@@ -1,1 +1,5 @@
 zwl is the zeta widget library.  It is designed to be simple, yet at the same time look good and have a nice feel.  It is not designed to be a general-purpose application toolkit like GTK+, Qt, or EWL.  It will be used in zimwm for menus, frames, buttons and the like.  It will also have selectable rendering outputs for displaying images, such as Xlib or Imlib2.  It will have some more general-purpose widgets, such as sliders and the like, for extensions to zimwm, but nothing fancy.  It might also have a place in small programs that only need a limited subset of general-purpose widgets and don't mind many constraints.
+
+src/ Contains the zwl source code.
+tests/ Contains a test program.
+doc/ Contains documentation. Use gendoc to generate it from the source code.  You will need doxygen for this.
