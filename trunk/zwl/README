@@ -2,4 +2,4 @@ zwl is the zeta widget library.  It is designed to be simple, yet at the same ti
 
 src/ Contains the zwl source code.
 tests/ Contains a test program.
-doc/ Contains documentation. Use gendoc to generate it from the source code.  You will need doxygen for this.
+doc/ Contains documentation. Use gendoc to generate it from the source code.  You will need doxygen for this. 
