@@ -59,31 +59,27 @@ set visualbell
 let s:so_save = &so | let s:siso_save = &siso | set so=0 siso=0
 let v:this_session=expand("<sfile>:p")
 silent only
-cd ~/zde/zwl
+cd ~/zde/berlios/trunk/zwl
 set shortmess=aoO
-badd +87 ./configure.in
-badd +6 Makefile.am
-badd +14 src/Makefile.am
-badd +1 tests/Makefile.am
-badd +1 README
-badd +1 DESIGN
-badd +22 src/zwlwidget.h
-badd +25 src/widget.m
-badd +7 tests/zwl_test.m
-badd +1 src/zwl.h
-badd +34 src/init.m
-badd +28 src/zwlinit.h
-badd +1 src/zwlwindow.h
+badd +1 configure.in
+badd +1 Makefile.am
+badd +1 src/init.m
+badd +1 src/widget.m
 badd +1 src/window.m
-args ./configure.in Makefile.am src/Makefile.am tests/Makefile.am
-edit README
+badd +1 src/zwl.h
+badd +1 src/zwlinit.h
+badd +1 src/zwlwidget.h
+badd +1 src/zwlwindow.h
+badd +1 src/Makefile.am
+badd +0 tests/zwl_test.m
+silent! argdel *
+edit tests/zwl_test.m
 set splitbelow splitright
 set nosplitbelow
 set nosplitright
 wincmd t
 set winheight=1 winwidth=1
 argglobal
-edit README
 setlocal noautoindent
 setlocal autoread
 setlocal nobinary
@@ -104,8 +100,8 @@ setlocal nodiff
 setlocal equalprg=
 setlocal errorformat=
 setlocal noexpandtab
-if &filetype != ''
-setlocal filetype=
+if &filetype != 'objc'
+setlocal filetype=objc
 endif
 setlocal foldcolumn=0
 setlocal foldenable
@@ -136,8 +132,7 @@ setlocal matchpairs=(:),{:},[:]
 setlocal modeline
 setlocal modifiable
 setlocal nrformats=octal,hex
-set number
-setlocal number
+setlocal nonumber
 setlocal path=
 setlocal nopreserveindent
 setlocal nopreviewwindow
@@ -149,8 +144,8 @@ setlocal nosmartindent
 setlocal softtabstop=0
 setlocal suffixesadd=
 setlocal swapfile
-if &syntax != ''
-setlocal syntax=
+if &syntax != 'objc'
+setlocal syntax=objc
 endif
 setlocal tabstop=8
 setlocal tags=
