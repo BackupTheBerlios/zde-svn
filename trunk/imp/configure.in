@@ -71,5 +71,5 @@ AC_CONFIG_FILES([
 		])
 AC_OUTPUT
 
-echo "imp is now ready to be built.  Make sure you reade the README."
+echo "imp is now ready to be built.  Make sure you reade the README first."
 	
