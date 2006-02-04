@@ -1,6 +1,0 @@
-#!/bin/sh
-
-REPOS="$1"
-REV="$2"
-$REPOS/hooks/ciabot_svn.sh "$REPOS" "$REV"&
-
