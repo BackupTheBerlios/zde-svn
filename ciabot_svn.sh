@@ -3,7 +3,7 @@
 # This is a CIA bot client script for Subversion repositories,
 # delivering via email. See below for usage and customization information.
 #
-# --------------------------------------------------------------------------
+# -------------------------------------------------------------------------
 #
 # Copyright (c) 2004-2005, Micah Dowty
 # All rights reserved.
