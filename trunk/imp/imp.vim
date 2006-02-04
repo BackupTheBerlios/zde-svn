@@ -53,32 +53,29 @@ set cindent
 set cscopetag
 set cscopeverbose
 set helplang=en
-set iminsert=0
 set mouse=a
 set termencoding=utf-8
 set visualbell
 let s:so_save = &so | let s:siso_save = &siso | set so=0 siso=0
 let v:this_session=expand("<sfile>:p")
 silent only
-cd ~/zde
+cd ~/zde/berlios/trunk/imp
 set shortmess=aoO
-badd +1 imp/README
-badd +45 imp/configure.in
-badd +3 imp/Makefile.am
-badd +4 imp/src/Makefile.am
-badd +52 imp/src/lists.m
-badd +4 imp/tests/Makefile.am
-badd +52 imp/tests/imp_test.m
-badd +38 imp/src/impobject.h
-badd +42 imp/src/impobject.m
-badd +1 imp/src/imp.h
-badd +53 imp/src/implists.h
-badd +34 imp/src/stack.m
-badd +33 imp/src/impstack.h
-badd +24 imp/src/impmemory.h
-badd +1 imp/src/memory.m
-args README
-edit imp/README
+badd +1 configure.in
+badd +1 Makefile.am
+badd +1 src/imp.h
+badd +1 src/implists.h
+badd +1 src/impmemory.h
+badd +1 src/impobject.h
+badd +1 src/impobject.m
+badd +1 src/impstack.h
+badd +1 src/lists.m
+badd +1 src/Makefile.am
+badd +1 src/memory.m
+badd +1 src/stack.m
+badd +0 tests/imp_test.m
+silent! argdel *
+edit tests/imp_test.m
 set splitbelow splitright
 set nosplitbelow
 set nosplitright
@@ -105,8 +102,8 @@ setlocal nodiff
 setlocal equalprg=
 setlocal errorformat=
 setlocal noexpandtab
-if &filetype != ''
-setlocal filetype=
+if &filetype != 'objc'
+setlocal filetype=objc
 endif
 setlocal foldcolumn=0
 setlocal foldenable
@@ -120,7 +117,7 @@ setlocal foldnestmax=20
 setlocal foldtext=foldtext()
 setlocal formatoptions=tcq
 setlocal grepprg=
-setlocal iminsert=0
+setlocal iminsert=2
 setlocal imsearch=2
 setlocal include=
 setlocal includeexpr=
@@ -129,8 +126,7 @@ setlocal indentkeys=0{,0},:,0#,!^F,o,O,e
 setlocal noinfercase
 setlocal iskeyword=@,48-57,_,192-255
 setlocal keywordprg=
-set linebreak
-setlocal linebreak
+setlocal nolinebreak
 setlocal nolisp
 setlocal nolist
 setlocal makeprg=
@@ -138,7 +134,6 @@ setlocal matchpairs=(:),{:},[:]
 setlocal modeline
 setlocal modifiable
 setlocal nrformats=octal,hex
-set number
 setlocal nonumber
 setlocal path=
 setlocal nopreserveindent
@@ -151,8 +146,8 @@ setlocal nosmartindent
 setlocal softtabstop=0
 setlocal suffixesadd=
 setlocal swapfile
-if &syntax != ''
-setlocal syntax=
+if &syntax != 'objc'
+setlocal syntax=objc
 endif
 setlocal tabstop=8
 setlocal tags=
