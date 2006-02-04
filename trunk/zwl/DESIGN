@@ -1,0 +1,29 @@
+-Preliminary Design Concept-
+
+Example Object Hierarchy
+
+Object
+-IMPObject
+--ZWidget
+---ZMainWindow
+---ZButton
+---ZScrollBar
+...
+...
+
+You recieve events from instansiated objects by creating a class that implements the ZActions Protocol and passing that to the object's constructer when you create it.  When an event happens, ex "clicked", it calls the function in the ZActions class you passed it when it was created called clicked().  Its that simple.
+
+Planned General Drawing Backends:
+Xlib
+Imlib2
+XRender
+Cairo
+
+The reason for so many is I want zde to run on as many platforms as possible, and to have the most options available.  If I can do that by having many backends at first and slowly eliminating the ones that don't work well/aren't used, that's fine.  Its not like zwl will actually push the limits of any of these, the one or two that win will be the ones with the least ammount of code/cruft needed to implement them.  Xlib will definatly be one, Imlib2 is stable and fast, but not actively developed except for bugfixes(the E devs have moved on to bigger and better things).  XRender is more widely available than Cairo, but Cairo has an easier API(in my opinion).  We'll see if and when I actually implement all of them.  These are for drawing images/widgets in zwl.
+
+Planned Text Drawing Backends
+Core Xlib
+Xft
+
+Xft is pretty much the defacto standard for text rendering these days.  FreeType is another possibility, but I think Xft will do fine.  Core X is obviously outdated, but I want it so ZDE has the option of running even on old, decrepit X servers.  I could use Imlib2 fonts, but it has been reported to be buggy in some edge cases.  I don't think I will use Pango because a text layout engine really isn't needed, and it depends on Glib.
+ 
