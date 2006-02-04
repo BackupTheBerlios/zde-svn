@@ -12,7 +12,7 @@ Basic Installation
 
 These are generic installation instructions.
 
-   The `configure' shell script attempts to guess correct values for
+   The 'configure' shell script attempts to guess correct values for
 various system-dependent variables used during compilation.  It uses
 those values to create a `Makefile' in each directory of the package.
 It may also create one or more `.h' files containing system-dependent
