@@ -64,18 +64,19 @@ set shortmess=aoO
 badd +1 configure.in
 badd +1 Makefile.am
 badd +1 src/imp.h
-badd +1 src/implists.h
+badd +25 src/implists.h
 badd +1 src/impmemory.h
 badd +1 src/impobject.h
 badd +1 src/impobject.m
-badd +1 src/impstack.h
-badd +1 src/lists.m
+badd +7 src/impstack.h
+badd +52 src/lists.m
 badd +1 src/Makefile.am
-badd +1 src/memory.m
+badd +52 src/memory.m
 badd +1 src/stack.m
-badd +0 tests/imp_test.m
+badd +19 tests/imp_test.m
+badd +0 README
 silent! argdel *
-edit tests/imp_test.m
+edit README
 set splitbelow splitright
 set nosplitbelow
 set nosplitright
@@ -102,8 +103,8 @@ setlocal nodiff
 setlocal equalprg=
 setlocal errorformat=
 setlocal noexpandtab
-if &filetype != 'objc'
-setlocal filetype=objc
+if &filetype != ''
+setlocal filetype=
 endif
 setlocal foldcolumn=0
 setlocal foldenable
@@ -146,8 +147,8 @@ setlocal nosmartindent
 setlocal softtabstop=0
 setlocal suffixesadd=
 setlocal swapfile
-if &syntax != 'objc'
-setlocal syntax=objc
+if &syntax != ''
+setlocal syntax=
 endif
 setlocal tabstop=8
 setlocal tags=
