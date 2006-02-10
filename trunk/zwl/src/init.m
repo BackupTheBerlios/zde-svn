@@ -58,7 +58,8 @@ void zwl_main_loop_start(void)
 		XNextEvent(zdpy,&ev);
 		
 		switch(ev.type) {
-				printf("HUZZA!!!\n");
+			default:
+				printf("Got Event.\n");
 		}
 	}
 }

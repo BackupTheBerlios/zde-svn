@@ -71,9 +71,10 @@ badd +1 src/zwlinit.h
 badd +1 src/zwlwidget.h
 badd +1 src/zwlwindow.h
 badd +1 src/Makefile.am
-badd +0 tests/zwl_test.m
+badd +1 tests/zwl_test.m
+badd +0 README
 silent! argdel *
-edit tests/zwl_test.m
+edit README
 set splitbelow splitright
 set nosplitbelow
 set nosplitright
@@ -100,8 +101,8 @@ setlocal nodiff
 setlocal equalprg=
 setlocal errorformat=
 setlocal noexpandtab
-if &filetype != 'objc'
-setlocal filetype=objc
+if &filetype != ''
+setlocal filetype=
 endif
 setlocal foldcolumn=0
 setlocal foldenable
@@ -115,7 +116,7 @@ setlocal foldnestmax=20
 setlocal foldtext=foldtext()
 setlocal formatoptions=tcq
 setlocal grepprg=
-setlocal iminsert=2
+setlocal iminsert=0
 setlocal imsearch=2
 setlocal include=
 setlocal includeexpr=
@@ -144,8 +145,8 @@ setlocal nosmartindent
 setlocal softtabstop=0
 setlocal suffixesadd=
 setlocal swapfile
-if &syntax != 'objc'
-setlocal syntax=objc
+if &syntax != ''
+setlocal syntax=
 endif
 setlocal tabstop=8
 setlocal tags=
@@ -155,12 +156,12 @@ setlocal nowinfixheight
 setlocal wrap
 setlocal wrapmargin=0
 silent! normal! zE
-let s:l = 1 - ((0 * winheight(0) + 26) / 52)
+let s:l = 5 - ((4 * winheight(0) + 26) / 52)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-1
-normal! 0
+5
+normal! 0109l
 set winheight=1 winwidth=20 shortmess=filnxtToO
 let s:sx = expand("<sfile>:p:r")."x.vim"
 if file_readable(s:sx)
