@@ -27,11 +27,17 @@
 
 - init
 {
+	int i;
+	
 	self->name = NULL;
 	self->window = NULL;
 	self->parent = NULL;
 
 	zwl_main_loop_add_widget(self);
+
+	for(i=0;i<100;i++) {
+		callbacks[i] = NULL;
+	}
 }
 
 - show
@@ -40,6 +46,8 @@
 		XMapWindow(zdpy,self->window);
 
 	XSync(zdpy,False);
+
+	[self recieve:SHOW];
 }
 
 - set_name:(char *)name
@@ -60,7 +68,7 @@
 {
 	ZCallback *sig_callback = NULL;
 	
-	if(signal >= 0) {
+	if(signal >= 0 && self->callbacks[signal] != NULL) {
 		sig_callback = self->callbacks[signal];
 		sig_callback(self,NULL);
 	}
