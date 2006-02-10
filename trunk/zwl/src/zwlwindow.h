@@ -21,12 +21,22 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
+/**
+	A widget that represents a Window.
+  */
+
 @interface ZWindow : ZWidget
 {
-
+	@public
+	ZWidget **children;	
 }
 
-/** If parent is NULL, use the default root window on screen 0 */
-- init:(ZWidget *)parent:(int)x:(int)y:(int)width:(int)height;
+/** 
+  When parent is passed as NULL, then it is assumed to be the root window of the current display. 
+ */
+
+- (id)init:(ZWidget *)parent:(int)x:(int)y:(int)width:(int)height;
+
+- free;
 
 @end
