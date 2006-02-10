@@ -58,7 +58,13 @@
 
 - (void)recieve:(int)signal
 {
+	ZCallback *sig_callback = NULL;
 	
+	if(signal >= 0) {
+		sig_callback = self->callbacks[signal];
+		sig_callback(self,NULL);
+	}
+			
 }
 
 - (void)attatch_cb:(int)signal:(ZCallback *)callback
