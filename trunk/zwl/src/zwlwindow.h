@@ -32,7 +32,7 @@
 }
 
 /** 
-  When parent is passed as NULL, then it is assumed to be the root window of the current display. 
+  When parent is passed as null, then it is assumed to be the root window of the current display. 
  */
 
 - (id)init:(ZWidget *)parent:(int)x:(int)y:(int)width:(int)height;
