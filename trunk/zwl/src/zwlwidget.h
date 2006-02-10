@@ -42,9 +42,9 @@ typedef void (ZCallback)(IMPObject *widget, void *data);
 	ZWidget *parent;  /**< The ZWidget that this widget is a child of, e.g. a menu item is part of a menu.  NULL if there is no parent. */
 		
 	@private
-	ZCallback *callbacks[100];
-	int x;
-	int y;
+	ZCallback *callbacks[100]; /**< Stores an array of ZCallbacks for when we recieve a signal */
+	int x; /**< 'x' coordinate.  Can have different meanings in different contexts, such as if this widget is a window or a button, etc. */
+	int y; /**< 'y' coordinate.  Can have different meanings in different contexts, such as if this widget is a window or a button, etc. */
 	int width;
 	int height;
 	

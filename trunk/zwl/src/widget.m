@@ -63,7 +63,9 @@
 
 - (void)attatch_cb:(int)signal:(ZCallback *)callback
 {
-
+	if(signal >= 0) {
+		self->callbacks[signal] = callback;
+	}	
 }
 
 @end
