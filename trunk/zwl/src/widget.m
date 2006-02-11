@@ -47,7 +47,7 @@
 
 	XSync(zdpy,False);
 
-	[self recieve:SHOW];
+	[self receive:SHOW:NULL];
 }
 
 - set_name:(char *)name
@@ -69,13 +69,13 @@
 	}
 }
 
-- (void)recieve:(int)signal
+- (void)receive:(int)signal:(void *)data
 {
 	ZCallback *sig_callback = NULL;
 	
 	if(signal >= 0 && self->callbacks[signal] != NULL) {
 		sig_callback = self->callbacks[signal];
-		sig_callback(self,NULL);
+		sig_callback(self,data);
 	}
 			
 }

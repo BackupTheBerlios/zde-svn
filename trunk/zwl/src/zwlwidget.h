@@ -25,8 +25,7 @@
 #define BUTTON_DOWN 1
 #define BUTTON_UP 2
 #define DESTROY 3
-#define KEY_DOWN 4
-#define KEY_UP 5
+#define KEY_PRESS 4
 
 /** Callback prototype */
 typedef void (ZCallback)(IMPObject *widget, void *data);
@@ -65,7 +64,7 @@ typedef void (ZCallback)(IMPObject *widget, void *data);
 - set_parent:(ZWidget *)parent;
 
 /** Send signal to this widget */
-- (void)recieve:(int)signal;
+- (void)receive:(int)signal:(void *)data;
 
 /** Attatch a callback to the widget */
 - (void)attatch_cb:(int)signal:(ZCallback *)callback;

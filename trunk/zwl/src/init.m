@@ -66,9 +66,9 @@ void zwl_main_loop_start(void)
 			case KeyPress:
 				key = ev.xkey;
 				w = find_widget(key.window);		
-				printf("A key has been pressed on widget with name %s.\n",[w get_name]);
+				[w receive:KEY_PRESS:&ev.xkey];
 			default:
-				printf("Got Event.\n");
+				printf("Got event, but don't know what it is.\n");
 		}
 	}
 }
