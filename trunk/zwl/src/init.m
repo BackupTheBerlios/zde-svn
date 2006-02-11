@@ -26,6 +26,9 @@
 Display *zdpy = NULL;
 IMPList *window_list = NULL;
 
+/* Helper functions */
+ZWidget *find_widget(Window *w);
+
 void zwl_init(void)
 {
 	zdpy = XOpenDisplay(NULL);
@@ -53,14 +56,39 @@ void zwl_main_loop_add_widget(ZWidget *w)
 void zwl_main_loop_start(void)
 {
 	XEvent ev;
+	XKeyEvent key;
+	ZWidget *w = NULL;
 
 	for(;;) {
 		XNextEvent(zdpy,&ev);
 		
 		switch(ev.type) {
+			case KeyPress:
+				key = ev.xkey;
+				w = find_widget(key.window);		
+				printf("A key has been pressed on widget with name %s.\n",[w get_name]);
 			default:
 				printf("Got Event.\n");
 		}
 	}
 }
 
+ZWidget *find_widget(Window *w)
+{
+	int i;
+	IMPList *list = window_list;
+	ZWidget *widget;
+	
+	while(list) {
+
+		widget = (ZWidget *)list->data;
+		
+		if(widget->window == w) { /* We've found our widget */
+			return widget;
+		}
+		
+		list = list->next;
+	}
+
+	return NULL;
+}

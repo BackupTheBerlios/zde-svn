@@ -11,6 +11,7 @@ int main(void)
 	win = [ZWindow alloc];
 	[win init:NULL:100:100:100:100];
 
+	[win set_name:"Test Window"];
 	[win attatch_cb:SHOW:(ZCallback *)on_show];
 	[win show];
 	

@@ -58,6 +58,9 @@ typedef void (ZCallback)(IMPObject *widget, void *data);
 /** Set the name */
 - set_name:(char *)name;
 
+/** Get the name */
+- get_name;
+
 /** Set the parent widget */
 - set_parent:(ZWidget *)parent;
 

@@ -56,6 +56,11 @@
 		self->name = strdup(name);
 }
 
+- get_name
+{
+	return self->name;
+}
+
 - set_parent:(ZWidget *)parent
 {
 	if(parent) {
