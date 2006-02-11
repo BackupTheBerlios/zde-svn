@@ -40,7 +40,15 @@
 	}
 }
 
-- show
+- free
+{
+	if(self->name)
+		free(self->name);
+	
+	[super free];	
+}
+
+- (void)show
 {
 	if(self->window)
 		XMapWindow(zdpy,self->window);
@@ -48,6 +56,17 @@
 	XSync(zdpy,False);
 
 	[self receive:SHOW:NULL];
+}
+
+- (void)destroy
+{
+	if(self->window)
+		XDestroyWindow(zdpy,self->window);
+
+	XSync(zdpy,False);
+
+	[self receive:DESTROY:NULL];
+	[self release];
 }
 
 - set_name:(char *)name

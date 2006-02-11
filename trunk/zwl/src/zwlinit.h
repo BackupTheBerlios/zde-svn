@@ -28,4 +28,5 @@ void zwl_init(void);
 Display *zwl_get_display(void);
 void zwl_main_loop_add_widget(ZWidget *w);
 void zwl_main_loop_start(void);
+void zwl_main_loop_quit(void);
 

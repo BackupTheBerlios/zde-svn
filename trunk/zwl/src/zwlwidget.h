@@ -50,9 +50,13 @@ typedef void (ZCallback)(IMPObject *widget, void *data);
 }
 
 - init;
+- free;
 
 /** Show the widget */
-- show;
+- (void)show;
+
+/** Destroys the widget and decreases the reference count */
+- (void)destroy;
 
 /** Set the name */
 - set_name:(char *)name;

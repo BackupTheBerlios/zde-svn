@@ -25,6 +25,7 @@
 
 Display *zdpy = NULL;
 IMPList *window_list = NULL;
+static unsigned short int quit = 0;
 
 /* Helper functions */
 ZWidget *find_widget(Window *w);
@@ -59,7 +60,7 @@ void zwl_main_loop_start(void)
 	XKeyEvent key;
 	ZWidget *w = NULL;
 
-	for(;;) {
+	while(!quit) {
 		XNextEvent(zdpy,&ev);
 		
 		switch(ev.type) {
@@ -67,10 +68,15 @@ void zwl_main_loop_start(void)
 				key = ev.xkey;
 				w = find_widget(key.window);		
 				[w receive:KEY_PRESS:&ev.xkey];
-			default:
-				printf("Got event, but don't know what it is.\n");
+			//default:
+			//	printf("Got event, but don't know what it is.\n");
 		}
 	}
+}
+
+void zwl_main_loop_quit(void)
+{
+	quit = 1;
 }
 
 ZWidget *find_widget(Window *w)
