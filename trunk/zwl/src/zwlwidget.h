@@ -34,15 +34,15 @@ typedef void (ZCallback)(IMPObject *widget, void *data);
 /** The basic widget of zwl.  Never instansiate this by itself, only its subclasses. */
 @interface ZWidget : IMPObject
 {
-	@protected
-	char *name;
-
 	@public
 	Window *window;	 /**< The X11 window that represents this widget. */
 	ZWidget *parent;  /**< The ZWidget that this widget is a child of, e.g. a menu item is part of a menu.  NULL if there is no parent. */
 		
-	@private
+	@protected
+	char *name;
+	ZCallback *internal_callbacks[100]; /**< For internal use only.  Called before the user callback is called. */
 	ZCallback *callbacks[100]; /**< Stores an array of ZCallbacks for when we recieve a signal */
+	ZWidget *children[100];
 	int x; /**< 'x' coordinate.  Can have different meanings in different contexts, such as if this widget is a window or a button, etc. */
 	int y; /**< 'y' coordinate.  Can have different meanings in different contexts, such as if this widget is a window or a button, etc. */
 	int width;
@@ -53,10 +53,10 @@ typedef void (ZCallback)(IMPObject *widget, void *data);
 - init;
 - free;
 
-/** Show the widget */
+/** Show the widget. */
 - (void)show;
 
-/** Destroys the widget and decreases the reference count */
+/** Destroys the widget and decreases the reference count. */
 - (void)destroy;
 
 /** Set the name */
@@ -71,7 +71,13 @@ typedef void (ZCallback)(IMPObject *widget, void *data);
 /** Send signal to this widget */
 - (void)receive:(int)signal:(void *)data;
 
-/** Attatch a callback to the widget */
+/** Attatch a callback to the widget. */
 - (void)attatch_cb:(int)signal:(ZCallback *)callback;
+
+/** Used to attatch internal callbacks. Should not be used by application programs unless you want trouble, or REALLY know what you are doing.
+ Using this, it is possible to override how widgets react to basic XEvents, such as button presses and Exposes.  Unless you are writing a widget,
+ this is dangerous.
+ */
+- (void)attatch_internal_cb:(int)signal:(ZCallback *)callback;
 
 @end

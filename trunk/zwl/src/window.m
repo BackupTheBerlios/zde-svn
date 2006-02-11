@@ -29,6 +29,8 @@
 {
 	XSetWindowAttributes attr;
 
+	[super init];
+	
 	attr.event_mask = ButtonPressMask |
     			  ButtonReleaseMask |
      			  EnterWindowMask |
@@ -54,6 +56,8 @@
 	XChangeWindowAttributes(zdpy,self->window,CWEventMask,&attr);
 	
 	zwl_main_loop_add_widget(self);
+
+//	[super init];
 }
 
 @end

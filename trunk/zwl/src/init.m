@@ -59,6 +59,7 @@ void zwl_main_loop_start(void)
 	XEvent ev;
 	XKeyEvent key;
 	XButtonEvent button;
+	XDestroyWindowEvent dest;
 	
 	ZWidget *w = NULL;
 
@@ -75,15 +76,22 @@ void zwl_main_loop_start(void)
 				button = ev.xbutton;
 				w = find_widget(button.window);
 				
-				if(button.type ==  ButtonPress) {
-					[w receive:BUTTON_DOWN:&ev.xbutton];
-				}
-				else if(button.type == ButtonRelease) {
-					[w receive:BUTTON_UP:&ev.xbutton];
-				}
-				
+				[w receive:BUTTON_DOWN:&ev.xbutton];
+				break;
+			case ButtonRelease:
+				button = ev.xbutton;
+				w = find_widget(button.window);
+
+				[w receive:BUTTON_UP:&ev.xbutton];
+				break;
+			case DestroyNotify:
+				dest = ev.xdestroywindow;
+				w = find_widget(dest.window);
+
+				[w receive:DESTROY:&ev.xdestroywindow];
 				break;
 			default:
+				w = find_widget(ev.xany.window);
 				[w receive:DEFAULT:&ev];
 		}
 	}

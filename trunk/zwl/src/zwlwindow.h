@@ -27,15 +27,14 @@
 
 @interface ZWindow : ZWidget
 {
-	@public
-	ZWidget **children;	
+	@protected
+	char *title;
 }
 
 /** 
   When parent is passed as null, then it is assumed to be the root window of the current display. 
  */
-
-- (id)init:(ZWidget *)parent:(int)x:(int)y:(int)width:(int)height;
+- init:(ZWidget *)parent:(int)x:(int)y:(int)width:(int)height;
 
 - free;
 

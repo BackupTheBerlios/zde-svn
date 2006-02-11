@@ -1,5 +1,5 @@
 lib_LTLIBRARIES = libzwl.la
-libzwl_la_SOURCES = widget.m init.m window.m
+libzwl_la_SOURCES = widget.m init.m window.m button.m
 
 INCLUDES = \
 -I$(top_builddir) \
@@ -9,6 +9,7 @@ $(IMP_CFLAGS) $(X_CFLAGS)
 ZWLHEADERS = \
 	     zwlinit.h \
 	     zwlwindow.h \
+	     zwlbutton.h \
 	     zwlwidget.h
 
 installed_headersdir = $(prefix)/include/zwl

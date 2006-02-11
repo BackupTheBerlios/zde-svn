@@ -47,12 +47,14 @@ map <xF2> <F2>
 map <xF1> <F1>
 let &cpo=s:cpo_save
 unlet s:cpo_save
+set autoindent
 set background=dark
 set backspace=indent,eol,start
 set cindent
 set cscopetag
 set cscopeverbose
 set helplang=en
+set iminsert=0
 set mouse=a
 set termencoding=utf-8
 set visualbell
@@ -63,16 +65,18 @@ cd ~/zde/berlios/trunk/zwl
 set shortmess=aoO
 badd +1 configure.in
 badd +1 Makefile.am
-badd +1 src/init.m
+badd +84 src/init.m
 badd +1 src/widget.m
 badd +1 src/window.m
 badd +1 src/zwl.h
 badd +1 src/zwlinit.h
-badd +1 src/zwlwidget.h
+badd +29 src/zwlwidget.h
 badd +1 src/zwlwindow.h
 badd +1 src/Makefile.am
-badd +1 tests/zwl_test.m
-badd +0 README
+badd +67 tests/zwl_test.m
+badd +5 README
+badd +1 src/zwlbutton.h
+badd +1 src/button.m
 silent! argdel *
 edit README
 set splitbelow splitright
@@ -133,6 +137,7 @@ setlocal matchpairs=(:),{:},[:]
 setlocal modeline
 setlocal modifiable
 setlocal nrformats=octal,hex
+set number
 setlocal nonumber
 setlocal path=
 setlocal nopreserveindent
@@ -161,7 +166,7 @@ if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
 5
-normal! 0109l
+normal! 0
 set winheight=1 winwidth=20 shortmess=filnxtToO
 let s:sx = expand("<sfile>:p:r")."x.vim"
 if file_readable(s:sx)

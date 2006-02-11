@@ -23,11 +23,16 @@
 
 #include "zwl.h"
 
+/* Internal callback prototypes */
+static void on_destroy(IMPObject *widget, void *data);
+
 @implementation ZWidget : IMPObject
 
 - init
 {
 	int i;
+
+	[super init];
 	
 	self->name = NULL;
 	self->window = NULL;
@@ -36,8 +41,13 @@
 	zwl_main_loop_add_widget(self);
 
 	for(i=0;i<100;i++) {
+		internal_callbacks[i] = NULL;
 		callbacks[i] = NULL;
 	}
+
+	/* Attatch internal callbacks */
+	[self attatch_internal_cb:DESTROY:(ZCallback *)on_destroy];
+
 }
 
 - free
@@ -64,9 +74,6 @@
 		XDestroyWindow(zdpy,self->window);
 
 	XSync(zdpy,False);
-
-	[self receive:DESTROY:NULL];
-	[self release];
 }
 
 - set_name:(char *)name
@@ -90,7 +97,14 @@
 
 - (void)receive:(int)signal:(void *)data
 {
+	ZCallback *sig_internal_callback = NULL;
 	ZCallback *sig_callback = NULL;
+
+	/* Make sure the internal callback is called first. */
+	if(signal >=0 && self->internal_callbacks[signal] != NULL) {
+		sig_internal_callback = self->internal_callbacks[signal];
+		sig_internal_callback(self,data);
+	}
 	
 	if(signal >= 0 && self->callbacks[signal] != NULL) {
 		sig_callback = self->callbacks[signal];
@@ -106,4 +120,17 @@
 	}	
 }
 
+- (void)attatch_internal_cb:(int)signal:(ZCallback *)callback
+{
+	if(signal >= 0) {
+		self->internal_callbacks[signal] = callback;
+	}
+}
+
 @end
+
+/* Internal callbacks. */
+static void on_destroy(IMPObject *widget, void *data)
+{
+	[widget release];
+}
