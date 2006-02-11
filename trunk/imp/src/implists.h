@@ -24,22 +24,46 @@
 #ifndef IMPLIST_H
 #define IMPLIST_H
 
-/** A singly-linked list implementation, non-circular(the tail doesn't know where the head is, and vice-versa) */
+/** A singly-linked list implementation, non-circular(the tail doesn't know where the head is, and vice-versa).
+ Here is a simple example of iterating over an IMPList from zwl, assuming that *list is a pointer to where you want to start:
+ \verbatim
+ ZWidget *find_widget(Window *w)
+ {
+	int i;
+	IMPList *list = window_list;
+	ZWidget *widget;
+	
+	while(list) {
+
+		widget = (ZWidget *)list->data;
+		
+		if(widget->window == w) {
+			return widget;
+		}
+		
+		list = list->next;
+	}
+	return NULL;
+ }
+ \endverbatim
+ As you can see, it is fairly similar to other linked list implementations.
+ */
 @interface IMPList : IMPObject
 {
 	@public
-	void *data;
+	void *data;  /**< Pointer to data that you may want to associate with this node.  Make sure that you set type correctly. */
 	IMPList *next;	/**< Pointer to next list node, NULL if this is the last node */
 	int type;  /**< Can be set at any time.  0 for malloc data, 1 for IMPObjects */
 }
 
 /** Init the list. Set type to 0 if the data you will be storing will be allocated with a C malloc/calloc/realloc function (i_alloc, i_calloc, and 
   i_realloc count).
-   Set type to 1 if the data you will be storing will be IMPObjects. */
+   Set type to 1 if the data you will be storing will be IMPObjects. 
+ */
 - init:(int)type;
-- free;  /**< Freeing one frees all nodes after it */
+- free;  /**< Freeing one frees all nodes after it.  This way, you can free a whole list by calling free on the head. */
 
-/** Add a new node at the end of the list and point the new node's "data" field to the parameter supplied. Returns the new end of the list */
+/** Add a new node at the end of the list and point the new node's "data" field to the parameter supplied. Returns the new end of the list. */
 - (IMPList *)append_data:(void *)user_data;  
 
 /** Add a new node at the beginning of the list and point the new node's "data" field to the parameter 
