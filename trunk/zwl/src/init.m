@@ -58,6 +58,8 @@ void zwl_main_loop_start(void)
 {
 	XEvent ev;
 	XKeyEvent key;
+	XButtonEvent button;
+	
 	ZWidget *w = NULL;
 
 	while(!quit) {
@@ -68,8 +70,21 @@ void zwl_main_loop_start(void)
 				key = ev.xkey;
 				w = find_widget(key.window);		
 				[w receive:KEY_PRESS:&ev.xkey];
-			//default:
-			//	printf("Got event, but don't know what it is.\n");
+				break;
+			case ButtonPress:
+				button = ev.xbutton;
+				w = find_widget(button.window);
+				
+				if(button.type ==  ButtonPress) {
+					[w receive:BUTTON_DOWN:&ev.xbutton];
+				}
+				else if(button.type == ButtonRelease) {
+					[w receive:BUTTON_UP:&ev.xbutton];
+				}
+				
+				break;
+			default:
+				[w receive:DEFAULT:&ev];
 		}
 	}
 }

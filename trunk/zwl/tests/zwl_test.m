@@ -2,6 +2,8 @@
 
 void on_show(IMPObject *widget, void *data);
 void on_keypress(IMPObject *widget, void *data);
+void on_buttondown(IMPObject *widget, void *data);
+void on_buttonup(IMPObject *widget, void *data);
 
 int main(void)
 {
@@ -18,8 +20,11 @@ int main(void)
 	[win set_name:"Test Window"];
 	[win attatch_cb:SHOW:(ZCallback *)on_show];
 	[win attatch_cb:KEY_PRESS:(ZCallback *)on_keypress];
-	[win show];	
+	[win attatch_cb:BUTTON_DOWN:(ZCallback *)on_buttondown];
+	[win attatch_cb:BUTTON_UP:(ZCallback *)on_buttonup];
 	
+	[win show];	
+/*	
 	for(i=0;i<1000;i++) {
 		wins[i] = [ZWindow alloc];
 		[wins[i] init:NULL:100:100:100:100];
@@ -30,7 +35,7 @@ int main(void)
 		
 		[wins[i] destroy];
 	}
-		
+*/		
 	zwl_main_loop_start();
 	
 	return 0;
@@ -55,3 +60,18 @@ void on_keypress(IMPObject *widget, void *data)
 	}
 }
 
+void on_buttondown(IMPObject *widget, void *data)
+{
+	ZWindow *w = (ZWindow *)widget;
+	XButtonEvent *ev = (XButtonEvent *)data;
+
+	printf("Mouse button %d was pressed down at %d,%d.\n",ev->button,ev->x,ev->y);
+}
+
+void on_buttonup(IMPObject *widget, void *data)
+{	
+	ZWindow *w = (ZWindow *)widget;
+	XButtonEvent *ev = (XButtonEvent *)data;
+
+	printf("Mouse button %d was released at %d,%d.\n",ev->button,ev->x,ev->y);
+}

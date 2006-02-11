@@ -26,6 +26,7 @@
 #define BUTTON_UP 2
 #define DESTROY 3
 #define KEY_PRESS 4
+#define DEFAULT 5
 
 /** Callback prototype */
 typedef void (ZCallback)(IMPObject *widget, void *data);
