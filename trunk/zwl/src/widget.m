@@ -41,8 +41,9 @@ static void on_destroy(IMPObject *widget, void *data);
 	zwl_main_loop_add_widget(self);
 
 	for(i=0;i<100;i++) {
-		internal_callbacks[i] = NULL;
-		callbacks[i] = NULL;
+		self->children[i] = NULL;
+		self->internal_callbacks[i] = NULL;
+		self->callbacks[i] = NULL;
 	}
 
 	/* Attatch internal callbacks */
@@ -85,6 +86,20 @@ static void on_destroy(IMPObject *widget, void *data);
 - get_name
 {
 	return self->name;
+}
+
+- add_child:(ZWidget *)child
+{
+	int i;
+
+	/* find the next open spot and add it */
+	for(i=0;i<100;i++) {
+		if(self->children[i]) {
+			self->children[i] = child;
+			[child receive:ADDED:self];
+			break;
+		}
+	}
 }
 
 - set_parent:(ZWidget *)parent
