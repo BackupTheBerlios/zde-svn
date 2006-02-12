@@ -23,8 +23,7 @@
 
 /**
 	A widget that represents a Window.
-  */
-
+ */
 @interface ZWindow : ZWidget
 {
 	@protected

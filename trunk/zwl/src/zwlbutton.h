@@ -21,6 +21,11 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
+/**
+  A window that must be a child of a ZWindow, which is accomplished by calling [parent add_child:button]
+  BEFORE showing the button.  It also will draw the text in *label by itself, and handles Expose events for
+  drawing that text.
+  */
 @interface ZButton : ZWindow
 {
 	@protected

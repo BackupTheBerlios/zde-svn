@@ -33,7 +33,9 @@
 /** Callback prototype */
 typedef void (ZCallback)(IMPObject *widget, void *data);
 
-/** The basic widget of zwl.  Never instansiate this by itself, only its subclasses. */
+/** The basic widget of zwl.  Never instansiate this by itself, only its subclasses. You can also use this as a base class
+ for creating new widgets outside of zwl itself.
+ */
 @interface ZWidget : IMPObject
 {
 	@public
