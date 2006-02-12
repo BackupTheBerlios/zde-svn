@@ -24,7 +24,7 @@
 #include "zwl.h"
 
 /* Internal callback prototypes */
-void on_add(IMPObject *widget, void *data);
+static void on_add(IMPObject *widget, void *data);
 
 @implementation ZButton : ZWindow
 
@@ -42,7 +42,7 @@ void on_add(IMPObject *widget, void *data);
 
 @end
 
-void on_add(IMPObject *widget, void *data)
+static void on_add(IMPObject *widget, void *data)
 {
 	ZWidget *myself = (ZWidget *)data;
 	ZWidget *parent = myself->parent;

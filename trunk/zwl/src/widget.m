@@ -96,7 +96,7 @@ static void on_destroy(IMPObject *widget, void *data);
 
 	/* find the next open spot and add it */
 	for(i=0;i<100;i++) {
-		if(self->children[i]) {
+		if(self->children[i] == NULL) {
 			self->children[i] = child;
 		
 			[child set_parent:self];

@@ -6,6 +6,9 @@ static void on_buttondown(IMPObject *widget, void *data);
 static void on_buttonup(IMPObject *widget, void *data);
 static void on_destroy(IMPObject *widget, void *data);
 
+static void on_button_show(IMPObject *widget, void *data);
+static void on_button_buttondown(IMPObject *widget, void *data);
+
 int main(void)
 {
 	ZWindow *win = NULL;
@@ -26,10 +29,15 @@ int main(void)
 	[win attatch_cb:BUTTON_UP:(ZCallback *)on_buttonup];
 	[win attatch_cb:DESTROY:(ZCallback *)on_destroy];
 	
-	[win show];	
+	//[win show];	
 
 	button = [ZButton alloc];
 	[button init:10:10:20:10];
+	[win add_child:(ZWidget *)button];
+	[button attatch_cb:SHOW:(ZCallback *)on_button_show];
+	[button attatch_cb:BUTTON_DOWN:(ZCallback *)on_button_buttondown];
+	[button show];
+	[win show];
 /*	
 	for(i=0;i<1000;i++) {
 		win2 = [ZWindow alloc];
@@ -87,3 +95,14 @@ static void on_destroy(IMPObject *widget, void *data)
 	printf("Goodbye, cruel world...\n");
 	zwl_main_loop_quit();
 }
+
+static void on_button_show(IMPObject *widget, void *data)
+{
+
+}
+
+static void on_button_buttondown(IMPObject *widget, void *data)
+{
+	printf("NICENESS!!!\n");
+}
+
