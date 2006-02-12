@@ -28,6 +28,7 @@
 #define KEY_PRESS 4
 #define DEFAULT 5
 #define ADDED 6
+#define EXPOSE 7
 
 /** Callback prototype */
 typedef void (ZCallback)(IMPObject *widget, void *data);

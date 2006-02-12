@@ -60,6 +60,7 @@ void zwl_main_loop_start(void)
 	XKeyEvent key;
 	XButtonEvent button;
 	XDestroyWindowEvent dest;
+	XExposeEvent expose;
 	
 	ZWidget *w = NULL;
 
@@ -90,6 +91,12 @@ void zwl_main_loop_start(void)
 				w = find_widget(dest.window);
 
 				[w receive:DESTROY:&ev.xdestroywindow];
+				break;
+			case Expose:
+				expose = ev.xexpose;
+				w = find_widget(dest.window);
+
+				[w receive:EXPOSE:&ev.xexpose];
 				break;
 			default:
 				w = find_widget(ev.xany.window);

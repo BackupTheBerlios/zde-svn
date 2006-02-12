@@ -32,6 +32,7 @@
 #include <X11/Xatom.h>
 #include <X11/keysym.h>
 #include <X11/Xproto.h>
+#include <X11/Xft/Xft.h>
 
 #include "zwlwidget.h"
 #include "zwlinit.h"

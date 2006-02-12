@@ -25,6 +25,7 @@
 
 /* Internal callback prototypes */
 static void on_add(IMPObject *widget, void *data);
+static void on_expose(IMPObject *widget, void *data);
 
 @implementation ZButton : ZWindow
 
@@ -34,11 +35,20 @@ static void on_add(IMPObject *widget, void *data);
 	[super init:x:y:width:height];
 
 	[self attatch_internal_cb:ADDED:(ZCallback *)on_add];
+	[self attatch_internal_cb:EXPOSE:(ZCallback *)on_expose];
 }
 
 - free
 {
 	[super free];
+}
+
+- set_label:(char *)label
+{
+	if(label) {
+		self->label = strdup(label);	
+		[self receive:EXPOSE:self];
+	}
 }
 
 @end
@@ -67,4 +77,10 @@ static void on_add(IMPObject *widget, void *data)
 	XChangeWindowAttributes(zdpy,myself->window,CWEventMask,&attr);
 	
 	zwl_main_loop_add_widget(myself);
+}
+
+static void on_expose(IMPObject *widget, void *data)
+{
+	ZWidget *myself = (ZWidget *)data;
+	
 }
