@@ -45,6 +45,7 @@ void on_add(IMPObject *widget, void *data);
 void on_add(IMPObject *widget, void *data)
 {
 	ZWidget *myself = (ZWidget *)data;
+	ZWidget *parent = myself->parent;
 	XSetWindowAttributes attr;
 
 	attr.event_mask = ButtonPressMask |
@@ -58,7 +59,9 @@ void on_add(IMPObject *widget, void *data)
      			  KeyReleaseMask;
 	
 	
-	myself->window = (Window *)XCreateSimpleWindow(zdpy,myself->parent->window,myself->x,myself->y,myself->width,myself->height,1,1,1);
+	myself->window = (Window *)XCreateSimpleWindow(zdpy,myself->parent->window,
+			myself->x + parent->x,myself->y + parent->y,myself->width,myself->height,
+			1,1,1);
 
 	XChangeWindowAttributes(zdpy,myself->window,CWEventMask,&attr);
 	

@@ -27,6 +27,7 @@
 	char *label;
 }
 
+/* x and y are relative to the button's parent */
 - init:(int)x:(int)y:(int)width:(int)height;
 - free;
 
