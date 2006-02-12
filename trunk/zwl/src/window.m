@@ -50,7 +50,7 @@ static Atom wm_name;
 	
 	if(!parent) {
 		self->window = (Window *)XCreateSimpleWindow(zdpy,XRootWindow(zdpy,0),x,y,width,height,1,1,1);
-		self->parent = XRootWindow(zdpy,0);
+		//self->parent = XRootWindow(zdpy,0);
 	}
 	else {
 		self->window = (Window *)XCreateSimpleWindow(zdpy,parent->window,x,y,width,height,1,1,1);
@@ -63,6 +63,11 @@ static Atom wm_name;
 
 	utf8 = XInternAtom(zdpy,"UTF8_STRING",False);
 	wm_name = XInternAtom(zdpy,"WM_NAME",False);
+
+}
+
+- init:(int)x:(int)y:(int)width:(int)height
+{
 
 }
 
