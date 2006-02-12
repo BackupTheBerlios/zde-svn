@@ -63,20 +63,21 @@ let v:this_session=expand("<sfile>:p")
 silent only
 cd ~/zde/berlios/trunk/zwl
 set shortmess=aoO
-badd +1 configure.in
+badd +126 configure.in
 badd +1 Makefile.am
-badd +84 src/init.m
-badd +1 src/widget.m
-badd +1 src/window.m
-badd +1 src/zwl.h
+badd +115 src/init.m
+badd +100 src/widget.m
+badd +58 src/window.m
+badd +39 src/zwl.h
 badd +1 src/zwlinit.h
-badd +29 src/zwlwidget.h
-badd +1 src/zwlwindow.h
-badd +1 src/Makefile.am
-badd +67 tests/zwl_test.m
-badd +5 README
-badd +1 src/zwlbutton.h
-badd +1 src/button.m
+badd +51 src/zwlwidget.h
+badd +39 src/zwlwindow.h
+badd +18 src/Makefile.am
+badd +53 tests/zwl_test.m
+badd +1 README
+badd +34 src/zwlbutton.h
+badd +68 src/button.m
+badd +7 tests/Makefile.am
 silent! argdel *
 edit README
 set splitbelow splitright
@@ -161,11 +162,11 @@ setlocal nowinfixheight
 setlocal wrap
 setlocal wrapmargin=0
 silent! normal! zE
-let s:l = 5 - ((4 * winheight(0) + 26) / 52)
+let s:l = 1 - ((0 * winheight(0) + 26) / 52)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-5
+1
 normal! 0
 set winheight=1 winwidth=20 shortmess=filnxtToO
 let s:sx = expand("<sfile>:p:r")."x.vim"

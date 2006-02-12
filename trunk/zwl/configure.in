@@ -98,6 +98,33 @@ AC_CHECK_HEADER(X11/X.h,
 AC_SUBST(X_CFLAGS)
 AC_SUBST(X_LIBS)
 
+dnl Check for Xft
+if test x$PKGCONFIG != xno; then
+	AC_MSG_CHECKING(for Xft >= 2.1.8...)
+
+	xft_major_version=`$PKGCONFIG xft --modversion | \
+	   sed 's/\([[0-9]]*\).\([[0-9]]*\).\([[0-9]]*\).\([[0-9]]*\)/\1/'`
+	 xft_minor_version=`$PKGCONFIG xft --modversion | \
+	   sed 's/\([[0-9]]*\).\([[0-9]]*\).\([[0-9]]*\).\([[0-9]]*\)/\2/'`
+	 xft_micro_version=`$PKGCONFIG xft --modversion | \
+	   sed 's/\([[0-9]]*\).\([[0-9]]*\).\([[0-9]]*\).\([[0-9]]*\)/\3/'`
+
+	 if test $xft_major_version -ge 2 -a $xft_minor_version \
+		       -ge 1 -a $xft_micro_version -ge 8 ; then
+		AC_MSG_RESULT(ok)
+		AC_MSG_CHECKING(for xft compile information)
+		XFT_CFLAGS=`$PKGCONFIG xft --cflags`
+		XFT_LIBS=`$PKGCONFIG xft --libs`
+		AC_MSG_RESULT(ok)
+	else AC_MSG_ERROR(Incorrect Xft version. Please upgrade to 2.1.8 or greater)
+	fi
+else
+	AC_MSG_ERROR(echo *** Xft >= 2.1.8  not found ***)
+fi
+
+AC_SUBST(XFT_CFLAGS)
+AC_SUBST(XFT_LIBS)
+
 AC_CHECK_LIB(pot,coffee,,[
                 echo "Your coffee pot is empty, time to make some coffee!"
                 ])
