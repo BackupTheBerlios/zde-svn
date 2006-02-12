@@ -67,6 +67,8 @@ static Atom wm_name;
 
 	if(self->window)
 		zwl_main_loop_add_widget(self);
+	
+	self->xftdraw = XftDrawCreate(zdpy,self->window,DefaultVisual(zdpy,DefaultScreen(zdpy)),DefaultColormap(zdpy,DefaultScreen(zdpy)));
 
 	utf8 = XInternAtom(zdpy,"UTF8_STRING",False);
 	wm_name = XInternAtom(zdpy,"WM_NAME",False);
@@ -90,6 +92,8 @@ static Atom wm_name;
 {
 	if(self->title)
 		free(self->title);
+	
+	XftDrawDestroy(self->xftdraw);
 
 	[super free];
 }

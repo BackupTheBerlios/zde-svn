@@ -39,8 +39,6 @@ static void on_add(IMPObject *widget, void *data);
 	self->window = NULL;
 	self->parent = NULL;
 
-	//zwl_main_loop_add_widget(self);
-
 	for(i=0;i<100;i++) {
 		self->children[i] = NULL;
 		self->internal_callbacks[i] = NULL;

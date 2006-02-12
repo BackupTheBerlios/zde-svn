@@ -49,6 +49,7 @@ typedef void (ZCallback)(IMPObject *widget, void *data);
 	ZCallback *internal_callbacks[100]; /**< For internal use only.  Called before the user callback is called. */
 	ZCallback *callbacks[100]; /**< Stores an array of ZCallbacks for when we recieve a signal */
 	ZWidget *children[100];
+
 }
 
 - init;
