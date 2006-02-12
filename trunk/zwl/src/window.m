@@ -50,6 +50,7 @@ static Atom wm_name;
 	
 	if(!parent) {
 		self->window = (Window *)XCreateSimpleWindow(zdpy,XRootWindow(zdpy,0),x,y,width,height,1,1,1);
+		self->parent = NULL;
 		//self->parent = XRootWindow(zdpy,0);
 	}
 	else {
@@ -57,6 +58,11 @@ static Atom wm_name;
 		self->parent = parent;
 	}
 
+	self->x = x;
+	self->y = y;
+	self->width = width;
+	self->height = height;
+	
 	XChangeWindowAttributes(zdpy,self->window,CWEventMask,&attr);
 	
 	zwl_main_loop_add_widget(self);
@@ -68,6 +74,14 @@ static Atom wm_name;
 
 - init:(int)x:(int)y:(int)width:(int)height
 {
+	[super init];
+	
+	self->name = NULL;
+	
+	self->x = x;
+	self->y = y;
+	self->width = width;
+	self->height = height;
 
 }
 
