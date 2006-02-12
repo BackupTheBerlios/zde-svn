@@ -55,6 +55,8 @@ static void on_destroy(IMPObject *widget, void *data);
 {
 	if(self->name)
 		free(self->name);
+	if(self->parent)
+		[self->parent release];
 	
 	[super free];	
 }
@@ -96,7 +98,10 @@ static void on_destroy(IMPObject *widget, void *data);
 	for(i=0;i<100;i++) {
 		if(self->children[i]) {
 			self->children[i] = child;
-			[child receive:ADDED:self];
+		
+			[child set_parent:self];
+			[child receive:ADDED:child];
+			
 			break;
 		}
 	}

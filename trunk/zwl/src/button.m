@@ -44,5 +44,23 @@ void on_add(IMPObject *widget, void *data);
 
 void on_add(IMPObject *widget, void *data)
 {
+	ZWidget *myself = (ZWidget *)data;
+	XSetWindowAttributes attr;
 
+	attr.event_mask = ButtonPressMask |
+    			  ButtonReleaseMask |
+     			  EnterWindowMask |
+     			  LeaveWindowMask |
+     		 	  PointerMotionMask |
+     			  ExposureMask |
+     		  	  StructureNotifyMask |
+     			  KeyPressMask |
+     			  KeyReleaseMask;
+	
+	
+	myself->window = (Window *)XCreateSimpleWindow(zdpy,myself->parent->window,myself->x,myself->y,myself->width,myself->height,1,1,1);
+
+	XChangeWindowAttributes(zdpy,myself->window,CWEventMask,&attr);
+	
+	zwl_main_loop_add_widget(myself);
 }
