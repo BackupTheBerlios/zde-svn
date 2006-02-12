@@ -18,6 +18,7 @@ int main(void)
 	[win init:NULL:100:100:100:100];
 
 	[win set_name:"Test Window"];
+	[win set_title:"Test Window"];
 	[win attatch_cb:SHOW:(ZCallback *)on_show];
 	[win attatch_cb:KEY_PRESS:(ZCallback *)on_keypress];
 	[win attatch_cb:BUTTON_DOWN:(ZCallback *)on_buttondown];
@@ -30,6 +31,7 @@ int main(void)
 		win2 = [ZWindow alloc];
 		[win2 init:NULL:100:100:100:100];
 		[win2 set_name:"Test Window 2"];
+		[win2 set_title:"Test Window 2"];
 		[win2 attatch_cb:SHOW:(ZCallback *)on_show];
 		[win2 attatch_cb:KEY_PRESS:(ZCallback *)on_keypress];
 		[win2 show];

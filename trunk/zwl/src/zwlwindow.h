@@ -35,7 +35,11 @@
   When parent is passed as null, then it is assumed to be the root window of the current display. 
  */
 - init:(ZWidget *)parent:(int)x:(int)y:(int)width:(int)height;
-
 - free;
+
+/**
+  Set the title of the window. Returns -1 on failure, 0 otherwise.
+  */
+- (int)set_title:(char *)title;
 
 @end

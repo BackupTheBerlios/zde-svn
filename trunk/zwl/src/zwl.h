@@ -36,5 +36,6 @@
 #include "zwlwidget.h"
 #include "zwlinit.h"
 #include "zwlwindow.h"
+#include "zwlbutton.h"
 
 #endif

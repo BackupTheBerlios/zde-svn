@@ -23,6 +23,10 @@
 
 #include "zwl.h"
 
+/* Atoms needed by windows */
+static Atom utf8;
+static Atom wm_name;
+
 @implementation ZWindow : ZWidget
 
 - init:(ZWidget *)parent:(int)x:(int)y:(int)width:(int)height
@@ -57,7 +61,21 @@
 	
 	zwl_main_loop_add_widget(self);
 
-//	[super init];
+	utf8 = XInternAtom(zdpy,"UTF8_STRING",False);
+	wm_name = XInternAtom(zdpy,"WM_NAME",False);
+
+}
+
+- (int)set_title:(char *)title
+{
+	if(title && self->window) {
+		self->title = strdup(title);
+		XChangeProperty(zdpy,self->window,wm_name,utf8,8,PropModeReplace,self->title,strlen(self->title));
+
+		return 0;
+	}
+
+	return -1;
 }
 
 @end
