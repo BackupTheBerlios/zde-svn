@@ -30,7 +30,6 @@
 	@protected
 	char *title;
 	XftDraw *xftdraw; /**< For displaying text, used internally. */
-
 }
 
 /** 

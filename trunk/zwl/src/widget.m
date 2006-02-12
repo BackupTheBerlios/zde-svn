@@ -79,18 +79,18 @@ static void on_add(IMPObject *widget, void *data);
 	XSync(zdpy,False);
 }
 
-- set_name:(char *)name
+- (void)set_name:(char *)name
 {
 	if(name)
 		self->name = strdup(name);
 }
 
-- get_name
+- (void)get_name
 {
 	return self->name;
 }
 
-- add_child:(ZWidget *)child
+- (void)add_child:(ZWidget *)child
 {
 	int i;
 
@@ -107,13 +107,29 @@ static void on_add(IMPObject *widget, void *data);
 	}
 }
 
-- set_parent:(ZWidget *)parent
+- (void)set_parent:(ZWidget *)parent
 {
 	if(parent) {
 		self->parent = parent;
 		[self->parent grab];
 	}
 }
+
+- move:(int)x:(int)y
+{
+	self->x = x;
+	self->y = y;
+
+	XMoveResizeWindow(zdpy,self->window,self->x,self->y,self->width,self->height);
+}
+
+- resize:(int)width:(int)height
+{
+	self->width = width;
+	self->height = height;
+
+	XMoveResizeWindow(zdpy,self->window,self->x,self->y,self->width,self->height);
+}	
 
 - (void)receive:(int)signal:(void *)data
 {

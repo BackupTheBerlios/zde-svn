@@ -62,16 +62,22 @@ typedef void (ZCallback)(IMPObject *widget, void *data);
 - (void)destroy;
 
 /** Set the name */
-- set_name:(char *)name;
+- (void)set_name:(char *)name;
 
 /** Get the name */
-- get_name;
+- (char *)get_name;
 
 /** Set the parent widget */
-- set_parent:(ZWidget *)parent;
+- (void)set_parent:(ZWidget *)parent;
 
 /** Take a widget, add it to the children array, and emit the ADDED signal on the child. */
-- add_child:(ZWidget *)child;
+- (void)add_child:(ZWidget *)child;
+
+/** Move the widget */
+- (void)move:(int)x:(int)y;
+
+/** Resize the widget */
+- (void)resize:(int)width:(int)height;
 
 /** Send signal to this widget */
 - (void)receive:(int)signal:(void *)data;
