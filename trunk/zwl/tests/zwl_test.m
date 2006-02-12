@@ -11,6 +11,7 @@ int main(void)
 	ZWindow *win = NULL;
 	int i;
 	ZWindow *win2 = NULL;
+	ZButton *button = NULL;
 	
 	zwl_init();
 	
@@ -26,6 +27,9 @@ int main(void)
 	[win attatch_cb:DESTROY:(ZCallback *)on_destroy];
 	
 	[win show];	
+
+	button = [ZButton alloc];
+	[button init:10:10:20:10];
 /*	
 	for(i=0;i<1000;i++) {
 		win2 = [ZWindow alloc];

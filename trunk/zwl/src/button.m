@@ -32,7 +32,7 @@ void on_add(IMPObject *widget, void *data);
 {
 	[super init:x:y:width:height];
 
-	[self add_internal_cb:ADDED:(ZCallback *)on_add];
+	[self attatch_internal_cb:ADDED:(ZCallback *)on_add];
 }
 
 - free

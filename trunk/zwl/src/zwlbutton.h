@@ -31,4 +31,6 @@
 - init:(int)x:(int)y:(int)width:(int)height;
 - free;
 
+- set_label:(char *)label;
+
 @end;
