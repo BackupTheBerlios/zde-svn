@@ -38,17 +38,16 @@ typedef void (ZCallback)(IMPObject *widget, void *data);
 	@public
 	Window *window;	 /**< The X11 window that represents this widget. */
 	ZWidget *parent;  /**< The ZWidget that this widget is a child of, e.g. a menu item is part of a menu.  NULL if there is no parent. */
-		
+	int x; /**< 'x' coordinate.  Can have different meanings in different contexts, such as if this widget is a window or a button, etc. */
+	int y; /**< 'y' coordinate.  Can have different meanings in different contexts, such as if this widget is a window or a button, etc. */
+	int width;
+	int height;
+			
 	@protected
 	char *name;  /**< For internal identification use only.  Has nothing to do with WM_NAME or similiar. */
 	ZCallback *internal_callbacks[100]; /**< For internal use only.  Called before the user callback is called. */
 	ZCallback *callbacks[100]; /**< Stores an array of ZCallbacks for when we recieve a signal */
 	ZWidget *children[100];
-	int x; /**< 'x' coordinate.  Can have different meanings in different contexts, such as if this widget is a window or a button, etc. */
-	int y; /**< 'y' coordinate.  Can have different meanings in different contexts, such as if this widget is a window or a button, etc. */
-	int width;
-	int height;
-	
 }
 
 - init;

@@ -70,6 +70,7 @@ void zwl_main_loop_start(void)
 			case KeyPress:
 				key = ev.xkey;
 				w = find_widget(key.window);		
+				
 				[w receive:KEY_PRESS:&ev.xkey];
 				break;
 			case ButtonPress:
@@ -109,8 +110,9 @@ ZWidget *find_widget(Window *w)
 	ZWidget *widget;
 	
 	while(list) {
-
 		widget = (ZWidget *)list->data;
+		
+		//printf("window:%d vs window:%d\n",widget->window,w);
 		
 		if(widget->window == w) { /* We've found our widget */
 			return widget;

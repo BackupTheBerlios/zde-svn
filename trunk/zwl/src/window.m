@@ -64,8 +64,9 @@ static Atom wm_name;
 	self->height = height;
 	
 	XChangeWindowAttributes(zdpy,self->window,CWEventMask,&attr);
-	
-	zwl_main_loop_add_widget(self);
+
+	if(self->window)
+		zwl_main_loop_add_widget(self);
 
 	utf8 = XInternAtom(zdpy,"UTF8_STRING",False);
 	wm_name = XInternAtom(zdpy,"WM_NAME",False);

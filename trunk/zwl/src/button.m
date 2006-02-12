@@ -30,6 +30,7 @@ static void on_add(IMPObject *widget, void *data);
 
 - init:(int)x:(int)y:(int)width:(int)height
 {
+	self->window = NULL;
 	[super init:x:y:width:height];
 
 	[self attatch_internal_cb:ADDED:(ZCallback *)on_add];
@@ -59,8 +60,8 @@ static void on_add(IMPObject *widget, void *data)
      			  KeyReleaseMask;
 	
 	
-	myself->window = (Window *)XCreateSimpleWindow(zdpy,myself->parent->window,
-			myself->x + parent->x,myself->y + parent->y,myself->width,myself->height,
+	myself->window = (Window *)XCreateSimpleWindow(zdpy,parent->window,
+			myself->x,myself->y,myself->width,myself->height,
 			1,1,1);
 
 	XChangeWindowAttributes(zdpy,myself->window,CWEventMask,&attr);
