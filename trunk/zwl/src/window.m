@@ -66,6 +66,14 @@ static Atom wm_name;
 
 }
 
+- free
+{
+	if(self->title)
+		free(self->title);
+
+	[super free];
+}
+
 - (int)set_title:(char *)title
 {
 	if(title && self->window) {
