@@ -43,12 +43,17 @@ static void on_expose(IMPObject *widget, void *data);
 	[super free];
 }
 
-- set_label:(char *)label
+- (void)set_label:(char *)label
 {
 	if(label) {
 		self->label = strdup(label);	
 		[self receive:EXPOSE:self];
 	}
+}
+
+- (char *)get_label
+{
+	return self->label;
 }
 
 @end
@@ -82,5 +87,21 @@ static void on_add(IMPObject *widget, void *data)
 static void on_expose(IMPObject *widget, void *data)
 {
 	ZWidget *myself = (ZWidget *)data;
+	XftDraw *xftdraw;
+	XftColor xftcolor;
+	XftFont *font;
+	XGlyphInfo extents;
+	char *label = [myself get_label];
+
+	XClearWindow(zdpy,myself->window);
+
+	xftdraw = XftDrawCreate(zdpy,myself->window,DefaultVisual(zdpy,DefaultScreen(zdpy)),DefaultColormap(zdpy,DefaultScreen(zdpy)));
+	XftColorAllocName(zdpy,DefaultVisual(zdpy,DefaultScreen(zdpy)),DefaultColormap(zdpy,DefaultScreen(zdpy)),"white",&xftcolor);
+	font = XftFontOpenName(zdpy,DefaultScreen(zdpy),"sans-8");
+	XftTextExtents8(zdpy,font,label,strlen(label),&extents);
 	
+	XftDrawString8(xftdraw,&xftcolor,font,
+			(myself->width / 2) - (extents.width / 2),
+			(myself->height) - (extents.height),
+			label,strlen(label));	
 }

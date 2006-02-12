@@ -30,12 +30,13 @@ int main(void)
 	[win attatch_cb:DESTROY:(ZCallback *)on_destroy];
 	
 	button = [ZButton alloc];
-	[button init:0:0:50:10];
+	[button init:0:0:50:20];
 	[win add_child:(ZWidget *)button];
 	[button attatch_cb:SHOW:(ZCallback *)on_button_show];
 	[button attatch_cb:BUTTON_DOWN:(ZCallback *)on_button_buttondown];
 	[button show];
 	[win show];
+	[button set_label:"Button"];
 /*	
 	for(i=0;i<1000;i++) {
 		win2 = [ZWindow alloc];

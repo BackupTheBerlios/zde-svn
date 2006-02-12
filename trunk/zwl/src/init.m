@@ -96,7 +96,7 @@ void zwl_main_loop_start(void)
 				expose = ev.xexpose;
 				w = find_widget(dest.window);
 
-				[w receive:EXPOSE:&ev.xexpose];
+				[w receive:EXPOSE:w];
 				break;
 			default:
 				w = find_widget(ev.xany.window);
