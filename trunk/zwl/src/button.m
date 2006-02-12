@@ -62,7 +62,7 @@ static void on_add(IMPObject *widget, void *data)
 	
 	myself->window = (Window *)XCreateSimpleWindow(zdpy,parent->window,
 			myself->x,myself->y,myself->width,myself->height,
-			1,1,1);
+		1,WhitePixel(zdpy,DefaultScreen(zdpy)),1);
 
 	XChangeWindowAttributes(zdpy,myself->window,CWEventMask,&attr);
 	
