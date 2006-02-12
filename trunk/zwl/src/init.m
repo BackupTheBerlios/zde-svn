@@ -94,7 +94,7 @@ void zwl_main_loop_start(void)
 				break;
 			case Expose:
 				expose = ev.xexpose;
-				w = find_widget(dest.window);
+				w = find_widget(expose.window);
 
 				[w receive:EXPOSE:w];
 				break;
