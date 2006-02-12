@@ -23,11 +23,26 @@
 
 #include "zwl.h"
 
+/* Internal callback prototypes */
+void on_add(IMPObject *widget, void *data);
+
 @implementation ZButton : ZWindow
 
 - init:(int)x:(int)y:(int)width:(int)height
 {
+	[super init:x:y:width:height];
 
+	[self add_internal_cb:ADDED:(ZCallback *)on_add];
+}
+
+- free
+{
+	[super free];
 }
 
 @end
+
+void on_add(IMPObject *widget, void *data)
+{
+
+}

@@ -27,6 +27,7 @@
 #define DESTROY 3
 #define KEY_PRESS 4
 #define DEFAULT 5
+#define ADDED 6
 
 /** Callback prototype */
 typedef void (ZCallback)(IMPObject *widget, void *data);
@@ -67,6 +68,9 @@ typedef void (ZCallback)(IMPObject *widget, void *data);
 
 /** Set the parent widget */
 - set_parent:(ZWidget *)parent;
+
+/** Take a widget, add it to the children array, and emit the ADDED signal on the child. */
+- add_child:(ZWidget *)child;
 
 /** Send signal to this widget */
 - (void)receive:(int)signal:(void *)data;
