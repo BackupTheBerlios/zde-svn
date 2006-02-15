@@ -40,6 +40,9 @@ static void on_expose(IMPObject *widget, void *data);
 
 - free
 {
+	if(self->label)
+		free(self->label);
+
 	[super free];
 }
 

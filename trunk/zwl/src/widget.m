@@ -26,6 +26,7 @@
 /* Internal callback prototypes */
 static void on_destroy(IMPObject *widget, void *data);
 static void on_add(IMPObject *widget, void *data);
+static void on_configure(IMPObject *widget, void *data);
 
 @implementation ZWidget : IMPObject
 
@@ -48,6 +49,7 @@ static void on_add(IMPObject *widget, void *data);
 	/* Attatch internal callbacks */
 	[self attatch_internal_cb:DESTROY:(ZCallback *)on_destroy];
 	[self attatch_internal_cb:ADDED:(ZCallback *)on_add];
+	[self attatch_internal_cb:CONFIGURE:(ZCallback *)on_configure];
 
 }
 
@@ -85,7 +87,7 @@ static void on_add(IMPObject *widget, void *data);
 		self->name = strdup(name);
 }
 
-- (void)get_name
+- (char *)get_name
 {
 	return self->name;
 }
@@ -175,3 +177,15 @@ static void on_add(IMPObject *widget, void *data)
 {
 
 }
+
+static void on_configure(IMPObject *widget, void *data)
+{
+	ZWidget *w = (ZWidget *)widget;
+	XConfigureEvent *configure = (XConfigureEvent *)data;
+
+	w->x = configure->x;
+	w->y = configure->y;
+	w->width = configure->width;
+	w->height = configure->height;
+}
+

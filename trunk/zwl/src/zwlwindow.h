@@ -22,12 +22,14 @@
  */
 
 /**
-	A widget that represents a Window.
+	A widget that represents a main window.  This is for windows that are not going to be children.
+	If you want a child window, for widgets or similiar, extend from this class.
  */
 @interface ZWindow : ZWidget
 {
 	@protected
-	char *title;
+	char *title; /**< The title of this window.  This is not useful if you are deriving from this class
+		       for creating subclasses, so in that case, it can be safely ignored. */
 	XftDraw *xftdraw; /**< For displaying text, used internally. */
 }
 
@@ -36,14 +38,18 @@
  */
 - init:(ZWidget *)parent:(int)x:(int)y:(int)width:(int)height;
 
-/** Defer creation of window and parent until later
+/** Defer creation of the X11 window until later. This is mostly useful for creating subclasses
+  that are going to be added as children of another ZWidget.  In that case, make sure you respond to
+  the ADDED event internally to create your window the way you want it.
   */
 - init:(int)x:(int)y:(int)width:(int)height;
 
 - free;
 
 /**
-  Set the title of the window. Returns -1 on failure, 0 otherwise.
+  Set the title of the window. This is probably not useful if you 
+  are calling this from a subclass that creates its window in the 
+  ADDED event. Returns -1 on failure, 0 otherwise.
   */
 - (int)set_title:(char *)title;
 

@@ -24,8 +24,11 @@
 #include "zwl.h"
 
 /* Atoms needed by windows */
+static Atom atom;
 static Atom utf8;
 static Atom wm_name;
+static Atom wm_protocols;
+static Atom wm_delete_window;
 
 @implementation ZWindow : ZWidget
 
@@ -72,6 +75,11 @@ static Atom wm_name;
 
 	utf8 = XInternAtom(zdpy,"UTF8_STRING",False);
 	wm_name = XInternAtom(zdpy,"WM_NAME",False);
+	wm_protocols = XInternAtom(zdpy,"WM_PROTOCOLS",False);
+	wm_delete_window = XInternAtom(zdpy,"WM_DELETE_WINDOW",False);
+
+	/* We want to be notified when we are going to be closed */
+	XChangeProperty(zdpy,self->window,wm_protocols,XA_ATOM,32,PropModeReplace,&wm_delete_window,1);
 
 }
 

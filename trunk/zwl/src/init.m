@@ -25,10 +25,12 @@
 
 Display *zdpy = NULL;
 IMPList *window_list = NULL;
+
+static Atom wm_delete_window;
 static unsigned short int quit = 0;
 
 /* Helper functions */
-ZWidget *find_widget(Window *w);
+static ZWidget *find_widget(Window *w);
 
 void zwl_init(void)
 {
@@ -61,9 +63,13 @@ void zwl_main_loop_start(void)
 	XButtonEvent button;
 	XDestroyWindowEvent dest;
 	XExposeEvent expose;
+	XClientMessageEvent cmessage;
+	XConfigureEvent configure;
 	
 	ZWidget *w = NULL;
 
+	wm_delete_window = XInternAtom(zdpy,"WM_DELETE_WINDOW",False);
+	
 	while(!quit) {
 		XNextEvent(zdpy,&ev);
 		
@@ -98,6 +104,20 @@ void zwl_main_loop_start(void)
 
 				[w receive:EXPOSE:w];
 				break;
+			case ClientMessage:
+				cmessage = ev.xclient;
+				w = find_widget(cmessage.window);
+
+				if(cmessage.data.l[0] == wm_delete_window) {
+					[w receive:CLOSE:&ev.xclient];	
+				}
+				break;
+			case ConfigureNotify:
+				configure = ev.xconfigure;
+				w = find_widget(configure.window);
+
+				[w receive:CONFIGURE:&ev.xconfigure];
+				break;
 			default:
 				w = find_widget(ev.xany.window);
 				[w receive:DEFAULT:&ev];
@@ -110,7 +130,7 @@ void zwl_main_loop_quit(void)
 	quit = 1;
 }
 
-ZWidget *find_widget(Window *w)
+static ZWidget *find_widget(Window *w)
 {
 	int i;
 	IMPList *list = window_list;
