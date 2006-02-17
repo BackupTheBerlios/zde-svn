@@ -21,23 +21,33 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef ZWL_H
-#define ZWL_H
+/* A widget that displays text and must be a child of a ZWindow.  It can be set to 
+   automatically set its own width and height if you are changing the label a lot.
+   This widget DOES NOT perform word-wrapping or any other form of text-layout.
+   It simply displays text.
+ */
 
-#include <imp.h>
+@interface ZLabel : ZWindow
+{
+	@protected
+	char *label;
+	int resize;
+}
 
-#include <X11/Xlib.h>
-#include <X11/Xcms.h>
-#include <X11/Xutil.h>
-#include <X11/Xatom.h>
-#include <X11/keysym.h>
-#include <X11/Xproto.h>
-#include <X11/Xft/Xft.h>
+/* Use this form if you know exactly what you want width and height to be.  Any
+   text that cannot fix in this space will be truncated.
+ */
+- init:(int)x:(int)y:(int)width:(int)height;
 
-#include "zwlwidget.h"
-#include "zwlinit.h"
-#include "zwlwindow.h"
-#include "zwllabel.h"
-#include "zwlbutton.h"
+/* Use this form if you want width and height to be determined automatically.
+ */
+- init:(int)x:(int)y;
 
-#endif
+- free;
+
+/* Will override any previously set label and display it.
+ */
+- (void)set_label:(char *)label;
+- (char *)get_label;
+
+@end;

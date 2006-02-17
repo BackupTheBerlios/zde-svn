@@ -49,7 +49,7 @@ static Atom wm_delete_window;
      			  KeyReleaseMask;
 	
 	
-	self->name = NULL;
+	self->title = NULL;
 	
 	if(!parent) {
 		self->window = (Window *)XCreateSimpleWindow(zdpy,XRootWindow(zdpy,0),x,y,width,height,1,1,1);
@@ -87,7 +87,7 @@ static Atom wm_delete_window;
 {
 	[super init];
 	
-	self->name = NULL;
+	self->title = NULL;
 	
 	self->x = x;
 	self->y = y;
@@ -109,6 +109,9 @@ static Atom wm_delete_window;
 - (int)set_title:(char *)title
 {
 	if(title && self->window) {
+		if(self->title)
+			free(self->title);
+
 		self->title = strdup(title);
 		XChangeProperty(zdpy,self->window,wm_name,utf8,8,PropModeReplace,self->title,strlen(self->title));
 

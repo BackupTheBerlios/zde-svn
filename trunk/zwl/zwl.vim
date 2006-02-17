@@ -63,21 +63,23 @@ let v:this_session=expand("<sfile>:p")
 silent only
 cd ~/zde/berlios/trunk/zwl
 set shortmess=aoO
-badd +126 configure.in
+badd +96 configure.in
 badd +1 Makefile.am
-badd +115 src/init.m
-badd +100 src/widget.m
-badd +58 src/window.m
-badd +39 src/zwl.h
+badd +119 src/init.m
+badd +190 src/widget.m
+badd +79 src/window.m
+badd +35 src/zwl.h
 badd +1 src/zwlinit.h
-badd +51 src/zwlwidget.h
-badd +39 src/zwlwindow.h
+badd +44 src/zwlwidget.h
+badd +45 src/zwlwindow.h
 badd +18 src/Makefile.am
-badd +53 tests/zwl_test.m
+badd +30 tests/zwl_test.m
 badd +1 README
-badd +34 src/zwlbutton.h
-badd +68 src/button.m
-badd +7 tests/Makefile.am
+badd +27 src/zwlbutton.h
+badd +60 src/button.m
+badd +5 tests/Makefile.am
+badd +1 src/zwllabel.h
+badd +1 src/label.m
 silent! argdel *
 edit README
 set splitbelow splitright

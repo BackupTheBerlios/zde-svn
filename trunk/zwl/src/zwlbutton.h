@@ -23,13 +23,17 @@
 
 /**
   A window that must be a child of a ZWindow, which is accomplished by calling [parent add_child:button]
-  BEFORE showing the button.  It also will draw the text in *label by itself, and handles Expose events for
+  BEFORE showing the button.  It uses a ZLabel to draw the text in *label, and handles Expose events for
   drawing that text.
   */
 @interface ZButton : ZWindow
 {
 	@protected
 	char *label;
+	
+	@public
+	ZLabel *zlabel; /** For internal use only.  Do not manually change it, instead call
+			  set_label with the text you want to display. */
 }
 
 /* x and y are relative to the button's parent */

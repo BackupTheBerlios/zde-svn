@@ -30,6 +30,7 @@
 	@protected
 	char *title; /**< The title of this window.  This is not useful if you are deriving from this class
 		       for creating subclasses, so in that case, it can be safely ignored. */
+	@public
 	XftDraw *xftdraw; /**< For displaying text, used internally. */
 }
 

@@ -15,6 +15,7 @@ static void on_button_buttondown(IMPObject *widget, void *data);
 static ZButton *button = NULL;
 static ZWindow *win = NULL;
 static ZWindow *win2 = NULL;
+static ZLabel *label = NULL;
 
 #define BUTTON_WIDTH 50
 #define BUTTON_HEIGHT 20
@@ -26,7 +27,7 @@ int main(void)
 	zwl_init();
 	
 	win = [ZWindow alloc];
-	[win init:NULL:100:100:100:100];
+	[win init:NULL:0:0:150:100];
 	
 	[win set_name:"Test Window"];
 	[win set_title:"Test Window"];
@@ -44,8 +45,15 @@ int main(void)
 	[win add_child:(ZWidget *)button];
 	[button attatch_cb:SHOW:(ZCallback *)on_button_show];
 	[button attatch_cb:BUTTON_DOWN:(ZCallback *)on_button_buttondown];
-	[button set_label:"Button"];
+	[button set_label:"A Button"];
 	[button show];
+
+	label = [ZLabel alloc];
+	[label init:0:0];
+	[win add_child:(ZWidget *)label];
+	[label set_label:"This is a test program for zwl."];
+	[label show];
+	
 	[win show];
 
 /*	
@@ -81,6 +89,9 @@ static void on_keypress(IMPObject *widget, void *data)
 
 	if(!strncmp(key,"Q",3)) {
 		[w destroy];
+	}
+	else if(!strncmp(key,"A",3)) {
+		[label set_label:"Hey man! Stop it!!"];
 	}
 }
 

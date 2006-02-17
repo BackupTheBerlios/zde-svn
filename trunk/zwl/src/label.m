@@ -26,20 +26,31 @@
 /* Internal callback prototypes */
 static void on_add(IMPObject *widget, void *data);
 static void on_expose(IMPObject *widget, void *data);
-static void on_label_down(IMPObject *widget, void *data);
-static void on_label_up(IMPObject *widget, void *data);
 
-@implementation ZButton : ZWindow
+@implementation ZLabel : ZWindow
 
 - init:(int)x:(int)y:(int)width:(int)height
 {
 	self->window = NULL;
-	self->zlabel = [ZLabel alloc];
+
 	[super init:x:y:width:height];
-	
+
+	self->resize = 0;
+
 	[self attatch_internal_cb:ADDED:(ZCallback *)on_add];
 	[self attatch_internal_cb:EXPOSE:(ZCallback *)on_expose];
+}
 
+- init:(int)x:(int)y
+{
+	self->window = NULL;
+
+	[super init:x:y:1:1];
+
+	self->resize = 1;
+
+	[self attatch_internal_cb:ADDED:(ZCallback *)on_add];
+	[self attatch_internal_cb:EXPOSE:(ZCallback *)on_expose];
 }
 
 - free
@@ -52,21 +63,12 @@ static void on_label_up(IMPObject *widget, void *data);
 
 - (void)set_label:(char *)label
 {
-	XftFont *font = XftFontOpenName(zdpy,DefaultScreen(zdpy),"sans-8");;
-	XGlyphInfo extents;
-
 	if(label) {
 		if(self->label)
 			free(self->label);
 
 		self->label = strdup(label);	
-		if(self->window) {
-			XftTextExtents8(zdpy,font,self->label,strlen(self->label),&extents);
-			
-			[self->zlabel move:(self->width / 2) - (extents.width / 2):extents.height];
-			[self->zlabel set_label:self->label];
-			[self receive:EXPOSE:self];
-		}
+		[self receive:EXPOSE:self];
 	}
 }
 
@@ -79,7 +81,7 @@ static void on_label_up(IMPObject *widget, void *data);
 
 static void on_add(IMPObject *widget, void *data)
 {
-	ZButton *myself = (ZButton *)data;
+	ZLabel *myself = (ZLabel *)data;
 	ZWidget *parent = myself->parent;
 	XSetWindowAttributes attr;
 
@@ -96,12 +98,7 @@ static void on_add(IMPObject *widget, void *data)
 	
 	myself->window = (Window *)XCreateSimpleWindow(zdpy,parent->window,
 			myself->x,myself->y,myself->width,myself->height,
-		1,WhitePixel(zdpy,DefaultScreen(zdpy)),1);
-
-	[myself->zlabel init:0:0];
-	[myself add_child:(ZWidget *)myself->zlabel];
-	[myself->zlabel attatch_internal_cb:BUTTON_DOWN:(ZCallback *)on_label_down];
-	[myself->zlabel attatch_internal_cb:BUTTON_UP:(ZCallback *)on_label_up];
+		0,WhitePixel(zdpy,DefaultScreen(zdpy)),1);
 
 	XChangeWindowAttributes(zdpy,myself->window,CWEventMask,&attr);
 
@@ -112,8 +109,8 @@ static void on_add(IMPObject *widget, void *data)
 
 static void on_expose(IMPObject *widget, void *data)
 {
-	ZButton *myself = (ZButton *)data;
-/*	XftColor xftcolor;
+	ZLabel *myself = (ZLabel *)data;
+	XftColor xftcolor;
 	XftFont *font;
 	XGlyphInfo extents;
 	char *label = [myself get_label];
@@ -123,26 +120,18 @@ static void on_expose(IMPObject *widget, void *data)
 	XftColorAllocName(zdpy,DefaultVisual(zdpy,DefaultScreen(zdpy)),DefaultColormap(zdpy,DefaultScreen(zdpy)),"white",&xftcolor);
 	font = XftFontOpenName(zdpy,DefaultScreen(zdpy),"sans-8");
 	XftTextExtents8(zdpy,font,label,strlen(label),&extents);
+
+	if(myself->resize) {
+		myself->width = extents.width + 1;
+		myself->height = extents.height + 2; /* XXX the +2 helps to compensate for y's and g's. ??!?! */
+	
+		[myself resize:myself->width:myself->height];
+	}
+		
 	
 	XftDrawString8(myself->xftdraw,&xftcolor,font,
-			(myself->width / 2) - (extents.width / 2),
-			(myself->height) - (extents.height),
+			0,
+			extents.height,
 			label,strlen(label));	
-	*/
-	[myself->zlabel show];
-}
 
-/* These two functions forward BUTTON_UP and BUTTON_DOWN events
-   to the button instead of the label. */
-static void on_label_down(IMPObject *widget, void *data)
-{
-	ZWidget *w = (ZWidget *)widget;
-	[w->parent receive:BUTTON_DOWN:data];
 }
-
-static void on_label_up(IMPObject *widget, void *data)
-{
-	ZWidget *w = (ZWidget *)widget;
-	[w->parent receive:BUTTON_UP:data];
-}
-

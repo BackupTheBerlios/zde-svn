@@ -83,8 +83,12 @@ static void on_configure(IMPObject *widget, void *data);
 
 - (void)set_name:(char *)name
 {
-	if(name)
+	if(name) {
+		if(self->name)
+			free(self->name);
+
 		self->name = strdup(name);
+	}
 }
 
 - (char *)get_name
