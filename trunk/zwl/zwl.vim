@@ -80,6 +80,8 @@ badd +60 src/button.m
 badd +5 tests/Makefile.am
 badd +1 src/zwllabel.h
 badd +1 src/label.m
+badd +1 src/zwlmenu.h
+badd +1 src/menu.m
 silent! argdel *
 edit README
 set splitbelow splitright

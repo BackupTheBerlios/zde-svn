@@ -46,7 +46,7 @@ static void on_label_up(IMPObject *widget, void *data);
 {
 	if(self->label)
 		free(self->label);
-
+	
 	[super free];
 }
 

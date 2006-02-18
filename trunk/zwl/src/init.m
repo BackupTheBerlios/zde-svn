@@ -128,6 +128,7 @@ void zwl_main_loop_start(void)
 void zwl_main_loop_quit(void)
 {
 	quit = 1;
+	[window_list release];
 }
 
 static ZWidget *find_widget(Window *w)

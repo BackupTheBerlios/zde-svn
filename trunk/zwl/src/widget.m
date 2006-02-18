@@ -39,9 +39,10 @@ static void on_configure(IMPObject *widget, void *data);
 	self->name = NULL;
 	self->window = NULL;
 	self->parent = NULL;
+	self->children = NULL;
 
 	for(i=0;i<100;i++) {
-		self->children[i] = NULL;
+		//self->children[i] = NULL;
 		self->internal_callbacks[i] = NULL;
 		self->callbacks[i] = NULL;
 	}
@@ -60,7 +61,7 @@ static void on_configure(IMPObject *widget, void *data);
 	if(self->parent)
 		[self->parent release];
 	
-	[super free];	
+	[super free];
 }
 
 - (void)show
@@ -98,9 +99,10 @@ static void on_configure(IMPObject *widget, void *data);
 
 - (void)add_child:(ZWidget *)child
 {
+	/*
 	int i;
 
-	/* find the next open spot and add it */
+	// find the next open spot and add it 
 	for(i=0;i<100;i++) {
 		if(self->children[i] == NULL) {
 			self->children[i] = child;
@@ -111,6 +113,24 @@ static void on_configure(IMPObject *widget, void *data);
 			break;
 		}
 	}
+	*/
+
+	if(child) {
+		if(!self->children) {
+			self->children = [IMPList alloc];
+			[self->children init:1];
+
+			self->children->data = child;
+		}
+		else {
+			[self->children append_data:child];
+		}	
+		
+		[child set_parent:self];
+		[child receive:ADDED:child];
+	}
+	
+	
 }
 
 - (void)set_parent:(ZWidget *)parent

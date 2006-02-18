@@ -121,4 +121,14 @@ static Atom wm_delete_window;
 	return -1;
 }
 
+- (char *)get_title
+{
+	return self->title;
+}
+
+- (XftDraw *)get_xftdraw
+{
+	return self->xftdraw;
+}
+
 @end

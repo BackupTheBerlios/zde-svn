@@ -54,4 +54,10 @@
   */
 - (int)set_title:(char *)title;
 
+- (char *)get_title;
+
+/** Returns a pointer to the XftDraw that the window uses for drawing text.
+  */
+- (XftDraw *)get_xftdraw;
+
 @end

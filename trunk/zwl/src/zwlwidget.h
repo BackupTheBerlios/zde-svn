@@ -63,7 +63,8 @@ typedef void (ZCallback)(IMPObject *widget, void *data);
 	char *name;  /**< For internal identification use only.  Has nothing to do with the WM_NAME atom or similiar. */
 	ZCallback *internal_callbacks[100]; /**< For internal use only.  Called before the user callback is called. */
 	ZCallback *callbacks[100]; /**< Stores an array of ZCallbacks for when we recieve a signal. */
-	ZWidget *children[100]; /**< Array of widgets that are children of this widget. */
+	//ZWidget *children[100]; /**< Array of widgets that are children of this widget. */
+	IMPList *children;
 
 }
 
