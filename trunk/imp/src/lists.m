@@ -65,8 +65,8 @@
 
 	new_node->data = user_data;
 	temp->next = new_node;
-
-	if(self->type = 1)
+	
+	if(self->type == 1)
 		[data grab];
 	
 	return temp->next;
