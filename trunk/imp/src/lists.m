@@ -53,6 +53,7 @@
 {
 	IMPList *temp = self;
 	IMPList *new_node;
+	IMPObject *data = (IMPObject *)user_data;
 	
 	/* find end of list */
 	while(temp->next != NULL) {
@@ -64,6 +65,9 @@
 
 	new_node->data = user_data;
 	temp->next = new_node;
+
+	if(self->type = 1)
+		[data grab];
 	
 	return temp->next;
 }
