@@ -21,8 +21,19 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
+extern Atom atom;
+extern Atom utf8;
+extern Atom wm_name;
+extern Atom wm_protocols;
+extern Atom wm_delete_window;
+extern Atom net_wm_window_type;
+extern Atom net_wm_window_type_normal;
+extern Atom net_wm_window_type_menu;
+
 extern Display *zdpy;
 
+/** You must call this function before you use
+  any zwl widgets. */
 void zwl_init(void);
 
 Display *zwl_get_display(void);

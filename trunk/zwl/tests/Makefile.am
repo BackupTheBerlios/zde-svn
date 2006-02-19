@@ -2,6 +2,6 @@ bin_PROGRAMS  = zwltest
 zwltest_SOURCES = zwl_test.m
 
 INCLUDES = \
-	   $(IMP_CFLAGS) $(XFT_CFLAGS)
+	   $(IMP_CFLAGS) $(XFT_CFLAGS) $(CAIRO_CFLAGS)
 
-zwltest_LDADD = ../src/libzwl.la -lobjc -lpthread $(IMP_LIBS) $(X_LIBS) $(XFT_LIBS)
+zwltest_LDADD = ../src/libzwl.la -lobjc -lpthread $(IMP_LIBS) $(X_LIBS) $(XFT_LIBS) $(CAIRO_LIBS)

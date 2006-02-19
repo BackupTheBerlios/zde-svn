@@ -25,8 +25,6 @@
 
 /* Internal callback prototypes */
 static void on_destroy(IMPObject *widget, void *data);
-static void on_add(IMPObject *widget, void *data);
-static void on_configure(IMPObject *widget, void *data);
 
 @implementation ZWidget : IMPObject
 
@@ -49,8 +47,6 @@ static void on_configure(IMPObject *widget, void *data);
 
 	/* Attatch internal callbacks */
 	[self attatch_internal_cb:DESTROY:(ZCallback *)on_destroy];
-	[self attatch_internal_cb:ADDED:(ZCallback *)on_add];
-	[self attatch_internal_cb:CONFIGURE:(ZCallback *)on_configure];
 
 }
 
@@ -99,22 +95,6 @@ static void on_configure(IMPObject *widget, void *data);
 
 - (void)add_child:(ZWidget *)child
 {
-	/*
-	int i;
-
-	// find the next open spot and add it 
-	for(i=0;i<100;i++) {
-		if(self->children[i] == NULL) {
-			self->children[i] = child;
-		
-			[child set_parent:self];
-			[child receive:ADDED:child];
-			
-			break;
-		}
-	}
-	*/
-
 	if(child) {
 		if(!self->children) {
 			self->children = [IMPList alloc];
@@ -128,9 +108,7 @@ static void on_configure(IMPObject *widget, void *data);
 		
 		[child set_parent:self];
 		[child receive:ADDED:child];
-	}
-	
-	
+	}	
 }
 
 - (void)set_parent:(ZWidget *)parent
@@ -195,21 +173,5 @@ static void on_configure(IMPObject *widget, void *data);
 static void on_destroy(IMPObject *widget, void *data)
 {
 	[widget release];
-}
-
-static void on_add(IMPObject *widget, void *data)
-{
-
-}
-
-static void on_configure(IMPObject *widget, void *data)
-{
-	ZWidget *w = (ZWidget *)widget;
-	XConfigureEvent *configure = (XConfigureEvent *)data;
-
-	w->x = configure->x;
-	w->y = configure->y;
-	w->width = configure->width;
-	w->height = configure->height;
 }
 

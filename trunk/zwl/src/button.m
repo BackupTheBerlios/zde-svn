@@ -26,6 +26,7 @@
 /* Internal callback prototypes */
 static void on_add(IMPObject *widget, void *data);
 static void on_expose(IMPObject *widget, void *data);
+static void on_configure(IMPObject *widget, void *data);
 static void on_label_down(IMPObject *widget, void *data);
 static void on_label_up(IMPObject *widget, void *data);
 
@@ -35,6 +36,10 @@ static void on_label_up(IMPObject *widget, void *data);
 {
 	self->window = NULL;
 	self->zlabel = [ZLabel alloc];
+	self->label = NULL;
+	self->image_path = NULL;
+	self->cr = NULL;
+	
 	[super init:x:y:width:height];
 	
 	[self attatch_internal_cb:ADDED:(ZCallback *)on_add];
@@ -42,17 +47,47 @@ static void on_label_up(IMPObject *widget, void *data);
 
 }
 
+- init:(char *)image_path:(int)x:(int)y:(int)width:(int)height
+{		
+	self->window = NULL;
+	self->zlabel = NULL;
+	self->image_path = NULL;
+	self->label = NULL;
+	self->cr = NULL;
+	
+	if(image_path)
+		self->image_path = strdup(image_path);
+	else
+		self->image_path = NULL;
+
+	[super init:x:y:width:height];
+
+	self->image_surface = cairo_image_surface_create_from_png(self->image_path);
+	
+	[self attatch_internal_cb:ADDED:(ZCallback *)on_add];
+	[self attatch_internal_cb:EXPOSE:(ZCallback *)on_expose];
+	[self attatch_internal_cb:CONFIGURE:(ZCallback *)on_configure];
+		
+}
+
 - free
 {
 	if(self->label)
 		free(self->label);
+	
+	if(self->cr)
+		cairo_destroy(self->cr);
+	if(self->window_surface)
+		cairo_surface_destroy(self->window_surface);
+	if(self->image_surface)
+		cairo_surface_destroy(self->image_surface);	
 	
 	[super free];
 }
 
 - (void)set_label:(char *)label
 {
-	XftFont *font = XftFontOpenName(zdpy,DefaultScreen(zdpy),"sans-8");;
+	XftFont *font = XftFontOpenName(zdpy,DefaultScreen(zdpy),"sans-8"); /* This is bad... */
 	XGlyphInfo extents;
 
 	if(label) {
@@ -60,11 +95,11 @@ static void on_label_up(IMPObject *widget, void *data);
 			free(self->label);
 
 		self->label = strdup(label);	
-		if(self->window) {
-			XftTextExtents8(zdpy,font,self->label,strlen(self->label),&extents);
-			
-			[self->zlabel move:(self->width / 2) - (extents.width / 2):extents.height];
+		if(self->window && self->zlabel) {
 			[self->zlabel set_label:self->label];
+			XftTextExtents8(zdpy,font,[self->zlabel get_label],strlen([self->zlabel get_label]),&extents);
+			
+			[self->zlabel move:(self->width / 2) - (extents.width / 2):(self->height / 2) - (extents.height / 2)];
 			[self receive:EXPOSE:self];
 		}
 	}
@@ -75,6 +110,39 @@ static void on_label_up(IMPObject *widget, void *data);
 	return self->label;
 }
 
+- (char *)get_image_path
+{
+	return self->image_path;
+}
+
+- (cairo_t *)get_cairo_t
+{	
+	return self->cr;
+}	
+
+- (cairo_surface_t *)get_window_surface
+{
+	return self->window_surface;
+}
+
+- (cairo_surface_t *)get_image_surface
+{
+	return self->image_surface;
+}
+
+- (void)set_cairo_t:(cairo_t *)cr
+{
+	if(cr) {
+		self->cr = cr;
+	}
+}
+- (void)set_window_surface:(cairo_surface_t *)window_surface
+{
+	if(window_surface) {
+		self->window_surface = window_surface;
+	}
+}
+
 @end
 
 static void on_add(IMPObject *widget, void *data)
@@ -82,6 +150,9 @@ static void on_add(IMPObject *widget, void *data)
 	ZButton *myself = (ZButton *)data;
 	ZWidget *parent = myself->parent;
 	XSetWindowAttributes attr;
+	cairo_t *cr;
+	cairo_surface_t *window_surface;
+	cairo_surface_t *image_surface;
 
 	attr.event_mask = ButtonPressMask |
     			  ButtonReleaseMask |
@@ -97,39 +168,55 @@ static void on_add(IMPObject *widget, void *data)
 	myself->window = (Window *)XCreateSimpleWindow(zdpy,parent->window,
 			myself->x,myself->y,myself->width,myself->height,
 		1,WhitePixel(zdpy,DefaultScreen(zdpy)),1);
-
-	[myself->zlabel init:0:0];
-	[myself add_child:(ZWidget *)myself->zlabel];
-	[myself->zlabel attatch_internal_cb:BUTTON_DOWN:(ZCallback *)on_label_down];
-	[myself->zlabel attatch_internal_cb:BUTTON_UP:(ZCallback *)on_label_up];
+	
+	if(![myself get_image_path]) {
+		[myself->zlabel init:0:0];
+		[myself add_child:(ZWidget *)myself->zlabel];
+		[myself->zlabel attatch_internal_cb:BUTTON_DOWN:(ZCallback *)on_label_down];
+		[myself->zlabel attatch_internal_cb:BUTTON_UP:(ZCallback *)on_label_up];
+	}
 
 	XChangeWindowAttributes(zdpy,myself->window,CWEventMask,&attr);
 
 	myself->xftdraw = XftDrawCreate(zdpy,myself->window,DefaultVisual(zdpy,DefaultScreen(zdpy)),DefaultColormap(zdpy,DefaultScreen(zdpy)));
 	
+	if([myself get_image_path]) {
+		image_surface = [myself get_image_surface];
+		
+		window_surface = cairo_xlib_surface_create(zdpy,myself->window,DefaultVisual(zdpy,DefaultScreen(zdpy)),
+				myself->width,myself->height);
+
+		[myself set_window_surface:window_surface];
+		
+		cr = cairo_create([myself get_window_surface]);
+		[myself set_cairo_t:cr];
+		cairo_set_source_surface([myself get_cairo_t],image_surface,0,0);	
+	}
+
 	zwl_main_loop_add_widget(myself);
 }
 
 static void on_expose(IMPObject *widget, void *data)
 {
 	ZButton *myself = (ZButton *)data;
-/*	XftColor xftcolor;
-	XftFont *font;
-	XGlyphInfo extents;
-	char *label = [myself get_label];
 
-	XClearWindow(zdpy,myself->window);
+	if(myself->label)
+		[myself->zlabel show];
+	else if(myself->image_path)
+		cairo_paint([myself get_cairo_t]);
+}
 
-	XftColorAllocName(zdpy,DefaultVisual(zdpy,DefaultScreen(zdpy)),DefaultColormap(zdpy,DefaultScreen(zdpy)),"white",&xftcolor);
-	font = XftFontOpenName(zdpy,DefaultScreen(zdpy),"sans-8");
-	XftTextExtents8(zdpy,font,label,strlen(label),&extents);
-	
-	XftDrawString8(myself->xftdraw,&xftcolor,font,
-			(myself->width / 2) - (extents.width / 2),
-			(myself->height) - (extents.height),
-			label,strlen(label));	
-	*/
-	[myself->zlabel show];
+static void on_configure(IMPObject *widget, void *data)
+{
+	ZButton *w = (ZWidget *)widget;
+	XConfigureEvent *configure = (XConfigureEvent *)data;
+
+	w->x = configure->x;
+	w->y = configure->y;
+	w->width = configure->width;
+	w->height = configure->height;
+
+	cairo_xlib_surface_set_size(w->window_surface,w->width,w->height);
 }
 
 /* These two functions forward BUTTON_UP and BUTTON_DOWN events

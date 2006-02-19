@@ -13,12 +13,13 @@ static void on_button_show(IMPObject *widget, void *data);
 static void on_button_buttondown(IMPObject *widget, void *data);
 	
 static ZButton *button = NULL;
+static ZButton *image = NULL;
 static ZWindow *win = NULL;
 static ZWindow *win2 = NULL;
 static ZLabel *label = NULL;
 
 #define BUTTON_WIDTH 50
-#define BUTTON_HEIGHT 20
+#define BUTTON_HEIGHT 25
 
 int main(void)
 {
@@ -53,6 +54,11 @@ int main(void)
 	[win add_child:(ZWidget *)label];
 	[label set_label:"This is a test program for zwl."];
 	[label show];
+
+	image = [ZButton alloc];
+	[image init:"test.png":win->width/2 - (BUTTON_WIDTH/2):win->height/2 + (BUTTON_HEIGHT/2) + 5:BUTTON_WIDTH:BUTTON_HEIGHT];
+	[win add_child:(ZWidget *)image];
+	[image show];
 	
 	[win show];
 
@@ -128,8 +134,9 @@ static void on_close(IMPObject *widget, void *data)
 
 static void on_expose(IMPObject *widget, void *data)
 {
-	/* keep the button centered in the window */
+	/* keep the button and image centered in the window */
 	[button move:win->width/2 - (BUTTON_WIDTH/2):win->height/2 - (BUTTON_HEIGHT/2)];
+	[image move:win->width/2 - (BUTTON_WIDTH/2):win->height/2 + (BUTTON_HEIGHT/2) + 5];
 }
 
 static void on_button_show(IMPObject *widget, void *data)

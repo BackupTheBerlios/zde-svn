@@ -26,7 +26,16 @@
 Display *zdpy = NULL;
 IMPList *window_list = NULL;
 
-static Atom wm_delete_window;
+/* Atoms */
+Atom atom;
+Atom utf8;
+Atom wm_name;
+Atom wm_protocols;
+Atom wm_delete_window;
+Atom net_wm_window_type;
+Atom net_wm_window_type_normal;
+Atom net_wm_window_type_menu;
+
 static unsigned short int quit = 0;
 
 /* Helper functions */
@@ -35,6 +44,16 @@ static ZWidget *find_widget(Window *w);
 void zwl_init(void)
 {
 	zdpy = XOpenDisplay(NULL);
+
+	/* Init the atoms that zwl needs */
+	utf8 = XInternAtom(zdpy,"UTF8_STRING",False);
+	wm_name = XInternAtom(zdpy,"WM_NAME",False);
+	wm_protocols = XInternAtom(zdpy,"WM_PROTOCOLS",False);
+	wm_delete_window = XInternAtom(zdpy,"WM_DELETE_WINDOW",False);
+	net_wm_window_type = XInternAtom(zdpy,"NET_WM_WINDOW_TYPE",False);
+	net_wm_window_type_normal = XInternAtom(zdpy,"NET_WM_WINDOW_TYPE_NORMAL",False);
+	net_wm_window_type_menu = XInternAtom(zdpy,"NET_WM_WINDOW_TYPE_MENU",False);
+	
 }
 
 Display *zwl_get_display(void)
@@ -67,8 +86,6 @@ void zwl_main_loop_start(void)
 	XConfigureEvent configure;
 	
 	ZWidget *w = NULL;
-
-	wm_delete_window = XInternAtom(zdpy,"WM_DELETE_WINDOW",False);
 	
 	while(!quit) {
 		XNextEvent(zdpy,&ev);

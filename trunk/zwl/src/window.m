@@ -23,12 +23,8 @@
 
 #include "zwl.h"
 
-/* Atoms needed by windows */
-static Atom atom;
-static Atom utf8;
-static Atom wm_name;
-static Atom wm_protocols;
-static Atom wm_delete_window;
+/* Internal callback prototypes */
+static void on_configure(IMPObject *widget, void *data);
 
 @implementation ZWindow : ZWidget
 
@@ -73,14 +69,12 @@ static Atom wm_delete_window;
 	
 	self->xftdraw = XftDrawCreate(zdpy,self->window,DefaultVisual(zdpy,DefaultScreen(zdpy)),DefaultColormap(zdpy,DefaultScreen(zdpy)));
 
-	utf8 = XInternAtom(zdpy,"UTF8_STRING",False);
-	wm_name = XInternAtom(zdpy,"WM_NAME",False);
-	wm_protocols = XInternAtom(zdpy,"WM_PROTOCOLS",False);
-	wm_delete_window = XInternAtom(zdpy,"WM_DELETE_WINDOW",False);
-
 	/* We want to be notified when we are going to be closed */
 	XChangeProperty(zdpy,self->window,wm_protocols,XA_ATOM,32,PropModeReplace,&wm_delete_window,1);
 
+	XChangeProperty(zdpy,self->window,net_wm_window_type,XA_ATOM,32,PropModeReplace,&net_wm_window_type_normal,1);
+	
+	[self attatch_internal_cb:CONFIGURE:(ZCallback *)on_configure];
 }
 
 - init:(int)x:(int)y:(int)width:(int)height
@@ -100,9 +94,12 @@ static Atom wm_delete_window;
 {
 	if(self->title)
 		free(self->title);
-	
-	XftDrawDestroy(self->xftdraw);
 
+	if(self->xftdraw)
+		XftDrawDestroy(self->xftdraw);
+	
+	self->xftdraw = NULL;
+	
 	[super free];
 }
 
@@ -132,3 +129,15 @@ static Atom wm_delete_window;
 }
 
 @end
+
+static void on_configure(IMPObject *widget, void *data)
+{
+	ZWidget *w = (ZWidget *)widget;
+	XConfigureEvent *configure = (XConfigureEvent *)data;
+
+	w->x = configure->x;
+	w->y = configure->y;
+	w->width = configure->width;
+	w->height = configure->height;
+}
+

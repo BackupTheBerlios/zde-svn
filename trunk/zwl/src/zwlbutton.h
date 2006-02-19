@@ -28,19 +28,47 @@
   */
 @interface ZButton : ZWindow
 {
+	@private
+	cairo_surface_t *window_surface;
+	cairo_surface_t *image_surface;
+	cairo_t *cr;
+	
 	@protected
 	char *label;
+	char *image_path; /** Path to png image to use on button. */
 	
 	@public
 	ZLabel *zlabel; /** For internal use only.  Do not manually change it, instead call
 			  set_label with the text you want to display. */
 }
 
-/* x and y are relative to the button's parent */
 - init:(int)x:(int)y:(int)width:(int)height;
+
+/**
+  image_path is the path to a png image to be used on the button. 
+  */
+- init:(char *)image_path:(int)x:(int)y:(int)width:(int)height;
+
 - free;
 
 - (void)set_label:(char *)label;
 - (char *)get_label;
+
+- (char *)get_image_path;
+
+/** Returns the cairo_t that is used for this button. */
+- (cairo_t *)get_cairo_t;
+
+/** Returns the cairo_surface_t for the button's window. */
+- (cairo_surface_t *)get_window_surface;
+
+/** Returns the cairo_surface_t for the button's image. */
+- (cairo_surface_t *)get_image_surface;
+
+/** Set the cairo_t for the button. Do not call from an application program. */
+- (void)set_cairo_t:(cairo_t *)cr;
+
+/** Set the window surface for the button. Do not call from an application program. */
+- (void)set_window_surface:(cairo_surface_t *)window_surface;
 
 @end;

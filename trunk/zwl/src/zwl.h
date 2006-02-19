@@ -34,9 +34,12 @@
 #include <X11/Xproto.h>
 #include <X11/Xft/Xft.h>
 
+#include <cairo.h>
+
 #include "zwlwidget.h"
 #include "zwlinit.h"
 #include "zwlwindow.h"
+#include "zwlmenu.h"
 #include "zwllabel.h"
 #include "zwlbutton.h"
 

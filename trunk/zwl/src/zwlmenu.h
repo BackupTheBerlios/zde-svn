@@ -21,6 +21,9 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
+/**
+	A popup menu widget.  This is not completed, do not use.
+  */
 @interface ZMenu : ZWindow
 {
 	@protected
@@ -33,8 +36,5 @@
 
 - (void)set_label:(char *)label;
 - (void)get_label;
-
-
-
 
 @end;

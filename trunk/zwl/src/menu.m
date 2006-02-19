@@ -21,4 +21,54 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
+#include "zwl.h"
+
+/* Internal callback prototypes */
+void on_added(IMPObject *widget, void *data);
+
+@implementation ZMenu : ZWindow
+
+- init:(int)x:(int)y
+{
+	self->window = NULL;
+	self->parent = NULL;
+	self->label = NULL;
+	
+	[super init:NULL:x:y:1:1];
+
+	XChangeProperty(zdpy,self->window,net_wm_window_type,XA_ATOM,32,PropModeReplace,&net_wm_window_type_menu,1);	
+
+	[self attatch_internal_cb:ADDED:(ZCallback *)on_added];
+}
+
+- free
+{
+	if(self->label)
+		free(label);
+
+	[super free];
+}
+
+- (void)set_label:(char *)label
+{
+	if(label) {
+		if(self->label)
+			free(self->label);
+
+		self->label = strdup(label);	
+	}
+
+}
+
+- (void)get_label
+{
+	return self->label;
+}
+
+@end
+
+void on_added(IMPObject *widget, void *data)
+{
+
+}
 
