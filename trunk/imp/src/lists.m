@@ -37,13 +37,16 @@
 
 - free
 {	
+	IMPObject *data;
 	if(self->type == 0)
 		i_free(self->data);
-	else if(self->type == 1)
-		[(IMPObject *)self->data release];
+	else if(self->type == 1 && self->data) {
+		data = (IMPObject *)self->data;	
+		[data free];
+	}
 	else fprintf(stderr, "Error. list->type not 0 or 1.\n");
 
-	if(self->next != NULL)	
+	if(self->next)	
 		[self->next free];
 
 	[super free];
@@ -77,12 +80,15 @@
 	IMPList *new_node;
 
 	new_node = [IMPList alloc];
-	[new_node init];
+	[new_node init:self->type];
 
-	new_node->data = data;
+	new_node->data = user_data;
 	new_node->next = self;
 	new_node->type = self->type;
 
+	if(self->type == 1)
+		[new_node->data grab];
+	
 	return new_node;	
 }
 
@@ -98,10 +104,11 @@
 	if(self->next && self->next->next) {
 		tmp = self->next->next;
 
+		self->next->next = NULL;
 		[self->next release];
 
 		self->next = tmp;
-
+	
 		return self->next;
 	}
 	else return NULL;
@@ -111,7 +118,11 @@
 {
 	IMPList *tmp = self->next;
 
-	[self free];
+	if(!tmp)
+		return self;
+
+	self->next = NULL;
+	[self release];
 	
 	return tmp;
 }
