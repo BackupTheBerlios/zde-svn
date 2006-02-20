@@ -23,10 +23,16 @@
 
 #include "zimwm.h"
 
-IMPList *clients = NULL;
+IMPList *client_list = NULL;
 ZWidget *root_window = NULL;
 
-void setup_root_window(void);
+static void setup_root_window(void);
+
+/* exported functions */
+void zimwm_add_client(ZimClient *client);
+ZimClient *zimwm_find_client_by_zwindow(ZWindow *w);
+void zimwm_delete_client(ZimClient *c);
+
 void on_button_down(IMPObject *widget, void *data);
 
 int main(int argc, char **argv)
@@ -40,9 +46,10 @@ int main(int argc, char **argv)
 	return 0;
 }
 
-void setup_root_window(void)
+static void setup_root_window(void)
 {
 	XSetWindowAttributes attr;
+	Cursor rootc;
 
 	root_window = [ZWidget alloc];
 	[root_window init];
@@ -57,14 +64,99 @@ void setup_root_window(void)
      			  ExposureMask |
      		  	  StructureNotifyMask |
 			  SubstructureRedirectMask |
+			  SubstructureNotifyMask |
      			  KeyPressMask |
      			  KeyReleaseMask;
 
-	XChangeWindowAttributes(zdpy,root_window->window,CWEventMask,&attr);
-
+	rootc = XCreateFontCursor(zdpy,XC_left_ptr);
+		
+	attr.cursor = rootc;
+	XChangeWindowAttributes(zdpy,root_window->window,CWEventMask | CWCursor,&attr);
+	
 	zwl_main_loop_add_widget(root_window);
 
 	[root_window attatch_cb:BUTTON_DOWN:(ZCallback *)on_button_down];
 	[root_window attatch_cb:MAP_REQUEST:(ZCallback *)on_map_request];
+	[root_window attatch_cb:DESTROY:(ZCallback *)on_unmap];
+}
+
+void zimwm_add_client(ZimClient *client)
+{
+	if(client_list) {
+		if(client) {
+			client_list = [client_list prepend_data:client];
+		}
+	}
+	else {
+		client_list = [IMPList alloc];
+		[client_list init:1];
+		client_list->data = client;
+	}
+}
+
+ZimClient *zimwm_find_client_by_zwindow(ZWindow *w)
+{
+	IMPList *list = client_list;
+	ZimClient *c;
+	
+	while(list) {
+		c = (ZimClient *)list->data;
+
+		if(c->window == w) {
+			return c;
+		}
+
+		list = list->next;
+	}
+	
+	return NULL;
+}
+
+ZimClient *zimwm_find_client_by_window(Window *w)
+{
+	IMPList *list = client_list;
+	ZimClient *c;
+
+	while(list) {
+		c = (ZimClient *)list->data;
+
+		if(c->window->window == w) {
+			return c;
+		}
+		
+		list = list->next;
+	}
+
+	return NULL;
+}
+
+void zimwm_delete_client(ZimClient *c)
+{
+	IMPList *list = client_list;
+	ZimClient *client;
+
+	if(!c)
+		return;
+	
+	client = (ZimClient *)client_list->data;
+	if(client == c) {	
+		[client->window->parent destroy];
+		client_list = [client_list delete_node];
+		return;
+	}
+		
+	while(list) {
+		client = (ZimClient *)list->next->data;
+
+		if((client == c) && list->next) {
+			[client->window->parent destroy];
+			printf("%d\n",list->next);
+			[list delete_next_node];
+			return;
+		}
+		
+		list = list->next;
+	}
+	
 }
 

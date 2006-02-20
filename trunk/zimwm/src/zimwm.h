@@ -26,6 +26,14 @@
 
 #include <zwl.h>
 
+#include "client.h"
 #include "events.h"
+
+extern ZWidget *root_window;
+
+void zimwm_add_client(ZimClient *client);
+ZimClient *zimwm_find_client_by_zwindow(ZWindow *w);
+ZimClient *zimwm_find_client_by_window(Window *w);
+void zimwm_delete_client(ZimClient *c);
 
 #endif

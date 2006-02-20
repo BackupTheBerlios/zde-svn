@@ -31,7 +31,21 @@ void on_button_down(IMPObject *widget, void *data)
 extern void on_map_request(IMPObject *widget, void *data)
 {
 	XMapRequestEvent *ev = (XMapRequestEvent *)data;
+	ZimClient *client = [ZimClient alloc];
+		
+	[client init:ev->window];
 	
-	printf("Window %d wants to be mapped.\n",ev->window);
+}
+
+extern void on_unmap(IMPObject *widget, void *data)
+{
+	printf("EJF:LKDSJF:LDSJF:LKJBV\n");
+	XDestroyWindowEvent *ev = (XDestroyWindowEvent *)data;
+	ZimClient *c = NULL;
+	
+	c = zimwm_find_client_by_window(ev->window);
+
+	zimwm_delete_client(c);
+
 }
 

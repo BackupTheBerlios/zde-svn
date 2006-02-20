@@ -24,9 +24,16 @@
 @interface ZimClient : IMPObject
 {
 	@public
-	ZWidget *window; /**< A ZWidget that encapsulates the window. */
-
-		
+	ZWindow *window; /**< A ZWindow that encapsulates the X11 window. */	
+	unsigned int border; /**< Border width in pixels. */
+	unsigned int title_height; /**< Titlebar height in pixels. */
 }
+
+/** Register an new client with zimwm.
+  \param window X11 Window pointer
+  */
+- init:(Window *)window;
+
+- free;
 
 @end

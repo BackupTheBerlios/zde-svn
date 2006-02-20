@@ -70,6 +70,8 @@ badd +16 src/main.m
 badd +27 src/zimwm.h
 badd +1 src/events.h
 badd +1 src/events.m
+badd +1 src/client.h
+badd +1 src/client.m
 args configure.in README
 edit README
 set splitbelow splitright
