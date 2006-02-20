@@ -77,6 +77,7 @@ static void setup_root_window(void)
 
 	[root_window attatch_cb:BUTTON_DOWN:(ZCallback *)on_button_down];
 	[root_window attatch_cb:MAP_REQUEST:(ZCallback *)on_map_request];
+	[root_window attatch_cb:UNMAP:(ZCallback *)on_unmap];
 	[root_window attatch_cb:DESTROY:(ZCallback *)on_unmap];
 }
 
@@ -84,7 +85,8 @@ void zimwm_add_client(ZimClient *client)
 {
 	if(client_list) {
 		if(client) {
-			client_list = [client_list prepend_data:client];
+			//client_list = [client_list prepend_data:client];
+			[client_list append_data:client];
 		}
 	}
 	else {
@@ -137,20 +139,21 @@ void zimwm_delete_client(ZimClient *c)
 
 	if(!c)
 		return;
-	
+	printf("Deleting client\n");	
 	client = (ZimClient *)client_list->data;
 	if(client == c) {	
 		[client->window->parent destroy];
+		
 		client_list = [client_list delete_node];
 		return;
 	}
-		
+	
 	while(list) {
 		client = (ZimClient *)list->next->data;
 
 		if((client == c) && list->next) {
 			[client->window->parent destroy];
-			printf("%d\n",list->next);
+			
 			[list delete_next_node];
 			return;
 		}

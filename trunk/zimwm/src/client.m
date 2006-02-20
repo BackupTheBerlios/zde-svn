@@ -28,6 +28,7 @@ static void on_win_unmap(IMPObject *widget, void *data);
 static void on_close_button_down(IMPObject *widget, void *data);
 static void on_frame_button_down(IMPObject *widget, void *data);
 static void on_frame_expose(IMPObject *widget, void *data);
+static void on_frame_label_button_down(IMPObject *widget, void *data);
 
 /* Helper functions */
 static ZWindow *create_frame_for_client(ZimClient *c);
@@ -56,6 +57,9 @@ static ZWindow *create_frame_for_client(ZimClient *c);
 		[w set_title:name];
 		XFree(name);
 	}
+	else {
+		[w set_title:"(null)"];
+	}
 	
 	self->window = w;
 	[self->window set_name:"XWINDOW"];
@@ -70,8 +74,8 @@ static ZWindow *create_frame_for_client(ZimClient *c);
 	
 	[frame add_child:self->window]; 
 	
-	[self->window attatch_cb:UNMAP:(ZCallback *)on_win_unmap];
-	//[self->window attatch_cb:DESTROY:(ZCallback *)on_win_unmap];
+//	[self->window attatch_cb:UNMAP:(ZCallback *)on_win_unmap];
+	[self->window attatch_cb:DESTROY:(ZCallback *)on_win_unmap];
 	
 	zwl_main_loop_add_widget(self->window);
 	zimwm_add_client(self);
@@ -93,7 +97,9 @@ static ZWindow *create_frame_for_client(ZimClient *c)
 	ZButton *close_button = [ZButton alloc];
 	ZWindow *f = [ZWindow alloc];
 	ZLabel *label = [ZLabel alloc];
-	
+	XGlyphInfo extents;
+	XftFont *font = XftFontOpenName(zdpy,DefaultScreen(zdpy),"sans-8"); /* This is bad... */
+
 	[f init:root_window:
 		c->window->x:
 		c->window->y:
@@ -101,7 +107,7 @@ static ZWindow *create_frame_for_client(ZimClient *c)
 		c->window->height + (c->border + c->title_height)];
 
 	[f attatch_cb:BUTTON_DOWN:(ZCallback *)on_frame_button_down];
-	//[f attatch_cb:EXPOSE:(ZCallback *)on_frame_expose];
+	[f attatch_cb:EXPOSE:(ZCallback *)on_frame_expose];
 	
 	[close_button init:0:0:10:10];
 	[f add_child:(ZWidget *)close_button];
@@ -109,9 +115,14 @@ static ZWindow *create_frame_for_client(ZimClient *c)
 	[close_button attatch_cb:BUTTON_DOWN:(ZCallback *)on_close_button_down];
 	[close_button show];
 
-	[label init:c->window->width / 2:0];
+	[label init:0:0];
 	[f add_child:(ZWidget *)label];
 	[label set_label:c->window->title];
+
+	XftTextExtents8(zdpy,font,[label get_label],strlen([label get_label]),&extents);
+	
+	[label move:(f->width / 2) - (extents.width / 2):0];
+	[label attatch_cb:BUTTON_DOWN:(ZCallback *)on_frame_label_button_down];
 	[label show];
 
 	return f;	
@@ -204,6 +215,13 @@ static void on_frame_expose(IMPObject *widget, void *data)
 			
 		children = children->next;
 	}
-	printf("YEYYEYYEY\n");
 }
 
+static void on_frame_label_button_down(IMPObject *widget, void *data)
+{
+	ZWidget *frame = (ZWidget *)widget;
+
+	frame = frame->parent;
+	
+	[frame receive:BUTTON_DOWN:data];
+}
