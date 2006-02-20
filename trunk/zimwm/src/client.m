@@ -159,7 +159,7 @@ static void on_win_unmap(IMPObject *widget, void *data)
 	ZWindow *w = (ZWindow *)widget;
 	ZimClient *c = NULL;
 
-	XGrabServer(zdpy);
+	//XGrabServer(zdpy);
 
 	w->window = NULL;
 	
@@ -170,7 +170,7 @@ static void on_win_unmap(IMPObject *widget, void *data)
 	[w->parent destroy];
 	//zimwm_delete_client(c);
 	
-	XUngrabServer(zdpy);
+	//XUngrabServer(zdpy);
 }
 
 static void on_close_button_down(IMPObject *widget, void *data)

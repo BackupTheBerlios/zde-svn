@@ -59,7 +59,7 @@ AC_CHECK_FUNCS([realloc])
 
 AC_PATH_PROG(PKGCONFIG,pkg-config,no)
 if test x$PKGCONFIG != xno; then
-	AC_MSG_CHECKING(for imp >= 0.0.1...)
+	AC_MSG_CHECKING(for imp >= 0.0.2...)
 
 	imp_major_version=`$PKGCONFIG imp --modversion | \
 	   sed 's/\([[0-9]]*\).\([[0-9]]*\).\([[0-9]]*\)/\1/'`
@@ -69,16 +69,16 @@ if test x$PKGCONFIG != xno; then
 	   sed 's/\([[0-9]]*\).\([[0-9]]*\).\([[0-9]]*\)/\3/'`
 
 	if test $imp_major_version -ge 0 -a $imp_minor_version \
-		       -ge 0 -a $imp_micro_version -ge 1 ; then
+		       -ge 0 -a $imp_micro_version -ge 2 ; then
 		AC_MSG_RESULT(ok)
 		AC_MSG_CHECKING(for imp compile information)
 		IMP_CFLAGS=`$PKGCONFIG imp --cflags`
 		IMP_LIBS=`$PKGCONFIG imp --libs`
 		AC_MSG_RESULT(ok)
-	else AC_MSG_ERROR(Incorrect imp version. Please upgrade to 0.0.1 or greater)
+	else AC_MSG_ERROR(Incorrect imp version. Please upgrade to 0.0.2 or greater)
 	fi
 else
-	AC_MSG_ERROR(echo *** imp >= 0.0.1  not found ***)
+	AC_MSG_ERROR(echo *** imp >= 0.0.2  not found ***)
 fi
 
 AC_SUBST(IMP_CFLAGS)

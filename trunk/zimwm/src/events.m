@@ -28,19 +28,19 @@ void on_button_down(IMPObject *widget, void *data)
 	printf("KICKASS!\n");
 }
 
-extern void on_map_request(IMPObject *widget, void *data)
+void on_map_request(IMPObject *widget, void *data)
 {
 	XMapRequestEvent *ev = (XMapRequestEvent *)data;
 	ZimClient *client = [ZimClient alloc];
 	
-	printf("Window %d requests to be mapped.\n",ev->window);
+//	printf("Window %d requests to be mapped.\n",ev->window);
 	
 	[client init:ev->window];
 	
 	zimwm_add_client(client);	
 }
 
-extern void on_unmap(IMPObject *widget, void *data)
+void on_unmap(IMPObject *widget, void *data)
 {
 	printf("EJF:LKDSJF:LDSJF:LKJBV\n");
 	XUnmapEvent *ev = (XUnmapEvent *)data;
