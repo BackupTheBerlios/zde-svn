@@ -71,9 +71,9 @@ static void on_configure(IMPObject *widget, void *data);
 	self->xftdraw = XftDrawCreate(zdpy,self->window,DefaultVisual(zdpy,DefaultScreen(zdpy)),DefaultColormap(zdpy,DefaultScreen(zdpy)));
 
 	/* We want to be notified when we are going to be closed */
-	XChangeProperty(zdpy,self->window,wm_protocols,XA_ATOM,32,PropModeReplace,&wm_delete_window,1);
+	XChangeProperty(zdpy,self->window,z_atom[WM_PROTOCOLS],XA_ATOM,32,PropModeReplace,&z_atom[WM_DELETE_WINDOW],1);
 
-	XChangeProperty(zdpy,self->window,net_wm_window_type,XA_ATOM,32,PropModeReplace,&net_wm_window_type_normal,1);
+	XChangeProperty(zdpy,self->window,z_atom[NET_WM_WINDOW_TYPE],XA_ATOM,32,PropModeReplace,&z_atom[NET_WM_WINDOW_TYPE_NORMAL],1);
 	
 	[self attatch_internal_cb:CONFIGURE:(ZCallback *)on_configure];
 }
@@ -111,7 +111,7 @@ static void on_configure(IMPObject *widget, void *data);
 			free(self->title);
 
 		self->title = strdup(title);
-		XChangeProperty(zdpy,self->window,wm_name,utf8,8,PropModeReplace,self->title,strlen(self->title));
+		XChangeProperty(zdpy,self->window,z_atom[WM_NAME],z_atom[UTF8_STRING],8,PropModeReplace,self->title,strlen(self->title));
 
 		return 0;
 	}

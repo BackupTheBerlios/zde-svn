@@ -36,7 +36,7 @@ void on_added(IMPObject *widget, void *data);
 	
 	[super init:NULL:x:y:1:1];
 
-	XChangeProperty(zdpy,self->window,net_wm_window_type,XA_ATOM,32,PropModeReplace,&net_wm_window_type_menu,1);	
+	//XChangeProperty(zdpy,self->window,net_wm_window_type,XA_ATOM,32,PropModeReplace,&net_wm_window_type_menu,1);	
 
 	[self attatch_internal_cb:ADDED:(ZCallback *)on_added];
 }

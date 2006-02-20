@@ -21,6 +21,20 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
+extern Atom *z_atom;
+
+typedef enum {
+	UTF8_STRING,
+	WM_NAME,
+	WM_PROTOCOLS,
+	WM_DELETE_WINDOW,
+	NET_WM_WINDOW_TYPE,
+	NET_WM_WINDOW_TYPE_NORMAL,
+	NET_WM_WINDOW_TYPE_MENU,
+	END_ATOM
+}ATOM;
+
+/*
 extern Atom atom;
 extern Atom utf8;
 extern Atom wm_name;
@@ -29,7 +43,7 @@ extern Atom wm_delete_window;
 extern Atom net_wm_window_type;
 extern Atom net_wm_window_type_normal;
 extern Atom net_wm_window_type_menu;
-
+*/
 extern Display *zdpy;
 
 /** You must call this function before you use

@@ -27,6 +27,9 @@ Display *zdpy = NULL;
 IMPList *window_list = NULL;
 
 /* Atoms */
+Atom *z_atom;
+
+/*
 Atom atom;
 Atom utf8;
 Atom wm_name;
@@ -35,6 +38,7 @@ Atom wm_delete_window;
 Atom net_wm_window_type;
 Atom net_wm_window_type_normal;
 Atom net_wm_window_type_menu;
+*/
 
 static unsigned short int quit = 0;
 
@@ -46,14 +50,23 @@ void zwl_init(void)
 	zdpy = XOpenDisplay(NULL);
 
 	/* Init the atoms that zwl needs */
-	utf8 = XInternAtom(zdpy,"UTF8_STRING",False);
+/*	utf8 = XInternAtom(zdpy,"UTF8_STRING",False);
 	wm_name = XInternAtom(zdpy,"WM_NAME",False);
 	wm_protocols = XInternAtom(zdpy,"WM_PROTOCOLS",False);
 	wm_delete_window = XInternAtom(zdpy,"WM_DELETE_WINDOW",False);
 	net_wm_window_type = XInternAtom(zdpy,"NET_WM_WINDOW_TYPE",False);
 	net_wm_window_type_normal = XInternAtom(zdpy,"NET_WM_WINDOW_TYPE_NORMAL",False);
 	net_wm_window_type_menu = XInternAtom(zdpy,"NET_WM_WINDOW_TYPE_MENU",False);
+*/
+	z_atom = i_calloc(100,sizeof(Atom));
 	
+	z_atom[UTF8_STRING] = XInternAtom(zdpy,"UTF8_STRING",False);
+	z_atom[WM_NAME] = XInternAtom(zdpy,"WM_NAME",False);
+	z_atom[WM_PROTOCOLS] = XInternAtom(zdpy,"WM_PROTOCOLS",False);
+	z_atom[WM_DELETE_WINDOW] = XInternAtom(zdpy,"WM_DELETE_WINDOW",False);
+	z_atom[NET_WM_WINDOW_TYPE] = XInternAtom(zdpy,"NET_WM_WINDOW_TYPE",False);
+	z_atom[NET_WM_WINDOW_TYPE_NORMAL] = XInternAtom(zdpy,"NET_WM_WINDOW_TYPE_NORMAL",False);
+	z_atom[NET_WM_WINDOW_TYPE_MENU] = XInternAtom(zdpy,"NET_WM_WINDOW_TYPE_MENU",False);
 }
 
 Display *zwl_get_display(void)
@@ -127,7 +140,7 @@ void zwl_main_loop_start(void)
 				cmessage = ev.xclient;
 				w = find_widget(cmessage.window);
 
-				if(cmessage.data.l[0] == wm_delete_window) {
+				if(cmessage.data.l[0] == z_atom[WM_DELETE_WINDOW]) {
 					[w receive:CLOSE:&ev.xclient];	
 				}
 				else {

@@ -54,8 +54,8 @@ static void on_destroy(IMPObject *widget, void *data);
 {
 	if(self->name)
 		free(self->name);
-	if(self->parent)
-		[self->parent release];
+	//if(self->parent)
+	//	[self->parent release];
 	
 	[super free];
 }
