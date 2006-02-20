@@ -56,7 +56,7 @@ int main(void)
 	[label show];
 
 	image = [ZButton alloc];
-	[image init:"test.png":win->width/2 - (BUTTON_WIDTH/2):win->height/2 + (BUTTON_HEIGHT/2) + 5:BUTTON_WIDTH:BUTTON_HEIGHT];
+	[image init:"/home/thisnukes4u/zde/berlios/trunk/zwl/tests/test.png":win->width/2 - (BUTTON_WIDTH/2):win->height/2 + (BUTTON_HEIGHT/2) + 5:BUTTON_WIDTH:BUTTON_HEIGHT];
 	[win add_child:(ZWidget *)image];
 	[image show];
 	

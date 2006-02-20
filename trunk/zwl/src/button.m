@@ -39,6 +39,8 @@ static void on_label_up(IMPObject *widget, void *data);
 	self->label = NULL;
 	self->image_path = NULL;
 	self->cr = NULL;
+	self->window_surface = NULL;
+	self->image_surface = NULL;
 	
 	[super init:x:y:width:height];
 	
@@ -161,6 +163,7 @@ static void on_add(IMPObject *widget, void *data)
      		 	  PointerMotionMask |
      			  ExposureMask |
      		  	  StructureNotifyMask |
+	//		  SubstructureNotifyMask |
      			  KeyPressMask |
      			  KeyReleaseMask;
 	

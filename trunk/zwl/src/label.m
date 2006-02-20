@@ -92,6 +92,7 @@ static void on_add(IMPObject *widget, void *data)
      		 	  PointerMotionMask |
      			  ExposureMask |
      		  	  StructureNotifyMask |
+		//	  SubstructureNotifyMask |
      			  KeyPressMask |
      			  KeyReleaseMask;
 	
