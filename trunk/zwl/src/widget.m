@@ -73,10 +73,13 @@ static void on_destroy(IMPObject *widget, void *data);
 - (void)destroy
 {
 	if(self->window) {
-		XUnmapWindow(zdpy,self->window);
+//		XUnmapWindow(zdpy,self->window);
 		XDestroyWindow(zdpy,self->window);
+		self->window = NULL;
 	}
 
+	[self receive:DESTROY:NULL];
+	
 	XSync(zdpy,False);
 }
 

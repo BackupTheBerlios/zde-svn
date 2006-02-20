@@ -139,7 +139,7 @@ void zwl_main_loop_start(void)
 			case ClientMessage:
 				cmessage = ev.xclient;
 				w = find_widget(cmessage.window);
-
+				
 				if(cmessage.data.l[0] == z_atom[WM_DELETE_WINDOW]) {
 					[w receive:CLOSE:&ev.xclient];	
 				}
