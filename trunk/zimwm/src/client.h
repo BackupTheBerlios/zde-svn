@@ -27,13 +27,18 @@
 	ZWindow *window; /**< A ZWindow that encapsulates the X11 window. */	
 	unsigned int border; /**< Border width in pixels. */
 	unsigned int title_height; /**< Titlebar height in pixels. */
+	Atom *atoms; /**< Array of atoms this window has. */
+	
 }
 
 /** Register an new client with zimwm.
   \param window X11 Window pointer
   */
 - init:(Window *)window;
-
 - free;
+
+/** Used to get and store all atom properties of the client, such as WM_PROTOCOLS
+  */
+- (void)get_properties;
 
 @end

@@ -74,11 +74,12 @@ static ZWindow *create_frame_for_client(ZimClient *c);
 	
 	[frame add_child:self->window]; 
 	
-//	[self->window attatch_cb:UNMAP:(ZCallback *)on_win_unmap];
-	[self->window attatch_cb:DESTROY:(ZCallback *)on_win_unmap];
+	[self->window attatch_cb:UNMAP:(ZCallback *)on_win_unmap];
+//	[self->window attatch_cb:DESTROY:(ZCallback *)on_win_unmap];
 	
 	zwl_main_loop_add_widget(self->window);
-	zimwm_add_client(self);
+
+	[self get_properties];
 	
 	[frame show];
 	[self->window show];	
@@ -88,6 +89,31 @@ static ZWindow *create_frame_for_client(ZimClient *c);
 {
 	[self->window release];
 	[super free];
+}
+
+- (void)get_properties
+{
+	int i,len;
+	Atom *atom = NULL;
+	
+	self->atoms = i_calloc(30,sizeof(Atom));
+
+	for(i=0;i<30;i++) {
+		atoms[i] = NULL;
+	}
+
+	/* WM_PROTOCOLS */
+	XGetWMProtocols(zdpy,self->window->window,&atom,&len);
+	
+	if(atom) {
+		self->atoms[WM_PROTOCOLS] = atom;
+		
+		for(i=0;i<len;i++) {
+			if(atom[i] == z_atom[WM_DELETE_WINDOW]) {
+				self->atoms[WM_DELETE_WINDOW] = atom[WM_DELETE_WINDOW];
+			}
+		}
+	}
 }
 
 @end
@@ -130,11 +156,21 @@ static ZWindow *create_frame_for_client(ZimClient *c)
 
 static void on_win_unmap(IMPObject *widget, void *data)
 {
+	ZWindow *w = (ZWindow *)widget;
 	ZimClient *c = NULL;
-	
-	c = zimwm_find_client_by_zwindow((ZWindow *)widget);
 
-	zimwm_delete_client(c);
+	XGrabServer(zdpy);
+
+	w->window = NULL;
+	
+	c = zimwm_find_client_by_zwindow(w);
+
+	zimwm_remove_client(c);
+
+	[w->parent destroy];
+	//zimwm_delete_client(c);
+	
+	XUngrabServer(zdpy);
 }
 
 static void on_close_button_down(IMPObject *widget, void *data)
@@ -142,6 +178,7 @@ static void on_close_button_down(IMPObject *widget, void *data)
 	ZWidget *w = (ZWidget *)widget;
 	ZWindow *window = NULL;
 	IMPList *children = NULL;
+	ZimClient *c;
 	char *name;
 
 	/* Find the window by searching through the frame's children list. */
@@ -155,7 +192,8 @@ static void on_close_button_down(IMPObject *widget, void *data)
 			name = "";
 			
 		if(!strncmp(name,"XWINDOW",8)) {
-			zimwm_delete_client(zimwm_find_client_by_zwindow(window));
+			c = zimwm_find_client_by_zwindow(window);
+			zimwm_delete_client(c);
 			return;
 		}
 

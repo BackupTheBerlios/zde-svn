@@ -37,6 +37,7 @@ extern void on_map_request(IMPObject *widget, void *data)
 	
 	[client init:ev->window];
 	
+	zimwm_add_client(client);	
 }
 
 extern void on_unmap(IMPObject *widget, void *data)
@@ -47,7 +48,7 @@ extern void on_unmap(IMPObject *widget, void *data)
 	
 	c = zimwm_find_client_by_window(ev->window);
 
-	zimwm_delete_client(c);
+	zimwm_remove_client(c);
 
 }
 
