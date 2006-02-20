@@ -95,13 +95,16 @@
 {
 	IMPList *tmp = NULL;
 
-	tmp = self->next->next;
+	if(self->next && self->next->next) {
+		tmp = self->next->next;
 
-	[self->next free];
+		[self->next release];
 
-	self->next = tmp;
+		self->next = tmp;
 
-	return self->next;
+		return self->next;
+	}
+	else return NULL;
 }
 
 - (IMPList *)delete_node

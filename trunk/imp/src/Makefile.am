@@ -1,7 +1,7 @@
 lib_LTLIBRARIES = libimp.la
 libimp_la_SOURCES = lists.m impobject.m stack.m memory.m
 
-####EXTRA_DIST = imp.h impobject.h implists.h impstack.h impmemory.h
+EXTRA_DIST = imp.h impobject.h implists.h impstack.h impmemory.h
 
 IMPHEADERS = \
 	      imp.h \
