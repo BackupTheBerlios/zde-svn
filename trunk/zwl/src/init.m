@@ -84,6 +84,8 @@ void zwl_main_loop_start(void)
 	XExposeEvent expose;
 	XClientMessageEvent cmessage;
 	XConfigureEvent configure;
+	XMapRequestEvent mapreq;
+	XUnmapEvent unmap;
 	
 	ZWidget *w = NULL;
 	
@@ -112,7 +114,7 @@ void zwl_main_loop_start(void)
 			case DestroyNotify:
 				dest = ev.xdestroywindow;
 				w = find_widget(dest.window);
-
+				
 				[w receive:DESTROY:&ev.xdestroywindow];
 				break;
 			case Expose:
@@ -128,12 +130,27 @@ void zwl_main_loop_start(void)
 				if(cmessage.data.l[0] == wm_delete_window) {
 					[w receive:CLOSE:&ev.xclient];	
 				}
+				else {
+					[w receive:CLIENT_MESSAGE:&ev.xclient];
+				}
 				break;
 			case ConfigureNotify:
 				configure = ev.xconfigure;
 				w = find_widget(configure.window);
 
 				[w receive:CONFIGURE:&ev.xconfigure];
+				break;
+			case MapRequest:
+				mapreq = ev.xmaprequest;
+				w = find_widget(mapreq.parent);
+
+				[w receive:MAP_REQUEST:&ev.xmaprequest];
+				break;
+			case UnmapNotify:
+				unmap = ev.xunmap;
+				w = find_widget(unmap.window);
+
+				[w receive:UNMAP:&ev.xunmap];				
 				break;
 			default:
 				w = find_widget(ev.xany.window);
@@ -150,7 +167,6 @@ void zwl_main_loop_quit(void)
 
 static ZWidget *find_widget(Window *w)
 {
-	int i;
 	IMPList *list = window_list;
 	ZWidget *widget;
 	

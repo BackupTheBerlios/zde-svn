@@ -41,6 +41,7 @@ static void on_configure(IMPObject *widget, void *data);
      		 	  PointerMotionMask |
      			  ExposureMask |
      		  	  StructureNotifyMask |
+			  SubstructureNotifyMask |
      			  KeyPressMask |
      			  KeyReleaseMask;
 	
@@ -54,7 +55,7 @@ static void on_configure(IMPObject *widget, void *data);
 	}
 	else {
 		self->window = (Window *)XCreateSimpleWindow(zdpy,parent->window,x,y,width,height,1,1,1);
-		self->parent = parent;
+		[self set_parent:parent];
 	}
 
 	self->x = x;
@@ -121,6 +122,13 @@ static void on_configure(IMPObject *widget, void *data);
 - (char *)get_title
 {
 	return self->title;
+}
+
+- (void)raise
+{
+	if(self->window) {
+		XRaiseWindow(zdpy,self->window);
+	}
 }
 
 - (XftDraw *)get_xftdraw

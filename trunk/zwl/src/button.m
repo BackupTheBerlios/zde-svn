@@ -200,8 +200,10 @@ static void on_expose(IMPObject *widget, void *data)
 {
 	ZButton *myself = (ZButton *)data;
 
-	if(myself->label)
+	if(myself->label && myself->zlabel->window) {
 		[myself->zlabel show];
+		[myself->zlabel receive:EXPOSE:myself->zlabel];
+	}
 	else if(myself->image_path)
 		cairo_paint([myself get_cairo_t]);
 }

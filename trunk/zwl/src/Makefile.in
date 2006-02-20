@@ -197,7 +197,9 @@ INCLUDES = \
 -I$(top_srcdir) \
 $(IMP_CFLAGS) $(X_CFLAGS) $(XFT_CFLAGS) $(CAIRO_CFLAGS)
 
+EXTRA_DIST = zwl.h zwlinit.h zwlwindow.h zwlbutton.h zwllabel.h zwlmenu.h zwlwidget.h
 ZWLHEADERS = \
+	     zwl.h \
 	     zwlinit.h \
 	     zwlwindow.h \
 	     zwlbutton.h \

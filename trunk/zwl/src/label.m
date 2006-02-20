@@ -120,7 +120,7 @@ static void on_expose(IMPObject *widget, void *data)
 	XftColorAllocName(zdpy,DefaultVisual(zdpy,DefaultScreen(zdpy)),DefaultColormap(zdpy,DefaultScreen(zdpy)),"white",&xftcolor);
 	font = XftFontOpenName(zdpy,DefaultScreen(zdpy),"sans-8");
 
-	if(myself->resize) {
+	if(myself->resize && label) {
 		XftTextExtents8(zdpy,font,label,strlen(label),&extents);
 		myself->width = extents.width + 1;
 		myself->height = extents.height + 2; /* XXX the +2 helps to compensate for y's and g's. ??!?! */
@@ -128,10 +128,10 @@ static void on_expose(IMPObject *widget, void *data)
 		[myself resize:myself->width:myself->height];
 	}
 		
-	
-	XftDrawString8(myself->xftdraw,&xftcolor,font,
-			0,
-			extents.height,
-			label,strlen(label));	
-
+	if(label) {	
+		XftDrawString8(myself->xftdraw,&xftcolor,font,
+				0,
+				extents.height,
+				label,strlen(label));	
+	}
 }

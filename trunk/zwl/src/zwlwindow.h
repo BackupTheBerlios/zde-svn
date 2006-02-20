@@ -56,6 +56,9 @@
 
 - (char *)get_title;
 
+/** Raise the window. */
+- (void)raise;
+
 /** Returns a pointer to the XftDraw that the window uses for drawing text.
   */
 - (XftDraw *)get_xftdraw;

@@ -72,8 +72,10 @@ static void on_destroy(IMPObject *widget, void *data);
 
 - (void)destroy
 {
-	if(self->window)
+	if(self->window) {
+		XUnmapWindow(zdpy,self->window);
 		XDestroyWindow(zdpy,self->window);
+	}
 
 	XSync(zdpy,False);
 }
@@ -113,7 +115,7 @@ static void on_destroy(IMPObject *widget, void *data);
 
 - (void)set_parent:(ZWidget *)parent
 {
-	if(parent) {
+	if((parent) && parent != self->window) {
 		self->parent = parent;
 		[self->parent grab];
 	}
