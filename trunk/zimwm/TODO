@@ -1,0 +1,5 @@
+Use ZLabel's get text extents function
+Define a new widget to place in frame on edges that can be used to trigger resizing on clicking it, ZimEdgeHandle?
+Fix Resizing window
+EWMH/ICCCM Support
+IPC
