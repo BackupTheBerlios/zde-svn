@@ -50,7 +50,11 @@ static void setup_root_window(void)
 {
 	XSetWindowAttributes attr;
 	Cursor rootc;
-
+	ZimClient *newc;
+	Window root,parent;
+	Window *children;
+	int i,len;
+	
 	root_window = [ZWidget alloc];
 	[root_window init];
 
@@ -72,21 +76,35 @@ static void setup_root_window(void)
 		
 	attr.cursor = rootc;
 	XChangeWindowAttributes(zdpy,root_window->window,CWEventMask | CWCursor,&attr);
+
+	XGrabKey(zdpy,AnyKey,ControlMask | Mod1Mask,root_window->window,True,GrabModeAsync,GrabModeAsync);
 	
 	zwl_main_loop_add_widget(root_window);
 
 	[root_window attatch_cb:BUTTON_DOWN:(ZCallback *)on_button_down];
 	[root_window attatch_cb:MAP_REQUEST:(ZCallback *)on_map_request];
-	[root_window attatch_cb:UNMAP:(ZCallback *)on_unmap];
+	[root_window attatch_cb:KEY_PRESS:(ZCallback *)on_key_press];
+	//[root_window attatch_cb:UNMAP:(ZCallback *)on_unmap];
 	//[root_window attatch_cb:DESTROY:(ZCallback *)on_unmap];
+
+	XQueryTree(zdpy,root_window->window,&root,&parent,&children,&len);
+
+	for(i=0;i<len;i++) {
+		newc = [ZimClient alloc];
+		[newc init:&children[i]];
+	
+		zimwm_add_client(newc);
+	}
+
+	XFreeCursor(zdpy,rootc);
 }
 
 void zimwm_add_client(ZimClient *client)
 {
 	if(client_list) {
 		if(client) {
-			//client_list = [client_list prepend_data:client];
-			[client_list append_data:client];
+			client_list = [client_list prepend_data:client];
+			//[client_list append_data:client];
 		}
 	}
 	else {
@@ -148,17 +166,19 @@ void zimwm_delete_client(ZimClient *c)
 	client = (ZimClient *)client_list->data;
 	if(client == c) {
 		if(c->atoms[WM_DELETE_WINDOW] && c->window->window) {
-			cv.type = ClientMessage;
+		/*	cv.type = ClientMessage;
 			cv.message_type = z_atom[WM_PROTOCOLS];
 			cv.window = c->window->window;
 			cv.format = 32;
 			cv.data.l[0] = z_atom[WM_DELETE_WINDOW];
 			cv.data.l[1] = CurrentTime;
 			XSendEvent(zdpy,c->window->window,False,NoEventMask,&cv);		
+			*/
+			[c send_client_message:32:z_atom[WM_PROTOCOLS]:z_atom[WM_DELETE_WINDOW]];
 		}
 		else {
 			[client->window->parent destroy];
-			client_list = [client_list delete_node];
+			//client_list = [client_list delete_node];
 		}
 		return;
 	}
@@ -168,17 +188,19 @@ void zimwm_delete_client(ZimClient *c)
 
 		if((client == c) && list->next) {
 			if(client->atoms[WM_DELETE_WINDOW] && c->window->window) {	
-				cv.type = ClientMessage;
+		/*		cv.type = ClientMessage;
 				cv.message_type = z_atom[WM_PROTOCOLS];
 				cv.window = client->window->window;
 				cv.format = 32;
 				cv.data.l[0] = z_atom[WM_DELETE_WINDOW];
 				cv.data.l[1] = CurrentTime;
 				XSendEvent(zdpy,client->window->window,False,NoEventMask,&cv);		
+				*/
+				[client send_client_message:32:z_atom[WM_PROTOCOLS]:z_atom[WM_DELETE_WINDOW]];
 			}
 			else {
 				[client->window->parent destroy];
-				[list delete_next_node];
+			//	[list delete_next_node];
 			}
 			return;
 		}

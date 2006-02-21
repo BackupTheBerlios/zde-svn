@@ -32,23 +32,23 @@ void on_map_request(IMPObject *widget, void *data)
 {
 	XMapRequestEvent *ev = (XMapRequestEvent *)data;
 	ZimClient *client = [ZimClient alloc];
+
+//	XGrabServer(zdpy);
 	
 //	printf("Window %d requests to be mapped.\n",ev->window);
 	
 	[client init:ev->window];
 	
 	zimwm_add_client(client);	
+
+//	XSync(zdpy,False);
+//	XUngrabServer(zdpy);
 }
 
-void on_unmap(IMPObject *widget, void *data)
+void on_key_press(IMPObject *widget, void *data)
 {
-	printf("EJF:LKDSJF:LDSJF:LKJBV\n");
-	XUnmapEvent *ev = (XUnmapEvent *)data;
-	ZimClient *c = NULL;
-	
-	c = zimwm_find_client_by_window(ev->window);
+	ZWidget *w = (ZWidget *)widget;
 
-	zimwm_remove_client(c);
-
+//	printf("Coolness!\n");
 }
 

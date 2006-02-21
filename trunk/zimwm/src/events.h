@@ -23,5 +23,5 @@
 
 extern void on_button_down(IMPObject *widget, void *data);
 extern void on_map_request(IMPObject *widget, void *data);
-extern void on_unmap(IMPObject *widget, void *data);
+extern void on_key_press(IMPObject *widget, void *data);
 

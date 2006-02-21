@@ -41,4 +41,8 @@
   */
 - (void)get_properties;
 
+/** Sends a ClientMessage to the X11 Window represented by this client.
+  */
+- (void)send_client_message:(int)format:(Atom)type:(Atom)data;
+
 @end
