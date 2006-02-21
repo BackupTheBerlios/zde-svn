@@ -1,0 +1,4 @@
+ZLabel function to return text extents
+ZLabel should store font & extents internally
+
+
