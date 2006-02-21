@@ -110,7 +110,7 @@ static void on_add(IMPObject *widget, void *data)
 
 static void on_expose(IMPObject *widget, void *data)
 {
-	ZLabel *myself = (ZLabel *)data;
+	ZLabel *myself = (ZLabel *)widget;
 	XftColor xftcolor;
 	XftFont *font;
 	XGlyphInfo extents;

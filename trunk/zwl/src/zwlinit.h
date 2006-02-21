@@ -34,21 +34,12 @@ typedef enum {
 	END_ATOM
 }ATOM;
 
-/*
-extern Atom atom;
-extern Atom utf8;
-extern Atom wm_name;
-extern Atom wm_protocols;
-extern Atom wm_delete_window;
-extern Atom net_wm_window_type;
-extern Atom net_wm_window_type_normal;
-extern Atom net_wm_window_type_menu;
-*/
 extern Display *zdpy;
 
 /** You must call this function before you use
   any zwl widgets. */
 void zwl_init(void);
+void zwl_receive_xevent(XEvent *ev);
 
 Display *zwl_get_display(void);
 void zwl_main_loop_add_widget(ZWidget *w);

@@ -201,7 +201,7 @@ static void on_add(IMPObject *widget, void *data)
 
 static void on_expose(IMPObject *widget, void *data)
 {
-	ZButton *myself = (ZButton *)data;
+	ZButton *myself = (ZButton *)widget;
 
 	if(myself->label && myself->zlabel->window) {
 		[myself->zlabel show];

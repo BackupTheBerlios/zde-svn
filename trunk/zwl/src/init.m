@@ -29,35 +29,16 @@ IMPList *window_list = NULL;
 /* Atoms */
 Atom *z_atom;
 
-/*
-Atom atom;
-Atom utf8;
-Atom wm_name;
-Atom wm_protocols;
-Atom wm_delete_window;
-Atom net_wm_window_type;
-Atom net_wm_window_type_normal;
-Atom net_wm_window_type_menu;
-*/
-
 static unsigned short int quit = 0;
 
 /* Helper functions */
 static ZWidget *find_widget(Window *w);
+static void process_xevent(XEvent *ev);
 
 void zwl_init(void)
 {
 	zdpy = XOpenDisplay(NULL);
 
-	/* Init the atoms that zwl needs */
-/*	utf8 = XInternAtom(zdpy,"UTF8_STRING",False);
-	wm_name = XInternAtom(zdpy,"WM_NAME",False);
-	wm_protocols = XInternAtom(zdpy,"WM_PROTOCOLS",False);
-	wm_delete_window = XInternAtom(zdpy,"WM_DELETE_WINDOW",False);
-	net_wm_window_type = XInternAtom(zdpy,"NET_WM_WINDOW_TYPE",False);
-	net_wm_window_type_normal = XInternAtom(zdpy,"NET_WM_WINDOW_TYPE_NORMAL",False);
-	net_wm_window_type_menu = XInternAtom(zdpy,"NET_WM_WINDOW_TYPE_MENU",False);
-*/
 	z_atom = i_calloc(100,sizeof(Atom));
 	
 	z_atom[UTF8_STRING] = XInternAtom(zdpy,"UTF8_STRING",False);
@@ -72,6 +53,13 @@ void zwl_init(void)
 Display *zwl_get_display(void)
 {
 	return zdpy;
+}
+
+void zwl_receive_xevent(XEvent *ev)
+{
+	if(ev) {
+		process_xevent(ev);
+	}
 }
 
 void zwl_main_loop_add_widget(ZWidget *w)
@@ -91,6 +79,15 @@ void zwl_main_loop_add_widget(ZWidget *w)
 void zwl_main_loop_start(void)
 {
 	XEvent ev;
+	
+	while(!quit) {
+		XNextEvent(zdpy,&ev);
+		process_xevent(&ev);	
+	}
+}
+
+static void process_xevent(XEvent *ev)
+{	
 	XKeyEvent key;
 	XButtonEvent button;
 	XDestroyWindowEvent dest;
@@ -101,75 +98,71 @@ void zwl_main_loop_start(void)
 	XUnmapEvent unmap;
 	
 	ZWidget *w = NULL;
-	
-	while(!quit) {
-		XNextEvent(zdpy,&ev);
-		
-		switch(ev.type) {
+
+	switch(ev->type) {
 			case KeyPress:
-				key = ev.xkey;
+				key = ev->xkey;
 				w = find_widget(key.window);		
 				
-				[w receive:KEY_PRESS:&ev.xkey];
+				[w receive:KEY_PRESS:&ev->xkey];
 				break;
 			case ButtonPress:
-				button = ev.xbutton;
+				button = ev->xbutton;
 				w = find_widget(button.window);
 				
-				[w receive:BUTTON_DOWN:&ev.xbutton];
+				[w receive:BUTTON_DOWN:&ev->xbutton];
 				break;
 			case ButtonRelease:
-				button = ev.xbutton;
+				button = ev->xbutton;
 				w = find_widget(button.window);
 
-				[w receive:BUTTON_UP:&ev.xbutton];
+				[w receive:BUTTON_UP:&ev->xbutton];
 				break;
 			case DestroyNotify:
-				dest = ev.xdestroywindow;
+				dest = ev->xdestroywindow;
 				w = find_widget(dest.window);
 				
-				[w receive:DESTROY:&ev.xdestroywindow];
+				[w receive:DESTROY:&ev->xdestroywindow];
 				break;
 			case Expose:
-				expose = ev.xexpose;
+				expose = ev->xexpose;
 				w = find_widget(expose.window);
 
-				[w receive:EXPOSE:w];
+				[w receive:EXPOSE:&ev->xexpose];
 				break;
 			case ClientMessage:
-				cmessage = ev.xclient;
+				cmessage = ev->xclient;
 				w = find_widget(cmessage.window);
 				
 				if(cmessage.data.l[0] == z_atom[WM_DELETE_WINDOW]) {
-					[w receive:CLOSE:&ev.xclient];	
+					[w receive:CLOSE:&ev->xclient];	
 				}
 				else {
-					[w receive:CLIENT_MESSAGE:&ev.xclient];
+					[w receive:CLIENT_MESSAGE:&ev->xclient];
 				}
 				break;
 			case ConfigureNotify:
-				configure = ev.xconfigure;
+				configure = ev->xconfigure;
 				w = find_widget(configure.window);
 
-				[w receive:CONFIGURE:&ev.xconfigure];
+				[w receive:CONFIGURE:&ev->xconfigure];
 				break;
 			case MapRequest:
-				mapreq = ev.xmaprequest;
+				mapreq = ev->xmaprequest;
 				w = find_widget(mapreq.parent);
 
-				[w receive:MAP_REQUEST:&ev.xmaprequest];
+				[w receive:MAP_REQUEST:&ev->xmaprequest];
 				break;
 			case UnmapNotify:
-				unmap = ev.xunmap;
+				unmap = ev->xunmap;
 				w = find_widget(unmap.window);
 
-				[w receive:UNMAP:&ev.xunmap];				
+				[w receive:UNMAP:&ev->xunmap];				
 				break;
 			default:
-				w = find_widget(ev.xany.window);
-				[w receive:DEFAULT:&ev];
+				w = find_widget(ev->xany.window);
+				[w receive:DEFAULT:ev];
 		}
-	}
 }
 
 void zwl_main_loop_quit(void)
