@@ -66,12 +66,13 @@ badd +190 configure.in
 badd +1 README
 badd +1 Makefile.am
 badd +13 src/Makefile.am
-badd +16 src/main.m
+badd +94 src/main.m
 badd +27 src/zimwm.h
 badd +1 src/events.h
-badd +1 src/events.m
-badd +1 src/client.h
-badd +1 src/client.m
+badd +40 src/events.m
+badd +46 src/client.h
+badd +282 src/client.m
+badd +1 TODO
 args configure.in README
 edit README
 set splitbelow splitright
@@ -133,6 +134,7 @@ setlocal matchpairs=(:),{:},[:]
 setlocal modeline
 setlocal modifiable
 setlocal nrformats=octal,hex
+set number
 setlocal nonumber
 setlocal path=
 setlocal nopreserveindent
