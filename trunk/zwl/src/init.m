@@ -69,7 +69,7 @@ void zwl_main_loop_add_widget(ZWidget *w)
 			[window_list append_data:w];
 		}
 	}
-	else {
+	else if(w){
 		window_list = [IMPList alloc];
 		[window_list init:1];
 		window_list->data = w;
@@ -168,7 +168,9 @@ static void process_xevent(XEvent *ev)
 void zwl_main_loop_quit(void)
 {
 	quit = 1;
-	[window_list release];
+	[window_list delete_list];
+
+	window_list = NULL;
 }
 
 static ZWidget *find_widget(Window *w)

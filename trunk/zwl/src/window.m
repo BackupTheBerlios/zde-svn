@@ -31,7 +31,8 @@ static void on_configure(IMPObject *widget, void *data);
 - init:(ZWidget *)parent:(int)x:(int)y:(int)width:(int)height
 {
 	XSetWindowAttributes attr;
-
+	self->xftdraw = NULL;
+	
 	[super init];
 	
 	attr.event_mask = ButtonPressMask |
@@ -83,6 +84,7 @@ static void on_configure(IMPObject *widget, void *data);
 	[super init];
 	
 	self->title = NULL;
+	self->xftdraw = NULL;
 	
 	self->x = x;
 	self->y = y;

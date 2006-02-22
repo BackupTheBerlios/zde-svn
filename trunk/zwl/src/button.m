@@ -54,6 +54,8 @@ static void on_label_up(IMPObject *widget, void *data);
 	self->window = NULL;
 	self->zlabel = NULL;
 	self->image_path = NULL;
+	self->window_surface = NULL;
+	self->image_surface = NULL;
 	self->label = NULL;
 	self->cr = NULL;
 	
@@ -83,6 +85,8 @@ static void on_label_up(IMPObject *widget, void *data);
 		cairo_surface_destroy(self->window_surface);
 	if(self->image_surface)
 		cairo_surface_destroy(self->image_surface);	
+	if(self->image_path)
+		free(self->image_path);
 	
 	[super free];
 }
