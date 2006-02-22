@@ -37,7 +37,7 @@
 
 - free
 {	
-	IMPObject *data;
+	IMPObject *data = NULL;;
 	if(self->type == 0)
 		i_free(self->data);
 	else if(self->type == 1 && self->data) {
@@ -118,13 +118,21 @@
 {
 	IMPList *tmp = self->next;
 
-	if(!tmp)
-		return self;
+	//if(!tmp)
+	//	return self;
 
 	self->next = NULL;
 	[self release];
 	
 	return tmp;
+}
+
+- (void)delete_list
+{
+	if(!self->next)
+		return;
+
+	[self release];
 }
 
 @end

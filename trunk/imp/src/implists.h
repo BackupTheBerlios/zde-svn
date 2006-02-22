@@ -82,6 +82,9 @@ beginning of the list */
 /** Deletes the current node.  Make sure you only use this on the head node, or you will be making a hole in the list. Returns the new head of the list. */
 - (IMPList *)delete_node;
 
+/** Deletes the current node and all nodes after it. The list should not be accessed after this. */
+- (void)delete_list;
+
 @end
 
 #endif

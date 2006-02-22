@@ -69,7 +69,8 @@ int main(void)
 			cur = [cur append_data:buff];
 		}	
 
-		[temp release];
+//		[temp release];
+		[temp delete_list];
 		
 		printf(".");
 		fflush(stdout);
