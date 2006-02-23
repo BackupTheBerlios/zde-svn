@@ -31,6 +31,8 @@ static void on_frame_expose(IMPObject *widget, void *data);
 static void on_frame_label_button_down(IMPObject *widget, void *data);
 static void on_frame_key_press(IMPObject *widget, void *data);
 
+static void resize(IMPObject *widget, void *data);
+
 /* Helper functions */
 static ZWindow *create_frame_for_client(ZimClient *c);
 
@@ -137,6 +139,9 @@ static ZWindow *create_frame_for_client(ZimClient *c)
 {
 	ZButton *close_button = [ZButton alloc];
 	ZWindow *f = [ZWindow alloc];
+	ZWindow *right_handle = [ZWindow alloc];
+	ZWindow *left_handle = [ZWindow alloc];
+	ZWindow *bottom_handle = [ZWindow alloc];
 	ZLabel *label = [ZLabel alloc];
 	XGlyphInfo extents;
 	XftFont *font = XftFontOpenName(zdpy,DefaultScreen(zdpy),"sans-8"); /* This is bad... */
@@ -150,6 +155,24 @@ static ZWindow *create_frame_for_client(ZimClient *c)
 //	[f attatch_cb:KEY_PRESS:(ZCallback *)on_frame_key_press];
 	[f attatch_cb:BUTTON_DOWN:(ZCallback *)on_frame_button_down];
 	[f attatch_cb:EXPOSE:(ZCallback *)on_frame_expose];
+
+	[right_handle init:f:f->width - c->border:c->title_height:c->border:f->height];
+	[right_handle attatch_cb:BUTTON_DOWN:(ZCallback *)resize];
+	[right_handle set_name:"RIGHT_HANDLE"];
+	[f add_child:(ZWidget *)right_handle];
+	[right_handle show];
+
+	[left_handle init:f:0:c->title_height:c->border:f->height];
+	[left_handle attatch_cb:BUTTON_DOWN:(ZCallback *)resize];
+	[left_handle set_name:"LEFT_HANDLE"];
+	[f add_child:(ZWidget *)left_handle];
+	[left_handle show];
+
+	[bottom_handle init:f:0:f->height - c->border:f->width:c->border];
+	[bottom_handle attatch_cb:BUTTON_DOWN:(ZCallback *)resize];
+	[bottom_handle set_name:"BOTTOM_HANDLE"];
+	[f add_child:(ZWidget *)bottom_handle];
+	[bottom_handle show];
 	
 	[close_button init:0:0:10:10];
 	[f add_child:(ZWidget *)close_button];
@@ -251,7 +274,7 @@ static void on_frame_button_down(IMPObject *widget, void *data)
 			case MotionNotify:
 				/* XXX RESIZE IS BROKEN BADLY XXX */
 				if(ev.xmotion.state & ControlMask) {
-					XUngrabServer(zdpy);		
+			/*		XUngrabServer(zdpy);		
 					width = abs(w->x - ev.xmotion.x);
 					height = abs(w->y - ev.xmotion.y);
 
@@ -260,13 +283,13 @@ static void on_frame_button_down(IMPObject *widget, void *data)
 					
 					XSync(zdpy,False);
 					XGrabServer(zdpy);
-					/*
+			*/		/*
 					[w resize:((ev.xmotion.x_root - w->width)) + w->width:
 						((ev.xmotion.y_root - w->height)) + w->height];
 						*/
 					
 					/* Find the window by searching through the frame's children list. */
-					children = w->children;
+			/*		children = w->children;
 	
 					while(children) {
 						window = children->data;
@@ -288,7 +311,7 @@ static void on_frame_button_down(IMPObject *widget, void *data)
 					
 					[w resize:width:height];
 					[w raise];
-				}
+			*/	}
 				else {
 					[w move:ev.xmotion.x_root - x1:ev.xmotion.y_root - y1];
 					[w raise];
@@ -370,8 +393,10 @@ static void on_frame_expose(IMPObject *widget, void *data)
 {
 	ZWindow *frame = (ZWindow *)widget;
 	ZLabel *label = NULL;
+	ZWindow *w = NULL;
 	IMPList *children;
 	ZWindow *window = NULL;
+	ZimClient *c = NULL;
 	XGlyphInfo extents;
 	XftFont *font = XftFontOpenName(zdpy,DefaultScreen(zdpy),"sans-8"); /* This is bad... */
 	char *name = NULL;
@@ -392,7 +417,12 @@ static void on_frame_expose(IMPObject *widget, void *data)
 			XftTextExtents8(zdpy,font,[label get_label],strlen([label get_label]),&extents);
 			[label move:(frame->width / 2) - (extents.width / 2):0];
 		}
+	/*	else if(!strncmp(name,"RIGHT_HANDLE",12)) {
+			w = (ZWindow *)window;
 
+			[w move:frame->width - c->border:c->title_height];
+		}
+*/
 		children = children->next;
 	}
 
@@ -406,4 +436,92 @@ static void on_frame_label_button_down(IMPObject *widget, void *data)
 	frame = frame->parent;
 	
 	[frame receive:BUTTON_DOWN:data];
+}
+
+static void resize(IMPObject *widget, void *data)
+{
+	ZWindow *w = (ZWindow *)widget;
+	ZWindow *myself = (ZWindow *)widget;
+	ZWindow *right,*left,*bottom;
+	Window w1,w2;
+	XEvent ev;
+	Cursor arrow = XCreateFontCursor(zdpy,XC_bottom_right_corner);
+	IMPList *children = NULL;
+	ZimClient *c;
+	ZWindow *window;
+	char *name;
+	int width;
+	int height;
+	
+	w = w->parent;
+	
+	XGrabPointer(zdpy,root_window->window,True,PointerMotionMask | ButtonReleaseMask,GrabModeAsync,GrabModeAsync,None,arrow,CurrentTime);
+
+
+	/* Find the window by searching through the frame's children list. */
+	children = w->children;
+
+	while(children) {
+		window = children->data;
+		name = [window get_name];
+		
+		if(!name)
+			name = "";
+			
+		if(!strncmp(name,"XWINDOW",8)) {
+			c = zimwm_find_client_by_zwindow(window);	
+		}
+		else if(!strncmp(name,"RIGHT_HANDLE",8)) {
+			right = window;
+		}
+		else if(!strncmp(name,"LEFT_HANDLE",7)) {
+			left = window;
+		}
+		else if(!strncmp(name,"BOTTOM_HANDLE",13)) {
+			bottom = window;
+		}
+
+		children = children->next;
+	}
+	
+	while(1) {
+		XNextEvent(zdpy,&ev);
+		
+		switch(ev.type) {
+			case MotionNotify:
+				width = abs(w->x - ev.xmotion.x_root);
+				height = abs(w->y - ev.xmotion.y_root);
+
+				width -= (width - 10) % 10;
+				height -= (height - 10) % 10;
+					
+				[w resize:width:height];
+				[w raise];
+			
+				[c->window resize:width - c->border * 2:height - c->border - 3];
+				[c->window move:c->border:c->title_height];
+		
+				[right move:w->width - c->border:c->title_height];
+				[right resize:c->border:w->height];
+				[left move:0:c->title_height];
+				[left resize:c->border:w->height];
+				[bottom move:0:w->height - c->border];
+				[bottom resize:w->width:c->border];
+				
+				[right raise];
+				[left raise];
+				[bottom raise];
+				
+				break;		
+			case ButtonRelease:
+				XUngrabPointer(zdpy,CurrentTime);
+				return;
+			default:
+				zwl_receive_xevent(&ev);
+				break;
+		}
+	}
+
+	XFreeCursor(zdpy,arrow);
+	
 }

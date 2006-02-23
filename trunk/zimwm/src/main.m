@@ -87,7 +87,7 @@ static void setup_root_window(void)
 	//[root_window attatch_cb:UNMAP:(ZCallback *)on_unmap];
 	//[root_window attatch_cb:DESTROY:(ZCallback *)on_unmap];
 
-	XQueryTree(zdpy,root_window->window,&root,&parent,&children,&len);
+/*	XQueryTree(zdpy,root_window->window,&root,&parent,&children,&len);
 
 	for(i=0;i<len;i++) {
 		newc = [ZimClient alloc];
@@ -95,7 +95,7 @@ static void setup_root_window(void)
 	
 		zimwm_add_client(newc);
 	}
-
+*/
 	XFreeCursor(zdpy,rootc);
 }
 
