@@ -98,10 +98,11 @@ static void on_configure(IMPObject *widget, void *data);
 	if(self->title)
 		free(self->title);
 
-	if(self->xftdraw)
-		XftDrawDestroy(self->xftdraw);
+	if(self->xftdraw) {
+//		XftDrawDestroy(self->xftdraw);
+		self->xftdraw = NULL;
+	}
 	
-	self->xftdraw = NULL;
 	
 	[super free];
 }

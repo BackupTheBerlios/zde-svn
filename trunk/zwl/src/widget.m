@@ -57,7 +57,7 @@ static void on_destroy(IMPObject *widget, void *data);
 	//if(self->parent)
 	//	[self->parent release];
 
-	[self->children delete_list];
+	//[self->children delete_list];
 	
 	[super free];
 }
@@ -76,6 +76,7 @@ static void on_destroy(IMPObject *widget, void *data);
 {
 	if(self->window) {
 //		XUnmapWindow(zdpy,self->window);
+//		zwl_main_loop_remove_widget(self);
 		XDestroyWindow(zdpy,self->window);
 		self->window = NULL;
 	}

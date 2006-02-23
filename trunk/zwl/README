@@ -1,3 +1,6 @@
+You will need the latest version of imp from svn to compile zwl.  Be aware that this is alpha-quality code, and completely unpolished. It has rough, pointy edges, and should be approached with caution and an open mind. Patches are welcome, e-mail the zde-devel list, the address of which can be
+found on the berlios project page.
+
 zwl is the zeta widget library.  It is designed to be simple, yet at the same time look good and have a nice feel.  It is not designed to be a general-purpose application toolkit like GTK+, Qt, or EWL.  It will be used in zimwm for menus, frames, buttons and the like.  It will also have selectable rendering outputs for displaying images, such as Xlib or Imlib2.  It will have some more special-purpose widgets, such as sliders and the like, for extensions to zimwm, but nothing fancy.  It might also have a place in small programs that only need a limited subset of general-purpose widgets and don't mind many constraints.
 
 src/ Contains the zwl source code.

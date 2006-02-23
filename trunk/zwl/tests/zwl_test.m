@@ -131,7 +131,6 @@ static void on_close(IMPObject *widget, void *data)
 {
 	printf("Window manager says we must go. Fine then.\n");
 	[(ZWidget *)widget destroy];
-	on_destroy(NULL,NULL);
 }
 
 static void on_expose(IMPObject *widget, void *data)

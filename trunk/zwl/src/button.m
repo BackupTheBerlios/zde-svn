@@ -79,14 +79,22 @@ static void on_label_up(IMPObject *widget, void *data);
 	if(self->label)
 		free(self->label);
 	
-	if(self->cr)
+	if(self->cr) {
 		cairo_destroy(self->cr);
-	if(self->window_surface)
-		cairo_surface_destroy(self->window_surface);
-	if(self->image_surface)
+		self->cr = NULL;
+	}
+	if(self->window_surface) {
+//		cairo_surface_destroy(self->window_surface);
+		self->window_surface = NULL;
+	}
+	if(self->image_surface) {
 		cairo_surface_destroy(self->image_surface);	
-	if(self->image_path)
+		self->image_surface = NULL;
+	}
+	if(self->image_path) {
 		free(self->image_path);
+		self->image_path = NULL;
+	}
 	
 	[super free];
 }
@@ -181,11 +189,13 @@ static void on_add(IMPObject *widget, void *data)
 		[myself add_child:(ZWidget *)myself->zlabel];
 		[myself->zlabel attatch_internal_cb:BUTTON_DOWN:(ZCallback *)on_label_down];
 		[myself->zlabel attatch_internal_cb:BUTTON_UP:(ZCallback *)on_label_up];
+
+		myself->xftdraw = XftDrawCreate(zdpy,myself->window,DefaultVisual(zdpy,DefaultScreen(zdpy)),
+				DefaultColormap(zdpy,DefaultScreen(zdpy)));
 	}
 
 	XChangeWindowAttributes(zdpy,myself->window,CWEventMask,&attr);
 
-	myself->xftdraw = XftDrawCreate(zdpy,myself->window,DefaultVisual(zdpy,DefaultScreen(zdpy)),DefaultColormap(zdpy,DefaultScreen(zdpy)));
 	
 	if([myself get_image_path]) {
 		image_surface = [myself get_image_surface];

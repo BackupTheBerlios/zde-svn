@@ -32,6 +32,7 @@ static void on_expose(IMPObject *widget, void *data);
 - init:(int)x:(int)y:(int)width:(int)height
 {
 	self->window = NULL;
+	self->label = NULL;
 
 	[super init:x:y:width:height];
 
@@ -44,6 +45,7 @@ static void on_expose(IMPObject *widget, void *data);
 - init:(int)x:(int)y
 {
 	self->window = NULL;
+	self->label = NULL;
 
 	[super init:x:y:1:1];
 
@@ -57,7 +59,7 @@ static void on_expose(IMPObject *widget, void *data);
 {
 	if(self->label)
 		free(self->label);
-
+	
 	[super free];
 }
 

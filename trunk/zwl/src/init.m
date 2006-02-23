@@ -76,6 +76,23 @@ void zwl_main_loop_add_widget(ZWidget *w)
 	}
 }
 
+void zwl_main_loop_remove_widget(ZWidget *w)
+{
+	ZWidget *widget = find_widget(w->window);
+	ZWidget *w2;
+	IMPList *list = window_list;
+	
+	if(widget) {
+		while(list) {
+			w2 = (ZWidget *)list->data;
+			if(w2 == w->window) {
+				[list delete_node];
+			}
+			list = list->next;	
+		}
+	}
+}
+
 void zwl_main_loop_start(void)
 {
 	XEvent ev;

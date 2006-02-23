@@ -3,3 +3,5 @@
 -Find & fix the Segmentation fault when calling zwl_main_loop_quit. Has something to do with freeing all widget,
  but it could be in IMPList or zwl somewhere.  This one will probably take a bit of effort, as all obvious locations of the bug
  have come up dry.
+ -Fixed by not freeing xftdraw or the cairo window surface.  This is NOT a real fix, just a stopgap until I find out what is 
+ really causing the problem, because those should not be causing those errors.
