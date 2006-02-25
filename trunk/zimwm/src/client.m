@@ -292,7 +292,7 @@ static void on_frame_button_down(IMPObject *widget, void *data)
 	Window w1,w2;
 	XEvent ev;
 	Cursor arrow = XCreateFontCursor(zdpy,XC_fleur);
-	ZimClient *c;
+	ZimClient *c = NULL;
 	int mask;
 	int x,x1;
 	int y,y1;
@@ -330,7 +330,8 @@ static void on_frame_button_down(IMPObject *widget, void *data)
 		switch(ev.type) {
 			case MotionNotify:
 				[w move:ev.xmotion.x_root - x1:ev.xmotion.y_root - y1];	
-				[c send_configure_message:w->x:w->y:c->window->width:c->window->height];
+				if(c)
+					[c send_configure_message:w->x:w->y:c->window->width:c->window->height];
 
 				XSync(zdpy,False);
 				break;
@@ -399,13 +400,13 @@ static void resize(IMPObject *widget, void *data)
 	XEvent ev;
 	Cursor arrow = XCreateFontCursor(zdpy,XC_bottom_right_corner);
 	IMPList *children = NULL;
-	ZimClient *c;
+	ZimClient *c = NULL;
 	ZWindow *window;
 	char *name;
 	int width;
 	int height;
-	int w_resize_inc = 3;
-	int h_resize_inc = 3;
+	int w_resize_inc = 1;
+	int h_resize_inc = 1;
 	
 	w = w->parent;
 	
@@ -414,6 +415,9 @@ static void resize(IMPObject *widget, void *data)
 	/* Find the window by searching through the frame's children list. */
 	children = w->children;
 
+	if(!children)
+		return;
+	
 	while(children) {
 		window = children->data;
 		name = [window get_name];
@@ -423,7 +427,7 @@ static void resize(IMPObject *widget, void *data)
 			
 		if(!strncmp(name,"XWINDOW",8)) {
 			c = zimwm_find_client_by_zwindow(window);
-			if(c->size_hints) {
+			if(c && c->size_hints) {
 				w_resize_inc = c->size_hints->width_inc;
 				h_resize_inc = c->size_hints->height_inc;
 			}
@@ -480,6 +484,14 @@ static void resize(IMPObject *widget, void *data)
 					height = w->height;
 				}
 
+				if(c && c->size_hints) {
+					if(width < c->size_hints->min_width)
+						width = c->size_hints->min_width;
+					if(height < c->size_hints->min_height)
+						height = c->size_hints->min_height;
+				}
+
+				
 				/* resize the window before the frame, I think it makes it look smoother... */
 				[c->window move:c->border:c->title_height];
 				[c->window resize:width - c->border * 2:height - c->border - c->title_height];
