@@ -45,4 +45,8 @@
   */
 - (void)send_client_message:(int)format:(Atom)type:(Atom)data;
 
+/** Sends a Configure Message to the X11 Window represented by this client.
+  */
+- (void)send_configure_message:(int)x:(int)y;
+
 @end

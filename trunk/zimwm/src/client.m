@@ -132,6 +132,23 @@ static ZWindow *create_frame_for_client(ZimClient *c);
 	XSendEvent(zdpy,self->window->window,False,NoEventMask,&cv);
 }
 
+- (void)send_configure_message:(int)x:(int)y
+{
+	XConfigureEvent cv;
+
+	cv.type = ConfigureNotify;
+	cv.window = self->window->window;
+	cv.x = x;
+	cv.y = y;
+	cv.width = self->window->width;
+	cv.height = self->window->height;
+
+	self->window->x = x;
+	self->window->y = y;
+	
+	XSendEvent(zdpy,self->window->window,False,StructureNotifyMask | SubstructureNotifyMask,&cv);
+}
+
 @end
 
 static ZWindow *create_frame_for_client(ZimClient *c)
@@ -252,6 +269,28 @@ static void on_frame_button_down(IMPObject *widget, void *data)
 	int mask;
 	int x,x1;
 	int y,y1;
+	ZWindow *window = NULL;
+	IMPList *children = NULL;
+	char *name;
+
+	
+	/* Find the window by searching through the frame's children list. */
+	children = w->children;
+	
+	while(children) {
+		window = children->data;
+		name = [window get_name];
+		
+		if(!name)
+			name = "";
+			
+		if(!strncmp(name,"XWINDOW",8)) {
+			c = zimwm_find_client_by_zwindow(window);
+			break;
+		}
+
+		children = children->next;
+	}
 	
 	XGrabPointer(zdpy,root_window->window,True,PointerMotionMask | ButtonReleaseMask,GrabModeAsync,GrabModeAsync,None,arrow,CurrentTime);
 	XQueryPointer(zdpy,w->window,&w1,&w2,&x,&y,&x1,&y1,&mask);
@@ -264,6 +303,9 @@ static void on_frame_button_down(IMPObject *widget, void *data)
 		switch(ev.type) {
 			case MotionNotify:
 				[w move:ev.xmotion.x_root - x1:ev.xmotion.y_root - y1];
+				
+				[c send_configure_message:w->x:w->y];
+				
 				XSync(zdpy,False);
 				break;
 			case ButtonRelease:
@@ -400,8 +442,8 @@ static void resize(IMPObject *widget, void *data)
 				}
 
 				/* resize the window before the frame, I think it makes it look smoother... */
-				[c->window resize:width - c->border * 2:height - c->border - 3];
 				[c->window move:c->border:c->title_height];
+				[c->window resize:width - c->border * 2:height - c->border - c->title_height];
 		
 				[w resize:width:height];
 				[w raise];
