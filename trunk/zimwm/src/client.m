@@ -484,25 +484,24 @@ static void resize(IMPObject *widget, void *data)
 					height = w->height;
 				}
 
-				if(c && c->size_hints && 
-						c->size_hints->max_width > 0 && c->size_hints->min_width > 0 &&
-						c->size_hints->max_height > 0 && c->size_hints->min_height > 0) {
-					if(c->size_hints->max_width == c->size_hints->min_width)
+				if(c && c->size_hints) {
+					if((c->size_hints->max_width == c->size_hints->min_width) && 
+							c->size_hints->max_width > 0 && c->size_hints->min_width > 0)
 						width = c->size_hints->max_width;
-					else if(width > c->size_hints->max_width)
+					else if((width > c->size_hints->max_width) && c->size_hints->max_width > 0)
 						width = c->size_hints->max_width;	
-					else if(width < c->size_hints->min_width)
+					else if((width < c->size_hints->min_width) && c->size_hints->min_width > 0)
 						width = c->size_hints->min_width;
 					
-					if(c->size_hints->max_height == c->size_hints->min_width)
+					if((c->size_hints->max_height == c->size_hints->min_width) &&
+							c->size_hints->max_height > 0 && c->size_hints->max_width > 0)
 						height = c->size_hints->max_height;
-					else if(height < c->size_hints->min_height)
+					else if((height < c->size_hints->min_height) && c->size_hints->min_height > 0)
 						height = c->size_hints->min_height;
-					else if(height > c->size_hints->max_height)
+					else if((height > c->size_hints->max_height) && c->size_hints->max_height > 0)
 						height = c->size_hints->max_height;
 				}
-
-				
+		
 				/* resize the window before the frame, I think it makes it look smoother... */
 				[c->window move:c->border:c->title_height];
 				[c->window resize:width - c->border * 2:height - c->border - c->title_height];
@@ -526,7 +525,7 @@ static void resize(IMPObject *widget, void *data)
 				
 				[c send_configure_message:c->window->x:c->window->y:c->window->width:c->window->height];
 				
-				XSync(zdpy,False);	
+				//XSync(zdpy,False);	
 				break;		
 			case ButtonRelease:
 				XUngrabPointer(zdpy,CurrentTime);
