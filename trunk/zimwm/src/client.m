@@ -485,10 +485,20 @@ static void resize(IMPObject *widget, void *data)
 				}
 
 				if(c && c->size_hints) {
-					if(width < c->size_hints->min_width)
+					if(c->size_hints->max_width == c->size_hints->min_width)
+						width = c->size_hints->max_width;
+					else if(width > c->size_hints->max_width)
+						width = c->size_hints->max_width;	
+					else if(width < c->size_hints->min_width)
 						width = c->size_hints->min_width;
-					if(height < c->size_hints->min_height)
+					
+					if(c->size_hints->max_height == c->size_hints->min_width)
+						height = c->size_hints->max_height;
+					else if(height < c->size_hints->min_height)
 						height = c->size_hints->min_height;
+					else if(height > c->size_hints->max_height)
+						height = c->size_hints->max_height;
+
 				}
 
 				
