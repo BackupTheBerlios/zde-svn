@@ -21,8 +21,17 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
+/*! \addtogroup X11 Atoms and Events
+   *  @{
+   */
+
+/** Publicly available array of atoms. 
+  Referenced by something like \code z_atom[ATOM] \endcode Where ATOM is defined in the enum ATOM 
+  These are created when zwl_init is called.
+ */
 extern Atom *z_atom;
 
+/** Enumeration of some commonly used Atoms. For use with the z_atom array. */
 typedef enum {
 	UTF8_STRING,
 	WM_NAME,
@@ -78,15 +87,28 @@ typedef enum {
 	END_ATOM
 }ATOM;
 
+/** Publicly available variable that is the display opened by zwl. 
+  It is better to call zwl_get_display instead of referencing this directly. */
 extern Display *zdpy;
 
-/** You must call this function before you use
-  any zwl widgets. */
+/** You must call this function before you use any zwl widgets. 
+  It opens the display and initializes the z_atom array.
+ */
 void zwl_init(void);
+
+/** Used when you want zwl to process an XEvent you have received and do not want to deal with. */
 void zwl_receive_xevent(XEvent *ev);
 
+/** Gets the display zwl has opened. Use this in preference to referencing zdpy */
 Display *zwl_get_display(void);
+
+/** Adds a widget to the list of widgets that zwl will process events for. */
 void zwl_main_loop_add_widget(ZWidget *w);
+
+/** Starts the main event processing loop. */
 void zwl_main_loop_start(void);
+
+/** Terminates the main event loop and deallocates the list of widgets. */
 void zwl_main_loop_quit(void);
 
+/*! @} */
