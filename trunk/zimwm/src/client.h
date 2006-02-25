@@ -47,6 +47,6 @@
 
 /** Sends a Configure Message to the X11 Window represented by this client.
   */
-- (void)send_configure_message:(int)x:(int)y;
+- (void)send_configure_message:(int)x:(int)y:(int)width:(int)height;
 
 @end

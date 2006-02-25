@@ -132,7 +132,7 @@ static ZWindow *create_frame_for_client(ZimClient *c);
 	XSendEvent(zdpy,self->window->window,False,NoEventMask,&cv);
 }
 
-- (void)send_configure_message:(int)x:(int)y
+- (void)send_configure_message:(int)x:(int)y:(int)width:(int)height
 {
 	XConfigureEvent cv;
 
@@ -140,11 +140,13 @@ static ZWindow *create_frame_for_client(ZimClient *c);
 	cv.window = self->window->window;
 	cv.x = x;
 	cv.y = y;
-	cv.width = self->window->width;
-	cv.height = self->window->height;
+	cv.width = width;
+	cv.height = height;
 
 	self->window->x = x;
 	self->window->y = y;
+	self->window->width = width;
+	self->window->height = height;
 	
 	XSendEvent(zdpy,self->window->window,False,StructureNotifyMask | SubstructureNotifyMask,&cv);
 }
@@ -302,10 +304,9 @@ static void on_frame_button_down(IMPObject *widget, void *data)
 
 		switch(ev.type) {
 			case MotionNotify:
-				[w move:ev.xmotion.x_root - x1:ev.xmotion.y_root - y1];
-				
-				[c send_configure_message:w->x:w->y];
-				
+				[w move:ev.xmotion.x_root - x1:ev.xmotion.y_root - y1];	
+				[c send_configure_message:w->x:w->y:c->window->width:c->window->height];
+
 				XSync(zdpy,False);
 				break;
 			case ButtonRelease:
@@ -352,9 +353,7 @@ static void on_frame_expose(IMPObject *widget, void *data)
 			return;
 		}
 		children = children->next;
-	}
-
-	
+	}	
 }
 
 static void on_frame_label_button_down(IMPObject *widget, void *data)
@@ -423,17 +422,17 @@ static void resize(IMPObject *widget, void *data)
 					
 				if(!strncmp(name,"RIGHT_HANDLE",8)) {	
 					width = abs(w->x - ev.xmotion.x_root);
-					width -= (width - 10) % 10;
+					width -= (width - 10) % 3;
 					height = w->height;
 				}
 				else if(!strncmp(name,"LEFT_HANDLE",7)) {	
 					width = abs(w->x - ev.xmotion.x_root);
-					width -= (width - 10) % 10;
+					width -= (width - 10) % 3;
 					height = w->height;
 				}
 				else if(!strncmp(name,"BOTTOM_HANDLE",13)) {	
 					height = abs(w->y - ev.xmotion.y_root);
-					height -= (height - 10) % 10;
+					height -= (height - 10) % 3;
 					width = w->width;
 				}
 				else {
@@ -458,6 +457,8 @@ static void resize(IMPObject *widget, void *data)
 				[right raise];
 				[left raise];
 				[bottom raise];
+				
+				[c send_configure_message:c->window->x:c->window->y:c->window->width:c->window->height];
 				
 				XSync(zdpy,False);	
 				break;		
