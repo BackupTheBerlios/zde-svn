@@ -74,7 +74,7 @@ static void on_configure(IMPObject *widget, void *data);
 	/* We want to be notified when we are going to be closed */
 	XChangeProperty(zdpy,self->window,z_atom[WM_PROTOCOLS],XA_ATOM,32,PropModeReplace,&z_atom[WM_DELETE_WINDOW],1);
 
-	XChangeProperty(zdpy,self->window,z_atom[NET_WM_WINDOW_TYPE],XA_ATOM,32,PropModeReplace,&z_atom[NET_WM_WINDOW_TYPE_NORMAL],1);
+	XChangeProperty(zdpy,self->window,z_atom[_NET_WM_WINDOW_TYPE],XA_ATOM,32,PropModeReplace,&z_atom[_NET_WM_WINDOW_TYPE_NORMAL],1);
 	
 	[self attatch_internal_cb:CONFIGURE:(ZCallback *)on_configure];
 }
