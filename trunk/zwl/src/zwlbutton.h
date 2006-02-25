@@ -24,7 +24,7 @@
 /**
   A window that must be a child of a ZWindow, which is accomplished by calling [parent add_child:button]
   BEFORE showing the button.  It uses a ZLabel to draw the text in *label, and handles Expose events for
-  drawing that text.
+  drawing that text. It can also display a png image using Cairo instead of text when you use the second form of -init.
   */
 @interface ZButton : ZWindow
 {

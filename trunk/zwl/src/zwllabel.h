@@ -30,6 +30,8 @@
 {
 	@protected
 	char *label;
+
+	@public
 	int resize;
 }
 
