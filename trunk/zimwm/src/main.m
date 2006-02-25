@@ -84,7 +84,10 @@ static void setup_root_window(void)
 	[root_window attatch_cb:BUTTON_DOWN:(ZCallback *)on_button_down];
 	[root_window attatch_cb:MAP_REQUEST:(ZCallback *)on_map_request];
 	[root_window attatch_cb:KEY_PRESS:(ZCallback *)on_key_press];
+	[root_window attatch_cb:CLIENT_MESSAGE:(ZCallback *)on_client_message];
 
+	setup_ewmh_root_properties();
+	
 /*	XQueryTree(zdpy,root_window->window,&root,&parent,&children,&len);
 
 	for(i=0;i<len;i++) {

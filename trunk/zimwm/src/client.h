@@ -21,6 +21,9 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
+#ifndef CLIENT_H
+#define CLIENT_H
+
 @interface ZimClient : IMPObject
 {
 	@public
@@ -50,3 +53,5 @@
 - (void)send_configure_message:(int)x:(int)y:(int)width:(int)height;
 
 @end
+
+#endif

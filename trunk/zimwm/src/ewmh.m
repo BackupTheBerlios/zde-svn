@@ -23,39 +23,27 @@
 
 #include "zimwm.h"
 
-void on_button_down(IMPObject *widget, void *data)
+void setup_ewmh_root_properties(void)
 {
-	printf("KICKASS!\n");
+	char *net_supported[10];
+
+	/* All that we support for now... */
+	net_supported[0] = z_atom[_NET_CLOSE_WINDOW];
+	
+	XChangeProperty(zdpy,root_window->window,z_atom[_NET_SUPPORTED],XA_ATOM,32,PropModeReplace,net_supported,1);
 }
 
-void on_map_request(IMPObject *widget, void *data)
+void handle_ewmh_client_message(XClientMessageEvent *ev)
 {
-	XMapRequestEvent *ev = (XMapRequestEvent *)data;
-	ZimClient *client = [ZimClient alloc];
+	ZimClient *c = NULL;
 
-//	XGrabServer(zdpy);
+	if(ev->message_type = z_atom[_NET_CLOSE_WINDOW]) {
+		c = zimwm_find_client_by_window(ev->window);
+		
+		if(!c)
+			return;
+		
+		zimwm_delete_client(c);
+	}
 	
-//	printf("Window %d requests to be mapped.\n",ev->window);
-	
-	[client init:ev->window];
-	
-	zimwm_add_client(client);
-
-//	XSync(zdpy,False);
-//	XUngrabServer(zdpy);
 }
-
-void on_key_press(IMPObject *widget, void *data)
-{
-	ZWidget *w = (ZWidget *)widget;
-
-//	printf("Coolness!\n");
-}
-
-void on_client_message(IMPObject *widget, void *data)
-{
-	XClientMessageEvent *ev = (XClientMessageEvent *)data;
-	
-	handle_ewmh_client_message(ev);	
-}
-

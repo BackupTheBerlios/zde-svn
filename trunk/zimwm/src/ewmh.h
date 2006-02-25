@@ -21,41 +21,13 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#include "zimwm.h"
+#ifndef EWMH_H
+#define EWMH_H
 
-void on_button_down(IMPObject *widget, void *data)
-{
-	printf("KICKASS!\n");
-}
+/** Sets the root window properties, like _NET_SUPPORTED, etc. */
+void setup_ewmh_root_properties(void);
 
-void on_map_request(IMPObject *widget, void *data)
-{
-	XMapRequestEvent *ev = (XMapRequestEvent *)data;
-	ZimClient *client = [ZimClient alloc];
+/** Responds to EWMH messages to the root window, like _NET_CLOSE_WINDOW, etc. */
+void handle_ewmh_client_message(XClientMessageEvent *ev);
 
-//	XGrabServer(zdpy);
-	
-//	printf("Window %d requests to be mapped.\n",ev->window);
-	
-	[client init:ev->window];
-	
-	zimwm_add_client(client);
-
-//	XSync(zdpy,False);
-//	XUngrabServer(zdpy);
-}
-
-void on_key_press(IMPObject *widget, void *data)
-{
-	ZWidget *w = (ZWidget *)widget;
-
-//	printf("Coolness!\n");
-}
-
-void on_client_message(IMPObject *widget, void *data)
-{
-	XClientMessageEvent *ev = (XClientMessageEvent *)data;
-	
-	handle_ewmh_client_message(ev);	
-}
-
+#endif

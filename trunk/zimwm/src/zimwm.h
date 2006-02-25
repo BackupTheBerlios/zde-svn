@@ -26,6 +26,7 @@
 
 #include <zwl.h>
 
+#include "ewmh.h"
 #include "client.h"
 #include "events.h"
 
