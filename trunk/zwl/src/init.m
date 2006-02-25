@@ -66,6 +66,31 @@ void zwl_init(void)
 	z_atom[_NET_WM_MOVERESIZE] = XInternAtom(zdpy,"_NET_WM_MOVERESIZE",False);
         z_atom[_NET_RESTACK_WINDOW] = XInternAtom(zdpy,"_NET_RESTACK_WINDOW",False);
         z_atom[_NET_REQUEST_FRAME_EXTENTS] = XInternAtom(zdpy,"_NET_REQUEST_FRAME_EXTENTS",False);
+	z_atom[_NET_WM_NAME] = XInternAtom(zdpy,"_NET_WM_NAME",False);
+        z_atom[_NET_WM_VISIBLE_NAME] = XInternAtom(zdpy,"_NET_WM_VISIBLE_NAME",False);
+        z_atom[_NET_WM_ICON_NAME] = XInternAtom(zdpy,"_NET_WM_ICON_NAME",False);
+        z_atom[_NET_WM_VISIBLE_ICON_NAME] = XInternAtom(zdpy,"_NET_WM_VISIBLE_ICON_NAME",False);
+        z_atom[_NET_WM_DESKTOP] = XInternAtom(zdpy,"_NET_WM_DESKTOP",False);
+        z_atom[_NET_WM_STATE] = XInternAtom(zdpy,"_NET_WM_STATE",False);
+        z_atom[_NET_WM_ALLOWED_ACTIONS] = XInternAtom(zdpy,"_NET_WM_ALLOWED_ACTIONS",False);
+        z_atom[_NET_WM_STRUT] = XInternAtom(zdpy,"_NET_WM_STRUT",False);
+        z_atom[_NET_WM_STRUT_PARTIAL] = XInternAtom(zdpy,"_NET_WM_STRUT_PARTIAL",False);
+        z_atom[_NET_WM_ICON_GEOMETRY] = XInternAtom(zdpy,"_NET_WM_ICON_GEOMETRY",False);
+        z_atom[_NET_WM_ICON] = XInternAtom(zdpy,"_NET_WM_ICON",False);
+        z_atom[_NET_WM_PID] = XInternAtom(zdpy,"_NET_WM_PID",False);
+        z_atom[_NET_WM_HANDLED_ICONS] = XInternAtom(zdpy,"_NET_WM_HANDLED_ICONS",False);
+        z_atom[_NET_WM_USER_TIME] = XInternAtom(zdpy,"_NET_WM_USER_TYPE",False);
+        z_atom[_NET_FRAME_EXTENTS] = XInternAtom(zdpy,"_NET_FRAME_EXTENTS",False);
+	z_atom[_NET_WM_ACTION_MOVE] = XInternAtom(zdpy,"_NET_WM_ACTION_MOVE",False);
+	z_atom[_NET_WM_ACTION_RESIZE] = XInternAtom(zdpy,"_NET_WM_ACTION_RESIZE",False);
+	z_atom[_NET_WM_ACTION_MINIMIZE] = XInternAtom(zdpy,"_NET_WM_ACTION_MINIMIZE",False);
+	z_atom[_NET_WM_ACTION_SHADE] = XInternAtom(zdpy,"_NET_WM_ACTION_SHADE",False);
+	z_atom[_NET_WM_ACTION_STICK] = XInternAtom(zdpy,"_NET_WM_ACTION_STICK",False);
+	z_atom[_NET_WM_ACTION_MAXIMIZE_HORZ] = XInternAtom(zdpy,"_NET_WM_ACTION_MAXIMIZE_HORZ",False);
+	z_atom[_NET_WM_ACTION_MAXIMIZE_VERT] = XInternAtom(zdpy,"_NET_WM_ACTION_MAXIMIZE_VERT",False);
+	z_atom[_NET_WM_ACTION_FULLSCREEN] = XInternAtom(zdpy,"_NET_WM_ACTION_FULLSCREEN",False);
+	z_atom[_NET_WM_ACTION_CHANGE_DESKTOP] = XInternAtom(zdpy,"_NET_WM_ACTION_CHANGE_DESKTOP",False);
+	z_atom[_NET_WM_ACTION_CLOSE] = XInternAtom(zdpy,"_NET_WM_ACTION_CLOSE",False);
 }
 
 Display *zwl_get_display(void)
