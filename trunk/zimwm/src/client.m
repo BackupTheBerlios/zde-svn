@@ -78,7 +78,6 @@ static ZWindow *create_frame_for_client(ZimClient *c);
 	[frame add_child:self->window]; 
 		
 	[self->window attatch_cb:UNMAP:(ZCallback *)on_win_unmap];
-//	[self->window attatch_cb:DESTROY:(ZCallback *)on_win_unmap];
 	
 	zwl_main_loop_add_widget(self->window);
 
@@ -152,7 +151,6 @@ static ZWindow *create_frame_for_client(ZimClient *c)
 		c->window->width + (c->border * 2):
 		c->window->height + (c->border + c->title_height)];
 
-//	[f attatch_cb:KEY_PRESS:(ZCallback *)on_frame_key_press];
 	[f attatch_cb:BUTTON_DOWN:(ZCallback *)on_frame_button_down];
 	[f attatch_cb:EXPOSE:(ZCallback *)on_frame_expose];
 
@@ -204,13 +202,14 @@ static void on_win_unmap(IMPObject *widget, void *data)
 
 	w->window = NULL;
 	
-	c = zimwm_find_client_by_zwindow(w);
+	//c = zimwm_find_client_by_zwindow(w);
+	
+	//zimwm_remove_client(c);
 
-	zimwm_remove_client(c);
-
+	zimwm_find_and_remove_client(w);
+	
 	[w->parent destroy];
 	//zimwm_delete_client(c);
-	
 	//XUngrabServer(zdpy);
 }
 
@@ -242,85 +241,33 @@ static void on_close_button_down(IMPObject *widget, void *data)
 	}
 }
 
-/* XXX Moving the window works perfectly, but resizing, well... This needs to be cleaned up A LOT.  It
-   hardly can be called working. */
+/* Moves the window around. */
 static void on_frame_button_down(IMPObject *widget, void *data)
 {
 	ZWindow *w = (ZWindow *)widget;
 	Window w1,w2;
 	XEvent ev;
 	Cursor arrow = XCreateFontCursor(zdpy,XC_fleur);
-	IMPList *children = NULL;
 	ZimClient *c;
-	ZWindow *window;
-	char *name;
 	int mask;
 	int x,x1;
 	int y,y1;
-	int width;
-	int height;
 	
 	XGrabPointer(zdpy,root_window->window,True,PointerMotionMask | ButtonReleaseMask,GrabModeAsync,GrabModeAsync,None,arrow,CurrentTime);
 	XQueryPointer(zdpy,w->window,&w1,&w2,&x,&y,&x1,&y1,&mask);
 
-	if(mask & ControlMask)
-		XWarpPointer(zdpy,None,w->window,0,0,0,0,w->width,w->height);
-		
-	XGrabServer(zdpy);
+	[w raise];
+	
 	while(1) {
 		XNextEvent(zdpy,&ev);
 
 		switch(ev.type) {
 			case MotionNotify:
-				/* XXX RESIZE IS BROKEN BADLY XXX */
-				if(ev.xmotion.state & ControlMask) {
-			/*		XUngrabServer(zdpy);		
-					width = abs(w->x - ev.xmotion.x);
-					height = abs(w->y - ev.xmotion.y);
-
-					width -= (width - 10) % 10;
-					height -= (height - 10) % 10;
-					
-					XSync(zdpy,False);
-					XGrabServer(zdpy);
-			*/		/*
-					[w resize:((ev.xmotion.x_root - w->width)) + w->width:
-						((ev.xmotion.y_root - w->height)) + w->height];
-						*/
-					
-					/* Find the window by searching through the frame's children list. */
-			/*		children = w->children;
-	
-					while(children) {
-						window = children->data;
-						name = [window get_name];
-						
-						if(!name)
-							name = "";
-							
-						if(!strncmp(name,"XWINDOW",8)) {
-							c = zimwm_find_client_by_zwindow(window);
-							
-							[c->window resize:width - c->border:height - c->border * 2];
-							[c->window move:c->border:c->title_height];
-							break;
-						}
-
-						children = children->next;
-					}
-					
-					[w resize:width:height];
-					[w raise];
-			*/	}
-				else {
-					[w move:ev.xmotion.x_root - x1:ev.xmotion.y_root - y1];
-					[w raise];
-					XSync(zdpy,False);
-				}
+				[w move:ev.xmotion.x_root - x1:ev.xmotion.y_root - y1];
+				XSync(zdpy,False);
 				break;
 			case ButtonRelease:
 				XUngrabPointer(zdpy,CurrentTime);
-				XUngrabServer(zdpy);
 				[w raise];
 				return;
 			default:
@@ -332,63 +279,7 @@ static void on_frame_button_down(IMPObject *widget, void *data)
 	XFreeCursor(zdpy,arrow);
 }
 
-/*
-static void on_frame_key_press(IMPObject *widget, void *data)
-{
-	ZWindow *w = (ZWindow *)widget;
-	XEvent ev,ev1;
-	KeySym *key;
-	XKeyEvent *kev = (XKeyEvent *)data;
-	Window w1,w2;
-	Cursor arrow = XCreateFontCursor(zdpy,XC_bottom_right_corner);
-	int mask;
-	int x,x1;
-	int y,y1;
-
-	key = XKeycodeToKeysym(zdpy,kev->keycode,1);
-	
-	if(kev->keycode == 64 || kev->keycode == 113) {
-		while(1) {
-			XNextEvent(zdpy,&ev);
-			
-			switch(ev.type) {
-				case ButtonPress:
-					XGrabPointer(zdpy,w->window,True,PointerMotionMask | ButtonReleaseMask,
-							GrabModeAsync,GrabModeAsync,None,arrow,CurrentTime);
-					XWarpPointer(zdpy,None,w->window,0,0,0,0,w->width,w->height);
-						while(1) {
-							XNextEvent(zdpy,&ev1);
-							
-							switch(ev1.type) {
-								case MotionNotify:
-									x = w->width;
-									y = w->height;
-									printf("motion x:%d\nmotion y:%d\n",ev1.xmotion.x,ev1.xmotion.y);
-									[w resize:((ev1.xmotion.x - x)) + x:
-										((ev1.xmotion.y - y)) + y];
-									[w raise];
-									
-									break;
-								case ButtonRelease:
-									XUngrabPointer(zdpy,CurrentTime);
-									[w raise];
-									break;
-								default:
-								//	zwl_receive_xevent(&ev);
-									break;
-							}
-						}
-					break;
-				default:
-					zwl_receive_xevent(&ev);
-					break;
-			}
-
-		}
-	}	
-}
-*/
-
+/* Recenters the title in the frame. */
 static void on_frame_expose(IMPObject *widget, void *data)
 {
 	ZWindow *frame = (ZWindow *)widget;
@@ -416,13 +307,8 @@ static void on_frame_expose(IMPObject *widget, void *data)
 			
 			XftTextExtents8(zdpy,font,[label get_label],strlen([label get_label]),&extents);
 			[label move:(frame->width / 2) - (extents.width / 2):0];
+			return;
 		}
-	/*	else if(!strncmp(name,"RIGHT_HANDLE",12)) {
-			w = (ZWindow *)window;
-
-			[w move:frame->width - c->border:c->title_height];
-		}
-*/
 		children = children->next;
 	}
 
@@ -457,7 +343,6 @@ static void resize(IMPObject *widget, void *data)
 	
 	XGrabPointer(zdpy,root_window->window,True,PointerMotionMask | ButtonReleaseMask,GrabModeAsync,GrabModeAsync,None,arrow,CurrentTime);
 
-
 	/* Find the window by searching through the frame's children list. */
 	children = w->children;
 
@@ -489,18 +374,38 @@ static void resize(IMPObject *widget, void *data)
 		
 		switch(ev.type) {
 			case MotionNotify:
-				width = abs(w->x - ev.xmotion.x_root);
-				height = abs(w->y - ev.xmotion.y_root);
-
-				width -= (width - 10) % 10;
-				height -= (height - 10) % 10;
+				name = [myself get_name];
+				
+				if(!name)
+					name = "";
 					
-				[w resize:width:height];
-				[w raise];
-			
+				if(!strncmp(name,"RIGHT_HANDLE",8)) {	
+					width = abs(w->x - ev.xmotion.x_root);
+					width -= (width - 10) % 10;
+					height = w->height;
+				}
+				else if(!strncmp(name,"LEFT_HANDLE",7)) {	
+					width = abs(w->x - ev.xmotion.x_root);
+					width -= (width - 10) % 10;
+					height = w->height;
+				}
+				else if(!strncmp(name,"BOTTOM_HANDLE",13)) {	
+					height = abs(w->y - ev.xmotion.y_root);
+					height -= (height - 10) % 10;
+					width = w->width;
+				}
+				else {
+					width = w->width;
+					height = w->height;
+				}
+
+				/* resize the window before the frame, I think it makes it look smoother... */
 				[c->window resize:width - c->border * 2:height - c->border - 3];
 				[c->window move:c->border:c->title_height];
 		
+				[w resize:width:height];
+				[w raise];
+			
 				[right move:w->width - c->border:c->title_height];
 				[right resize:c->border:w->height];
 				[left move:0:c->title_height];
@@ -512,6 +417,7 @@ static void resize(IMPObject *widget, void *data)
 				[left raise];
 				[bottom raise];
 				
+				XSync(zdpy,False);	
 				break;		
 			case ButtonRelease:
 				XUngrabPointer(zdpy,CurrentTime);

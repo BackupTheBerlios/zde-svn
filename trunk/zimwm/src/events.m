@@ -39,7 +39,7 @@ void on_map_request(IMPObject *widget, void *data)
 	
 	[client init:ev->window];
 	
-	zimwm_add_client(client);	
+	zimwm_add_client(client);
 
 //	XSync(zdpy,False);
 //	XUngrabServer(zdpy);

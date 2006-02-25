@@ -103,8 +103,8 @@ void zimwm_add_client(ZimClient *client)
 {
 	if(client_list) {
 		if(client) {
-			client_list = [client_list prepend_data:client];
-			//[client_list append_data:client];
+			//client_list = [client_list prepend_data:client];
+			[client_list append_data:client];
 		}
 	}
 	else {
@@ -229,11 +229,31 @@ void zimwm_remove_client(ZimClient *c)
 		client = (ZimClient *)list->next->data;
 
 		if((client == c) && list->next) {
-			[list delete_next_node];
+			list = [list delete_next_node];
 			return;
 		}
 
 		list = list->next;
 	}
+}
+
+void zimwm_find_and_remove_client(ZWindow *w)
+{
+	IMPList *list = client_list;
+	ZimClient *c;
+
+	while(list) {
+		c = (ZimClient *)list->data;
+
+		if(c->window == w) {
+			list = [list delete_node];
+			client_list = list;
+			return;
+		}
+		
+		list = list->next;
+	}
+
+	return NULL;
 }
 
