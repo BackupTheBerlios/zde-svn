@@ -21,12 +21,11 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-/* A widget that displays text and must be a child of a ZWindow.  It can be set to 
+/** A widget that displays text and must be a child of a ZWindow.  It can be set to 
    automatically set its own width and height if you are changing the label a lot.
    This widget DOES NOT perform word-wrapping or any other form of text-layout.
    It simply displays text.
  */
-
 @interface ZLabel : ZWindow
 {
 	@protected
@@ -34,18 +33,18 @@
 	int resize;
 }
 
-/* Use this form if you know exactly what you want width and height to be.  Any
+/** Use this form if you know exactly what you want width and height to be.  Any
    text that cannot fix in this space will be truncated.
  */
 - init:(int)x:(int)y:(int)width:(int)height;
 
-/* Use this form if you want width and height to be determined automatically.
+/** Use this form if you want width and height to be determined automatically.
  */
 - init:(int)x:(int)y;
 
 - free;
 
-/* Will override any previously set label and display it.
+/** Will override any previously set label and display it.
  */
 - (void)set_label:(char *)label;
 - (char *)get_label;
