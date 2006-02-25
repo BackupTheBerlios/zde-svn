@@ -84,8 +84,6 @@ static void setup_root_window(void)
 	[root_window attatch_cb:BUTTON_DOWN:(ZCallback *)on_button_down];
 	[root_window attatch_cb:MAP_REQUEST:(ZCallback *)on_map_request];
 	[root_window attatch_cb:KEY_PRESS:(ZCallback *)on_key_press];
-	//[root_window attatch_cb:UNMAP:(ZCallback *)on_unmap];
-	//[root_window attatch_cb:DESTROY:(ZCallback *)on_unmap];
 
 /*	XQueryTree(zdpy,root_window->window,&root,&parent,&children,&len);
 
@@ -166,19 +164,10 @@ void zimwm_delete_client(ZimClient *c)
 	client = (ZimClient *)client_list->data;
 	if(client == c) {
 		if(c->atoms[WM_DELETE_WINDOW] && c->window->window) {
-		/*	cv.type = ClientMessage;
-			cv.message_type = z_atom[WM_PROTOCOLS];
-			cv.window = c->window->window;
-			cv.format = 32;
-			cv.data.l[0] = z_atom[WM_DELETE_WINDOW];
-			cv.data.l[1] = CurrentTime;
-			XSendEvent(zdpy,c->window->window,False,NoEventMask,&cv);		
-			*/
 			[c send_client_message:32:z_atom[WM_PROTOCOLS]:z_atom[WM_DELETE_WINDOW]];
 		}
 		else {
 			[client->window->parent destroy];
-			//client_list = [client_list delete_node];
 		}
 		return;
 	}
@@ -187,20 +176,10 @@ void zimwm_delete_client(ZimClient *c)
 		client = (ZimClient *)list->next->data;
 
 		if((client == c) && list->next) {
-			if(client->atoms[WM_DELETE_WINDOW] && c->window->window) {	
-		/*		cv.type = ClientMessage;
-				cv.message_type = z_atom[WM_PROTOCOLS];
-				cv.window = client->window->window;
-				cv.format = 32;
-				cv.data.l[0] = z_atom[WM_DELETE_WINDOW];
-				cv.data.l[1] = CurrentTime;
-				XSendEvent(zdpy,client->window->window,False,NoEventMask,&cv);		
-				*/
 				[client send_client_message:32:z_atom[WM_PROTOCOLS]:z_atom[WM_DELETE_WINDOW]];
 			}
 			else {
 				[client->window->parent destroy];
-			//	[list delete_next_node];
 			}
 			return;
 		}
