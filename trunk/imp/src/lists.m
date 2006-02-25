@@ -135,5 +135,17 @@
 	[self release];
 }
 
+- (int)get_size
+{
+	IMPList *tmp = self;
+	int i;
+	
+	for(i=0;tmp;i++){
+		tmp = tmp->next;
+	}
+	
+	return i;
+}
+
 @end
 

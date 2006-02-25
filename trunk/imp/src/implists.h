@@ -85,6 +85,9 @@ beginning of the list */
 /** Deletes the current node and all nodes after it. The list should not be accessed after this. */
 - (void)delete_list;
 
+/** Gets the current size of the list, i.e. how many nodes it contains. */
+- (int)get_size;
+
 @end
 
 #endif
