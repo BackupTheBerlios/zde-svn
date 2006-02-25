@@ -44,6 +44,9 @@ static ZWindow *create_frame_for_client(ZimClient *c);
 	ZWindow *w = [ZWindow alloc];
 	ZWindow *frame = NULL;
 	char *name = NULL;
+
+	self->atoms = NULL;
+	self->size_hints = NULL;
 	
 	XGetWindowAttributes(zdpy,window,&attr);
 
@@ -90,6 +93,12 @@ static ZWindow *create_frame_for_client(ZimClient *c);
 - free
 {
 	[self->window release];
+
+	if(self->atoms)
+		i_free(self->atoms);
+	if(self->size_hints)
+		i_free(self->size_hints);
+	
 	[super free];
 }
 
@@ -97,6 +106,8 @@ static ZWindow *create_frame_for_client(ZimClient *c);
 {
 	int i,len;
 	Atom *atom = NULL;
+	XSizeHints shints;
+	long sreturn;
 	
 	self->atoms = i_calloc(30,sizeof(Atom));
 
@@ -116,6 +127,13 @@ static ZWindow *create_frame_for_client(ZimClient *c);
 			}
 		}
 	}
+
+	/* WM_NORMAL_HINTS */
+	XGetWMNormalHints(zdpy,self->window->window,&shints,&sreturn);
+
+	if(&shints) {
+		self->size_hints = memcpy(i_calloc(1,sizeof(XSizeHints)),&shints,sizeof(XSizeHints));
+	}	
 }
 
 - (void)send_client_message:(int)format:(Atom)type:(Atom)data
@@ -386,6 +404,8 @@ static void resize(IMPObject *widget, void *data)
 	char *name;
 	int width;
 	int height;
+	int w_resize_inc = 3;
+	int h_resize_inc = 3;
 	
 	w = w->parent;
 	
@@ -402,7 +422,11 @@ static void resize(IMPObject *widget, void *data)
 			name = "";
 			
 		if(!strncmp(name,"XWINDOW",8)) {
-			c = zimwm_find_client_by_zwindow(window);	
+			c = zimwm_find_client_by_zwindow(window);
+			if(c->size_hints) {
+				w_resize_inc = c->size_hints->width_inc;
+				h_resize_inc = c->size_hints->height_inc;
+			}
 		}
 		else if(!strncmp(name,"RIGHT_HANDLE",8)) {
 			right = window;
@@ -432,24 +456,24 @@ static void resize(IMPObject *widget, void *data)
 					
 				if(!strncmp(name,"RIGHT_HANDLE",8)) {	
 					width = abs(w->x - ev.xmotion.x_root);
-					width -= (width - 10) % 3;
+					width -= (width) % w_resize_inc;
 					height = w->height;
 				}
 				else if(!strncmp(name,"LEFT_HANDLE",7)) {	
 					width = abs(w->x - ev.xmotion.x_root);
-					width -= (width - 10) % 3;
+					width -= (width) % w_resize_inc;
 					height = w->height;
 				}
 				else if(!strncmp(name,"BOTTOM_HANDLE",13)) {	
 					height = abs(w->y - ev.xmotion.y_root);
-					height -= (height - 10) % 3;
+					height -= (height) % h_resize_inc;
 					width = w->width;
 				}
 				else if(!strncmp(name,"BOTTOM_RIGHT_HANDLE",19)) {	
 					width = abs(w->x - ev.xmotion.x_root);
-					width -= (width - 10) % 3;
+					width -= (width) % w_resize_inc;
 					height = abs(w->y - ev.xmotion.y_root);
-					height -= (height - 10) % 3;
+					height -= (height) % h_resize_inc;
 				}
 				else {
 					width = w->width;
