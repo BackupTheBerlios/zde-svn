@@ -160,6 +160,7 @@ static ZWindow *create_frame_for_client(ZimClient *c)
 	ZWindow *right_handle = [ZWindow alloc];
 	ZWindow *left_handle = [ZWindow alloc];
 	ZWindow *bottom_handle = [ZWindow alloc];
+	ZWindow *bottom_right_handle = [ZWindow alloc];
 	ZLabel *label = [ZLabel alloc];
 	XGlyphInfo extents;
 	XftFont *font = XftFontOpenName(zdpy,DefaultScreen(zdpy),"sans-8"); /* This is bad... */
@@ -190,6 +191,12 @@ static ZWindow *create_frame_for_client(ZimClient *c)
 	[bottom_handle set_name:"BOTTOM_HANDLE"];
 	[f add_child:(ZWidget *)bottom_handle];
 	[bottom_handle show];
+
+	[bottom_right_handle init:f:f->width - c->border:f->height - c->border:c->border:c->border];
+	[bottom_right_handle attatch_cb:BUTTON_DOWN:(ZCallback *)resize];
+	[bottom_right_handle set_name:"BOTTOM_RIGHT_HANDLE"];
+	[f add_child:(ZWidget *)bottom_right_handle];
+	[bottom_right_handle show];
 	
 	[close_button init:0:0:10:10];
 	[f add_child:(ZWidget *)close_button];
@@ -369,7 +376,7 @@ static void resize(IMPObject *widget, void *data)
 {
 	ZWindow *w = (ZWindow *)widget;
 	ZWindow *myself = (ZWindow *)widget;
-	ZWindow *right,*left,*bottom;
+	ZWindow *right,*left,*bottom,*bottom_right;
 	Window w1,w2;
 	XEvent ev;
 	Cursor arrow = XCreateFontCursor(zdpy,XC_bottom_right_corner);
@@ -406,6 +413,9 @@ static void resize(IMPObject *widget, void *data)
 		else if(!strncmp(name,"BOTTOM_HANDLE",13)) {
 			bottom = window;
 		}
+		else if(!strncmp(name,"BOTTOM_RIGHT_HANDLE",19)) {
+			bottom_right = window;
+		}
 
 		children = children->next;
 	}
@@ -435,6 +445,12 @@ static void resize(IMPObject *widget, void *data)
 					height -= (height - 10) % 3;
 					width = w->width;
 				}
+				else if(!strncmp(name,"BOTTOM_RIGHT_HANDLE",19)) {	
+					width = abs(w->x - ev.xmotion.x_root);
+					width -= (width - 10) % 3;
+					height = abs(w->y - ev.xmotion.y_root);
+					height -= (height - 10) % 3;
+				}
 				else {
 					width = w->width;
 					height = w->height;
@@ -453,10 +469,13 @@ static void resize(IMPObject *widget, void *data)
 				[left resize:c->border:w->height];
 				[bottom move:0:w->height - c->border];
 				[bottom resize:w->width:c->border];
+				[bottom_right move:w->width - c->border:w->height - c->border];
+				[bottom_right resize:c->border:c->border];
 				
 				[right raise];
 				[left raise];
 				[bottom raise];
+				[bottom_right raise];
 				
 				[c send_configure_message:c->window->x:c->window->y:c->window->width:c->window->height];
 				
@@ -474,3 +493,4 @@ static void resize(IMPObject *widget, void *data)
 	XFreeCursor(zdpy,arrow);
 	
 }
+
