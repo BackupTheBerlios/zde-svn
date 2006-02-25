@@ -61,6 +61,11 @@ void zwl_init(void)
         z_atom[_NET_VIRTUAL_ROOTS] = XInternAtom(zdpy,"_NET_VIRTUAL_ROOTS",False);
         z_atom[_NET_DESKTOP_LAYOUT] = XInternAtom(zdpy,"_NET_DESKTOP_LAYOUT",False);
         z_atom[_NET_SHOWING_DESKTOP] = XInternAtom(zdpy,"_NET_SHOWING_DESKTOP",False);
+	z_atom[_NET_CLOSE_WINDOW] = XInternAtom(zdpy,"_NET_CLOSE_WINDOW",False);
+	z_atom[_NET_MOVERESIZE_WINDOW] = XInternAtom(zdpy,"_NET_MOVERESIZE_WINDOW",False);
+	z_atom[_NET_WM_MOVERESIZE] = XInternAtom(zdpy,"_NET_WM_MOVERESIZE",False);
+        z_atom[_NET_RESTACK_WINDOW] = XInternAtom(zdpy,"_NET_RESTACK_WINDOW",False);
+        z_atom[_NET_REQUEST_FRAME_EXTENTS] = XInternAtom(zdpy,"_NET_REQUEST_FRAME_EXTENTS",False);
 }
 
 Display *zwl_get_display(void)
