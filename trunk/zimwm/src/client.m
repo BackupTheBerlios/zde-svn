@@ -333,7 +333,7 @@ static void on_frame_button_down(IMPObject *widget, void *data)
 				if(c)
 					[c send_configure_message:w->x:w->y:c->window->width:c->window->height];
 
-				XSync(zdpy,False);
+				//XSync(zdpy,False);
 				break;
 			case ButtonRelease:
 				XUngrabPointer(zdpy,CurrentTime);
