@@ -73,6 +73,8 @@ badd +40 src/events.m
 badd +46 src/client.h
 badd +282 src/client.m
 badd +1 TODO
+badd +1 src/ewmh.h
+badd +1 src/ewmh.m
 args configure.in README
 edit README
 set splitbelow splitright

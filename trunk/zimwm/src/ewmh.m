@@ -26,11 +26,18 @@
 void setup_ewmh_root_properties(void)
 {
 	char *net_supported[10];
+	Window ewmhwin;
 
 	/* All that we support for now... */
 	net_supported[0] = z_atom[_NET_CLOSE_WINDOW];
-	
-	XChangeProperty(zdpy,root_window->window,z_atom[_NET_SUPPORTED],XA_ATOM,32,PropModeReplace,net_supported,1);
+	net_supported[1] = z_atom[_NET_SUPPORTING_WM_CHECK];
+	XChangeProperty(zdpy,root_window->window,z_atom[_NET_SUPPORTED],XA_ATOM,32,PropModeReplace,net_supported,2);
+
+	/* Setup window for EWMH compatiablity. */
+	ewmhwin = XCreateSimpleWindow(zdpy,root_window->window,-100,-100,1,1,0,0,0);
+	XChangeProperty(zdpy,ewmhwin,z_atom[_NET_WM_NAME],z_atom[UTF8_STRING],32,PropModeReplace,"zimwm",1);
+	XChangeProperty(zdpy,ewmhwin,z_atom[_NET_SUPPORTING_WM_CHECK],XA_WINDOW,32,PropModeReplace,(unsigned char *)&ewmhwin,1);
+	XChangeProperty(zdpy,root_window->window,z_atom[_NET_SUPPORTING_WM_CHECK],XA_WINDOW,32,PropModeReplace,(unsigned char *)&ewmhwin,1);
 }
 
 void handle_ewmh_client_message(XClientMessageEvent *ev)
