@@ -101,8 +101,8 @@ void zimwm_add_client(ZimClient *client)
 {
 	if(client_list) {
 		if(client) {
-			//client_list = [client_list prepend_data:client];
-			[client_list append_data:client];
+			client_list = [client_list prepend_data:client];
+			//[client_list append_data:client];
 		}
 	}
 	else {
@@ -225,6 +225,8 @@ void zimwm_find_and_remove_client(ZWindow *w)
 		if(c->window == w) {
 			list = [list delete_node];
 			client_list = list;
+
+			printf("%d\n",[client_list get_size]);
 			return;
 		}
 		
