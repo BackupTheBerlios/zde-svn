@@ -68,7 +68,7 @@ void update_client_list(IMPList *list)
 
 		list = list->next;
 	}
-printf("UPDATING\n");
+
 	XChangeProperty(zdpy,root_window->window,z_atom[_NET_CLIENT_LIST],XA_WINDOW,32,PropModeReplace,(unsigned char *)windows,i);
 }
 
