@@ -23,13 +23,13 @@
 
 #include "imp.h"
 
+#include <string.h>
+
 void *i_alloc(unsigned int number, unsigned int size)
 {
 	void *temp = NULL;
 	
-	if(size == 0 || number == 0)
-		return NULL;
-	else if(size > 0 && number > 0) {
+	if(size > 0 && number > 0) {
 		temp = malloc(number * size);
 		if(temp != NULL)
 			return temp;
@@ -46,9 +46,7 @@ void *i_calloc(unsigned int number, unsigned int size)
 {
 	void *temp = NULL;
 	
-	if(size == 0 || number == 0)
-		return 0;
-	else if(size > 0 && number > 0) {
+	if(size > 0 && number > 0) {
 		temp = calloc(number, size);
 		if(temp != NULL)
 			return temp;
@@ -65,9 +63,7 @@ void *i_realloc(void *ptr, unsigned int number, unsigned int size)
 {
 	void *temp = NULL;
 
-	if(size == 0 || number == 0)
-		return NULL;
-	else if(size > 0 && number > 0) {
+	if(size > 0 && number > 0) {
 		temp = realloc(ptr, number * size);
 		if(temp != NULL)
 			return temp;
@@ -80,9 +76,14 @@ void *i_realloc(void *ptr, unsigned int number, unsigned int size)
 	return NULL;
 }
 
+char *i_strdup(const char *str)
+{
+	if(str != NULL)
+		return strdup(str);
+}
+
 void i_free(void *ptr)
 {
 	if(ptr != NULL)
 		free(ptr);
-
 }

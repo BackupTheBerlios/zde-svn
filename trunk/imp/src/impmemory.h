@@ -21,6 +21,10 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
+/** \addtogroup Memory Memory Management
+   *  @{
+   */
+
 /** Wrapper around the C Standard Library's malloc */
 void *i_alloc(unsigned int number, unsigned int size);
 
@@ -30,5 +34,10 @@ void *i_calloc(unsigned int number, unsigned int size);
 /** Wrapper around the C Standard Library's realloc */
 void *i_realloc(void *ptr, unsigned int number, unsigned int size);
 
+/** Wrapper around the C Standard Library's strdup */
+char *i_strdup(const char *str);
+
 /** Wrapper around the C Standard Library's free */
 void i_free(void *ptr);
+
+/** @} */
