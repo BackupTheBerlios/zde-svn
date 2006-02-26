@@ -7,7 +7,7 @@
     for the full text of this license and to the AUTHORS file for
     the complete list of developers.
 
-    This program is free software; you can redistribute it and/or
+    This program is i_free software; you can redistribute it and/or
     modify it under the terms of the GNU Lesser General Public
     License as published by the Free Software Foundation, version 2.1.
 
@@ -60,7 +60,7 @@ static void on_label_up(IMPObject *widget, void *data);
 	self->cr = NULL;
 	
 	if(image_path)
-		self->image_path = strdup(image_path);
+		self->image_path = i_strdup(image_path);
 	else
 		self->image_path = NULL;
 
@@ -77,7 +77,7 @@ static void on_label_up(IMPObject *widget, void *data);
 - free
 {
 	if(self->label)
-		free(self->label);
+		i_free(self->label);
 	
 	if(self->cr) {
 		cairo_destroy(self->cr);
@@ -92,7 +92,7 @@ static void on_label_up(IMPObject *widget, void *data);
 		self->image_surface = NULL;
 	}
 	if(self->image_path) {
-		free(self->image_path);
+		i_free(self->image_path);
 		self->image_path = NULL;
 	}
 	
@@ -106,9 +106,9 @@ static void on_label_up(IMPObject *widget, void *data);
 
 	if(label) {
 		if(self->label)
-			free(self->label);
+			i_free(self->label);
 
-		self->label = strdup(label);	
+		self->label = i_strdup(label);	
 		if(self->window && self->zlabel) {
 			[self->zlabel set_label:self->label];
 			XftTextExtents8(zdpy,font,[self->zlabel get_label],strlen([self->zlabel get_label]),&extents);

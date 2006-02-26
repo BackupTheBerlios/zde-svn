@@ -7,7 +7,7 @@
     for the full text of this license and to the AUTHORS file for
     the complete list of developers.
 
-    This program is free software; you can redistribute it and/or
+    This program is i_free software; you can redistribute it and/or
     modify it under the terms of the GNU Lesser General Public
     License as published by the Free Software Foundation, version 2.1.
 
@@ -96,7 +96,7 @@ static void on_configure(IMPObject *widget, void *data);
 - free
 {
 	if(self->title)
-		free(self->title);
+		i_free(self->title);
 
 	if(self->xftdraw) {
 //		XftDrawDestroy(self->xftdraw);
@@ -111,9 +111,9 @@ static void on_configure(IMPObject *widget, void *data);
 {
 	if(title && self->window) {
 		if(self->title)
-			free(self->title);
+			i_free(self->title);
 
-		self->title = strdup(title);
+		self->title = i_strdup(title);
 		XChangeProperty(zdpy,self->window,z_atom[WM_NAME],z_atom[UTF8_STRING],8,PropModeReplace,self->title,strlen(self->title));
 
 		return 0;

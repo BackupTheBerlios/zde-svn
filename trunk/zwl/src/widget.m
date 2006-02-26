@@ -7,7 +7,7 @@
     for the full text of this license and to the AUTHORS file for
     the complete list of developers.
 
-    This program is free software; you can redistribute it and/or
+    This program is i_free software; you can redistribute it and/or
     modify it under the terms of the GNU Lesser General Public
     License as published by the Free Software Foundation, version 2.1.
 
@@ -53,7 +53,7 @@ static void on_destroy(IMPObject *widget, void *data);
 - free
 {
 	if(self->name)
-		free(self->name);
+		i_free(self->name);
 	//if(self->parent)
 	//	[self->parent release];
 
@@ -90,9 +90,9 @@ static void on_destroy(IMPObject *widget, void *data);
 {
 	if(name) {
 		if(self->name)
-			free(self->name);
+			i_free(self->name);
 
-		self->name = strdup(name);
+		self->name = i_strdup(name);
 	}
 }
 

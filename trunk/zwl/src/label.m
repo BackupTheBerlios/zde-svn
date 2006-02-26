@@ -7,7 +7,7 @@
     for the full text of this license and to the AUTHORS file for
     the complete list of developers.
 
-    This program is free software; you can redistribute it and/or
+    This program is i_free software; you can redistribute it and/or
     modify it under the terms of the GNU Lesser General Public
     License as published by the Free Software Foundation, version 2.1.
 
@@ -58,7 +58,7 @@ static void on_expose(IMPObject *widget, void *data);
 - free
 {
 	if(self->label)
-		free(self->label);
+		i_free(self->label);
 	
 	[super free];
 }
@@ -67,9 +67,9 @@ static void on_expose(IMPObject *widget, void *data);
 {
 	if(label) {
 		if(self->label)
-			free(self->label);
+			i_free(self->label);
 
-		self->label = strdup(label);	
+		self->label = i_strdup(label);	
 		[self receive:EXPOSE:self];
 	}
 }
