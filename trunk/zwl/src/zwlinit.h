@@ -21,7 +21,7 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-/*! \addtogroup X11 Atoms and Events
+/** \addtogroup X11 Atoms and Events
    *  @{
    */
 
@@ -111,4 +111,4 @@ void zwl_main_loop_start(void);
 /** Terminates the main event loop and deallocates the list of widgets. */
 void zwl_main_loop_quit(void);
 
-/*! @} */
+/** @} */
