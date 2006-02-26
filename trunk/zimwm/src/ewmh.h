@@ -30,4 +30,7 @@ void setup_ewmh_root_properties(void);
 /** Responds to EWMH messages to the root window, like _NET_CLOSE_WINDOW, etc. */
 void handle_ewmh_client_message(XClientMessageEvent *ev);
 
+/** Updates the _NET_CLIENT_LIST property of the root window to the current client list, in order of mapping. */
+void update_client_list(IMPList *list);
+
 #endif

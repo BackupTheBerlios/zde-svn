@@ -31,7 +31,8 @@ void setup_ewmh_root_properties(void)
 	/* All that we support for now... */
 	net_supported[0] = z_atom[_NET_CLOSE_WINDOW];
 	net_supported[1] = z_atom[_NET_SUPPORTING_WM_CHECK];
-	XChangeProperty(zdpy,root_window->window,z_atom[_NET_SUPPORTED],XA_ATOM,32,PropModeReplace,net_supported,2);
+	net_supported[2] = z_atom[_NET_CLIENT_LIST];
+	XChangeProperty(zdpy,root_window->window,z_atom[_NET_SUPPORTED],XA_ATOM,32,PropModeReplace,net_supported,3);
 
 	/* Setup window for EWMH compatiablity. */
 	ewmhwin = XCreateSimpleWindow(zdpy,root_window->window,-100,-100,1,1,0,0,0);
@@ -54,3 +55,20 @@ void handle_ewmh_client_message(XClientMessageEvent *ev)
 	}
 	
 }
+
+void update_client_list(IMPList *list)
+{
+	Window **windows = i_calloc([list get_size],sizeof(Window));
+	ZimClient *c = NULL;
+	int i = 0;
+	
+	while(list) {
+		c = list->data;
+		windows[i++] = c->window->window;
+
+		list = list->next;
+	}
+printf("UPDATING\n");
+	XChangeProperty(zdpy,root_window->window,z_atom[_NET_CLIENT_LIST],XA_WINDOW,32,PropModeReplace,(unsigned char *)windows,i);
+}
+

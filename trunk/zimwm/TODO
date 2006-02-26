@@ -4,6 +4,8 @@
  -Done, but I didn't need a new widget.
 -Fix Resizing window
  -95% done, just need the icccm and ewmh stuff in it so it works better and smoother.
+-Fix windows resizing themselves.  Not sure how to do this yet.
+ -0%
 -EWMH/ICCCM Support
  -10%
 -IPC

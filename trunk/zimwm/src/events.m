@@ -41,6 +41,8 @@ void on_map_request(IMPObject *widget, void *data)
 	
 	zimwm_add_client(client);
 
+	update_client_list(client_list);
+	
 //	XSync(zdpy,False);
 //	XUngrabServer(zdpy);
 }

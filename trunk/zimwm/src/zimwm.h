@@ -31,6 +31,7 @@
 #include "events.h"
 
 extern ZWidget *root_window;
+extern IMPList *client_list;
 
 void zimwm_add_client(ZimClient *client);
 ZimClient *zimwm_find_client_by_zwindow(ZWindow *w);
