@@ -80,6 +80,8 @@ char *i_strdup(const char *str)
 {
 	if(str != NULL)
 		return strdup(str);
+	else
+		return NULL;
 }
 
 void i_free(void *ptr)
