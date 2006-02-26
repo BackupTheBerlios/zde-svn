@@ -49,7 +49,7 @@ static ZWindow *create_frame_for_client(ZimClient *c);
 	self->size_hints = NULL;
 	
 	XGetWindowAttributes(zdpy,window,&attr);
-
+	
 	w->x = attr.x;
 	w->y = attr.y;
 	w->width = attr.width;
@@ -451,7 +451,7 @@ static void resize(IMPObject *widget, void *data)
 	while(1) {
 		XNextEvent(zdpy,&ev);
 		
-		switch(ev.type) {
+	switch(ev.type) {
 			case MotionNotify:
 				name = [myself get_name];
 				

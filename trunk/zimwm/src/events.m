@@ -59,3 +59,7 @@ void on_client_message(IMPObject *widget, void *data)
 	handle_ewmh_client_message(ev);	
 }
 
+void on_configure_request(IMPObject *widget, void *data)
+{
+	printf("wooho\n");
+}

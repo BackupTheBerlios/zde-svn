@@ -49,6 +49,7 @@ int main(int argc, char **argv)
 static void setup_root_window(void)
 {
 	XSetWindowAttributes attr;
+	XWindowAttributes winattr;
 	Cursor rootc;
 	ZimClient *newc;
 	Window root,parent;
@@ -85,16 +86,20 @@ static void setup_root_window(void)
 	[root_window attatch_cb:MAP_REQUEST:(ZCallback *)on_map_request];
 	[root_window attatch_cb:KEY_PRESS:(ZCallback *)on_key_press];
 	[root_window attatch_cb:CLIENT_MESSAGE:(ZCallback *)on_client_message];
-
-	setup_ewmh_root_properties();
 	
-/*	XQueryTree(zdpy,root_window->window,&root,&parent,&children,&len);
+	setup_ewmh_root_properties();
+/*	
+	XQueryTree(zdpy,root_window->window,&root,&parent,&children,&len);
 
 	for(i=0;i<len;i++) {
-		newc = [ZimClient alloc];
-		[newc init:&children[i]];
+		XGetWindowAttributes(zdpy,children[i],&winattr);
+
+		if(!winattr.override_redirect && winattr.map_state == IsViewable) {
+			newc = [ZimClient alloc];
+			[newc init:children[i]];
+			zimwm_add_client(newc);
+		}
 	
-		zimwm_add_client(newc);
 	}
 */
 	XFreeCursor(zdpy,rootc);
@@ -228,8 +233,6 @@ void zimwm_find_and_remove_client(ZWindow *w)
 		if(c->window == w) {
 			list = [list delete_node];
 			client_list = list;
-
-			printf("%d\n",[client_list get_size]);
 			return;
 		}
 		
