@@ -156,6 +156,7 @@ static void process_xevent(XEvent *ev)
 	XConfigureEvent configure;
 	XMapRequestEvent mapreq;
 	XUnmapEvent unmap;
+	XConfigureRequestEvent conreq;
 	
 	ZWidget *w = NULL;
 
@@ -219,6 +220,15 @@ static void process_xevent(XEvent *ev)
 
 				[w receive:UNMAP:&ev->xunmap];				
 				break;
+			case ConfigureRequest:
+				conreq = ev->xconfigurerequest;
+				if(conreq.send_event == True)
+					w = find_widget(XRootWindow(zdpy,0));
+				else
+					w = find_widget(conreq.window);
+				
+				[w receive:CONFIGURE_REQUEST:&ev->xconfigurerequest];
+				break;
 			default:
 				w = find_widget(ev->xany.window);
 				[w receive:DEFAULT:ev];
@@ -240,9 +250,7 @@ static ZWidget *find_widget(Window *w)
 	
 	while(list) {
 		widget = (ZWidget *)list->data;
-		
-		//printf("window:%d vs window:%d\n",widget->window,w);
-		
+	
 		if(widget->window == w) { /* We've found our widget */
 			return widget;
 		}
