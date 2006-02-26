@@ -3,9 +3,9 @@
 -Define a new widget to place in frame on edges that can be used to trigger resizing on clicking it, ZimEdgeHandle?
  -Done, but I didn't need a new widget.
 -Fix Resizing window
- -85% done, just need the icccm and ewmh stuff in it so it works better and smoother.
+ -95% done, just need the icccm and ewmh stuff in it so it works better and smoother.
 -EWMH/ICCCM Support
- -5%
+ -10%
 -IPC
  -10% I have a rough makeup of what it should be in my head.
 -Speedups, especially when mapping windows.

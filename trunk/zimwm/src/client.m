@@ -29,8 +29,6 @@ static void on_close_button_down(IMPObject *widget, void *data);
 static void on_frame_button_down(IMPObject *widget, void *data);
 static void on_frame_expose(IMPObject *widget, void *data);
 static void on_frame_label_button_down(IMPObject *widget, void *data);
-static void on_frame_key_press(IMPObject *widget, void *data);
-
 static void resize(IMPObject *widget, void *data);
 
 /* Helper functions */
@@ -191,7 +189,7 @@ static ZWindow *create_frame_for_client(ZimClient *c)
 
 	[f attatch_cb:BUTTON_DOWN:(ZCallback *)on_frame_button_down];
 	[f attatch_cb:EXPOSE:(ZCallback *)on_frame_expose];
-
+	
 	[right_handle init:f:f->width - c->border:c->title_height:c->border:f->height];
 	[right_handle attatch_cb:BUTTON_DOWN:(ZCallback *)resize];
 	[right_handle set_name:"RIGHT_HANDLE"];

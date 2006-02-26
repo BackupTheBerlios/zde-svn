@@ -41,6 +41,9 @@
 - init:(Window *)window;
 - free;
 
+/** Resizes the client, correctly moving the frame, etc. */
+//- (void)resize:(int)nwidth:(int)nheight;
+
 /** Used to get and store all atom properties of the client, such as WM_PROTOCOLS
   */
 - (void)get_properties;
