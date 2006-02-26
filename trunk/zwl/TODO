@@ -5,3 +5,4 @@
  have come up dry.
  -Fixed by not freeing xftdraw or the cairo window surface.  This is NOT a real fix, just a stopgap until I find out what is 
  really causing the problem, because those should not be causing those errors.
+-Finish ZMenu
