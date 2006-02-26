@@ -426,6 +426,9 @@ static void resize(IMPObject *widget, void *data)
 		if(!strncmp(name,"XWINDOW",8)) {
 			c = zimwm_find_client_by_zwindow(window);
 			if(c && c->size_hints) {
+				if(c->size_hints->max_width == c->size_hints->min_width && 
+						c->size_hints->max_height == c->size_hints->min_height)
+					return;
 				w_resize_inc = c->size_hints->width_inc;
 				h_resize_inc = c->size_hints->height_inc;
 			}
