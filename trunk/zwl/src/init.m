@@ -45,6 +45,8 @@ void zwl_init(void)
 	z_atom[WM_NAME] = XInternAtom(zdpy,"WM_NAME",False);
 	z_atom[WM_PROTOCOLS] = XInternAtom(zdpy,"WM_PROTOCOLS",False);
 	z_atom[WM_DELETE_WINDOW] = XInternAtom(zdpy,"WM_DELETE_WINDOW",False);
+	z_atom[WM_TAKE_FOCUS] = XInternAtom(zdpy,"WM_TAKE_FOCUS",False);
+	
 	z_atom[_NET_WM_WINDOW_TYPE] = XInternAtom(zdpy,"_NET_WM_WINDOW_TYPE",False);
 	z_atom[_NET_WM_WINDOW_TYPE_NORMAL] = XInternAtom(zdpy,"_NET_WM_WINDOW_TYPE_NORMAL",False);
 	z_atom[_NET_WM_WINDOW_TYPE_MENU] = XInternAtom(zdpy,"_NET_WM_WINDOW_TYPE_MENU",False);
@@ -157,6 +159,7 @@ static void process_xevent(XEvent *ev)
 	XMapRequestEvent mapreq;
 	XUnmapEvent unmap;
 	XConfigureRequestEvent conreq;
+	XCrossingEvent cross;
 	
 	ZWidget *w = NULL;
 
@@ -228,6 +231,18 @@ static void process_xevent(XEvent *ev)
 					w = find_widget(conreq.window);
 				
 				[w receive:CONFIGURE_REQUEST:&ev->xconfigurerequest];
+				break;
+			case EnterNotify:
+				cross = ev->xcrossing;
+				w = find_widget(cross.window);
+
+				[w receive:POINTER_ENTER:&ev->xcrossing];
+				break;
+			case LeaveNotify:
+				cross = ev->xcrossing;
+				w = find_widget(cross.window);
+
+				[w receive:POINTER_LEAVE:&ev->xcrossing];
 				break;
 			default:
 				w = find_widget(ev->xany.window);
