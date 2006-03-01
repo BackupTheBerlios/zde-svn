@@ -21,25 +21,6 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef ZIMWM_H
-#define ZIMWM_H
-
-#include <zwl.h>
-
-#include "ewmh.h"
-#include "client.h"
-#include "events.h"
-#include "focus.h"
-
-extern ZWidget *root_window;
-extern IMPList *client_list;
-
-void zimwm_add_client(ZimClient *client);
-ZimClient *zimwm_find_client_by_zwindow(ZWindow *w);
-ZimClient *zimwm_find_client_by_window(Window *w);
-ZimClient *zimwm_find_client_by_window_frame(Window *w);
-void zimwm_delete_client(ZimClient *c);
-void zimwm_remove_client(ZimClient *c);
-void zimwm_find_and_remove_client(ZWindow *w);
-
-#endif
+/** Sets the focus of the window as described in the ICCCM section 4.1.7
+ Returns zero if the focus was successfuly changed, other if it was not. */
+int focus_client(ZimClient *c);

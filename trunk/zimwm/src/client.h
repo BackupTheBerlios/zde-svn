@@ -31,6 +31,8 @@
 	unsigned int border; /**< Border width in pixels. */
 	unsigned int title_height; /**< Titlebar height in pixels. */
 	Atom *atoms; /**< Array of atoms this window has. */
+
+	XWMHints *wm_hints; /**< Structure containing the WM_HINTS property of the window. */
 	XSizeHints *size_hints; /**< Structure containing the size hints contained in the window's WM_NORMAL_HINTS property. */
 	
 }

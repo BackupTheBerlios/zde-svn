@@ -78,7 +78,7 @@ static void setup_root_window(void)
 	attr.cursor = rootc;
 	XChangeWindowAttributes(zdpy,root_window->window,CWEventMask | CWCursor,&attr);
 
-	XGrabKey(zdpy,AnyKey,ControlMask | Mod1Mask,root_window->window,True,GrabModeAsync,GrabModeAsync);
+	XGrabKey(zdpy,XKeysymToKeycode(zdpy,XK_Alt_L),AnyModifier,root_window->window,False,GrabModeAsync,GrabModeAsync);
 	
 	zwl_main_loop_add_widget(root_window);
 
@@ -131,7 +131,7 @@ ZimClient *zimwm_find_client_by_zwindow(ZWindow *w)
 	while(list) {
 		c = (ZimClient *)list->data;
 		if(!c)
-			break;
+			continue;
 		if(c->window == w) {
 			return c;
 		}
@@ -147,10 +147,36 @@ ZimClient *zimwm_find_client_by_window(Window *w)
 	IMPList *list = client_list;
 	ZimClient *c;
 
+	if(!w)
+		return;
+	
 	while(list) {
-		c = (ZimClient *)list->data;
-
+		c = (ZimClient *)list->data;	
+		if(!c)
+			continue;
 		if(c->window->window == w) {
+			return c;
+		}
+		
+		list = list->next;
+	}
+
+	return NULL;
+}
+
+ZimClient *zimwm_find_client_by_window_frame(Window *w)
+{
+	IMPList *list = client_list;
+	ZimClient *c;
+
+	if(!w)
+		return;
+	
+	while(list) {
+		c = (ZimClient *)list->data;	
+		if(!c)
+			continue;
+		if(c->window->parent->window == w) {
 			return c;
 		}
 		

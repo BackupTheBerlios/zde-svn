@@ -29,6 +29,7 @@ static void on_close_button_down(IMPObject *widget, void *data);
 static void on_frame_button_down(IMPObject *widget, void *data);
 static void on_frame_expose(IMPObject *widget, void *data);
 static void on_frame_label_button_down(IMPObject *widget, void *data);
+static void on_frame_enter(IMPObject *widget, void *data);
 static void resize(IMPObject *widget, void *data);
 
 /* Helper functions */
@@ -42,7 +43,9 @@ static ZWindow *create_frame_for_client(ZimClient *c);
 	ZWindow *w = [ZWindow alloc];
 	ZWindow *frame = NULL;
 	char *name = NULL;
-
+	
+	XGrabServer(zdpy);
+	
 	self->atoms = NULL;
 	self->size_hints = NULL;
 	
@@ -52,7 +55,7 @@ static ZWindow *create_frame_for_client(ZimClient *c);
 	w->y = attr.y;
 	w->width = attr.width;
 	w->height = attr.height;
-
+	
 	w->window = window;
 	
 	XFetchName(zdpy,w->window,&name);
@@ -85,7 +88,10 @@ static ZWindow *create_frame_for_client(ZimClient *c);
 	[self get_properties];
 	
 	[frame show];
-	[self->window show];	
+	[self->window show];
+
+	XSync(zdpy,False);
+	XUngrabServer(zdpy);
 }
 
 - free
@@ -121,11 +127,17 @@ static ZWindow *create_frame_for_client(ZimClient *c);
 		
 		for(i=0;i<len;i++) {
 			if(atom[i] == z_atom[WM_DELETE_WINDOW]) {
-				self->atoms[WM_DELETE_WINDOW] = atom[WM_DELETE_WINDOW];
+				self->atoms[WM_DELETE_WINDOW] = atom[i];
+			}
+			else if(atom[i] == z_atom[WM_TAKE_FOCUS]) {
+				self->atoms[WM_TAKE_FOCUS] = atom[i];
 			}
 		}
 	}
 
+	/* WM_HINTS */
+	self->wm_hints = XGetWMHints(zdpy,self->window->window);
+		
 	/* WM_NORMAL_HINTS */
 	XGetWMNormalHints(zdpy,self->window->window,&shints,&sreturn);
 
@@ -189,6 +201,7 @@ static ZWindow *create_frame_for_client(ZimClient *c)
 
 	[f attatch_cb:BUTTON_DOWN:(ZCallback *)on_frame_button_down];
 	[f attatch_cb:EXPOSE:(ZCallback *)on_frame_expose];
+	[f attatch_cb:POINTER_ENTER:(ZCallback *)on_frame_enter];
 	
 	[right_handle init:f:f->width - c->border:c->title_height:c->border:f->height];
 	[right_handle attatch_cb:BUTTON_DOWN:(ZCallback *)resize];
@@ -389,6 +402,37 @@ static void on_frame_label_button_down(IMPObject *widget, void *data)
 	frame = frame->parent;
 	
 	[frame receive:BUTTON_DOWN:data];
+}
+
+/* This basically implements a very basic form of sloppy focus. */
+static void on_frame_enter(IMPObject *widget, void *data)
+{
+	ZWindow *w = (ZWindow *)widget;
+	ZWindow *window;
+	ZimClient *c = NULL;
+	IMPList *children;
+	char *name;
+	
+	/* Find the window by searching through the frame's children list. */
+	children = w->children;
+	
+	while(children) {
+		window = (ZWindow *)children->data;
+		name = [window get_name];
+		
+		if(!name)
+			name = "";
+			
+		if(!strncmp(name,"XWINDOW",8)) {
+			c = zimwm_find_client_by_zwindow(window);
+			break;
+		}
+
+		children = children->next;
+	}
+
+	
+	focus_client(c);
 }
 
 static void resize(IMPObject *widget, void *data)

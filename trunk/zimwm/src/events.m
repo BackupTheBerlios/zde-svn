@@ -25,7 +25,11 @@
 
 void on_button_down(IMPObject *widget, void *data)
 {
-	printf("KICKASS!\n");
+	ZWindow *w = (ZWindow *)widget;
+	XButtonEvent *ev = (XButtonEvent *)data;
+	
+	if(1)	
+		printf("KICKASS!\n");
 }
 
 void on_map_request(IMPObject *widget, void *data)
@@ -41,6 +45,7 @@ void on_map_request(IMPObject *widget, void *data)
 	
 	zimwm_add_client(client);
 
+	focus_client(client);
 	update_client_list(client_list);
 	
 //	XSync(zdpy,False);
@@ -49,9 +54,31 @@ void on_map_request(IMPObject *widget, void *data)
 
 void on_key_press(IMPObject *widget, void *data)
 {
-	ZWidget *w = (ZWidget *)widget;
+	ZWindow *w = (ZWindow *)widget;
+	XEvent ev;
+	ZimClient *c = NULL;
+	Window w1;
+	int x;
+	
+	XGetInputFocus(zdpy,&w1,&x);
+		
+	c = zimwm_find_client_by_window(w1);
 
-//	printf("Coolness!\n");
+	if(c) {
+		XGrabButton(zdpy,Button1,AnyModifier,w1,True,ButtonPressMask,GrabModeAsync,GrabModeAsync,None,None);		
+		while(1) {
+			XNextEvent(zdpy,&ev);
+			
+			switch(ev.type) {
+				case ButtonPress:
+					[c->window->parent receive:BUTTON_DOWN:&ev.xbutton];
+					XUngrabButton(zdpy,Button1,AnyModifier,w1);
+					return;
+				default:
+					zwl_receive_xevent(&ev);	
+			}
+		}
+	}
 }
 
 void on_client_message(IMPObject *widget, void *data)
@@ -61,7 +88,3 @@ void on_client_message(IMPObject *widget, void *data)
 	handle_ewmh_client_message(ev);	
 }
 
-void on_configure_request(IMPObject *widget, void *data)
-{
-	printf("wooho\n");
-}

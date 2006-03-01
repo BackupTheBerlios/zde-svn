@@ -21,25 +21,28 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef ZIMWM_H
-#define ZIMWM_H
+#include "zimwm.h"
 
-#include <zwl.h>
+int focus_client(ZimClient *c)
+{
+	if(!c)
+		return -1;
 
-#include "ewmh.h"
-#include "client.h"
-#include "events.h"
-#include "focus.h"
+	if(c->wm_hints && c->wm_hints->input == True) {
+		if(c->atoms[WM_TAKE_FOCUS]) {
+			[c send_client_message:32:XA_ATOM:z_atom[WM_TAKE_FOCUS]];
+			XSetInputFocus(zdpy,c->window->window,RevertToPointerRoot,CurrentTime);
+			return 0;
+		}
+		else {
+			XSetInputFocus(zdpy,c->window->window,RevertToPointerRoot,CurrentTime);
+			return 0;
+		}
+	}
+	else { /* We really shouldn't set the focus, but some misbehaved clients need this. */
+		XSetInputFocus(zdpy,c->window->window,RevertToPointerRoot,CurrentTime);
+	}
+	
+	return -1;
+}
 
-extern ZWidget *root_window;
-extern IMPList *client_list;
-
-void zimwm_add_client(ZimClient *client);
-ZimClient *zimwm_find_client_by_zwindow(ZWindow *w);
-ZimClient *zimwm_find_client_by_window(Window *w);
-ZimClient *zimwm_find_client_by_window_frame(Window *w);
-void zimwm_delete_client(ZimClient *c);
-void zimwm_remove_client(ZimClient *c);
-void zimwm_find_and_remove_client(ZWindow *w);
-
-#endif
