@@ -88,3 +88,21 @@ void on_client_message(IMPObject *widget, void *data)
 	handle_ewmh_client_message(ev);	
 }
 
+void on_configure(IMPObject *widget, void *data)
+{
+	XConfigureEvent *ev = (XConfigureEvent *)data;
+	ZimClient *c = NULL;
+	
+//	if(ev->send_event == True) {
+		c = zimwm_find_client_by_window(ev->window);
+	printf("COOLNESS\n");	
+		c->window->parent->x = ev->x;
+		c->window->parent->y = ev->y;
+		c->window->parent->width = ev->width;
+		c->window->parent->height = ev->height;
+
+		[c->window->parent move:c->window->parent->x:c->window->parent->y];
+		[c->window->parent resize:c->window->parent->width:c->window->parent->height];
+//	}
+}
+

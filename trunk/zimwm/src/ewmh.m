@@ -53,6 +53,21 @@ void handle_ewmh_client_message(XClientMessageEvent *ev)
 		
 		zimwm_delete_client(c);
 	}
+	/* FIXME */
+	else if(ev->message_type = z_atom[_NET_MOVERESIZE_WINDOW]) {
+		c = zimwm_find_client_by_window(ev->window);
+
+		if(!c)
+			return;
+		printf("HECK YES!\n");
+		c->window->parent->x = ev->data.l[1];
+		c->window->parent->y = ev->data.l[2];
+		c->window->parent->width = ev->data.l[3];
+		c->window->parent->height = ev->data.l[4];
+
+		[c->window->parent move:c->window->parent->x:c->window->parent->y];
+		[c->window->parent resize:c->window->parent->width:c->window->parent->y];
+	}
 	
 }
 

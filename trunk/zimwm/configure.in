@@ -183,6 +183,7 @@ AC_CHECK_LIB(pot,coffee,,[
 
 AC_CONFIG_FILES([
                 Makefile \
+		data/Makefile \
                 src/Makefile
 		])
 AC_OUTPUT

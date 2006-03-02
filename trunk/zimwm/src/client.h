@@ -30,6 +30,11 @@
 	ZWindow *window; /**< A ZWindow that encapsulates the X11 window. */	
 	unsigned int border; /**< Border width in pixels. */
 	unsigned int title_height; /**< Titlebar height in pixels. */
+	Bool sticky;
+	Bool withdrawn;
+	Bool no_use_area;
+	Bool maximised;
+	Bool shaded;
 	Atom *atoms; /**< Array of atoms this window has. */
 
 	XWMHints *wm_hints; /**< Structure containing the WM_HINTS property of the window. */
@@ -57,6 +62,10 @@
 /** Sends a Configure Message to the X11 Window represented by this client.
   */
 - (void)send_configure_message:(int)x:(int)y:(int)width:(int)height;
+
+/** "Snaps" the client to the edges of other windows and the screen. 
+ Returns 0 if the client was snapped, other if it was not snapped. */
+- (int)snap;
 
 @end
 

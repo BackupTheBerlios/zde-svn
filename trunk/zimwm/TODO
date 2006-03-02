@@ -15,7 +15,7 @@ the item can be completed.
  -50% done, right now its just sloppy focus. I also want just pointer focus, i.e. focus is strictly is under the mouse.
 
 *Snap window borders while moving
- -0% done
+ -100% done
  
 *Keybindings
  -5% done. So far, pressing ALT on a window and clicking moves it. There needs to be a sophisticated key:action
@@ -37,8 +37,14 @@ the item can be completed.
  -0% done
 
 *EWMH/ICCCM Support
- -10%
+ -10% done
 
+*Virtual Desktops, including keybindings and edge flipping by border
+ -0%
+
+*Various window states, i.e. sticky, withdrawn, shaded...
+ -5% done
+ 
 *IPC
  -0% I have a rough makeup of what it should be in my head.
 

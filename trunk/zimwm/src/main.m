@@ -23,6 +23,9 @@
 
 #include "zimwm.h"
 
+/* FIXME NEEDS TO BE A CONFIGURABLE VALUE */
+int snap_px = 5;
+
 IMPList *client_list = NULL;
 ZWidget *root_window = NULL;
 
@@ -70,7 +73,7 @@ static void setup_root_window(void)
      		  	  StructureNotifyMask |
 			  SubstructureRedirectMask |
 			  SubstructureNotifyMask |
-     			  KeyPressMask |
+			  KeyPressMask |
      			  KeyReleaseMask;
 
 	rootc = XCreateFontCursor(zdpy,XC_left_ptr);
@@ -86,6 +89,7 @@ static void setup_root_window(void)
 	[root_window attatch_cb:MAP_REQUEST:(ZCallback *)on_map_request];
 	[root_window attatch_cb:KEY_PRESS:(ZCallback *)on_key_press];
 	[root_window attatch_cb:CLIENT_MESSAGE:(ZCallback *)on_client_message];
+	[root_window attatch_cb:CONFIGURE:(ZCallback *)on_configure];
 	
 	setup_ewmh_root_properties();
 /*	

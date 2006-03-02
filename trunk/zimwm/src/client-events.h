@@ -21,13 +21,15 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef EVENTS_H
-#define EVENTS_H
+#ifndef CLIENT_EVENTSH
+#define CLIENT_EVENTSH
 
-void on_button_down(IMPObject *widget, void *data);
-void on_map_request(IMPObject *widget, void *data);
-void on_key_press(IMPObject *widget, void *data);
-void on_client_message(IMPObject *widget, void *data);
-void on_configure(IMPObject *widget, void *data);
+/* Callbacks */
+void on_win_unmap(IMPObject *widget, void *data);
+void on_close_button_down(IMPObject *widget, void *data);
+void on_frame_button_down(IMPObject *widget, void *data);
+void on_frame_expose(IMPObject *widget, void *data);
+void on_frame_label_button_down(IMPObject *widget, void *data);
+void on_frame_enter(IMPObject *widget, void *data);
 
 #endif

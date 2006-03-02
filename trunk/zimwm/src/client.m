@@ -23,17 +23,18 @@
 
 #include "zimwm.h"
 
-/* Callbacks */
-static void on_win_unmap(IMPObject *widget, void *data);
-static void on_close_button_down(IMPObject *widget, void *data);
-static void on_frame_button_down(IMPObject *widget, void *data);
-static void on_frame_expose(IMPObject *widget, void *data);
-static void on_frame_label_button_down(IMPObject *widget, void *data);
-static void on_frame_enter(IMPObject *widget, void *data);
-static void resize(IMPObject *widget, void *data);
+void on_win_configure(IMPObject *widget, void *data);
 
 /* Helper functions */
 static ZWindow *create_frame_for_client(ZimClient *c);
+static inline int absmin(int a, int b);
+
+/* Technically, you might say this is a callback.
+   Technically, you might also say this is a helper function.
+   I'll be moving this back and forth between client-events.m
+   and here as I feel like categorizing it.
+   */
+static void resize(IMPObject *widget, void *data);
 
 @implementation ZimClient : IMPObject
 
@@ -82,6 +83,7 @@ static ZWindow *create_frame_for_client(ZimClient *c);
 	[frame add_child:self->window]; 
 		
 	[self->window attatch_cb:UNMAP:(ZCallback *)on_win_unmap];
+	//[self->window attatch_cb:CONFIGURE:(ZCallback *)on_win_configure];
 	
 	zwl_main_loop_add_widget(self->window);
 
@@ -179,6 +181,65 @@ static ZWindow *create_frame_for_client(ZimClient *c);
 	XSendEvent(zdpy,self->window->window,False,StructureNotifyMask | SubstructureNotifyMask,&cv);
 }
 
+- (int)snap
+{
+	ZWindow *frame = (ZWindow *)self->window->parent;
+	int dx,dy;
+	IMPList *list = client_list;
+	ZimClient *c;
+	
+	/* This is updated/translated/adapted from some work I did in an
+	   earlier attempt to write a window manager that was never released.
+	   Therefore, this code is kinda ugly. I do intend to clean it up at
+	   some point in the future, and make it more efficient, but until then,
+	   this will suffice. 
+	 */
+	
+	if(abs(frame->x) < snap_px)
+		frame->x = 0;
+	if(abs(frame->y) < snap_px)
+		frame->y = 0;
+
+	if(abs(frame->x + frame->width - DisplayWidth(zdpy,zscreen)) < snap_px)
+		frame->x = DisplayWidth(zdpy,zscreen) - frame->width;
+	if(abs(frame->y + frame->height - DisplayHeight(zdpy,zscreen)) < snap_px)
+		frame->y = DisplayHeight(zdpy,zscreen) - frame->height;
+	
+	dx = dy = snap_px;
+
+	/* snap to other clients */	
+	while(list) {
+		c = (ZimClient *)list->data;
+		if(c && c != self) {
+			if(c->window->parent->y - frame->height - frame->y <=
+				snap_px && frame->y - c->window->parent->height - c->window->parent->y <= snap_px) {
+                               	 
+				dx = absmin(dx, c->window->parent->x + c->window->parent->width - frame->x);
+                                dx = absmin(dx, c->window->parent->x + c->window->parent->width - frame->x - frame->width);
+                                dx = absmin(dx, c->window->parent->x - frame->x - frame->width);
+                                dx = absmin(dx, c->window->parent->x - frame->x);
+                        }
+			if(c->window->parent->x - frame->width - frame->x <=
+				snap_px && frame->x - c->window->parent->width - c->window->parent->x <= snap_px) {
+                                
+				dy = absmin(dy, c->window->parent->y + c->window->parent->height - frame->y);
+                                dy = absmin(dy, c->window->parent->y + c->window->parent->height - frame->y - frame->height);
+                                dy = absmin(dy, c->window->parent->y - frame->y - frame->height);
+                                dy = absmin(dy, c->window->parent->y - frame->y);
+                        }			
+		}
+		
+		list = list->next;
+	}
+	
+	if(abs(dx) < snap_px)
+                frame->x += dx;
+        if(abs(dy) < snap_px)
+                frame->y += dy;
+
+	[frame move:frame->x:frame->y];
+}
+
 @end
 
 static ZWindow *create_frame_for_client(ZimClient *c)
@@ -227,10 +288,12 @@ static ZWindow *create_frame_for_client(ZimClient *c)
 	[f add_child:(ZWidget *)bottom_right_handle];
 	[bottom_right_handle show];
 	
-	[close_button init:0:0:10:10];
+	//[close_button init:0:0:10:10];
+	[close_button init:PACKAGE_DATA_DIR"/default_close.png":1:1:10:10];
+	[close_button set_border_width:0];
 	[f add_child:(ZWidget *)close_button];
 	[close_button set_name:"CLOSE"];
-	[close_button set_label:"X"];
+	//[close_button set_label:"X"];
 	[close_button attatch_cb:BUTTON_DOWN:(ZCallback *)on_close_button_down];
 	[close_button show];
 
@@ -248,192 +311,6 @@ static ZWindow *create_frame_for_client(ZimClient *c)
 	return f;	
 }
 
-static void on_win_unmap(IMPObject *widget, void *data)
-{
-	ZWindow *w = (ZWindow *)widget;
-	ZimClient *c = NULL;
-
-	//XGrabServer(zdpy);
-
-	w->window = NULL;
-	
-	//c = zimwm_find_client_by_zwindow(w);
-	
-	//zimwm_remove_client(c);
-
-	zimwm_find_and_remove_client(w);
-	
-	update_client_list(client_list);
-	
-	[w->parent destroy];
-	//zimwm_delete_client(c);
-	//XUngrabServer(zdpy);
-}
-
-static void on_close_button_down(IMPObject *widget, void *data)
-{
-	ZWidget *w = (ZWidget *)widget;
-	ZWindow *window = NULL;
-	IMPList *children = NULL;
-	ZimClient *c;
-	char *name;
-
-	/* Find the window by searching through the frame's children list. */
-	children = w->parent->children;
-	
-	while(children) {
-		window = children->data;
-		name = [window get_name];
-		
-		if(!name)
-			name = "";
-			
-		if(!strncmp(name,"XWINDOW",8)) {
-			c = zimwm_find_client_by_zwindow(window);
-			zimwm_delete_client(c);
-			return;
-		}
-
-		children = children->next;
-	}
-}
-
-/* Moves the window around. */
-static void on_frame_button_down(IMPObject *widget, void *data)
-{
-	ZWindow *w = (ZWindow *)widget;
-	Window w1,w2;
-	XEvent ev;
-	Cursor arrow = XCreateFontCursor(zdpy,XC_fleur);
-	ZimClient *c = NULL;
-	int mask;
-	int x,x1;
-	int y,y1;
-	ZWindow *window = NULL;
-	IMPList *children = NULL;
-	char *name;
-
-	
-	/* Find the window by searching through the frame's children list. */
-	children = w->children;
-	
-	while(children) {
-		window = children->data;
-		name = [window get_name];
-		
-		if(!name)
-			name = "";
-			
-		if(!strncmp(name,"XWINDOW",8)) {
-			c = zimwm_find_client_by_zwindow(window);
-			break;
-		}
-
-		children = children->next;
-	}
-	
-	XGrabPointer(zdpy,root_window->window,True,PointerMotionMask | ButtonReleaseMask,GrabModeAsync,GrabModeAsync,None,arrow,CurrentTime);
-	XQueryPointer(zdpy,w->window,&w1,&w2,&x,&y,&x1,&y1,&mask);
-
-	[w raise];
-	
-	while(1) {
-		XNextEvent(zdpy,&ev);
-
-		switch(ev.type) {
-			case MotionNotify:
-				[w move:ev.xmotion.x_root - x1:ev.xmotion.y_root - y1];	
-				if(c)
-					[c send_configure_message:w->x:w->y:c->window->width:c->window->height];
-
-				//XSync(zdpy,False);
-				break;
-			case ButtonRelease:
-				XUngrabPointer(zdpy,CurrentTime);
-				[w raise];
-				return;
-			default:
-				zwl_receive_xevent(&ev);
-				break;
-		}
-	}
-
-	XFreeCursor(zdpy,arrow);
-}
-
-/* Recenters the title in the frame. */
-static void on_frame_expose(IMPObject *widget, void *data)
-{
-	ZWindow *frame = (ZWindow *)widget;
-	ZLabel *label = NULL;
-	ZWindow *w = NULL;
-	IMPList *children;
-	ZWindow *window = NULL;
-	ZimClient *c = NULL;
-	XGlyphInfo extents;
-	XftFont *font = XftFontOpenName(zdpy,DefaultScreen(zdpy),"sans-8"); /* This is bad... */
-	char *name = NULL;
-
-	children = frame->children;
-	
-	while(children) {
-		window = (ZWindow *)children->data;
-		
-		name = [window get_name];
-		
-		if(!name)
-			name = "";
-		
-		if(!strncmp(name,"TITLE",5)) {
-			label = (ZLabel *)window;
-			
-			XftTextExtents8(zdpy,font,[label get_label],strlen([label get_label]),&extents);
-			[label move:(frame->width / 2) - (extents.width / 2):0];
-			return;
-		}
-		children = children->next;
-	}	
-}
-
-static void on_frame_label_button_down(IMPObject *widget, void *data)
-{
-	ZWidget *frame = (ZWidget *)widget;
-
-	frame = frame->parent;
-	
-	[frame receive:BUTTON_DOWN:data];
-}
-
-/* This basically implements a very basic form of sloppy focus. */
-static void on_frame_enter(IMPObject *widget, void *data)
-{
-	ZWindow *w = (ZWindow *)widget;
-	ZWindow *window;
-	ZimClient *c = NULL;
-	IMPList *children;
-	char *name;
-	
-	/* Find the window by searching through the frame's children list. */
-	children = w->children;
-	
-	while(children) {
-		window = (ZWindow *)children->data;
-		name = [window get_name];
-		
-		if(!name)
-			name = "";
-			
-		if(!strncmp(name,"XWINDOW",8)) {
-			c = zimwm_find_client_by_zwindow(window);
-			break;
-		}
-
-		children = children->next;
-	}
-
-	
-	focus_client(c);
-}
 
 static void resize(IMPObject *widget, void *data)
 {
@@ -498,92 +375,120 @@ static void resize(IMPObject *widget, void *data)
 	while(1) {
 		XNextEvent(zdpy,&ev);
 		
-	switch(ev.type) {
-			case MotionNotify:
-				name = [myself get_name];
-				
-				if(!name)
-					name = "";
+		switch(ev.type) {
+				case MotionNotify:
+					name = [myself get_name];
 					
-				if(!strncmp(name,"RIGHT_HANDLE",8)) {	
-					width = abs(w->x - ev.xmotion.x_root);
-					width -= (width) % w_resize_inc;
-					height = w->height;
-				}
-				else if(!strncmp(name,"LEFT_HANDLE",7)) {	
-					width = abs(w->x - ev.xmotion.x_root);
-					width -= (width) % w_resize_inc;
-					height = w->height;
-				}
-				else if(!strncmp(name,"BOTTOM_HANDLE",13)) {	
-					height = abs(w->y - ev.xmotion.y_root);
-					height -= (height) % h_resize_inc;
-					width = w->width;
-				}
-				else if(!strncmp(name,"BOTTOM_RIGHT_HANDLE",19)) {	
-					width = abs(w->x - ev.xmotion.x_root);
-					width -= (width) % w_resize_inc;
-					height = abs(w->y - ev.xmotion.y_root);
-					height -= (height) % h_resize_inc;
-				}
-				else {
-					width = w->width;
-					height = w->height;
-				}
+					if(!name)
+						name = "";
+						
+					if(!strncmp(name,"RIGHT_HANDLE",8)) {	
+						width = abs(w->x - ev.xmotion.x_root);
+						width -= (width) % w_resize_inc;
+						height = w->height;
+					}
+					else if(!strncmp(name,"LEFT_HANDLE",7)) {	
+						width = abs(w->x - ev.xmotion.x_root);
+						width -= (width) % w_resize_inc;
+						height = w->height;
+					}
+					else if(!strncmp(name,"BOTTOM_HANDLE",13)) {	
+						height = abs(w->y - ev.xmotion.y_root);
+						height -= (height) % h_resize_inc;
+						width = w->width;
+					}
+					else if(!strncmp(name,"BOTTOM_RIGHT_HANDLE",19)) {	
+						width = abs(w->x - ev.xmotion.x_root);
+						width -= (width) % w_resize_inc;
+						height = abs(w->y - ev.xmotion.y_root);
+						height -= (height) % h_resize_inc;
+					}
+					else {
+						width = w->width;
+						height = w->height;
+					}
 
-				if(c && c->size_hints) {
-					if((c->size_hints->max_width == c->size_hints->min_width) && 
-							c->size_hints->max_width > 0 && c->size_hints->min_width > 0)
-						width = c->size_hints->max_width;
-					else if((width > c->size_hints->max_width) && c->size_hints->max_width > 0)
-						width = c->size_hints->max_width;	
-					else if((width < c->size_hints->min_width) && c->size_hints->min_width > 0)
-						width = c->size_hints->min_width;
-					
-					if((c->size_hints->max_height == c->size_hints->min_width) &&
-							c->size_hints->max_height > 0 && c->size_hints->max_width > 0)
-						height = c->size_hints->max_height;
-					else if((height < c->size_hints->min_height) && c->size_hints->min_height > 0)
-						height = c->size_hints->min_height;
-					else if((height > c->size_hints->max_height) && c->size_hints->max_height > 0)
-						height = c->size_hints->max_height;
-				}
-		
-				/* resize the window before the frame, I think it makes it look smoother... */
-				[c->window move:c->border:c->title_height];
-				[c->window resize:width - c->border * 2:height - c->border - c->title_height];
-		
-				[w resize:width:height];
-				[w raise];
+					if(c && c->size_hints) {
+						if((c->size_hints->max_width == c->size_hints->min_width) && 
+								c->size_hints->max_width > 0 && c->size_hints->min_width > 0)
+							width = c->size_hints->max_width;
+						else if((width > c->size_hints->max_width) && c->size_hints->max_width > 0)
+							width = c->size_hints->max_width;	
+						else if((width < c->size_hints->min_width) && c->size_hints->min_width > 0)
+							width = c->size_hints->min_width;
+						
+						if((c->size_hints->max_height == c->size_hints->min_width) &&
+								c->size_hints->max_height > 0 && c->size_hints->max_width > 0)
+							height = c->size_hints->max_height;
+						else if((height < c->size_hints->min_height) && c->size_hints->min_height > 0)
+							height = c->size_hints->min_height;
+						else if((height > c->size_hints->max_height) && c->size_hints->max_height > 0)
+							height = c->size_hints->max_height;
+					}
 			
-				[right move:w->width - c->border:c->title_height];
-				[right resize:c->border:w->height];
-				[left move:0:c->title_height];
-				[left resize:c->border:w->height];
-				[bottom move:0:w->height - c->border];
-				[bottom resize:w->width:c->border];
-				[bottom_right move:w->width - c->border:w->height - c->border];
-				[bottom_right resize:c->border:c->border];
+					/* resize the window before the frame, I think it makes it look smoother... */
+					[c->window move:c->border:c->title_height];
+					[c->window resize:width - c->border * 2:height - c->border - c->title_height];
+			
+					[w resize:width:height];
+					[w raise];
 				
-				[right raise];
-				[left raise];
-				[bottom raise];
-				[bottom_right raise];
-				
-				[c send_configure_message:c->window->x:c->window->y:c->window->width:c->window->height];
-				
-				//XSync(zdpy,False);	
-				break;		
-			case ButtonRelease:
-				XUngrabPointer(zdpy,CurrentTime);
-				return;
-			default:
-				zwl_receive_xevent(&ev);
-				break;
+					[right move:w->width - c->border:c->title_height];
+					[right resize:c->border:w->height];
+					[left move:0:c->title_height];
+					[left resize:c->border:w->height];
+					[bottom move:0:w->height - c->border];
+					[bottom resize:w->width:c->border];
+					[bottom_right move:w->width - c->border:w->height - c->border];
+					[bottom_right resize:c->border:c->border];
+					
+					[right raise];
+					[left raise];
+					[bottom raise];
+					[bottom_right raise];
+					
+					[c send_configure_message:c->window->x:c->window->y:c->window->width:c->window->height];
+					
+					//XSync(zdpy,False);	
+					break;		
+				case ButtonRelease:
+					XUngrabPointer(zdpy,CurrentTime);
+					return;
+				default:
+					zwl_receive_xevent(&ev);
+					break;
 		}
 	}
 
 	XFreeCursor(zdpy,arrow);
+	
+}
+
+static inline int absmin(int a, int b)
+{
+        if(abs(a) < abs(b))
+                return a;
+        else
+                return b;
+}
+
+void on_win_configure(IMPObject *widget, void *data)
+{
+	ZWindow *win = (ZWindow *)widget;
+	ZWindow *frame;
+	XConfigureEvent *ev = (XConfigureEvent *)data;
+	ZimClient *c = NULL;
+
+	c = zimwm_find_client_by_zwindow(win);
+
+	if(!c)
+		return;
+	frame = c->window->parent;
+
+	frame->width += frame->width - ev->width;
+	frame->height += frame->height - ev->height;
+
+	[frame resize:frame->width:frame->height];
 	
 }
 

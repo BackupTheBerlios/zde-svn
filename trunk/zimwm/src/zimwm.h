@@ -26,10 +26,15 @@
 
 #include <zwl.h>
 
+#include "../zimwm-config.h"
 #include "ewmh.h"
+#include "client-events.h"
 #include "client.h"
 #include "events.h"
 #include "focus.h"
+
+/* FIXME */
+extern int snap_px;
 
 extern ZWidget *root_window;
 extern IMPList *client_list;
