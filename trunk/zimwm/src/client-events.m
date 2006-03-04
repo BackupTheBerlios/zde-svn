@@ -41,7 +41,7 @@ void on_win_unmap(IMPObject *widget, void *data)
 	update_client_list(client_list);
 	
 	[w->parent destroy];
-	[w->parent release];
+	[w destroy];
 	
 	//zimwm_delete_client(c);
 	//XUngrabServer(zdpy);
