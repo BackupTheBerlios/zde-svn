@@ -73,7 +73,8 @@ head node of the list, or that you have some way up updating the pointer of the 
 beginning of the list */
 - (IMPList *)prepend_data:(void *)user_data;  
 
-/** Add a new node at the positing that is "pos" nodes from this one.  If there are not enough nodes to traverse, it returns NULL.  The nodes preceding and after are updated, as we know where they are when moving in order. FIXME: NOT YET IMPLEMENTED */ 
+/** Add a new node at the positing that is "pos" nodes from this one.  If there are not enough nodes to traverse, it returns NULL.
+  The nodes preceding and after are updated, as we know where they are when moving in order. FIXME: NOT YET IMPLEMENTED */ 
 - (IMPList *)insert_data_nth:(int)pos:(void *)user_data;  
 
 /** Deletes the next node in the list. Returns the new next node. */

@@ -94,7 +94,28 @@
 
 - (IMPList *)insert_data_nth:(int)pos:(void *)user_data
 {
-	fprintf(stderr,"insert_data_nth not yet implemented.  Please implement it!\n");
+	int i;
+	IMPList *curr = self;
+	IMPList *tmp,*tmp1;
+	
+	/* This gets us to the place BEFORE where we want to insert. */
+	for(i=0;i<pos - 1;i++) {
+		if(curr->next == NULL)
+			return NULL;
+		
+		curr = curr->next;
+	}
+	
+	tmp = [IMPList alloc];
+	[tmp init:self->type];
+
+	tmp1 = curr->next;
+	curr->next = tmp;
+	tmp->next = tmp1;
+	
+	return tmp;
+
+	//fprintf(stderr,"insert_data_nth not yet implemented.  Please implement it!\n");
 }
 
 - (IMPList *)delete_next_node
