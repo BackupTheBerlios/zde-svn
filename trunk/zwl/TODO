@@ -5,6 +5,9 @@
  -0% done
  
 -ZWindow needs to be more configurable, i.e. setting background color, frame or no frame, etc.
+ -10%
+ 
+-ZButton needs a way for the image to be updated on-the-fly, i.e. changing the image path reloads the image.
  -0%
  
 -Find & fix the Segmentation fault when calling zwl_main_loop_quit. Has something to do with freeing all widget,

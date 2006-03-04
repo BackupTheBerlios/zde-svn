@@ -40,7 +40,6 @@ static void on_destroy(IMPObject *widget, void *data);
 	self->children = NULL;
 
 	for(i=0;i<100;i++) {
-		//self->children[i] = NULL;
 		self->internal_callbacks[i] = NULL;
 		self->callbacks[i] = NULL;
 	}
@@ -54,10 +53,6 @@ static void on_destroy(IMPObject *widget, void *data);
 {
 	if(self->name)
 		i_free(self->name);
-	//if(self->parent)
-	//	[self->parent release];
-
-	//[self->children delete_list];
 	
 	[super free];
 }
@@ -75,8 +70,6 @@ static void on_destroy(IMPObject *widget, void *data);
 - (void)destroy
 {
 	if(self->window) {
-//		XUnmapWindow(zdpy,self->window);
-//		zwl_main_loop_remove_widget(self);
 		XDestroyWindow(zdpy,self->window);
 		self->window = NULL;
 	}
