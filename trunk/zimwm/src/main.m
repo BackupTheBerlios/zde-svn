@@ -86,7 +86,7 @@ static void setup_root_window(void)
 	[root_window attatch_cb:KEY_PRESS:(ZCallback *)on_key_press];
 	[root_window attatch_cb:CLIENT_MESSAGE:(ZCallback *)on_client_message];
 	[root_window attatch_cb:CONFIGURE_REQUEST:(ZCallback *)on_configure_request];
-	[root_window attatch_cb:PROPERTY:(ZCallback *)on_property_notify];
+	//[root_window attatch_cb:PROPERTY:(ZCallback *)on_property_notify];
 	
 	setup_ewmh_root_properties();
 /*	

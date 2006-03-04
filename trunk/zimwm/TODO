@@ -9,7 +9,7 @@ the item can be completed.
  -100% done, but I didn't need a new widget.
 
 *Fix Resizing window
- -75% done, need the icccm and ewmh stuff in it so it works better and smoother. Also need to make resize code more
+ -100% done, need the icccm and ewmh stuff in it so it works better and smoother. Also need to make resize code more
  generalized so I can resize windows more easily from other sections of code, such as on ConfigureNotify's.
 
 *Focus system

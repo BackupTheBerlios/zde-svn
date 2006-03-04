@@ -44,11 +44,14 @@ static void resize(IMPObject *widget, void *data);
 	ZWindow *w = [ZWindow alloc];
 	ZWindow *frame = NULL;
 	char *name = NULL;
+	XSetWindowAttributes sattr;
+	
+	sattr.event_mask = PropertyChangeMask;
 	
 	XGrabServer(zdpy);
 	
 	self->atoms = NULL;
-	self->size_hints = NULL;
+	self->size_hints = i_calloc(1,sizeof(XSizeHints));
 	
 	XGetWindowAttributes(zdpy,window,&attr);
 	
@@ -58,7 +61,7 @@ static void resize(IMPObject *widget, void *data);
 	w->height = attr.height;
 	
 	w->window = window;
-	
+	XChangeWindowAttributes(zdpy,w->window,CWEventMask,&sattr);
 	XFetchName(zdpy,w->window,&name);
 	
 	if(name) {
@@ -84,7 +87,7 @@ static void resize(IMPObject *widget, void *data);
 		
 	[self->window attatch_cb:UNMAP:(ZCallback *)on_win_unmap];
 	//[self->window attatch_cb:CONFIGURE:(ZCallback *)on_win_configure];
-	//[self->window attatch_cb:PROPERTY:(ZCallback *)on_property_notify];
+	[self->window attatch_cb:PROPERTY:(ZCallback *)on_property_notify];
 		
 	zwl_main_loop_add_widget(self->window);
 
@@ -113,7 +116,7 @@ static void resize(IMPObject *widget, void *data);
 {
 	int i,len;
 	Atom *atom = NULL;
-	XSizeHints shints;
+	XSizeHints *shints;
 	long sreturn;
 
 	if(!self->atoms) {
@@ -144,10 +147,11 @@ static void resize(IMPObject *widget, void *data);
 	self->wm_hints = XGetWMHints(zdpy,self->window->window);
 		
 	/* WM_NORMAL_HINTS */
-	XGetWMNormalHints(zdpy,self->window->window,&shints,&sreturn);
+	XGetWMNormalHints(zdpy,self->window->window,self->size_hints,&sreturn);
 
-	if(&shints) {
-		self->size_hints = memcpy(i_calloc(1,sizeof(XSizeHints)),&shints,sizeof(XSizeHints));
+	if(shints) {
+		//self->size_hints = memcpy(i_calloc(1,sizeof(XSizeHints)),&shints,sizeof(XSizeHints));
+		//self->size_hints = shints;
 	}	
 }
 

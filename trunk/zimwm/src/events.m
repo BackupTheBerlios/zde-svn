@@ -111,14 +111,18 @@ void on_property_notify(IMPObject *widget, void *data)
 {
 	XPropertyEvent *ev = (XPropertyEvent *)data;
 	ZimClient *c = NULL;
+	XSizeHints *oldhints;
 
 	c = zimwm_find_client_by_window(ev->window);
-	printf("cool:%d\n",ev->window);
 	
 	if(!c)
 		return;
-	printf("cooler\n");
-	[c get_properties];
-	[c resize:c->size_hints->base_width + c->border:c->size_hints->base_height + c->border];
+	
+	if(ev->atom == XA_WM_NORMAL_HINTS) {
+		oldhints = c->size_hints;
+		[c get_properties];
+		[c resize:c->window->parent->width + c->size_hints->base_width - oldhints->base_width:
+			  c->window->parent->height + c->size_hints->base_height - oldhints->base_height];
+	}
 }
 
