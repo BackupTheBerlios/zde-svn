@@ -32,15 +32,17 @@ void on_win_unmap(IMPObject *widget, void *data)
 
 	w->window = NULL;
 	
-	//c = zimwm_find_client_by_zwindow(w);
+	c = zimwm_find_client_by_zwindow(w);
 	
-	//zimwm_remove_client(c);
+	zimwm_remove_client(c);
 
-	zimwm_find_and_remove_client(w);
+	//zimwm_find_and_remove_client(w);
 	
 	update_client_list(client_list);
 	
 	[w->parent destroy];
+	[w->parent release];
+	
 	//zimwm_delete_client(c);
 	//XUngrabServer(zdpy);
 }
@@ -117,12 +119,10 @@ void on_frame_button_down(IMPObject *widget, void *data)
 
 		switch(ev.type) {
 			case MotionNotify:
-				[w move:ev.xmotion.x_root - x1:ev.xmotion.y_root - y1];	
-				[c snap];
-				if(c)
-					[c send_configure_message:w->x:w->y:c->window->width:c->window->height];
-
-				//XSync(zdpy,False);
+				if(c) {
+					[c move:ev.xmotion.x_root - x1:ev.xmotion.y_root - y1];	
+					[c snap];
+				}
 				break;
 			case ButtonRelease:
 				XUngrabPointer(zdpy,CurrentTime);

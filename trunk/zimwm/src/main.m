@@ -36,8 +36,6 @@ void zimwm_add_client(ZimClient *client);
 ZimClient *zimwm_find_client_by_zwindow(ZWindow *w);
 void zimwm_delete_client(ZimClient *c);
 
-void on_button_down(IMPObject *widget, void *data);
-
 int main(int argc, char **argv)
 {	
 	zwl_init();
@@ -68,11 +66,9 @@ static void setup_root_window(void)
     			  ButtonReleaseMask |
      			  EnterWindowMask |
      			  LeaveWindowMask |
-     		 	  PointerMotionMask |
-     			  ExposureMask |
-     		  	  StructureNotifyMask |
 			  SubstructureRedirectMask |
 			  SubstructureNotifyMask |
+			  PropertyChangeMask |
 			  KeyPressMask |
      			  KeyReleaseMask;
 
@@ -81,7 +77,7 @@ static void setup_root_window(void)
 	attr.cursor = rootc;
 	XChangeWindowAttributes(zdpy,root_window->window,CWEventMask | CWCursor,&attr);
 
-	XGrabKey(zdpy,XKeysymToKeycode(zdpy,XK_Alt_L),AnyModifier,root_window->window,False,GrabModeAsync,GrabModeAsync);
+	XGrabKey(zdpy,XKeysymToKeycode(zdpy,XK_Alt_L),AnyModifier,root_window->window,True,GrabModeAsync,GrabModeAsync);
 	
 	zwl_main_loop_add_widget(root_window);
 
@@ -89,7 +85,8 @@ static void setup_root_window(void)
 	[root_window attatch_cb:MAP_REQUEST:(ZCallback *)on_map_request];
 	[root_window attatch_cb:KEY_PRESS:(ZCallback *)on_key_press];
 	[root_window attatch_cb:CLIENT_MESSAGE:(ZCallback *)on_client_message];
-	[root_window attatch_cb:CONFIGURE:(ZCallback *)on_configure];
+	[root_window attatch_cb:CONFIGURE_REQUEST:(ZCallback *)on_configure_request];
+	[root_window attatch_cb:PROPERTY:(ZCallback *)on_property_notify];
 	
 	setup_ewmh_root_properties();
 /*	
@@ -252,6 +249,7 @@ void zimwm_remove_client(ZimClient *c)
 	}
 }
 
+/* FIXME */
 void zimwm_find_and_remove_client(ZWindow *w)
 {
 	IMPList *list = client_list;
@@ -268,7 +266,5 @@ void zimwm_find_and_remove_client(ZWindow *w)
 		
 		list = list->next;
 	}
-
-	return NULL;
 }
 

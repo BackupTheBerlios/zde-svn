@@ -84,7 +84,8 @@ static void resize(IMPObject *widget, void *data);
 		
 	[self->window attatch_cb:UNMAP:(ZCallback *)on_win_unmap];
 	//[self->window attatch_cb:CONFIGURE:(ZCallback *)on_win_configure];
-	
+	//[self->window attatch_cb:PROPERTY:(ZCallback *)on_property_notify];
+		
 	zwl_main_loop_add_widget(self->window);
 
 	[self get_properties];
@@ -114,11 +115,13 @@ static void resize(IMPObject *widget, void *data);
 	Atom *atom = NULL;
 	XSizeHints shints;
 	long sreturn;
-	
-	self->atoms = i_calloc(30,sizeof(Atom));
 
-	for(i=0;i<30;i++) {
-		atoms[i] = NULL;
+	if(!self->atoms) {
+		self->atoms = i_calloc(30,sizeof(Atom));
+
+		for(i=0;i<30;i++) {
+			atoms[i] = NULL;
+		}
 	}
 
 	/* WM_PROTOCOLS */
@@ -181,7 +184,7 @@ static void resize(IMPObject *widget, void *data);
 	XSendEvent(zdpy,self->window->window,False,StructureNotifyMask | SubstructureNotifyMask,&cv);
 }
 
-- (int)snap
+- (void)snap
 {
 	ZWindow *frame = (ZWindow *)self->window->parent;
 	int dx,dy;
@@ -238,6 +241,80 @@ static void resize(IMPObject *widget, void *data);
                 frame->y += dy;
 
 	[frame move:frame->x:frame->y];
+}
+
+- (void)move:(int)x:(int)y
+{
+	ZWindow *w = self->window->parent;
+	
+	[w move:x:y];	
+	[self send_configure_message:w->x:w->y:self->window->width:self->window->height];
+}
+
+- (void)resize:(int)width:(int)height
+{
+	IMPList *children = NULL;
+	ZWindow *window,*right,*left,*bottom,*bottom_right;
+	ZWindow *frame = self->window->parent;
+	char *name = NULL;
+	
+	/* Find the window by searching through the frame's children list. */
+	children = frame->children;
+
+	if(!children)
+		return;
+	
+	while(children) {
+		window = children->data;
+		name = [window get_name];
+		
+		if(!name)
+			name = "";
+			
+		if(!strncmp(name,"RIGHT_HANDLE",8)) {
+			right = window;
+		}
+		else if(!strncmp(name,"LEFT_HANDLE",7)) {
+			left = window;
+		}
+		else if(!strncmp(name,"BOTTOM_HANDLE",13)) {
+			bottom = window;
+		}
+		else if(!strncmp(name,"BOTTOM_RIGHT_HANDLE",19)) {
+			bottom_right = window;
+		}
+
+		children = children->next;
+	}
+	
+	[self resize:width:height:right:left:bottom:bottom_right];
+}
+
+- (void)resize:(int)width:(int)height:(ZWindow *)right:(ZWindow *)left:(ZWindow *)bottom:(ZWindow *)bottom_right
+{
+	ZWindow *frame = self->window->parent;
+
+	[self->window move:self->border:self->title_height];
+	[self->window resize:width - self->border * 2:height - self->border - self->title_height];
+
+	[frame resize:width:height];
+	[frame raise];
+
+	[right move:frame->width - self->border:self->title_height];
+	[right resize:self->border:frame->height];
+	[left move:0:self->title_height];
+	[left resize:self->border:frame->height];
+	[bottom move:0:frame->height - self->border];
+	[bottom resize:frame->width:self->border];
+	[bottom_right move:frame->width - self->border:frame->height - self->border];
+	[bottom_right resize:self->border:self->border];
+	
+	[right raise];
+	[left raise];
+	[bottom raise];
+	[bottom_right raise];
+	
+	[self send_configure_message:self->window->x:self->window->y:self->window->width:self->window->height];
 }
 
 @end
@@ -426,30 +503,12 @@ static void resize(IMPObject *widget, void *data)
 							height = c->size_hints->max_height;
 					}
 			
-					/* resize the window before the frame, I think it makes it look smoother... */
-					[c->window move:c->border:c->title_height];
-					[c->window resize:width - c->border * 2:height - c->border - c->title_height];
-			
-					[w resize:width:height];
-					[w raise];
-				
-					[right move:w->width - c->border:c->title_height];
-					[right resize:c->border:w->height];
-					[left move:0:c->title_height];
-					[left resize:c->border:w->height];
-					[bottom move:0:w->height - c->border];
-					[bottom resize:w->width:c->border];
-					[bottom_right move:w->width - c->border:w->height - c->border];
-					[bottom_right resize:c->border:c->border];
+					[c resize:width:height:left:right:bottom:bottom_right];
 					
-					[right raise];
-					[left raise];
-					[bottom raise];
-					[bottom_right raise];
-					
-					[c send_configure_message:c->window->x:c->window->y:c->window->width:c->window->height];
-					
-					//XSync(zdpy,False);	
+					if(data == NULL) {
+						XUngrabPointer(zdpy,CurrentTime);
+						return;
+					}
 					break;		
 				case ButtonRelease:
 					XUngrabPointer(zdpy,CurrentTime);
@@ -461,7 +520,6 @@ static void resize(IMPObject *widget, void *data)
 	}
 
 	XFreeCursor(zdpy,arrow);
-	
 }
 
 static inline int absmin(int a, int b)
@@ -478,17 +536,73 @@ void on_win_configure(IMPObject *widget, void *data)
 	ZWindow *frame;
 	XConfigureEvent *ev = (XConfigureEvent *)data;
 	ZimClient *c = NULL;
+	IMPList *children = NULL;
+	ZWindow *right,*left,*bottom,*bottom_right,*window;
+	char *name;
 
 	c = zimwm_find_client_by_zwindow(win);
-
+	
 	if(!c)
 		return;
+	
+	frame = c->window->parent;
+	
+	if(ev->send_event == True || (ev->x == win->x || ev->y == win->y || ev->width == win->width || ev->height == win->height))
+		return;
+
+	frame->width += ev->width - win->width;
+	frame->height += ev->height - win->height;
+
+	[c resize:frame->width:frame->height];
+/*
+	children = win->children;
+
+	if(!children)
+		return;
+	
+	while(children) {
+		window = children->data;
+		name = [window get_name];
+		
+		if(!name)
+			name = "";
+			
+		if(!strncmp(name,"RIGHT_HANDLE",8)) {
+			right = window;
+		}
+		else if(!strncmp(name,"LEFT_HANDLE",7)) {
+			left = window;
+		}
+		else if(!strncmp(name,"BOTTOM_HANDLE",13)) {
+			bottom = window;
+		}
+		else if(!strncmp(name,"BOTTOM_RIGHT_HANDLE",19)) {
+			bottom_right = window;
+		}
+
+		children = children->next;
+	}
+	
 	frame = c->window->parent;
 
-	frame->width += frame->width - ev->width;
-	frame->height += frame->height - ev->height;
+	frame->width += ev->width - frame->width;
+	frame->height += ev->height - frame->height;
 
 	[frame resize:frame->width:frame->height];
 	
+	[right move:win->width - c->border:c->title_height];
+	[right resize:c->border:win->height];
+	[left move:0:c->title_height];
+	[left resize:c->border:win->height];
+	[bottom move:0:win->height - c->border];
+	[bottom resize:win->width:c->border];
+	[bottom_right move:win->width - c->border:win->height - c->border];
+	[bottom_right resize:c->border:c->border];
+	
+	[right raise];
+	[left raise];
+	[bottom raise];
+	[bottom_right raise];
+*/
 }
 

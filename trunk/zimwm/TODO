@@ -9,13 +9,14 @@ the item can be completed.
  -100% done, but I didn't need a new widget.
 
 *Fix Resizing window
- -95% done, just need the icccm and ewmh stuff in it so it works better and smoother.
+ -75% done, need the icccm and ewmh stuff in it so it works better and smoother. Also need to make resize code more
+ generalized so I can resize windows more easily from other sections of code, such as on ConfigureNotify's.
 
 *Focus system
  -50% done, right now its just sloppy focus. I also want just pointer focus, i.e. focus is strictly is under the mouse.
 
 *Snap window borders while moving
- -100% done
+ -100% done, could use some speedups and cleanup of code so its more readable.
  
 *Keybindings
  -5% done. So far, pressing ALT on a window and clicking moves it. There needs to be a sophisticated key:action
@@ -34,7 +35,7 @@ the item can be completed.
  -0% done
  
 *Fix windows resizing themselves.  Not sure how to do this yet.
- -0% done
+ -20% done
 
 *EWMH/ICCCM Support
  -10% done
@@ -51,4 +52,7 @@ the item can be completed.
 *Speedups, especially when mapping windows. (imp,zwl)
  -0% I'm not even thinking of optimizing right now.
 
+*Fix all the stupid little bugs and memory leaks lying around
+ -??% you can never know when you have finished. Just do it.
+ 
 *Some kind of functionality to "remember" window settings, like place, size, etc. that are set/can be set by the window manager.

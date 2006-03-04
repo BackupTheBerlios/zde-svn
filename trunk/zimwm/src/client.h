@@ -63,9 +63,17 @@
   */
 - (void)send_configure_message:(int)x:(int)y:(int)width:(int)height;
 
-/** "Snaps" the client to the edges of other windows and the screen. 
- Returns 0 if the client was snapped, other if it was not snapped. */
-- (int)snap;
+/** "Snaps" the client to the edges of other windows and the screen. */
+- (void)snap;
+
+/** Moves the client to a position x,y */
+- (void)move:(int)x:(int)y;
+
+/** Resizes the client. */
+- (void)resize:(int)width:(int)height;
+
+/** Used internally so that we don't have to find the handles every resize. */
+- (void)resize:(int)width:(int)height:(ZWindow *)right:(ZWindow *)left:(ZWindow *)bottom:(ZWindow *)bottom_right;
 
 @end
 

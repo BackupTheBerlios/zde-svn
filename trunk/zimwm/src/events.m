@@ -56,16 +56,21 @@ void on_key_press(IMPObject *widget, void *data)
 {
 	ZWindow *w = (ZWindow *)widget;
 	XEvent ev;
+	XKeyEvent *keyev = (XKeyEvent *)data;
 	ZimClient *c = NULL;
-	Window w1;
+	Window w1 = keyev->subwindow;
 	int x;
 	
 	XGetInputFocus(zdpy,&w1,&x);
-		
+	
+	/* Pass events along to the owner. */
+	keyev->window = w1;
+	XSendEvent(zdpy,keyev->window,True,KeyPressMask,keyev);
+	
 	c = zimwm_find_client_by_window(w1);
 
 	if(c) {
-		XGrabButton(zdpy,Button1,AnyModifier,w1,True,ButtonPressMask,GrabModeAsync,GrabModeAsync,None,None);		
+		XGrabButton(zdpy,Button1,AnyModifier,w1,True,ButtonPressMask,GrabModeAsync,GrabModeAsync,None,None);
 		while(1) {
 			XNextEvent(zdpy,&ev);
 			
@@ -88,21 +93,32 @@ void on_client_message(IMPObject *widget, void *data)
 	handle_ewmh_client_message(ev);	
 }
 
-void on_configure(IMPObject *widget, void *data)
+void on_configure_request(IMPObject *widget, void *data)
 {
-	XConfigureEvent *ev = (XConfigureEvent *)data;
+	XConfigureRequestEvent *ev = (XConfigureRequestEvent *)data;
 	ZimClient *c = NULL;
-	
-//	if(ev->send_event == True) {
-		c = zimwm_find_client_by_window(ev->window);
-	printf("COOLNESS\n");	
-		c->window->parent->x = ev->x;
-		c->window->parent->y = ev->y;
-		c->window->parent->width = ev->width;
-		c->window->parent->height = ev->height;
 
-		[c->window->parent move:c->window->parent->x:c->window->parent->y];
-		[c->window->parent resize:c->window->parent->width:c->window->parent->height];
-//	}
+	c = zimwm_find_client_by_window(ev->window);
+	printf("NICENESS\n");
+	
+	if(!c)
+		return;
+
+	[c resize:ev->width - c->window->width:ev->height - c->window->height];
+}
+
+void on_property_notify(IMPObject *widget, void *data)
+{
+	XPropertyEvent *ev = (XPropertyEvent *)data;
+	ZimClient *c = NULL;
+
+	c = zimwm_find_client_by_window(ev->window);
+	printf("cool:%d\n",ev->window);
+	
+	if(!c)
+		return;
+	printf("cooler\n");
+	[c get_properties];
+	[c resize:c->size_hints->base_width + c->border:c->size_hints->base_height + c->border];
 }
 
