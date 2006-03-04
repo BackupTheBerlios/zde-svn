@@ -34,6 +34,9 @@ the item can be completed.
 *Titlebar buttons for Maximise, tile, other functions.  Should be images. (zwl?)
  -0% done
  
+*Window context menu for functions and settings related to the window, anything not on the titlebar.(zwl ZMenu)
+ -0%
+ 
 *Fix windows resizing themselves.  Not sure how to do this yet.
  -20% done
 
@@ -56,3 +59,4 @@ the item can be completed.
  -??% you can never know when you have finished. Just do it.
  
 *Some kind of functionality to "remember" window settings, like place, size, etc. that are set/can be set by the window manager.
+ -0%
