@@ -198,7 +198,7 @@ void zimwm_delete_client(ZimClient *c)
 	
 	client = (ZimClient *)client_list->data;
 	if(client == c) {
-		if(c->atoms[WM_DELETE_WINDOW] && c->window->window) {
+		if(c->atoms[WM_DELETE_WINDOW] && c->window && c->window->window) {
 			[c send_client_message:32:z_atom[WM_PROTOCOLS]:z_atom[WM_DELETE_WINDOW]];
 		}
 		else {
