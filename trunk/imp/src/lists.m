@@ -108,6 +108,7 @@
 	
 	tmp = [IMPList alloc];
 	[tmp init:self->type];
+	tmp->data = user_data;
 
 	tmp1 = curr->next;
 	curr->next = tmp;
