@@ -129,15 +129,27 @@ void zwl_main_loop_remove_widget(ZWidget *w)
 	ZWidget *w2;
 	IMPList *list = window_list;
 	
-	if(widget) {
-		while(list) {
-			w2 = (ZWidget *)list->data;
-			if(w2 == w->window) {
-				[list delete_node];
-			}
-			list = list->next;	
-		}
+	if(!widget)
+		return;
+
+	w2 = (ZWidget *)list->data;
+	if(w2 == widget) {
+		list = [list delete_node];
+		window_list = list;
+		return;
 	}
+	
+	while(list) {
+		w2 = (ZWidget *)list->next->data;		
+		
+		if((w2 == widget) && list->next) {
+			list = [list delete_next_node];
+			return;
+		}
+		
+		list = list->next;
+	}
+	
 }
 
 void zwl_main_loop_start(void)
@@ -244,13 +256,13 @@ static void process_xevent(XEvent *ev)
 
 				[w receive:POINTER_LEAVE:&ev->xcrossing];
 				break;
-		/*	case PropertyNotify:
+			case PropertyNotify:
 				prop = ev->xproperty;
 				w = find_widget(prop.window);
 				
 				[w receive:PROPERTY:&ev->xproperty];
 				break;
-		*/	default:
+			default:
 				w = find_widget(ev->xany.window);
 				[w receive:DEFAULT:ev];
 		}
