@@ -24,6 +24,7 @@
 #include "zwl.h"
 
 Display *zdpy = NULL;
+int zscreen = 0;
 IMPList *window_list = NULL;
 
 /* Atoms */
@@ -38,7 +39,8 @@ static void process_xevent(XEvent *ev);
 void zwl_init(void)
 {
 	zdpy = XOpenDisplay(NULL);
-
+	zscreen = DefaultScreen(zdpy);
+	
 	z_atom = i_calloc(100,sizeof(Atom));
 	
 	z_atom[UTF8_STRING] = XInternAtom(zdpy,"UTF8_STRING",False);
@@ -160,6 +162,7 @@ static void process_xevent(XEvent *ev)
 	XUnmapEvent unmap;
 	XConfigureRequestEvent conreq;
 	XCrossingEvent cross;
+	XPropertyEvent prop;
 	
 	ZWidget *w = NULL;
 
@@ -225,10 +228,7 @@ static void process_xevent(XEvent *ev)
 				break;
 			case ConfigureRequest:
 				conreq = ev->xconfigurerequest;
-				if(conreq.send_event == True)
-					w = find_widget(XRootWindow(zdpy,0));
-				else
-					w = find_widget(conreq.window);
+				w = find_widget(conreq.window);
 				
 				[w receive:CONFIGURE_REQUEST:&ev->xconfigurerequest];
 				break;
@@ -244,7 +244,13 @@ static void process_xevent(XEvent *ev)
 
 				[w receive:POINTER_LEAVE:&ev->xcrossing];
 				break;
-			default:
+		/*	case PropertyNotify:
+				prop = ev->xproperty;
+				w = find_widget(prop.window);
+				
+				[w receive:PROPERTY:&ev->xproperty];
+				break;
+		*/	default:
 				w = find_widget(ev->xany.window);
 				[w receive:DEFAULT:ev];
 		}

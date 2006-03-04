@@ -35,10 +35,12 @@
 	
 	@protected
 	char *label;
-	char *image_path; /** Path to png image to use on button. */
+	char *image_path; /**< Path to png image to use on button. */
+	unsigned int border_width; /**< Set to the pixel width you want displayed around the button, default is 1.
+			    		This must be set before you make it a child of any other widgets. */
 	
 	@public
-	ZLabel *zlabel; /** For internal use only.  Do not manually change it, instead call
+	ZLabel *zlabel; /**< For internal use only.  Do not manually change it, instead call
 			  set_label with the text you want to display. */
 }
 
@@ -55,6 +57,10 @@
 - (char *)get_label;
 
 - (char *)get_image_path;
+
+- (void)set_border_width:(unsigned int)width;
+
+- (int)get_border_width;
 
 /** Returns the cairo_t that is used for this button. */
 - (cairo_t *)get_cairo_t;

@@ -41,6 +41,7 @@ static void on_label_up(IMPObject *widget, void *data);
 	self->cr = NULL;
 	self->window_surface = NULL;
 	self->image_surface = NULL;
+	self->border_width = 1;
 	
 	[super init:x:y:width:height];
 	
@@ -58,6 +59,7 @@ static void on_label_up(IMPObject *widget, void *data);
 	self->image_surface = NULL;
 	self->label = NULL;
 	self->cr = NULL;
+	self->border_width = 1;
 	
 	if(image_path)
 		self->image_path = i_strdup(image_path);
@@ -157,6 +159,16 @@ static void on_label_up(IMPObject *widget, void *data);
 	}
 }
 
+- (void)set_border_width:(unsigned int)width
+{
+	self->border_width = width;
+}
+
+- (unsigned int)get_border_width
+{
+	return self->border_width;
+}
+
 @end
 
 static void on_add(IMPObject *widget, void *data)
@@ -182,7 +194,7 @@ static void on_add(IMPObject *widget, void *data)
 	
 	myself->window = (Window *)XCreateSimpleWindow(zdpy,parent->window,
 			myself->x,myself->y,myself->width,myself->height,
-		1,WhitePixel(zdpy,DefaultScreen(zdpy)),1);
+		[myself get_border_width],WhitePixel(zdpy,DefaultScreen(zdpy)),1);
 	
 	if(![myself get_image_path]) {
 		[myself->zlabel init:0:0];

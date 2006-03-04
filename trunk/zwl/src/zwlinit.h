@@ -92,6 +92,9 @@ typedef enum {
   It is better to call zwl_get_display instead of referencing this directly. */
 extern Display *zdpy;
 
+/** Number of the screen on which zwl opened a display. */
+extern int zscreen;
+
 /** You must call this function before you use any zwl widgets. 
   It opens the display and initializes the z_atom array.
  */

@@ -43,6 +43,7 @@ static void on_configure(IMPObject *widget, void *data);
      			  ExposureMask |
      		  	  StructureNotifyMask |
 			  SubstructureNotifyMask |
+			  PropertyChangeMask |
      			  KeyPressMask |
      			  KeyReleaseMask;
 	
