@@ -297,7 +297,7 @@ static void resize(IMPObject *widget, void *data);
 - (void)resize:(int)width:(int)height:(ZWindow *)right:(ZWindow *)left:(ZWindow *)bottom:(ZWindow *)bottom_right
 {
 	ZWindow *frame = self->window->parent;
-
+	
 	[self->window move:self->border:self->title_height];
 	[self->window resize:width - self->border * 2:height - self->border - self->title_height];
 
@@ -342,7 +342,7 @@ static ZWindow *create_frame_for_client(ZimClient *c)
 		c->window->height + (c->border + c->title_height)];
 
 	[f attatch_cb:BUTTON_DOWN:(ZCallback *)on_frame_button_down];
-	[f attatch_cb:EXPOSE:(ZCallback *)on_frame_expose];
+	[f attatch_cb:CONFIGURE:(ZCallback *)on_frame_configure];
 	[f attatch_cb:POINTER_ENTER:(ZCallback *)on_frame_enter];
 	
 	[right_handle init:f:f->width - c->border:c->title_height:c->border:f->height];

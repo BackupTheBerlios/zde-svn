@@ -138,14 +138,12 @@ void on_frame_button_down(IMPObject *widget, void *data)
 }
 
 /* Recenters the title in the frame. */
-void on_frame_expose(IMPObject *widget, void *data)
+void on_frame_configure(IMPObject *widget, void *data)
 {
 	ZWindow *frame = (ZWindow *)widget;
 	ZLabel *label = NULL;
-	ZWindow *w = NULL;
 	IMPList *children;
 	ZWindow *window = NULL;
-	ZimClient *c = NULL;
 	XGlyphInfo extents;
 	XftFont *font = XftFontOpenName(zdpy,DefaultScreen(zdpy),"sans-8"); /* This is bad... */
 	char *name = NULL;

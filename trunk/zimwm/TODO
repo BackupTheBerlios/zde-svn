@@ -38,7 +38,7 @@ the item can be completed.
  -0%
  
 *Fix windows resizing themselves.  Not sure how to do this yet.
- -20% done
+ -90% done, still a few segvs and positioning problems, but its mostly there.
 
 *EWMH/ICCCM Support
  -10% done
