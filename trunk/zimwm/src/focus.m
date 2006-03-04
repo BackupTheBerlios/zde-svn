@@ -28,7 +28,10 @@ int focus_client(ZimClient *c)
 	if(!c)
 		return -1;
 
-	if(c->wm_hints && c->wm_hints->input == True) {
+	if(!c->wm_hints)
+		return;
+	
+	if(c->wm_hints->input == True) {
 		if(c->atoms[WM_TAKE_FOCUS]) {
 			[c send_client_message:32:XA_ATOM:z_atom[WM_TAKE_FOCUS]];
 			XSetInputFocus(zdpy,c->window->window,RevertToPointerRoot,CurrentTime);

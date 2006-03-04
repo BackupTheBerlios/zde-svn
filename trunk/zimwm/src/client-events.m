@@ -33,15 +33,14 @@ void on_win_unmap(IMPObject *widget, void *data)
 	w->window = NULL;
 	
 	c = zimwm_find_client_by_zwindow(w);
-	
+	[w destroy];
 	zimwm_remove_client(c);
 
 	//zimwm_find_and_remove_client(w);
 	
 	update_client_list(client_list);
-	
-	[w->parent destroy];
-	[w destroy];
+		
+	//[w->parent destroy];
 	
 	//zimwm_delete_client(c);
 	//XUngrabServer(zdpy);
