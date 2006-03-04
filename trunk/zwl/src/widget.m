@@ -77,7 +77,7 @@ static void on_destroy(IMPObject *widget, void *data);
 	[self receive:DESTROY:NULL];
 
 	zwl_main_loop_remove_widget(self);
-	
+		
 	XSync(zdpy,False);
 }
 

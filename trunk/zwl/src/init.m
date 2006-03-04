@@ -142,7 +142,7 @@ void zwl_main_loop_remove_widget(ZWidget *w)
 	while(list) {
 		w2 = (ZWidget *)list->next->data;		
 		
-		if((w2 == widget) && list->next) {
+		if(w2 == widget) {
 			list = [list delete_next_node];
 			return;
 		}
