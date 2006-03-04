@@ -211,3 +211,22 @@ void on_frame_enter(IMPObject *widget, void *data)
 	focus_client(c);
 }
 
+void on_win_property_notify(IMPObject *widget, void *data)
+{
+	XPropertyEvent *ev = (XPropertyEvent *)data;
+	ZimClient *c = NULL;
+	XSizeHints *oldhints;
+
+	c = zimwm_find_client_by_window(ev->window);
+	
+	if(!c)
+		return;
+	
+	if(ev->atom == XA_WM_NORMAL_HINTS) {
+		oldhints = c->size_hints;
+		[c get_properties];
+		[c resize:c->window->parent->width + c->size_hints->base_width - oldhints->base_width:
+			  c->window->parent->height + c->size_hints->base_height - oldhints->base_height];
+	}
+}
+

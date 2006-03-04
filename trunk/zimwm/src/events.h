@@ -29,6 +29,5 @@ void on_map_request(IMPObject *widget, void *data);
 void on_key_press(IMPObject *widget, void *data);
 void on_client_message(IMPObject *widget, void *data);
 void on_configure_request(IMPObject *widget, void *data);
-void on_property_notify(IMPObject *widget, void *data);
 
 #endif

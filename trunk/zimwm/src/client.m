@@ -87,7 +87,7 @@ static void resize(IMPObject *widget, void *data);
 		
 	[self->window attatch_cb:UNMAP:(ZCallback *)on_win_unmap];
 	//[self->window attatch_cb:CONFIGURE:(ZCallback *)on_win_configure];
-	[self->window attatch_cb:PROPERTY:(ZCallback *)on_property_notify];
+	[self->window attatch_cb:PROPERTY:(ZCallback *)on_win_property_notify];
 		
 	zwl_main_loop_add_widget(self->window);
 

@@ -107,22 +107,3 @@ void on_configure_request(IMPObject *widget, void *data)
 	[c resize:ev->width - c->window->width:ev->height - c->window->height];
 }
 
-void on_property_notify(IMPObject *widget, void *data)
-{
-	XPropertyEvent *ev = (XPropertyEvent *)data;
-	ZimClient *c = NULL;
-	XSizeHints *oldhints;
-
-	c = zimwm_find_client_by_window(ev->window);
-	
-	if(!c)
-		return;
-	
-	if(ev->atom == XA_WM_NORMAL_HINTS) {
-		oldhints = c->size_hints;
-		[c get_properties];
-		[c resize:c->window->parent->width + c->size_hints->base_width - oldhints->base_width:
-			  c->window->parent->height + c->size_hints->base_height - oldhints->base_height];
-	}
-}
-
