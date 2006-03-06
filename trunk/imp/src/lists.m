@@ -38,7 +38,7 @@
 - free
 {	
 	IMPObject *data = NULL;;
-	if(self->type == 0)
+	if(self->type == 0 && self-data)
 		i_free(self->data);
 	else if(self->type == 1 && self->data) {
 		data = (IMPObject *)self->data;	
@@ -133,7 +133,15 @@
 	
 		return self->next;
 	}
-	else return NULL;
+	else if(self->next){
+		tmp = NULL;
+
+		self->next->next = NULL;
+		[self->next release];
+
+		self->next = tmp;
+		return self->next;
+	}
 }
 
 - (IMPList *)delete_node
