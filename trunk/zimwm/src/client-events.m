@@ -33,14 +33,14 @@ void on_win_unmap(IMPObject *widget, void *data)
 	w->window = NULL;
 	
 	c = zimwm_find_client_by_zwindow(w);
-	[w destroy];
 	zimwm_remove_client(c);
 
 	//zimwm_find_and_remove_client(w);
 	
 	update_client_list(client_list);
 		
-	//[w->parent destroy];
+	[w destroy];
+	[w->parent destroy];
 	
 	//zimwm_delete_client(c);
 	//XUngrabServer(zdpy);
@@ -198,14 +198,12 @@ void on_frame_enter(IMPObject *widget, void *data)
 			
 		if(!strncmp(name,"XWINDOW",8)) {
 			c = zimwm_find_client_by_zwindow(window);
-			break;
+			focus_client(c);
+			return;
 		}
 
 		children = children->next;
 	}
-
-	
-	focus_client(c);
 }
 
 void on_win_property_notify(IMPObject *widget, void *data)
@@ -214,7 +212,7 @@ void on_win_property_notify(IMPObject *widget, void *data)
 	ZimClient *c = NULL;
 	XSizeHints *oldhints;
 
-	c = zimwm_find_client_by_window(ev->window);
+	c = zimwm_find_client_by_zwindow(widget);
 	
 	if(!c)
 		return;

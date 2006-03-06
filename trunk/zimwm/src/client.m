@@ -44,7 +44,11 @@ static void resize(IMPObject *widget, void *data);
 	ZWindow *w = [ZWindow alloc];
 	ZWindow *frame = NULL;
 	char *name = NULL;
+	Window w1,w2;
 	XSetWindowAttributes sattr;
+	int x,x1;
+	int y,y1;
+	int mask;
 	
 	sattr.event_mask = PropertyChangeMask;
 	
@@ -55,10 +59,14 @@ static void resize(IMPObject *widget, void *data);
 	
 	XGetWindowAttributes(zdpy,window,&attr);
 	
-	w->x = attr.x;
-	w->y = attr.y;
+	//w->x = attr.x;
+	//w->y = attr.y;
 	w->width = attr.width;
 	w->height = attr.height;
+
+	XQueryPointer(zdpy,root_window->window,&w1,&w2,&x,&y,&x1,&y1,&mask);
+	w->x = x - w->width / 2;
+	w->y = y - w->height / 2;
 	
 	w->window = window;
 	XChangeWindowAttributes(zdpy,w->window,CWEventMask,&sattr);
@@ -116,7 +124,6 @@ static void resize(IMPObject *widget, void *data);
 {
 	int i,len;
 	Atom *atom = NULL;
-	XSizeHints *shints;
 	long sreturn;
 
 	if(!self->atoms) {
@@ -148,11 +155,6 @@ static void resize(IMPObject *widget, void *data);
 		
 	/* WM_NORMAL_HINTS */
 	XGetWMNormalHints(zdpy,self->window->window,self->size_hints,&sreturn);
-
-	if(shints) {
-		//self->size_hints = memcpy(i_calloc(1,sizeof(XSizeHints)),&shints,sizeof(XSizeHints));
-		//self->size_hints = shints;
-	}	
 }
 
 - (void)send_client_message:(int)format:(Atom)type:(Atom)data
@@ -262,7 +264,7 @@ static void resize(IMPObject *widget, void *data);
 	ZWindow *frame = self->window->parent;
 	char *name = NULL;
 	
-	/* Find the window by searching through the frame's children list. */
+	/* Find the windows by searching through the frame's children list. */
 	children = frame->children;
 
 	if(!children)
@@ -297,6 +299,9 @@ static void resize(IMPObject *widget, void *data);
 - (void)resize:(int)width:(int)height:(ZWindow *)right:(ZWindow *)left:(ZWindow *)bottom:(ZWindow *)bottom_right
 {
 	ZWindow *frame = self->window->parent;
+
+	if(!right || !left || !bottom || !bottom_right)
+		return;
 	
 	[self->window move:self->border:self->title_height];
 	[self->window resize:width - self->border * 2:height - self->border - self->title_height];
@@ -429,6 +434,10 @@ static void resize(IMPObject *widget, void *data)
 			
 		if(!strncmp(name,"XWINDOW",8)) {
 			c = zimwm_find_client_by_zwindow(window);
+			
+			if(!c)
+				return;
+			
 			if(c && c->size_hints) {
 				if(c->size_hints->max_width == c->size_hints->min_width && 
 						c->size_hints->max_height == c->size_hints->min_height)
@@ -488,8 +497,8 @@ static void resize(IMPObject *widget, void *data)
 						width = w->width;
 						height = w->height;
 					}
-
-					if(c && c->size_hints) {
+					
+					if(c->size_hints) {
 						if((c->size_hints->max_width == c->size_hints->min_width) && 
 								c->size_hints->max_width > 0 && c->size_hints->min_width > 0)
 							width = c->size_hints->max_width;
