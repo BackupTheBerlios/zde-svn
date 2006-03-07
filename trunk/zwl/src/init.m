@@ -125,7 +125,7 @@ void zwl_main_loop_add_widget(ZWidget *w)
 
 void zwl_main_loop_remove_widget(ZWidget *w)
 {
-	ZWidget *widget = find_widget(w->window);
+	ZWidget *widget = w;
 	ZWidget *w2;
 	IMPList *list = window_list;
 	
