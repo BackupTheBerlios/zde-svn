@@ -24,6 +24,25 @@
 #ifndef EWMH_H
 #define EWMH_H
 
+/**
+  	Holds values specified in _NET_WM_STRUT or _NET_WM_STRUT_PARTIAL
+  */
+typedef struct {
+	int left;
+	int right;
+	int top;
+	int bottom;
+	int left_start_y;
+	int left_end_y;
+	int right_start_y;
+	int right_end_y;
+	int top_start_x;
+	int top_end_x;
+	int bottom_start_x;
+	int bottom_end_x;
+	
+} ZStrutExtents;
+
 /** Sets the root window properties, like _NET_SUPPORTED, etc. */
 void setup_ewmh_root_properties(void);
 

@@ -74,6 +74,16 @@ void on_close_button_down(IMPObject *widget, void *data)
 	}
 }
 
+void on_maximise_button_down(IMPObject *widget, void *data)
+{
+
+}
+
+void on_minimise_button_down(IMPObject *widget, void *data)
+{
+
+}
+
 /* Moves the window around. */
 void on_frame_button_down(IMPObject *widget, void *data)
 {
@@ -223,5 +233,145 @@ void on_win_property_notify(IMPObject *widget, void *data)
 		[c resize:c->window->parent->width + c->size_hints->base_width - oldhints->base_width:
 			  c->window->parent->height + c->size_hints->base_height - oldhints->base_height];
 	}
+	else if(ev->atom == z_atom[_NET_WM_STRUT] || ev->atom == z_atom[_NET_WM_STRUT_PARTIAL]) {
+		[c get_properties];
+	}
+}
+
+void resize(IMPObject *widget, void *data)
+{
+	ZWindow *w = (ZWindow *)widget;
+	ZWindow *myself = (ZWindow *)widget;
+	ZWindow *right,*left,*bottom,*bottom_right;
+	Window w1,w2;
+	XEvent ev;
+	Cursor arrow = XCreateFontCursor(zdpy,XC_bottom_right_corner);
+	IMPList *children = NULL;
+	ZimClient *c = NULL;
+	ZWindow *window;
+	char *name;
+	int width;
+	int height;
+	int w_resize_inc = 1;
+	int h_resize_inc = 1;
+	
+	w = w->parent;
+	
+	XGrabPointer(zdpy,root_window->window,True,PointerMotionMask | ButtonReleaseMask,GrabModeAsync,GrabModeAsync,None,arrow,CurrentTime);
+
+	/* Find the window by searching through the frame's children list. */
+	children = w->children;
+
+	if(!children)
+		return;
+	
+	while(children) {
+		window = children->data;
+		name = [window get_name];
+		
+		if(!name)
+			name = "";
+			
+		if(!strncmp(name,"XWINDOW",8)) {
+			c = zimwm_find_client_by_zwindow(window);
+			
+			if(!c)
+				return;
+			
+			if(c && c->size_hints) {
+				if(c->size_hints->max_width == c->size_hints->min_width && 
+						c->size_hints->max_height == c->size_hints->min_height)
+					return;
+				w_resize_inc = c->size_hints->width_inc;
+				h_resize_inc = c->size_hints->height_inc;
+			}
+		}
+		else if(!strncmp(name,"RIGHT_HANDLE",8)) {
+			right = window;
+		}
+		else if(!strncmp(name,"LEFT_HANDLE",7)) {
+			left = window;
+		}
+		else if(!strncmp(name,"BOTTOM_HANDLE",13)) {
+			bottom = window;
+		}
+		else if(!strncmp(name,"BOTTOM_RIGHT_HANDLE",19)) {
+			bottom_right = window;
+		}
+
+		children = children->next;
+	}
+	
+	while(1) {
+		XNextEvent(zdpy,&ev);
+		
+		switch(ev.type) {
+				case MotionNotify:
+					name = [myself get_name];
+					
+					if(!name)
+						name = "";
+						
+					if(!strncmp(name,"RIGHT_HANDLE",8)) {	
+						width = abs(w->x - ev.xmotion.x_root);
+						width -= (width) % w_resize_inc;
+						height = w->height;
+					}
+					else if(!strncmp(name,"LEFT_HANDLE",7)) {	
+						width = abs(w->x - ev.xmotion.x_root);
+						width -= (width) % w_resize_inc;
+						height = w->height;
+					}
+					else if(!strncmp(name,"BOTTOM_HANDLE",13)) {	
+						height = abs(w->y - ev.xmotion.y_root);
+						height -= (height) % h_resize_inc;
+						width = w->width;
+					}
+					else if(!strncmp(name,"BOTTOM_RIGHT_HANDLE",19)) {	
+						width = abs(w->x - ev.xmotion.x_root);
+						width -= (width) % w_resize_inc;
+						height = abs(w->y - ev.xmotion.y_root);
+						height -= (height) % h_resize_inc;
+					}
+					else {
+						width = w->width;
+						height = w->height;
+					}
+					
+					if(c->size_hints) {
+						if((c->size_hints->max_width == c->size_hints->min_width) && 
+								c->size_hints->max_width > 0 && c->size_hints->min_width > 0)
+							width = c->size_hints->max_width;
+						else if((width > c->size_hints->max_width) && c->size_hints->max_width > 0)
+							width = c->size_hints->max_width;	
+						else if((width < c->size_hints->min_width) && c->size_hints->min_width > 0)
+							width = c->size_hints->min_width;
+						
+						if((c->size_hints->max_height == c->size_hints->min_width) &&
+								c->size_hints->max_height > 0 && c->size_hints->max_width > 0)
+							height = c->size_hints->max_height;
+						else if((height < c->size_hints->min_height) && c->size_hints->min_height > 0)
+							height = c->size_hints->min_height;
+						else if((height > c->size_hints->max_height) && c->size_hints->max_height > 0)
+							height = c->size_hints->max_height;
+					}
+			
+					[c resize:width:height:left:right:bottom:bottom_right];
+					
+					if(data == NULL) {
+						XUngrabPointer(zdpy,CurrentTime);
+						return;
+					}
+					break;		
+				case ButtonRelease:
+					XUngrabPointer(zdpy,CurrentTime);
+					return;
+				default:
+					zwl_receive_xevent(&ev);
+					break;
+		}
+	}
+
+	XFreeCursor(zdpy,arrow);
 }
 

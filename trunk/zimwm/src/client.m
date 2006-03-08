@@ -29,13 +29,6 @@ void on_win_configure(IMPObject *widget, void *data);
 static ZWindow *create_frame_for_client(ZimClient *c);
 static inline int absmin(int a, int b);
 
-/* Technically, you might say this is a callback.
-   Technically, you might also say this is a helper function.
-   I'll be moving this back and forth between client-events.m
-   and here as I feel like categorizing it.
-   */
-static void resize(IMPObject *widget, void *data);
-
 @implementation ZimClient : IMPObject
 
 - init:(Window *)window
@@ -56,6 +49,7 @@ static void resize(IMPObject *widget, void *data);
 	
 	self->atoms = NULL;
 	self->size_hints = i_calloc(1,sizeof(XSizeHints));
+	self->strut_extents = NULL;
 	
 	XGetWindowAttributes(zdpy,window,&attr);
 	
@@ -122,7 +116,8 @@ static void resize(IMPObject *widget, void *data);
 
 - (void)get_properties
 {
-	int i,len;
+	int i,len,format;
+	int *data;
 	Atom *atom = NULL;
 	long sreturn;
 
@@ -155,6 +150,59 @@ static void resize(IMPObject *widget, void *data);
 		
 	/* WM_NORMAL_HINTS */
 	XGetWMNormalHints(zdpy,self->window->window,self->size_hints,&sreturn);
+
+	/* _NET_WM_STRUT */
+	XGetWindowProperty(zdpy,self->window->window,z_atom[_NET_WM_STRUT],0,4,False,XA_CARDINAL,atom,&format,&len,&i,&data);
+	
+	if(!self->strut_extents && len == 4) {
+		self->strut_extents = i_calloc(i,sizeof(ZStrutExtents));
+		
+		self->strut_extents->left = data[0];
+		self->strut_extents->right = data[1];
+		self->strut_extents->top = data[2];
+		self->strut_extents->bottom = data[3];
+	}
+	else if(len == 4) {
+		self->strut_extents->left = data[0];
+		self->strut_extents->right = data[1];
+		self->strut_extents->top = data[2];
+		self->strut_extents->bottom = data[3];
+	}
+
+	/* _NET_WM_STRUT_PARTIAL */
+	XGetWindowProperty(zdpy,self->window->window,z_atom[_NET_WM_STRUT_PARTIAL],0,12,False,XA_CARDINAL,atom,&format,&len,&i,&data);
+	
+	if(!self->strut_extents && len == 12) {
+		self->strut_extents = i_calloc(i,sizeof(ZStrutExtents));
+		
+		self->strut_extents->left = data[0];
+		self->strut_extents->right = data[1];
+		self->strut_extents->top = data[2];
+		self->strut_extents->bottom = data[3];
+		self->strut_extents->left_start_y = data[4];
+		self->strut_extents->left_end_y = data[5];
+		self->strut_extents->right_start_y = data[6];
+		self->strut_extents->right_end_y = data[7];
+		self->strut_extents->top_start_x = data[8];
+		self->strut_extents->top_end_x = data[9];
+		self->strut_extents->bottom_start_x = data[10];
+		self->strut_extents->bottom_end_x = data[11];
+	}
+	else if(len == 12) {
+		self->strut_extents->left = data[0];
+		self->strut_extents->right = data[1];
+		self->strut_extents->top = data[2];
+		self->strut_extents->bottom = data[3];
+		self->strut_extents->left_start_y = data[4];
+		self->strut_extents->left_end_y = data[5];
+		self->strut_extents->right_start_y = data[6];
+		self->strut_extents->right_end_y = data[7];
+		self->strut_extents->top_start_x = data[8];
+		self->strut_extents->top_end_x = data[9];
+		self->strut_extents->bottom_start_x = data[10];
+		self->strut_extents->bottom_end_x = data[11];
+	}
+
 }
 
 - (void)send_client_message:(int)format:(Atom)type:(Atom)data
@@ -331,6 +379,8 @@ static void resize(IMPObject *widget, void *data);
 static ZWindow *create_frame_for_client(ZimClient *c)
 {
 	ZButton *close_button = [ZButton alloc];
+	ZButton *maximise_button = [ZButton alloc];
+	ZButton *minimise_button = [ZButton alloc];
 	ZWindow *f = [ZWindow alloc];
 	ZWindow *right_handle = [ZWindow alloc];
 	ZWindow *left_handle = [ZWindow alloc];
@@ -383,6 +433,20 @@ static ZWindow *create_frame_for_client(ZimClient *c)
 	[close_button attatch_cb:BUTTON_DOWN:(ZCallback *)on_close_button_down];
 	[close_button show];
 
+	[maximise_button init:PACKAGE_DATA_DIR"/default_maximise.png":12:1:10:10];
+	[maximise_button set_border_width:0];
+	[f add_child:(ZWidget *)maximise_button];
+	[maximise_button set_name:"MAX"];
+	[maximise_button attatch_cb:BUTTON_DOWN:(ZCallback *)on_maximise_button_down];
+	[maximise_button show];
+		
+	[minimise_button init:PACKAGE_DATA_DIR"/default_minimise.png":23:1:10:10];
+	[minimise_button set_border_width:0];
+	[f add_child:(ZWidget *)minimise_button];
+	[minimise_button set_name:"MAX"];
+	[minimise_button attatch_cb:BUTTON_DOWN:(ZCallback *)on_minimise_button_down];
+	[minimise_button show];
+	
 	[label init:0:0];
 	[f add_child:(ZWidget *)label];
 	[label set_name:"TITLE"];
@@ -395,144 +459,6 @@ static ZWindow *create_frame_for_client(ZimClient *c)
 	[label show];
 
 	return f;	
-}
-
-
-static void resize(IMPObject *widget, void *data)
-{
-	ZWindow *w = (ZWindow *)widget;
-	ZWindow *myself = (ZWindow *)widget;
-	ZWindow *right,*left,*bottom,*bottom_right;
-	Window w1,w2;
-	XEvent ev;
-	Cursor arrow = XCreateFontCursor(zdpy,XC_bottom_right_corner);
-	IMPList *children = NULL;
-	ZimClient *c = NULL;
-	ZWindow *window;
-	char *name;
-	int width;
-	int height;
-	int w_resize_inc = 1;
-	int h_resize_inc = 1;
-	
-	w = w->parent;
-	
-	XGrabPointer(zdpy,root_window->window,True,PointerMotionMask | ButtonReleaseMask,GrabModeAsync,GrabModeAsync,None,arrow,CurrentTime);
-
-	/* Find the window by searching through the frame's children list. */
-	children = w->children;
-
-	if(!children)
-		return;
-	
-	while(children) {
-		window = children->data;
-		name = [window get_name];
-		
-		if(!name)
-			name = "";
-			
-		if(!strncmp(name,"XWINDOW",8)) {
-			c = zimwm_find_client_by_zwindow(window);
-			
-			if(!c)
-				return;
-			
-			if(c && c->size_hints) {
-				if(c->size_hints->max_width == c->size_hints->min_width && 
-						c->size_hints->max_height == c->size_hints->min_height)
-					return;
-				w_resize_inc = c->size_hints->width_inc;
-				h_resize_inc = c->size_hints->height_inc;
-			}
-		}
-		else if(!strncmp(name,"RIGHT_HANDLE",8)) {
-			right = window;
-		}
-		else if(!strncmp(name,"LEFT_HANDLE",7)) {
-			left = window;
-		}
-		else if(!strncmp(name,"BOTTOM_HANDLE",13)) {
-			bottom = window;
-		}
-		else if(!strncmp(name,"BOTTOM_RIGHT_HANDLE",19)) {
-			bottom_right = window;
-		}
-
-		children = children->next;
-	}
-	
-	while(1) {
-		XNextEvent(zdpy,&ev);
-		
-		switch(ev.type) {
-				case MotionNotify:
-					name = [myself get_name];
-					
-					if(!name)
-						name = "";
-						
-					if(!strncmp(name,"RIGHT_HANDLE",8)) {	
-						width = abs(w->x - ev.xmotion.x_root);
-						width -= (width) % w_resize_inc;
-						height = w->height;
-					}
-					else if(!strncmp(name,"LEFT_HANDLE",7)) {	
-						width = abs(w->x - ev.xmotion.x_root);
-						width -= (width) % w_resize_inc;
-						height = w->height;
-					}
-					else if(!strncmp(name,"BOTTOM_HANDLE",13)) {	
-						height = abs(w->y - ev.xmotion.y_root);
-						height -= (height) % h_resize_inc;
-						width = w->width;
-					}
-					else if(!strncmp(name,"BOTTOM_RIGHT_HANDLE",19)) {	
-						width = abs(w->x - ev.xmotion.x_root);
-						width -= (width) % w_resize_inc;
-						height = abs(w->y - ev.xmotion.y_root);
-						height -= (height) % h_resize_inc;
-					}
-					else {
-						width = w->width;
-						height = w->height;
-					}
-					
-					if(c->size_hints) {
-						if((c->size_hints->max_width == c->size_hints->min_width) && 
-								c->size_hints->max_width > 0 && c->size_hints->min_width > 0)
-							width = c->size_hints->max_width;
-						else if((width > c->size_hints->max_width) && c->size_hints->max_width > 0)
-							width = c->size_hints->max_width;	
-						else if((width < c->size_hints->min_width) && c->size_hints->min_width > 0)
-							width = c->size_hints->min_width;
-						
-						if((c->size_hints->max_height == c->size_hints->min_width) &&
-								c->size_hints->max_height > 0 && c->size_hints->max_width > 0)
-							height = c->size_hints->max_height;
-						else if((height < c->size_hints->min_height) && c->size_hints->min_height > 0)
-							height = c->size_hints->min_height;
-						else if((height > c->size_hints->max_height) && c->size_hints->max_height > 0)
-							height = c->size_hints->max_height;
-					}
-			
-					[c resize:width:height:left:right:bottom:bottom_right];
-					
-					if(data == NULL) {
-						XUngrabPointer(zdpy,CurrentTime);
-						return;
-					}
-					break;		
-				case ButtonRelease:
-					XUngrabPointer(zdpy,CurrentTime);
-					return;
-				default:
-					zwl_receive_xevent(&ev);
-					break;
-		}
-	}
-
-	XFreeCursor(zdpy,arrow);
 }
 
 static inline int absmin(int a, int b)

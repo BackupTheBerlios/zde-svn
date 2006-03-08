@@ -24,6 +24,10 @@
 #ifndef CLIENT_H
 #define CLIENT_H
 
+/**
+	An Object used to represent a client in zimwm.  Abstracts the window and the frame in one
+	object, and allows easy manipulation of both at the same time.
+  */
 @interface ZimClient : IMPObject
 {
 	@public
@@ -32,13 +36,16 @@
 	unsigned int title_height; /**< Titlebar height in pixels. */
 	Bool sticky;
 	Bool withdrawn;
-	Bool no_use_area;
+	Bool no_use_area; /**< If this is set, the strut_extents structure must contain the values of
+			    the _NET_WM_STRUT or _NET_WM_STRUT_PARTIAL properties.
+			    */
 	Bool maximised;
 	Bool shaded;
 	Atom *atoms; /**< Array of atoms this window has. */
 
 	XWMHints *wm_hints; /**< Structure containing the WM_HINTS property of the window. */
 	XSizeHints *size_hints; /**< Structure containing the size hints contained in the window's WM_NORMAL_HINTS property. */
+	ZStrutExtents *strut_extents;
 	
 }
 

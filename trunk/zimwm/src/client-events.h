@@ -28,9 +28,12 @@
 void on_win_unmap(IMPObject *widget, void *data);
 void on_win_property_notify(IMPObject *widget, void *data);
 void on_close_button_down(IMPObject *widget, void *data);
+void on_maximise_button_down(IMPObject *widget, void *data);
+void on_minimise_button_down(IMPObject *widget, void *data);
 void on_frame_button_down(IMPObject *widget, void *data);
 void on_frame_configure(IMPObject *widget, void *data);
 void on_frame_label_button_down(IMPObject *widget, void *data);
 void on_frame_enter(IMPObject *widget, void *data);
+void resize(IMPObject *widget, void *data);
 
 #endif
