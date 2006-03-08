@@ -99,7 +99,7 @@
 	IMPList *tmp,*tmp1;
 	
 	/* This gets us to the place BEFORE where we want to insert. */
-	for(i=0;i<pos - 1;i++) {
+	for(i=0;i<pos - 2;i++) {
 		if(curr->next == NULL)
 			return NULL;
 		

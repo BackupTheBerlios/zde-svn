@@ -31,10 +31,11 @@ int main(void)
 	IMPStack *tmp = NULL;
 	IMPStack *curr = NULL;
 	IMPStack *t = NULL;
-	
 	char *buff = NULL;
 	int i,j;
 
+	srand(time(NULL));
+	
 	puts("Starting IMPObject tests...");
 
 	puts("Creating and freeing 10000000 objects...");
@@ -65,11 +66,37 @@ int main(void)
 			buff = i_calloc(1,20);
 			snprintf(buff,20,"Node #%d\n",i);
 			
-			/* keep track of the tail so we don't have to traverse the list every insert(takes a log of CPU time) */	
+			/* keep track of the tail so we don't have to traverse the list every insert(takes a lot of CPU time) */	
 			cur = [cur append_data:buff];
 		}	
 
 //		[temp release];
+		[temp delete_list];
+		
+		printf(".");
+		fflush(stdout);
+	}
+
+	puts("");
+	
+	puts("Inserting data into random positions of a 100000 node list 100 times...");
+	for(j=0;j<100;j++) {
+		temp = [IMPList alloc];
+		[temp init:0];
+		
+		temp->data = strdup("HEAD");
+		
+		cur = temp;
+		for(i=0;i<100000;i++) {
+			buff = i_calloc(1,20);
+			snprintf(buff,20,"Node #%d\n",i);
+
+			cur = [cur append_data:buff];
+		}
+			
+		for(i=0;i<100;i++)
+			[temp insert_data_nth:1 + rand() % 100000:strdup("INSERTED NODE")];
+
 		[temp delete_list];
 		
 		printf(".");
