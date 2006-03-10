@@ -128,7 +128,8 @@ int main(void)
 		for(i=0;i<100000;i++) {
 			t = curr->next;
 
-			[[curr pop] release];
+			//[[curr pop] release];
+			free([curr pop]);
 			
 			curr = t;
 		}	

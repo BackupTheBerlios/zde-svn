@@ -24,17 +24,43 @@
 #ifndef IMPSTACK_H
 #define IMPSTACK_H
 
+/** 
+  Protocol that defines a standard way of using both IMPStack and IMPSimpleStack.	
+ */
+@protocol IStack
 
-/** A simple stack implementation. */
-@interface IMPStack : IMPList
+/** 
+  Add a new node with user_data to the top of the stack. 
+  Make sure you use this on the head, or what you want to be the new head.
+  In this version, you must specify the type.
+  Returns the new head, which should be casted to an IStack *. 
+ */
+- (Protocol *)push:(int)type:(void *)user_data;
+
+/** 
+  Add a new node with user_data to the top of the stack. 
+  Make sure you use this on the head, or what you want to be the new head.
+  In this version, the type is implied to be 1, or an Objective C Object.
+  Returns the new head, which should be casted to an IStack *. 
+ */
+- (Protocol *)push:(void *)user_data;
+
+/** 
+  Pop the node's data off the top of the stack. 
+  Make sure you use this on the head. 
+  The new head is head->next. 
+ */
+- (void *)pop;
+
+@end
+
+/** 
+  A stack implementation, built on top of an IMPList.
+  This means that you can use normal IMPList functions on the stack.
+ */
+@interface IMPStack : IMPList <IStack>
 {
 }
-
-/** Add a new node with user_data to the top of the stack. Make sure you use this on the head, or what you want to be the new head. Returns the new head. */
-- (IMPStack *)push:(int)type:(void *)user_data;
-
-/** Pop the node off the top of the stack. Make sure you use this on the head. The new head is head->next. */
-- (IMPStack *)pop;
 
 @end
 

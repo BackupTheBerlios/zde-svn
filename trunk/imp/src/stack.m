@@ -25,7 +25,7 @@
 
 @implementation IMPStack : IMPList
 
-- (IMPStack *)push:(int)type:(void *)user_data
+- (Protocol *)push:(int)type:(void *)user_data
 {
 	IMPStack *new_node;
 
@@ -39,10 +39,30 @@
 	return new_node;
 }
 
-- (IMPStack *)pop
+- (Protocol *)push:(void *)user_data
 {
+	IMPStack *new_node;
+
+	new_node = [IMPStack alloc];
+	[new_node init:1];
+	
+	new_node->data = user_data;
+	
+	new_node->next = self;
+	
+	return new_node;
+}
+
+- (void *)pop
+{
+	void *temp = self->data;
+
 	self->next = NULL;
-	return self;	
+	self->data = NULL;
+	
+	[self release];
+	
+	return temp;	
 }
 
 @end
