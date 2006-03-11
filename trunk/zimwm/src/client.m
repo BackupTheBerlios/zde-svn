@@ -50,6 +50,8 @@ static inline int absmin(int a, int b);
 	self->atoms = NULL;
 	self->size_hints = i_calloc(1,sizeof(XSizeHints));
 	self->strut_extents = NULL;
+	self->no_use_area = False;
+	self->maximised = False;
 	
 	XGetWindowAttributes(zdpy,window,&attr);
 	
@@ -187,6 +189,8 @@ static inline int absmin(int a, int b);
 		self->strut_extents->top_end_x = data[9];
 		self->strut_extents->bottom_start_x = data[10];
 		self->strut_extents->bottom_end_x = data[11];
+
+		self->no_use_area = True;
 	}
 	else if(len == 12) {
 		self->strut_extents->left = data[0];
@@ -201,6 +205,8 @@ static inline int absmin(int a, int b);
 		self->strut_extents->top_end_x = data[9];
 		self->strut_extents->bottom_start_x = data[10];
 		self->strut_extents->bottom_end_x = data[11];
+
+		self->no_use_area = True;
 	}
 }
 

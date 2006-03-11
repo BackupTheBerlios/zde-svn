@@ -76,7 +76,46 @@ void on_close_button_down(IMPObject *widget, void *data)
 
 void on_maximise_button_down(IMPObject *widget, void *data)
 {
+	ZimClient *c = NULL;
+	ZWindow *frame = (ZWindow *)widget;
+	ZWindow *window = NULL;
+	IMPList *children = NULL;
+	char *name = NULL;
 
+	frame = frame->parent;
+	
+	children = frame->children;
+
+	while(children) {
+		window = children->data;
+		name = [window get_name];
+
+		if(!name)
+			name = "";
+
+		if(!strncmp(name,"XWINDOW",8)) {
+			c = zimwm_find_client_by_zwindow(window);
+			break;
+		}
+
+		children = children->next;
+	}
+	
+	if(!c)
+		return;
+	
+	/* FIXME Should check window's struts via _NET_WORKAREA property and only resize to fit that area... */
+	
+	if(c->maximised == False) {
+		/* FIXME Restore window to size and position before it was maximised, or to some other sane default. */		
+	}
+	
+	frame->width = DisplayWidth(zdpy,zscreen) - c->border;
+	frame->height = DisplayHeight(zdpy,zscreen) - c->border;
+
+	[c move:0:0];
+	[c resize:frame->width:frame->height];
+	c->maximised = True;
 }
 
 void on_minimise_button_down(IMPObject *widget, void *data)
