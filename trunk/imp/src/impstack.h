@@ -33,7 +33,8 @@
   Add a new node with user_data to the top of the stack. 
   Make sure you use this on the head, or what you want to be the new head.
   In this version, you must specify the type.
-  Returns the new head, which should be casted to an IStack *. 
+  Returns the new head, which should be casted to an IStack *, or NULL if it cannot be added. 
+  This is an OPTIONAL method.  It must be implemented, but the type parameter may not be meaningful.
  */
 - (Protocol *)push:(int)type:(void *)user_data;
 
@@ -41,16 +42,22 @@
   Add a new node with user_data to the top of the stack. 
   Make sure you use this on the head, or what you want to be the new head.
   In this version, the type is implied to be 1, or an Objective C Object.
-  Returns the new head, which should be casted to an IStack *. 
+  Returns the new head, which should be casted to an IStack *, or NULL if it cannot be added.
  */
 - (Protocol *)push:(void *)user_data;
 
 /** 
   Pop the node's data off the top of the stack. 
   Make sure you use this on the head. 
-  The new head is head->next. 
+  The new head is head->next.
+  Returns the data of the node being popped.
  */
 - (void *)pop;
+
+/**
+  Returns the size of the stack. 
+ */
+- (int)get_size;
 
 @end
 
@@ -64,4 +71,30 @@
 
 @end
 
+/**
+  A simple stack implementation built ontop of an Array instead of an IMPList.
+  Use this instead of IMPStack for most uses, unless you need to insert and delete
+  things in the middle of the stack.
+ */
+@interface IMPSimpleStack : IMPObject <IStack>
+{
+	@protected
+	Object **stack;
+	int num; /**< Size of the array that has been allocated. */
+	unsigned int head;
+}
+
+/**
+  Initializes the stack. This stack works only on Objective C Objects.
+  
+  \param num The expected maximum size of the stack.
+ */
+- init:(int)num;
+
+/**
+  Returns a copy of the array used to store the stack.
+  */
+- (Object *)get_array;
+
+@end
 #endif

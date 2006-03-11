@@ -67,3 +67,53 @@
 
 @end
 
+@implementation IMPSimpleStack : IMPObject
+
+- init:(int)num
+{
+	self->num = num;
+	self->stack = i_calloc(num,sizeof(Object));
+	self->head = -1;
+}
+
+- (Protocol *)push:(int)type:(void *)data
+{
+	return [self push:data];
+}
+
+- (Protocol *)push:(void *)data
+{
+	if(self->head == self->num)
+		return NULL;
+	
+	self->stack[++self->head] = (Object *)data;
+
+	return self;
+}
+
+- (void *)pop
+{
+	Object *tmp;
+	
+	if(self->stack[self->head] != NULL) {
+		tmp = self->stack[self->head];
+		self->stack[self->head--] = NULL;
+
+		return tmp;
+	}
+	else {
+		return NULL;
+	}
+}
+
+- (Object *)get_array
+{
+	return self->stack;
+}
+
+- (int)get_size
+{
+	return head + 1;
+}
+
+@end

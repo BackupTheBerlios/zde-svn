@@ -31,6 +31,7 @@ int main(void)
 	IMPStack *tmp = NULL;
 	IMPStack *curr = NULL;
 	IMPStack *t = NULL;
+	IMPSimpleStack *temp1 = NULL;
 	char *buff = NULL;
 	int i,j;
 
@@ -70,7 +71,6 @@ int main(void)
 			cur = [cur append_data:buff];
 		}	
 
-//		[temp release];
 		[temp delete_list];
 		
 		printf(".");
@@ -141,7 +141,30 @@ int main(void)
 	}
 
 	puts("");
+	
+	puts("Starting IMPSimpleStack tests...");
 
+	puts("Creating, pushing, popping, and freeing a 100000 node stack 100 times...");
+
+	for(j=0;j<100;j++) {
+		temp1 = [IMPSimpleStack alloc];
+		[temp1 init:100000];
+
+		for(i=0;i<100000;i++) {
+			obj = [[IMPObject alloc] init];
+			temp1 = [temp1 push:obj];
+		}
+
+		for(i=0;i<100000;i++) {
+			[[temp1 pop] free];	
+		}
+
+		printf(".");
+		fflush(stdout);
+	}
+
+	puts("");
+	
 	return 0;
 }
 
