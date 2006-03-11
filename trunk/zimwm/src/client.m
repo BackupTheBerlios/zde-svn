@@ -202,7 +202,6 @@ static inline int absmin(int a, int b);
 		self->strut_extents->bottom_start_x = data[10];
 		self->strut_extents->bottom_end_x = data[11];
 	}
-
 }
 
 - (void)send_client_message:(int)format:(Atom)type:(Atom)data

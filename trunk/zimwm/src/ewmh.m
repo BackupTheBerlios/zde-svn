@@ -26,19 +26,30 @@
 void setup_ewmh_root_properties(void)
 {
 	char *net_supported[10];
+	int *workarea = i_calloc(4,sizeof(int));
 	Window ewmhwin;
 
+	workarea[0] = 0;
+	workarea[1] = 0;
+	workarea[2] = DisplayWidth(zdpy,zscreen);
+	workarea[3] = DisplayHeight(zdpy,zscreen);
+	
 	/* All that we support for now... */
 	net_supported[0] = z_atom[_NET_CLOSE_WINDOW];
 	net_supported[1] = z_atom[_NET_SUPPORTING_WM_CHECK];
 	net_supported[2] = z_atom[_NET_CLIENT_LIST];
-	XChangeProperty(zdpy,root_window->window,z_atom[_NET_SUPPORTED],XA_ATOM,32,PropModeReplace,net_supported,3);
+	net_supported[3] = z_atom[_NET_WORKAREA];
+	XChangeProperty(zdpy,root_window->window,z_atom[_NET_SUPPORTED],XA_ATOM,32,PropModeReplace,net_supported,4);
 
 	/* Setup window for EWMH compatiablity. */
 	ewmhwin = XCreateSimpleWindow(zdpy,root_window->window,-100,-100,1,1,0,0,0);
 	XChangeProperty(zdpy,ewmhwin,z_atom[_NET_WM_NAME],z_atom[UTF8_STRING],32,PropModeReplace,"zimwm",1);
 	XChangeProperty(zdpy,ewmhwin,z_atom[_NET_SUPPORTING_WM_CHECK],XA_WINDOW,32,PropModeReplace,(unsigned char *)&ewmhwin,1);
+
 	XChangeProperty(zdpy,root_window->window,z_atom[_NET_SUPPORTING_WM_CHECK],XA_WINDOW,32,PropModeReplace,(unsigned char *)&ewmhwin,1);
+	XChangeProperty(zdpy,root_window->window,z_atom[_NET_WORKAREA],XA_CARDINAL,32,PropModeReplace,(unsigned char *)workarea,4);
+
+	i_free(workarea);
 }
 
 void handle_ewmh_client_message(XClientMessageEvent *ev)
