@@ -33,7 +33,6 @@ static inline int absmin(int a, int b);
 
 - init:(Window *)window
 {
-	XWindowAttributes attr;
 	ZWindow *w = [ZWindow alloc];
 	ZWindow *frame = NULL;
 	char *name = NULL;
@@ -52,20 +51,18 @@ static inline int absmin(int a, int b);
 	self->strut_extents = NULL;
 	self->no_use_area = False;
 	self->maximised = False;
-	
-	XGetWindowAttributes(zdpy,window,&attr);
-	
-	//w->x = attr.x;
-	//w->y = attr.y;
-	w->width = attr.width;
-	w->height = attr.height;
 
-	XQueryPointer(zdpy,root_window->window,&w1,&w2,&x,&y,&x1,&y1,&mask);
-	w->x = x - w->width / 2;
-	w->y = y - w->height / 2;
-	
 	w->window = window;
-	XChangeWindowAttributes(zdpy,w->window,CWEventMask,&sattr);
+	
+	self->window = w;
+	
+	[self get_properties];
+	
+	XQueryPointer(zdpy,root_window->window,&w1,&w2,&x,&y,&x1,&y1,&mask);
+	self->window->x = x - self->window->width / 2;
+	self->window->y = y - self->window->height / 2;
+	
+	XChangeWindowAttributes(zdpy,self->window->window,CWEventMask,&sattr);
 	XFetchName(zdpy,w->window,&name);
 	
 	if(name) {
@@ -76,7 +73,6 @@ static inline int absmin(int a, int b);
 		[w set_title:"(null)"];
 	}
 	
-	self->window = w;
 	[self->window set_name:"XWINDOW"];
 	[self->window grab];
 	
@@ -94,8 +90,6 @@ static inline int absmin(int a, int b);
 	[self->window attatch_cb:PROPERTY:(ZCallback *)on_win_property_notify];
 		
 	zwl_main_loop_add_widget(self->window);
-
-	[self get_properties];
 	
 	[frame show];
 	[self->window show];
@@ -122,6 +116,12 @@ static inline int absmin(int a, int b);
 	int *data;
 	Atom *atom = NULL;
 	long sreturn;
+	XWindowAttributes attr;
+
+	XGetWindowAttributes(zdpy,self->window->window,&attr);
+	
+	self->window->width = attr.width;
+	self->window->height = attr.height;
 
 	if(!self->atoms) {
 		self->atoms = i_calloc(30,sizeof(Atom));
@@ -347,6 +347,7 @@ static inline int absmin(int a, int b);
 	}
 	
 	[self resize:width:height:right:left:bottom:bottom_right];
+	self->maximised = False;
 }
 
 - (void)resize:(int)width:(int)height:(ZWindow *)right:(ZWindow *)left:(ZWindow *)bottom:(ZWindow *)bottom_right

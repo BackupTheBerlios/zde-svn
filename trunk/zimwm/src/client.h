@@ -46,7 +46,11 @@
 	XWMHints *wm_hints; /**< Structure containing the WM_HINTS property of the window. */
 	XSizeHints *size_hints; /**< Structure containing the size hints contained in the window's WM_NORMAL_HINTS property. */
 	ZStrutExtents *strut_extents;
-	
+
+	int oldx;
+	int oldy;
+	int oldwidth;
+	int oldheight;
 }
 
 /** Register an new client with zimwm.

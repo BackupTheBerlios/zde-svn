@@ -106,13 +106,26 @@ void on_maximise_button_down(IMPObject *widget, void *data)
 	
 	/* FIXME Should check window's struts via _NET_WORKAREA property and only resize to fit that area... */
 	
-	if(c->maximised == False) {
-		/* FIXME Restore window to size and position before it was maximised, or to some other sane default. */		
+	if(c->maximised == True) {	
+		[c move:c->oldx:c->oldy];
+		[c resize:c->oldwidth:c->oldheight];
+		c->oldx = -1;
+		c->oldy = -1;
+		c->oldwidth = 0;
+		c->oldy = 0;
+		
+		c->maximised = False;
+		return;
 	}
+
+	c->oldx = frame->x;
+	c->oldy = frame->y;
+	c->oldwidth = frame->width;
+	c->oldheight = frame->height;
 	
 	frame->width = DisplayWidth(zdpy,zscreen) - c->border;
 	frame->height = DisplayHeight(zdpy,zscreen) - c->border;
-
+	
 	[c move:0:0];
 	[c resize:frame->width:frame->height];
 	c->maximised = True;
@@ -120,7 +133,7 @@ void on_maximise_button_down(IMPObject *widget, void *data)
 
 void on_minimise_button_down(IMPObject *widget, void *data)
 {
-
+	/* FIXME Should iconify the window, whatever that means. */
 }
 
 /* Moves the window around. */
