@@ -347,7 +347,6 @@ static inline int absmin(int a, int b);
 	}
 	
 	[self resize:width:height:right:left:bottom:bottom_right];
-	self->maximised = False;
 }
 
 - (void)resize:(int)width:(int)height:(ZWindow *)right:(ZWindow *)left:(ZWindow *)bottom:(ZWindow *)bottom_right
@@ -356,13 +355,16 @@ static inline int absmin(int a, int b);
 
 	if(!right || !left || !bottom || !bottom_right)
 		return;
+
+	if(width <= 0 || height <= 0)
+		return;
 	
 	[self->window move:self->border:self->title_height];
 	[self->window resize:width - self->border * 2:height - self->border - self->title_height];
 
 	[frame resize:width:height];
 	[frame raise];
-
+	
 	[right move:frame->width - self->border:self->title_height];
 	[right resize:self->border:frame->height];
 	[left move:0:self->title_height];
@@ -378,6 +380,7 @@ static inline int absmin(int a, int b);
 	[bottom_right raise];
 	
 	[self send_configure_message:self->window->x:self->window->y:self->window->width:self->window->height];
+	self->maximised = False;
 }
 
 @end

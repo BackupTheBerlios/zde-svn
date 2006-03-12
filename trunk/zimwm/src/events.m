@@ -69,6 +69,9 @@ void on_key_press(IMPObject *widget, void *data)
 	
 	c = zimwm_find_client_by_window(w1);
 
+	if(!c)
+		return;
+
 	if(c) {
 		XGrabButton(zdpy,Button1,AnyModifier,w1,True,ButtonPressMask,GrabModeAsync,GrabModeAsync,None,None);
 		while(1) {
