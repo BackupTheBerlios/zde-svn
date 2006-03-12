@@ -28,8 +28,7 @@ void on_button_down(IMPObject *widget, void *data)
 	ZWindow *w = (ZWindow *)widget;
 	XButtonEvent *ev = (XButtonEvent *)data;
 	
-	if(1)	
-		printf("KICKASS!\n");
+	printf("KICKASS\n");
 }
 
 void on_map_request(IMPObject *widget, void *data)
@@ -54,39 +53,7 @@ void on_map_request(IMPObject *widget, void *data)
 
 void on_key_press(IMPObject *widget, void *data)
 {
-	ZWindow *w = (ZWindow *)widget;
-	XEvent ev;
-	XKeyEvent *keyev = (XKeyEvent *)data;
-	ZimClient *c = NULL;
-	Window w1 = keyev->subwindow;
-	int x;
-	
-	XGetInputFocus(zdpy,&w1,&x);
-	
-	/* Pass events along to the owner. */
-	keyev->window = w1;
-	XSendEvent(zdpy,keyev->window,True,KeyPressMask,keyev);
-	
-	c = zimwm_find_client_by_window(w1);
 
-	if(!c)
-		return;
-
-	if(c) {
-		XGrabButton(zdpy,Button1,AnyModifier,w1,True,ButtonPressMask,GrabModeAsync,GrabModeAsync,None,None);
-		while(1) {
-			XNextEvent(zdpy,&ev);
-			
-			switch(ev.type) {
-				case ButtonPress:
-					[c->window->parent receive:BUTTON_DOWN:&ev.xbutton];
-					XUngrabButton(zdpy,Button1,AnyModifier,w1);
-					return;
-				default:
-					zwl_receive_xevent(&ev);	
-			}
-		}
-	}
 }
 
 void on_client_message(IMPObject *widget, void *data)

@@ -88,12 +88,16 @@ static inline int absmin(int a, int b);
 	[self->window attatch_cb:UNMAP:(ZCallback *)on_win_unmap];
 	//[self->window attatch_cb:CONFIGURE:(ZCallback *)on_win_configure];
 	[self->window attatch_cb:PROPERTY:(ZCallback *)on_win_property_notify];
-		
+	[self->window attatch_cb:BUTTON_DOWN:(ZCallback *)on_win_button_down];
+	
 	zwl_main_loop_add_widget(self->window);
 	
 	[frame show];
 	[self->window show];
 
+	/* Grab mouse buttons so we can intercept things like alt-click for moving, etc. */
+	XGrabButton(zdpy,AnyButton,Mod1Mask,self->window->window,True,ButtonPressMask,GrabModeAsync,GrabModeAsync,None,None);
+	
 	XSync(zdpy,False);
 	XUngrabServer(zdpy);
 }

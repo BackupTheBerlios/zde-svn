@@ -427,3 +427,19 @@ void resize(IMPObject *widget, void *data)
 	XFreeCursor(zdpy,arrow);
 }
 
+void on_win_button_down(IMPObject *widget, void *data)
+{
+	ZWindow *win = (ZWindow *)widget;
+	XButtonEvent *ev = (XButtonEvent *)data;
+	ZimClient *c = NULL;
+	
+	c = zimwm_find_client_by_zwindow(win);
+
+	if(!c)
+		return;
+
+	if(ev->state & Mod1Mask)
+		[c->window->parent receive:BUTTON_DOWN:ev];
+}
+
+

@@ -27,6 +27,7 @@
 /* Callbacks */
 void on_win_unmap(IMPObject *widget, void *data);
 void on_win_property_notify(IMPObject *widget, void *data);
+void on_win_button_down(IMPObject *widget, void *data);
 void on_close_button_down(IMPObject *widget, void *data);
 void on_maximise_button_down(IMPObject *widget, void *data);
 void on_minimise_button_down(IMPObject *widget, void *data);
