@@ -6,7 +6,7 @@ the item can be completed.
  -0% done
  
 *Define a new widget to place in frame on edges that can be used to trigger resizing on clicking it.
- -100% done, but I didn't need a new widget.
+ -100% done.
 
 *Fix Resizing window
  -100% done, need the icccm and ewmh stuff in it so it works better and smoother. Also need to make resize code more
@@ -23,7 +23,7 @@ the item can be completed.
  configuration stored in a file, and a better subsystem to describe and implement this.
  
 *Maximise windows, horizontally, vertically, or both
- -0% done
+ -50% done, need horiz and vert seperatly but thats simple.  Need to recognize Struts.
 
 *Tile windows
  -0% done
@@ -38,10 +38,15 @@ the item can be completed.
  -0%
  
 *Fix windows resizing themselves.  Not sure how to do this yet.
- -90% done, still a few segvs and positioning problems, but its mostly there.
+ -70% done, still a few segvs and positioning problems, but its mostly there. Some windows set two different sizes I think,
+ one when they create the window and another in the properties of the window.  I need to use whichever one is most accurate,
+ so that the windows are not smaller or bigger than they are intended.
 
+*Shaped window support
+ -0% done
+ 
 *EWMH/ICCCM Support
- -10% done
+ -15% done
 
 *Virtual Desktops, including keybindings and edge flipping by border
  -0%
