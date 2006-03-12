@@ -47,6 +47,7 @@ map <xF2> <F2>
 map <xF1> <F1>
 let &cpo=s:cpo_save
 unlet s:cpo_save
+set autoindent
 set background=dark
 set backspace=indent,eol,start
 set cindent
@@ -72,9 +73,9 @@ badd +7 src/impstack.h
 badd +52 src/lists.m
 badd +1 src/Makefile.am
 badd +52 src/memory.m
-badd +1 src/stack.m
+badd +82 src/stack.m
 badd +19 tests/imp_test.m
-badd +0 README
+badd +1 README
 silent! argdel *
 edit README
 set splitbelow splitright
@@ -135,6 +136,7 @@ setlocal matchpairs=(:),{:},[:]
 setlocal modeline
 setlocal modifiable
 setlocal nrformats=octal,hex
+set number
 setlocal nonumber
 setlocal path=
 setlocal nopreserveindent
