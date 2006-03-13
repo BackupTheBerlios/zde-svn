@@ -334,8 +334,19 @@ void resize(IMPObject *widget, void *data)
 				if(c->size_hints->max_width == c->size_hints->min_width && 
 						c->size_hints->max_height == c->size_hints->min_height)
 					return;
+				
 				w_resize_inc = c->size_hints->width_inc;
 				h_resize_inc = c->size_hints->height_inc;
+
+				if(!(w_resize_inc && h_resize_inc >= 0)) {
+					w_resize_inc = 5;
+					h_resize_inc = 5;
+				}
+
+				if(!(c->size_hints->min_width && c->size_hints->min_height >= 0)) {
+					c->size_hints->min_width = 10;
+					c->size_hints->min_height = 10;
+				}
 			}
 		}
 		else if(!strncmp(name,"RIGHT_HANDLE",8)) {

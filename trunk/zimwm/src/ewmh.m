@@ -55,7 +55,7 @@ void setup_ewmh_root_properties(void)
 void handle_ewmh_client_message(XClientMessageEvent *ev)
 {
 	ZimClient *c = NULL;
-
+	
 	if(ev->message_type == z_atom[_NET_CLOSE_WINDOW]) {
 		c = zimwm_find_client_by_window(ev->window);
 		

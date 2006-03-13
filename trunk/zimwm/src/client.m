@@ -70,7 +70,7 @@ static inline int absmin(int a, int b);
 		XFree(name);
 	}
 	else {
-		[w set_title:"(null)"];
+		[w set_title:strdup("(null)")];
 	}
 	
 	[self->window set_name:"XWINDOW"];
@@ -86,7 +86,7 @@ static inline int absmin(int a, int b);
 	[frame add_child:self->window]; 
 		
 	[self->window attatch_cb:UNMAP:(ZCallback *)on_win_unmap];
-	//[self->window attatch_cb:CONFIGURE:(ZCallback *)on_win_configure];
+	[self->window attatch_cb:CONFIGURE:(ZCallback *)on_win_configure];
 	[self->window attatch_cb:PROPERTY:(ZCallback *)on_win_property_notify];
 	[self->window attatch_cb:BUTTON_DOWN:(ZCallback *)on_win_button_down];
 	
@@ -97,6 +97,9 @@ static inline int absmin(int a, int b);
 
 	/* Grab mouse buttons so we can intercept things like alt-click for moving, etc. */
 	XGrabButton(zdpy,AnyButton,Mod1Mask,self->window->window,True,ButtonPressMask,GrabModeAsync,GrabModeAsync,None,None);
+
+	[self get_properties];
+	[self resize:self->window->width:self->window->height];
 	
 	XSync(zdpy,False);
 	XUngrabServer(zdpy);
@@ -126,7 +129,7 @@ static inline int absmin(int a, int b);
 	
 	self->window->width = attr.width;
 	self->window->height = attr.height;
-
+	
 	if(!self->atoms) {
 		self->atoms = i_calloc(30,sizeof(Atom));
 
@@ -157,6 +160,13 @@ static inline int absmin(int a, int b);
 	/* WM_NORMAL_HINTS */
 	XGetWMNormalHints(zdpy,self->window->window,self->size_hints,&sreturn);
 
+	if(self->size_hints->flags & PMinSize) {
+		if(self->window->width < self->size_hints->min_width)
+			self->window->width = self->size_hints->min_width;
+		if(self->window->height < self->size_hints->min_height)
+			self->window->height = self->size_hints->min_height;
+	}
+	
 	/* _NET_WM_STRUT */
 	XGetWindowProperty(zdpy,self->window->window,z_atom[_NET_WM_STRUT],0,4,False,XA_CARDINAL,atom,&format,&len,&i,&data);
 	
@@ -496,16 +506,9 @@ void on_win_configure(IMPObject *widget, void *data)
 	
 	if(!c)
 		return;
-	
-	frame = c->window->parent;
-	
-	if(ev->send_event == True || (ev->x == win->x || ev->y == win->y || ev->width == win->width || ev->height == win->height))
-		return;
 
-	frame->width += ev->width - win->width;
-	frame->height += ev->height - win->height;
+	[c get_properties];
 
-	[c resize:frame->width:frame->height];
 /*
 	children = win->children;
 
