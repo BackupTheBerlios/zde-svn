@@ -9,8 +9,7 @@ the item can be completed.
  -100% done.
 
 *Fix Resizing window
- -100% done, need the icccm and ewmh stuff in it so it works better and smoother. Also need to make resize code more
- generalized so I can resize windows more easily from other sections of code, such as on ConfigureNotify's.
+ -100% done, need the icccm and ewmh stuff in it so it works better and smoother.
 
 *Focus system
  -50% done, right now its just sloppy focus. I also want just pointer focus, i.e. focus is strictly is under the mouse.
