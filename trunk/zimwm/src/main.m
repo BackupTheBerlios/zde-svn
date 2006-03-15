@@ -60,7 +60,7 @@ static void setup_root_window(void)
 	root_window = [ZWidget alloc];
 	[root_window init];
 
-	root_window->window = XRootWindow(zdpy,0);
+	root_window->window = (Window *)XRootWindow(zdpy,0);
 	
 	attr.event_mask = ButtonPressMask |
     			  ButtonReleaseMask |
@@ -75,9 +75,9 @@ static void setup_root_window(void)
 	rootc = XCreateFontCursor(zdpy,XC_left_ptr);
 		
 	attr.cursor = rootc;
-	XChangeWindowAttributes(zdpy,root_window->window,CWEventMask | CWCursor,&attr);
+	XChangeWindowAttributes(zdpy,(Window)root_window->window,CWEventMask | CWCursor,&attr);
 
-	XGrabKey(zdpy,XKeysymToKeycode(zdpy,XK_Alt_L),AnyModifier,root_window->window,True,GrabModeAsync,GrabModeAsync);
+	//XGrabKey(zdpy,XKeysymToKeycode(zdpy,XK_Alt_L),AnyModifier,root_window->window,True,GrabModeAsync,GrabModeAsync);
 	
 	zwl_main_loop_add_widget(root_window);
 

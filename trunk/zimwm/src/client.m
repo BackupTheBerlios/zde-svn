@@ -40,7 +40,7 @@ static inline int absmin(int a, int b);
 	XSetWindowAttributes sattr;
 	int x,x1;
 	int y,y1;
-	int mask;
+	unsigned int mask;
 	
 	sattr.event_mask = PropertyChangeMask;
 	
@@ -58,12 +58,12 @@ static inline int absmin(int a, int b);
 	
 	[self get_properties];
 	
-	XQueryPointer(zdpy,root_window->window,&w1,&w2,&x,&y,&x1,&y1,&mask);
+	XQueryPointer(zdpy,(Window)root_window->window,&w1,&w2,&x,&y,&x1,&y1,&mask);
 	self->window->x = x - self->window->width / 2;
 	self->window->y = y - self->window->height / 2;
 	
-	XChangeWindowAttributes(zdpy,self->window->window,CWEventMask,&sattr);
-	XFetchName(zdpy,w->window,&name);
+	XChangeWindowAttributes(zdpy,(Window)self->window->window,CWEventMask,&sattr);
+	XFetchName(zdpy,(Window)w->window,&name);
 	
 	if(name) {
 		[w set_title:name];
@@ -81,7 +81,7 @@ static inline int absmin(int a, int b);
 
 	frame = create_frame_for_client(self);
 
-	XReparentWindow(zdpy,self->window->window,frame->window,self->border,self->title_height);
+	XReparentWindow(zdpy,(Window)self->window->window,(Window)frame->window,self->border,self->title_height);
 	
 	[frame add_child:self->window]; 
 		
@@ -96,7 +96,7 @@ static inline int absmin(int a, int b);
 	[self->window show];
 
 	/* Grab mouse buttons so we can intercept things like alt-click for moving, etc. */
-	XGrabButton(zdpy,AnyButton,Mod1Mask,self->window->window,True,ButtonPressMask,GrabModeAsync,GrabModeAsync,None,None);
+	XGrabButton(zdpy,AnyButton,Mod1Mask,(Window)self->window->window,True,ButtonPressMask,GrabModeAsync,GrabModeAsync,None,None);
 
 	[self get_properties];
 	[self resize:self->window->width:self->window->height];
@@ -125,24 +125,20 @@ static inline int absmin(int a, int b);
 	long sreturn;
 	XWindowAttributes attr;
 
-	XGetWindowAttributes(zdpy,self->window->window,&attr);
+	XGetWindowAttributes(zdpy,(Window)self->window->window,&attr);
 	
 	self->window->width = attr.width;
 	self->window->height = attr.height;
 	
 	if(!self->atoms) {
 		self->atoms = i_calloc(30,sizeof(Atom));
-
-		for(i=0;i<30;i++) {
-			atoms[i] = NULL;
-		}
 	}
 
 	/* WM_PROTOCOLS */
-	XGetWMProtocols(zdpy,self->window->window,&atom,&len);
+	XGetWMProtocols(zdpy,(Window)self->window->window,&atom,&len);
 	
 	if(atom) {
-		self->atoms[WM_PROTOCOLS] = atom;
+		self->atoms[WM_PROTOCOLS] = (Atom)atom;
 		
 		for(i=0;i<len;i++) {
 			if(atom[i] == z_atom[WM_DELETE_WINDOW]) {
@@ -155,10 +151,10 @@ static inline int absmin(int a, int b);
 	}
 
 	/* WM_HINTS */
-	self->wm_hints = XGetWMHints(zdpy,self->window->window);
+	self->wm_hints = XGetWMHints(zdpy,(Window)self->window->window);
 		
 	/* WM_NORMAL_HINTS */
-	XGetWMNormalHints(zdpy,self->window->window,self->size_hints,&sreturn);
+	XGetWMNormalHints(zdpy,(Window)self->window->window,self->size_hints,&sreturn);
 
 	if(self->size_hints->flags & PMinSize) {
 		if(self->window->width < self->size_hints->min_width)
@@ -168,7 +164,8 @@ static inline int absmin(int a, int b);
 	}
 	
 	/* _NET_WM_STRUT */
-	XGetWindowProperty(zdpy,self->window->window,z_atom[_NET_WM_STRUT],0,4,False,XA_CARDINAL,atom,&format,&len,&i,&data);
+	XGetWindowProperty(zdpy,(Window)self->window->window,z_atom[_NET_WM_STRUT],0,4,False,XA_CARDINAL,atom,
+			(int *)&format,(unsigned long *)&len,(unsigned long *)&i,(unsigned char **)&data);
 	
 	if(!self->strut_extents && len == 4) {
 		self->strut_extents = i_calloc(i,sizeof(ZStrutExtents));
@@ -186,7 +183,8 @@ static inline int absmin(int a, int b);
 	}
 
 	/* _NET_WM_STRUT_PARTIAL */
-	XGetWindowProperty(zdpy,self->window->window,z_atom[_NET_WM_STRUT_PARTIAL],0,12,False,XA_CARDINAL,atom,&format,&len,&i,&data);
+	XGetWindowProperty(zdpy,(Window)self->window->window,z_atom[_NET_WM_STRUT_PARTIAL],0,12,False,XA_CARDINAL,atom,
+			(int *)&format,(unsigned long *)&len,(unsigned long *)&i,(unsigned char **)&data);
 	
 	if(!self->strut_extents && len == 12) {
 		self->strut_extents = i_calloc(i,sizeof(ZStrutExtents));
@@ -230,12 +228,12 @@ static inline int absmin(int a, int b);
 	
 	cv.type = ClientMessage;
 	cv.message_type = type;
-	cv.window = self->window->window;
+	cv.window = (Window)self->window->window;
 	cv.format = 32;
 	cv.data.l[0] = data;
 	cv.data.l[1] = CurrentTime;
 	
-	XSendEvent(zdpy,self->window->window,False,NoEventMask,&cv);
+	XSendEvent(zdpy,(Window)self->window->window,False,NoEventMask,(XEvent *)&cv);
 }
 
 - (void)send_configure_message:(int)x:(int)y:(int)width:(int)height
@@ -243,7 +241,7 @@ static inline int absmin(int a, int b);
 	XConfigureEvent cv;
 
 	cv.type = ConfigureNotify;
-	cv.window = self->window->window;
+	cv.window = (Window)self->window->window;
 	cv.x = x;
 	cv.y = y;
 	cv.width = width;
@@ -254,7 +252,7 @@ static inline int absmin(int a, int b);
 	self->window->width = width;
 	self->window->height = height;
 	
-	XSendEvent(zdpy,self->window->window,False,StructureNotifyMask | SubstructureNotifyMask,&cv);
+	XSendEvent(zdpy,(Window)self->window->window,False,StructureNotifyMask | SubstructureNotifyMask,(XEvent *)&cv);
 }
 
 - (void)snap
@@ -473,7 +471,7 @@ static ZWindow *create_frame_for_client(ZimClient *c)
 	[label init:0:0];
 	[f add_child:(ZWidget *)label];
 	[label set_name:"TITLE"];
-	[label set_label:c->window->title];
+	[label set_label:[c->window get_title]];
 
 	XftTextExtents8(zdpy,font,[label get_label],strlen([label get_label]),&extents);
 	

@@ -25,7 +25,7 @@
 
 void setup_ewmh_root_properties(void)
 {
-	char *net_supported[10];
+	Atom *net_supported[10];
 	int *workarea = i_calloc(4,sizeof(int));
 	Window ewmhwin;
 
@@ -35,19 +35,19 @@ void setup_ewmh_root_properties(void)
 	workarea[3] = DisplayHeight(zdpy,zscreen);
 	
 	/* All that we support for now... */
-	net_supported[0] = z_atom[_NET_CLOSE_WINDOW];
-	net_supported[1] = z_atom[_NET_SUPPORTING_WM_CHECK];
-	net_supported[2] = z_atom[_NET_CLIENT_LIST];
-	net_supported[3] = z_atom[_NET_WORKAREA];
-	XChangeProperty(zdpy,root_window->window,z_atom[_NET_SUPPORTED],XA_ATOM,32,PropModeReplace,net_supported,4);
+	net_supported[0] = (Atom *)z_atom[_NET_CLOSE_WINDOW];
+	net_supported[1] = (Atom *)z_atom[_NET_SUPPORTING_WM_CHECK];
+	net_supported[2] = (Atom *)z_atom[_NET_CLIENT_LIST];
+	net_supported[3] = (Atom *)z_atom[_NET_WORKAREA];
+	XChangeProperty(zdpy,(Window)root_window->window,z_atom[_NET_SUPPORTED],XA_ATOM,32,PropModeReplace,(unsigned char *)net_supported,4);
 
 	/* Setup window for EWMH compatiablity. */
-	ewmhwin = XCreateSimpleWindow(zdpy,root_window->window,-100,-100,1,1,0,0,0);
-	XChangeProperty(zdpy,ewmhwin,z_atom[_NET_WM_NAME],z_atom[UTF8_STRING],32,PropModeReplace,"zimwm",1);
+	ewmhwin = XCreateSimpleWindow(zdpy,(Window)root_window->window,-100,-100,1,1,0,0,0);
+	XChangeProperty(zdpy,ewmhwin,z_atom[_NET_WM_NAME],z_atom[UTF8_STRING],32,PropModeReplace,(unsigned char *)"zimwm",1);
 	XChangeProperty(zdpy,ewmhwin,z_atom[_NET_SUPPORTING_WM_CHECK],XA_WINDOW,32,PropModeReplace,(unsigned char *)&ewmhwin,1);
 
-	XChangeProperty(zdpy,root_window->window,z_atom[_NET_SUPPORTING_WM_CHECK],XA_WINDOW,32,PropModeReplace,(unsigned char *)&ewmhwin,1);
-	XChangeProperty(zdpy,root_window->window,z_atom[_NET_WORKAREA],XA_CARDINAL,32,PropModeReplace,(unsigned char *)workarea,4);
+	XChangeProperty(zdpy,(Window)root_window->window,z_atom[_NET_SUPPORTING_WM_CHECK],XA_WINDOW,32,PropModeReplace,(unsigned char *)&ewmhwin,1);
+	XChangeProperty(zdpy,(Window)root_window->window,z_atom[_NET_WORKAREA],XA_CARDINAL,32,PropModeReplace,(unsigned char *)workarea,4);
 
 	i_free(workarea);
 }
@@ -57,7 +57,7 @@ void handle_ewmh_client_message(XClientMessageEvent *ev)
 	ZimClient *c = NULL;
 	
 	if(ev->message_type == z_atom[_NET_CLOSE_WINDOW]) {
-		c = zimwm_find_client_by_window(ev->window);
+		c = zimwm_find_client_by_window(&ev->window);
 		
 		if(!c)
 			return;
@@ -66,7 +66,7 @@ void handle_ewmh_client_message(XClientMessageEvent *ev)
 	}
 	/* FIXME */
 	else if(ev->message_type == z_atom[_NET_MOVERESIZE_WINDOW]) {
-		c = zimwm_find_client_by_window(ev->window);
+		c = zimwm_find_client_by_window(&ev->window);
 
 		if(!c)
 			return;
@@ -95,6 +95,6 @@ void update_client_list(IMPList *list)
 		list = list->next;
 	}
 
-	XChangeProperty(zdpy,root_window->window,z_atom[_NET_CLIENT_LIST],XA_WINDOW,32,PropModeReplace,(unsigned char *)windows,i);
+	XChangeProperty(zdpy,(Window)root_window->window,z_atom[_NET_CLIENT_LIST],XA_WINDOW,32,PropModeReplace,(unsigned char *)windows,i);
 }
 

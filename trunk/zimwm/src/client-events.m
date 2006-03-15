@@ -82,7 +82,7 @@ void on_maximise_button_down(IMPObject *widget, void *data)
 	IMPList *children = NULL;
 	char *name = NULL;
 
-	frame = frame->parent;
+	frame = (ZWindow *)frame->parent;
 	
 	children = frame->children;
 
@@ -144,7 +144,7 @@ void on_frame_button_down(IMPObject *widget, void *data)
 	XEvent ev;
 	Cursor arrow = XCreateFontCursor(zdpy,XC_fleur);
 	ZimClient *c = NULL;
-	int mask;
+	unsigned int mask;
 	int x,x1;
 	int y,y1;
 	ZWindow *window = NULL;
@@ -170,8 +170,8 @@ void on_frame_button_down(IMPObject *widget, void *data)
 		children = children->next;
 	}
 	
-	XGrabPointer(zdpy,root_window->window,True,PointerMotionMask | ButtonReleaseMask,GrabModeAsync,GrabModeAsync,None,arrow,CurrentTime);
-	XQueryPointer(zdpy,w->window,&w1,&w2,&x,&y,&x1,&y1,&mask);
+	XGrabPointer(zdpy,(Window)root_window->window,True,PointerMotionMask | ButtonReleaseMask,GrabModeAsync,GrabModeAsync,None,arrow,CurrentTime);
+	XQueryPointer(zdpy,(Window)w->window,&w1,&w2,&x,&y,&x1,&y1,&mask);
 
 	[w raise];
 	
@@ -274,7 +274,7 @@ void on_win_property_notify(IMPObject *widget, void *data)
 	ZimClient *c = NULL;
 	XSizeHints *oldhints;
 
-	c = zimwm_find_client_by_zwindow(widget);
+	c = zimwm_find_client_by_zwindow((ZWindow *)widget);
 	
 	if(!c)
 		return;
@@ -307,9 +307,9 @@ void resize(IMPObject *widget, void *data)
 	int w_resize_inc = 1;
 	int h_resize_inc = 1;
 	
-	w = w->parent;
+	w = (ZWindow *)w->parent;
 	
-	XGrabPointer(zdpy,root_window->window,True,PointerMotionMask | ButtonReleaseMask,GrabModeAsync,GrabModeAsync,None,arrow,CurrentTime);
+	XGrabPointer(zdpy,(Window)root_window->window,True,PointerMotionMask | ButtonReleaseMask,GrabModeAsync,GrabModeAsync,None,arrow,CurrentTime);
 
 	/* Find the window by searching through the frame's children list. */
 	children = w->children;

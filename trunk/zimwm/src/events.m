@@ -68,7 +68,7 @@ void on_configure_request(IMPObject *widget, void *data)
 	XConfigureRequestEvent *ev = (XConfigureRequestEvent *)data;
 	ZimClient *c = NULL;
 
-	c = zimwm_find_client_by_window(ev->window);
+	c = zimwm_find_client_by_window((Window *)&ev->window);
 	printf("NICENESS\n");
 	
 	if(!c)
