@@ -60,7 +60,7 @@ static void on_destroy(IMPObject *widget, void *data);
 - (void)show
 {
 	if(self->window)
-		XMapWindow(zdpy,self->window);
+		XMapWindow(zdpy,(Window)self->window);
 
 	XSync(zdpy,False);
 
@@ -70,7 +70,7 @@ static void on_destroy(IMPObject *widget, void *data);
 - (void)destroy
 {
 	if(self->window) {
-		XDestroyWindow(zdpy,self->window);
+		XDestroyWindow(zdpy,(Window)self->window);
 		self->window = NULL;
 	}
 
@@ -116,26 +116,26 @@ static void on_destroy(IMPObject *widget, void *data);
 
 - (void)set_parent:(ZWidget *)parent
 {
-	if((parent) && parent != self->window) {
+	if((parent) && parent != (ZWidget *)self->window) {
 		self->parent = parent;
 		[self->parent grab];
 	}
 }
 
-- move:(int)x:(int)y
+- (void)move:(int)x:(int)y
 {
 	self->x = x;
 	self->y = y;
 
-	XMoveResizeWindow(zdpy,self->window,self->x,self->y,self->width,self->height);
+	XMoveResizeWindow(zdpy,(Window)self->window,self->x,self->y,self->width,self->height);
 }
 
-- resize:(int)width:(int)height
+- (void)resize:(int)width:(int)height
 {
 	self->width = width;
 	self->height = height;
 
-	XMoveResizeWindow(zdpy,self->window,self->x,self->y,self->width,self->height);
+	XMoveResizeWindow(zdpy,(Window)self->window,self->x,self->y,self->width,self->height);
 }	
 
 - (void)receive:(int)signal:(void *)data

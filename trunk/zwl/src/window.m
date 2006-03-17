@@ -56,7 +56,7 @@ static void on_configure(IMPObject *widget, void *data);
 		//self->parent = XRootWindow(zdpy,0);
 	}
 	else {
-		self->window = (Window *)XCreateSimpleWindow(zdpy,parent->window,x,y,width,height,1,1,1);
+		self->window = (Window *)XCreateSimpleWindow(zdpy,(Window)parent->window,x,y,width,height,1,1,1);
 		[self set_parent:parent];
 	}
 
@@ -65,17 +65,19 @@ static void on_configure(IMPObject *widget, void *data);
 	self->width = width;
 	self->height = height;
 	
-	XChangeWindowAttributes(zdpy,self->window,CWEventMask,&attr);
+	XChangeWindowAttributes(zdpy,(Window)self->window,CWEventMask,&attr);
 
 	if(self->window)
 		zwl_main_loop_add_widget(self);
 	
-	self->xftdraw = XftDrawCreate(zdpy,self->window,DefaultVisual(zdpy,DefaultScreen(zdpy)),DefaultColormap(zdpy,DefaultScreen(zdpy)));
+	self->xftdraw = XftDrawCreate(zdpy,(Window)self->window,DefaultVisual(zdpy,DefaultScreen(zdpy)),DefaultColormap(zdpy,DefaultScreen(zdpy)));
 
 	/* We want to be notified when we are going to be closed */
-	XChangeProperty(zdpy,self->window,z_atom[WM_PROTOCOLS],XA_ATOM,32,PropModeReplace,&z_atom[WM_DELETE_WINDOW],1);
+	XChangeProperty(zdpy,(Window)self->window,z_atom[WM_PROTOCOLS],XA_ATOM,32,PropModeReplace,
+			(unsigned char *)&z_atom[WM_DELETE_WINDOW],1);
 
-	XChangeProperty(zdpy,self->window,z_atom[_NET_WM_WINDOW_TYPE],XA_ATOM,32,PropModeReplace,&z_atom[_NET_WM_WINDOW_TYPE_NORMAL],1);
+	XChangeProperty(zdpy,(Window)self->window,z_atom[_NET_WM_WINDOW_TYPE],XA_ATOM,32,PropModeReplace,
+			(unsigned char *)&z_atom[_NET_WM_WINDOW_TYPE_NORMAL],1);
 	
 	[self attatch_internal_cb:CONFIGURE:(ZCallback *)on_configure];
 }
@@ -91,7 +93,6 @@ static void on_configure(IMPObject *widget, void *data);
 	self->y = y;
 	self->width = width;
 	self->height = height;
-
 }
 
 - free
@@ -115,7 +116,8 @@ static void on_configure(IMPObject *widget, void *data);
 			i_free(self->title);
 
 		self->title = i_strdup(title);
-		XChangeProperty(zdpy,self->window,z_atom[WM_NAME],z_atom[UTF8_STRING],8,PropModeReplace,self->title,strlen(self->title));
+		XChangeProperty(zdpy,(Window)self->window,z_atom[WM_NAME],z_atom[UTF8_STRING],8,PropModeReplace,
+				(unsigned char *)self->title,strlen(self->title));
 
 		return 0;
 	}
@@ -131,7 +133,7 @@ static void on_configure(IMPObject *widget, void *data);
 - (void)raise
 {
 	if(self->window) {
-		XRaiseWindow(zdpy,self->window);
+		XRaiseWindow(zdpy,(Window)self->window);
 	}
 }
 

@@ -30,6 +30,7 @@
 {
 	@protected
 	char *label;
+	XftFont *font;
 
 	@public
 	int resize;
@@ -49,9 +50,12 @@
 /** Will override any previously set label and display it.
  */
 - (void)set_label:(char *)label;
-- (char *)get_label;
+- (const char *)get_label;
 
-/** Override of the same method in ZWidget */
-- (void)add_child:(ZWidget *)child;
+/** Returns the text extents for the label as defined by the XftTextExtents8 function. */
+- (XGlyphInfo *)get_text_extents; 
+
+/** Returns the XftFont that this label is using. */
+- (const XftFont *)get_font;
 
 @end;

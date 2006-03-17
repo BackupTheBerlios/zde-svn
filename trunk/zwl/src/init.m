@@ -184,37 +184,37 @@ static void process_xevent(XEvent *ev)
 	switch(ev->type) {
 			case KeyPress:
 				key = ev->xkey;
-				w = find_widget(key.window);		
+				w = find_widget((Window *)key.window);		
 				
 				[w receive:KEY_PRESS:&ev->xkey];
 				break;
 			case ButtonPress:
 				button = ev->xbutton;
-				w = find_widget(button.window);
+				w = find_widget((Window *)button.window);
 				
 				[w receive:BUTTON_DOWN:&ev->xbutton];
 				break;
 			case ButtonRelease:
 				button = ev->xbutton;
-				w = find_widget(button.window);
+				w = find_widget((Window *)button.window);
 
 				[w receive:BUTTON_UP:&ev->xbutton];
 				break;
 			case DestroyNotify:
 				dest = ev->xdestroywindow;
-				w = find_widget(dest.window);
+				w = find_widget((Window *)dest.window);
 				
 				[w receive:DESTROY:&ev->xdestroywindow];
 				break;
 			case Expose:
 				expose = ev->xexpose;
-				w = find_widget(expose.window);
+				w = find_widget((Window *)expose.window);
 
 				[w receive:EXPOSE:&ev->xexpose];
 				break;
 			case ClientMessage:
 				cmessage = ev->xclient;
-				w = find_widget(cmessage.window);
+				w = find_widget((Window *)cmessage.window);
 				
 				if(cmessage.data.l[0] == z_atom[WM_DELETE_WINDOW]) {
 					[w receive:CLOSE:&ev->xclient];	
@@ -225,48 +225,48 @@ static void process_xevent(XEvent *ev)
 				break;
 			case ConfigureNotify:
 				configure = ev->xconfigure;
-				w = find_widget(configure.window);
+				w = find_widget((Window *)configure.window);
 
 				[w receive:CONFIGURE:&ev->xconfigure];
 				break;
 			case MapRequest:
 				mapreq = ev->xmaprequest;
-				w = find_widget(mapreq.parent);
+				w = find_widget((Window *)mapreq.parent);
 
 				[w receive:MAP_REQUEST:&ev->xmaprequest];
 				break;
 			case UnmapNotify:
 				unmap = ev->xunmap;
-				w = find_widget(unmap.window);
+				w = find_widget((Window *)unmap.window);
 
 				[w receive:UNMAP:&ev->xunmap];				
 				break;
 			case ConfigureRequest:
 				conreq = ev->xconfigurerequest;
-				w = find_widget(conreq.window);
+				w = find_widget((Window *)conreq.window);
 				
 				[w receive:CONFIGURE_REQUEST:&ev->xconfigurerequest];
 				break;
 			case EnterNotify:
 				cross = ev->xcrossing;
-				w = find_widget(cross.window);
+				w = find_widget((Window *)cross.window);
 
 				[w receive:POINTER_ENTER:&ev->xcrossing];
 				break;
 			case LeaveNotify:
 				cross = ev->xcrossing;
-				w = find_widget(cross.window);
+				w = find_widget((Window *)cross.window);
 
 				[w receive:POINTER_LEAVE:&ev->xcrossing];
 				break;
 			case PropertyNotify:
 				prop = ev->xproperty;
-				w = find_widget(prop.window);
+				w = find_widget((Window *)prop.window);
 				
 				[w receive:PROPERTY:&ev->xproperty];
 				break;
 			default:
-				w = find_widget(ev->xany.window);
+				w = find_widget((Window *)ev->xany.window);
 				[w receive:DEFAULT:ev];
 		}
 }

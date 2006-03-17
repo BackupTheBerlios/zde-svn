@@ -37,6 +37,8 @@ static void on_expose(IMPObject *widget, void *data);
 	[super init:x:y:width:height];
 
 	self->resize = 0;
+	
+	self->font = XftFontOpenName(zdpy,DefaultScreen(zdpy),"sans-8");
 
 	[self attatch_internal_cb:ADDED:(ZCallback *)on_add];
 	[self attatch_internal_cb:EXPOSE:(ZCallback *)on_expose];
@@ -50,6 +52,8 @@ static void on_expose(IMPObject *widget, void *data);
 	[super init:x:y:1:1];
 
 	self->resize = 1;
+	
+	self->font = XftFontOpenName(zdpy,DefaultScreen(zdpy),"sans-8");
 
 	[self attatch_internal_cb:ADDED:(ZCallback *)on_add];
 	[self attatch_internal_cb:EXPOSE:(ZCallback *)on_expose];
@@ -59,6 +63,9 @@ static void on_expose(IMPObject *widget, void *data);
 {
 	if(self->label)
 		i_free(self->label);
+
+	if(self->font)
+		
 	
 	[super free];
 }
@@ -74,9 +81,23 @@ static void on_expose(IMPObject *widget, void *data);
 	}
 }
 
-- (char *)get_label
+- (const char *)get_label
 {
 	return self->label;
+}
+
+- (XGlyphInfo *)get_text_extents
+{
+	XGlyphInfo *extents = i_calloc(1,sizeof(XGlyphInfo));
+			
+	XftTextExtents8(zdpy,self->font,(unsigned char *)self->label,strlen(self->label),extents);
+
+	return extents;
+}
+
+- (const XftFont *)get_font
+{
+	return self->font;
 }
 
 @end
@@ -99,13 +120,14 @@ static void on_add(IMPObject *widget, void *data)
      			  KeyReleaseMask;
 	
 	
-	myself->window = (Window *)XCreateSimpleWindow(zdpy,parent->window,
+	myself->window = (Window *)XCreateSimpleWindow(zdpy,(Window)parent->window,
 			myself->x,myself->y,myself->width,myself->height,
 		0,WhitePixel(zdpy,DefaultScreen(zdpy)),1);
 
-	XChangeWindowAttributes(zdpy,myself->window,CWEventMask,&attr);
+	XChangeWindowAttributes(zdpy,(Window)myself->window,CWEventMask,&attr);
 
-	myself->xftdraw = XftDrawCreate(zdpy,myself->window,DefaultVisual(zdpy,DefaultScreen(zdpy)),DefaultColormap(zdpy,DefaultScreen(zdpy)));
+	myself->xftdraw = XftDrawCreate(zdpy,(Window)myself->window,DefaultVisual(zdpy,DefaultScreen(zdpy)),
+			DefaultColormap(zdpy,DefaultScreen(zdpy)));
 	
 	zwl_main_loop_add_widget(myself);
 }
@@ -114,27 +136,26 @@ static void on_expose(IMPObject *widget, void *data)
 {
 	ZLabel *myself = (ZLabel *)widget;
 	XftColor xftcolor;
-	XftFont *font;
-	XGlyphInfo extents;
+	XGlyphInfo *extents;
 	char *label = [myself get_label];
 
-	XClearWindow(zdpy,myself->window);
+	XClearWindow(zdpy,(Window)myself->window);
 
 	XftColorAllocName(zdpy,DefaultVisual(zdpy,DefaultScreen(zdpy)),DefaultColormap(zdpy,DefaultScreen(zdpy)),"white",&xftcolor);
-	font = XftFontOpenName(zdpy,DefaultScreen(zdpy),"sans-8");
 
 	if(myself->resize && label) {
-		XftTextExtents8(zdpy,font,label,strlen(label),&extents);
-		myself->width = extents.width + 1;
-		myself->height = extents.height + 2; /* XXX the +2 helps to compensate for y's and g's. ??!?! */
+		extents = [myself get_text_extents];
+		
+		myself->width = extents->width + 1;
+		myself->height = extents->height + 2; /* XXX the +2 helps to compensate for y's and g's. ??!?! */
 	
 		[myself resize:myself->width:myself->height];
 	}
 		
 	if(label) {	
-		XftDrawString8(myself->xftdraw,&xftcolor,font,
+		XftDrawString8(myself->xftdraw,&xftcolor,[myself get_font],
 				0,
-				extents.height,
-				label,strlen(label));	
+				extents->height,
+				(unsigned char *)label,strlen(label));	
 	}
 }

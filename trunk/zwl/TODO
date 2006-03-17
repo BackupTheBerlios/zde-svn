@@ -1,8 +1,8 @@
 -ZLabel function to return text extents
- -0% done
+ -100% done
  
 -ZLabel should store font & extents internally
- -0% done
+ -100% done
  
 -ZWindow needs to be more configurable, i.e. setting background color, frame or no frame, etc.
  -10%
