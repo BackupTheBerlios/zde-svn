@@ -54,7 +54,7 @@ static void setup_root_window(void)
 	Cursor rootc;
 	ZimClient *newc;
 	Window root,parent;
-	Window *children;
+	Window **children;
 	int i,len;
 	
 	root_window = [ZWidget alloc];
@@ -89,7 +89,7 @@ static void setup_root_window(void)
 	//[root_window attatch_cb:PROPERTY:(ZCallback *)on_property_notify];
 	
 	setup_ewmh_root_properties();
-/*	
+/*
 	XQueryTree(zdpy,root_window->window,&root,&parent,&children,&len);
 
 	for(i=0;i<len;i++) {

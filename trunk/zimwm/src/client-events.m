@@ -281,9 +281,11 @@ void on_win_property_notify(IMPObject *widget, void *data)
 	
 	if(ev->atom == XA_WM_NORMAL_HINTS) {
 		oldhints = c->size_hints;
+		
 		[c get_properties];
 		[c resize:c->window->parent->width + c->size_hints->base_width - oldhints->base_width:
 			  c->window->parent->height + c->size_hints->base_height - oldhints->base_height];
+		[c->window move:c->border * 2:c->title_height - c->border];
 	}
 	else if(ev->atom == z_atom[_NET_WM_STRUT] || ev->atom == z_atom[_NET_WM_STRUT_PARTIAL]) {
 		[c get_properties];
@@ -339,8 +341,8 @@ void resize(IMPObject *widget, void *data)
 				h_resize_inc = c->size_hints->height_inc;
 
 				if(!(w_resize_inc && h_resize_inc >= 0)) {
-					w_resize_inc = 5;
-					h_resize_inc = 5;
+					w_resize_inc = 1;
+					h_resize_inc = 1;
 				}
 
 				if(!(c->size_hints->min_width && c->size_hints->min_height >= 0)) {

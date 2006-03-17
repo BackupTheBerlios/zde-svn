@@ -32,8 +32,9 @@
 {
 	@public
 	ZWindow *window; /**< A ZWindow that encapsulates the X11 window. */	
-	unsigned int border; /**< Border width in pixels. */
+	unsigned int border; /**< Border width in pixels around frame. */
 	unsigned int title_height; /**< Titlebar height in pixels. */
+	unsigned int win_border; /**< Border width around window to frame, set by window. */
 	Bool sticky;
 	Bool withdrawn;
 	Bool no_use_area; /**< If this is set, the strut_extents structure must contain the values of

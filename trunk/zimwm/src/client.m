@@ -129,6 +129,7 @@ static inline int absmin(int a, int b);
 	
 	self->window->width = attr.width;
 	self->window->height = attr.height;
+	self->win_border = attr.border_width;
 	
 	if(!self->atoms) {
 		self->atoms = i_calloc(30,sizeof(Atom));
