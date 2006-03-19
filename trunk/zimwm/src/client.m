@@ -47,7 +47,6 @@ static inline int absmin(int a, int b);
 	XGrabServer(zdpy);
 	
 	self->atoms = NULL;
-	self->size_hints = i_calloc(1,sizeof(XSizeHints));
 	self->strut_extents = NULL;
 	self->no_use_area = False;
 	self->maximised = False;
@@ -135,6 +134,14 @@ static inline int absmin(int a, int b);
 		self->atoms = i_calloc(30,sizeof(Atom));
 	}
 
+	if(!self->size_hints) {
+		self->size_hints = i_calloc(1,sizeof(XSizeHints));
+	}
+	else {
+		i_free(self->size_hints);
+		self->size_hints = i_calloc(1,sizeof(XSizeHints));
+	}
+	
 	/* WM_PROTOCOLS */
 	XGetWMProtocols(zdpy,(Window)self->window->window,&atom,&len);
 	
@@ -156,16 +163,26 @@ static inline int absmin(int a, int b);
 		
 	/* WM_NORMAL_HINTS */
 	XGetWMNormalHints(zdpy,(Window)self->window->window,self->size_hints,&sreturn);
-
+	
 	if(self->size_hints->flags & PMinSize) {
 		if(self->window->width < self->size_hints->min_width)
 			self->window->width = self->size_hints->min_width;
 		if(self->window->height < self->size_hints->min_height)
 			self->window->height = self->size_hints->min_height;
 	}
+
+	if(!(self->size_hints->flags & PMinSize)) {
+		self->size_hints->min_width = 5;
+		self->size_hints->min_height = 5;
+	}
+	
+	if(!(self->size_hints->flags & PMaxSize)) {
+		self->size_hints->max_width = 5000;
+		self->size_hints->max_height = 5000;
+	}
 	
 	/* _NET_WM_STRUT */
-	XGetWindowProperty(zdpy,(Window)self->window->window,z_atom[_NET_WM_STRUT],0,4,False,XA_CARDINAL,atom,
+/*	XGetWindowProperty(zdpy,(Window)self->window->window,z_atom[_NET_WM_STRUT],0,4,False,XA_CARDINAL,atom,
 			(int *)&format,(unsigned long *)&len,(unsigned long *)&i,(unsigned char **)&data);
 	
 	if(!self->strut_extents && len == 4) {
@@ -183,8 +200,8 @@ static inline int absmin(int a, int b);
 		self->strut_extents->bottom = data[3];
 	}
 
-	/* _NET_WM_STRUT_PARTIAL */
-	XGetWindowProperty(zdpy,(Window)self->window->window,z_atom[_NET_WM_STRUT_PARTIAL],0,12,False,XA_CARDINAL,atom,
+*/	/* _NET_WM_STRUT_PARTIAL */
+/*	XGetWindowProperty(zdpy,(Window)self->window->window,z_atom[_NET_WM_STRUT_PARTIAL],0,12,False,XA_CARDINAL,atom,
 			(int *)&format,(unsigned long *)&len,(unsigned long *)&i,(unsigned char **)&data);
 	
 	if(!self->strut_extents && len == 12) {
@@ -221,7 +238,7 @@ static inline int absmin(int a, int b);
 
 		self->no_use_area = True;
 	}
-}
+*/}
 
 - (void)send_client_message:(int)format:(Atom)type:(Atom)data
 {
@@ -373,8 +390,9 @@ static inline int absmin(int a, int b);
 		return;
 	
 	[self->window move:self->border:self->title_height];
-	[self->window resize:width - self->border * 2:height - self->border - self->title_height];
-
+	[self->window resize:width - (self->border * 2):height - self->border - self->title_height];
+	[self->window raise];
+	
 	[frame resize:width:height];
 	[frame raise];
 	

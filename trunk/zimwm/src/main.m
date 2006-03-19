@@ -36,11 +36,18 @@ void zimwm_add_client(ZimClient *client);
 ZimClient *zimwm_find_client_by_zwindow(ZWindow *w);
 void zimwm_delete_client(ZimClient *c);
 
+int handle_xerror(Display *dpy, XErrorEvent *ev)
+{
+
+}
+
 int main(int argc, char **argv)
 {	
 	zwl_init();
 
 	setup_root_window();
+
+//	XSetErrorHandler(handle_xerror);
 	
 	zwl_main_loop_start();
 	
@@ -193,7 +200,7 @@ void zimwm_delete_client(ZimClient *c)
 	XClientMessageEvent cv;
 	ZimClient *client;
 
-	if(!c)
+	if(!c || !c->window || !c->window->window)
 		return;
 	
 	client = (ZimClient *)client_list->data;

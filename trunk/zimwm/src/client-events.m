@@ -285,12 +285,11 @@ void on_win_property_notify(IMPObject *widget, void *data)
 		[c get_properties];
 		[c resize:c->window->parent->width + c->size_hints->base_width - oldhints->base_width:
 			  c->window->parent->height + c->size_hints->base_height - oldhints->base_height];
-		[c->window move:c->border * 2:c->title_height - c->border];
 	}
-	else if(ev->atom == z_atom[_NET_WM_STRUT] || ev->atom == z_atom[_NET_WM_STRUT_PARTIAL]) {
+/*	else if(ev->atom == z_atom[_NET_WM_STRUT] || ev->atom == z_atom[_NET_WM_STRUT_PARTIAL]) {
 		[c get_properties];
 	}
-}
+*/}
 
 void resize(IMPObject *widget, void *data)
 {
@@ -302,7 +301,7 @@ void resize(IMPObject *widget, void *data)
 	Cursor arrow = XCreateFontCursor(zdpy,XC_bottom_right_corner);
 	IMPList *children = NULL;
 	ZimClient *c = NULL;
-	ZWindow *window;
+	ZWindow *window,*win1;
 	char *name;
 	int width;
 	int height;
@@ -331,7 +330,7 @@ void resize(IMPObject *widget, void *data)
 			
 			if(!c)
 				return;
-			
+			win1 = window;
 			if(c && c->size_hints) {
 				if(c->size_hints->max_width == c->size_hints->min_width && 
 						c->size_hints->max_height == c->size_hints->min_height)
@@ -339,16 +338,6 @@ void resize(IMPObject *widget, void *data)
 				
 				w_resize_inc = c->size_hints->width_inc;
 				h_resize_inc = c->size_hints->height_inc;
-
-				if(!(w_resize_inc && h_resize_inc >= 0)) {
-					w_resize_inc = 1;
-					h_resize_inc = 1;
-				}
-
-				if(!(c->size_hints->min_width && c->size_hints->min_height >= 0)) {
-					c->size_hints->min_width = 10;
-					c->size_hints->min_height = 10;
-				}
 			}
 		}
 		else if(!strncmp(name,"RIGHT_HANDLE",8)) {
@@ -373,7 +362,7 @@ void resize(IMPObject *widget, void *data)
 		switch(ev.type) {
 				case MotionNotify:
 					name = [myself get_name];
-					
+		
 					if(!name)
 						name = "";
 						
@@ -412,8 +401,8 @@ void resize(IMPObject *widget, void *data)
 						else if((width < c->size_hints->min_width) && c->size_hints->min_width > 0)
 							width = c->size_hints->min_width;
 						
-						if((c->size_hints->max_height == c->size_hints->min_width) &&
-								c->size_hints->max_height > 0 && c->size_hints->max_width > 0)
+						if((c->size_hints->max_height == c->size_hints->min_height) &&
+								c->size_hints->max_height > 0 && c->size_hints->min_height > 0)
 							height = c->size_hints->max_height;
 						else if((height < c->size_hints->min_height) && c->size_hints->min_height > 0)
 							height = c->size_hints->min_height;
@@ -423,10 +412,6 @@ void resize(IMPObject *widget, void *data)
 			
 					[c resize:width:height:left:right:bottom:bottom_right];
 					
-					if(data == NULL) {
-						XUngrabPointer(zdpy,CurrentTime);
-						return;
-					}
 					break;		
 				case ButtonRelease:
 					XUngrabPointer(zdpy,CurrentTime);
