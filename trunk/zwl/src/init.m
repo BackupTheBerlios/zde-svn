@@ -52,6 +52,7 @@ void zwl_init(void)
 	z_atom[_NET_WM_WINDOW_TYPE] = XInternAtom(zdpy,"_NET_WM_WINDOW_TYPE",False);
 	z_atom[_NET_WM_WINDOW_TYPE_NORMAL] = XInternAtom(zdpy,"_NET_WM_WINDOW_TYPE_NORMAL",False);
 	z_atom[_NET_WM_WINDOW_TYPE_MENU] = XInternAtom(zdpy,"_NET_WM_WINDOW_TYPE_MENU",False);
+	z_atom[_NET_WM_WINDOW_TYPE_DIALOG] = XInternAtom(zdpy,"_NET_WM_WINDOW_TYPE_DIALOG",False);
 	z_atom[_NET_SUPPORTED] = XInternAtom(zdpy,"_NET_SUPPORTED",False);
         z_atom[_NET_CLIENT_LIST] = XInternAtom(zdpy,"_NET_CLIENT_LIST",False);
         z_atom[_NET_NUMBER_OF_DESKTOPS] = XInternAtom(zdpy,"_NET_NUMBER_OF_DESKTOPS",False);
