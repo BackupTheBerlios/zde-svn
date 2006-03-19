@@ -62,14 +62,14 @@ static inline int absmin(int a, int b);
 	self->window->y = y - self->window->height / 2;
 	
 	XChangeWindowAttributes(zdpy,(Window)self->window->window,CWEventMask,&sattr);
-	XFetchName(zdpy,(Window)w->window,&name);
+	XFetchName(zdpy,(Window)self->window->window,&name);
 	
 	if(name) {
-		[w set_title:name];
+		[self->window set_title:name:0];
 		XFree(name);
 	}
 	else {
-		[w set_title:strdup("(null)")];
+		[self->window set_title:strdup("(null)"):0];
 	}
 	
 	[self->window set_name:"XWINDOW"];
@@ -182,7 +182,7 @@ static inline int absmin(int a, int b);
 	}
 	
 	/* _NET_WM_STRUT */
-/*	XGetWindowProperty(zdpy,(Window)self->window->window,z_atom[_NET_WM_STRUT],0,4,False,XA_CARDINAL,atom,
+	XGetWindowProperty(zdpy,(Window)self->window->window,z_atom[_NET_WM_STRUT],0,4,False,XA_CARDINAL,atom,
 			(int *)&format,(unsigned long *)&len,(unsigned long *)&i,(unsigned char **)&data);
 	
 	if(!self->strut_extents && len == 4) {
@@ -200,8 +200,8 @@ static inline int absmin(int a, int b);
 		self->strut_extents->bottom = data[3];
 	}
 
-*/	/* _NET_WM_STRUT_PARTIAL */
-/*	XGetWindowProperty(zdpy,(Window)self->window->window,z_atom[_NET_WM_STRUT_PARTIAL],0,12,False,XA_CARDINAL,atom,
+	/* _NET_WM_STRUT_PARTIAL */
+	XGetWindowProperty(zdpy,(Window)self->window->window,z_atom[_NET_WM_STRUT_PARTIAL],0,12,False,XA_CARDINAL,atom,
 			(int *)&format,(unsigned long *)&len,(unsigned long *)&i,(unsigned char **)&data);
 	
 	if(!self->strut_extents && len == 12) {
@@ -238,7 +238,7 @@ static inline int absmin(int a, int b);
 
 		self->no_use_area = True;
 	}
-*/}
+}
 
 - (void)send_client_message:(int)format:(Atom)type:(Atom)data
 {
