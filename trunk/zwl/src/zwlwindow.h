@@ -50,9 +50,10 @@
 /**
   Set the title of the window. This is probably not useful if you 
   are calling this from a subclass that creates its window in the 
-  ADDED event. Returns -1 on failure, 0 otherwise.
+  ADDED event. xset is 1 if you want to set the title with XChangeProperty, 0 otherwise.
+  Returns -1 on failure, 0 otherwise.
   */
-- (int)set_title:(char *)title;
+- (int)set_title:(char *)title:(int)xset;
 
 - (char *)get_title;
 

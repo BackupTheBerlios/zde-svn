@@ -32,7 +32,7 @@ int main(void)
 	[win init:NULL:0:0:150:100];
 	
 	[win set_name:"Test Window"];
-	[win set_title:"Test Window"];
+	[win set_title:"Test Window":1];
 	[win attatch_cb:SHOW:(ZCallback *)on_show];
 	[win attatch_cb:KEY_PRESS:(ZCallback *)on_keypress];
 	[win attatch_cb:BUTTON_DOWN:(ZCallback *)on_buttondown];

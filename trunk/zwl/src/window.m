@@ -109,15 +109,18 @@ static void on_configure(IMPObject *widget, void *data);
 	[super free];
 }
 
-- (int)set_title:(char *)title
+- (int)set_title:(char *)title:(int)xset
 {
 	if(title && self->window) {
 		if(self->title)
 			i_free(self->title);
 
 		self->title = i_strdup(title);
-		XChangeProperty(zdpy,(Window)self->window,z_atom[WM_NAME],z_atom[UTF8_STRING],8,PropModeReplace,
-				(unsigned char *)self->title,strlen(self->title));
+		
+		if(xset == 1) {
+			XChangeProperty(zdpy,(Window)self->window,z_atom[WM_NAME],z_atom[UTF8_STRING],8,PropModeReplace,
+					(unsigned char *)self->title,strlen(self->title));
+		}
 
 		return 0;
 	}
