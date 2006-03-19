@@ -121,6 +121,7 @@ static inline int absmin(int a, int b);
 	int i,len,format;
 	int *data;
 	Atom *atom = NULL;
+	Atom *prop;
 	long sreturn;
 	XWindowAttributes attr;
 
@@ -158,6 +159,23 @@ static inline int absmin(int a, int b);
 		}
 	}
 
+	XGetWindowProperty(zdpy,(Window)self->window->window,z_atom[_NET_WM_WINDOW_TYPE],0,8,False,XA_ATOM,atom,
+			(int *)&format,(unsigned long *)&len,(unsigned long *)&i,(unsigned char **)&prop);
+
+	if(prop) {
+		self->atoms[_NET_WM_WINDOW_TYPE] = (Atom)prop;
+
+		for(i=0;i<len;i++) {
+			if(prop[i] == z_atom[_NET_WM_WINDOW_TYPE_NORMAL]) {
+				self->atoms[_NET_WM_WINDOW_TYPE_NORMAL] = prop[i];	
+			}
+			else if(prop[i] == z_atom[_NET_WM_WINDOW_TYPE_DIALOG]) {
+				self->atoms[_NET_WM_WINDOW_TYPE_DIALOG] = prop[i];
+			}
+			
+		}
+	}
+	
 	/* WM_HINTS */
 	self->wm_hints = XGetWMHints(zdpy,(Window)self->window->window);
 		
@@ -470,19 +488,22 @@ static ZWindow *create_frame_for_client(ZimClient *c)
 	[close_button attatch_cb:BUTTON_DOWN:(ZCallback *)on_close_button_down];
 	[close_button show];
 
-	[maximise_button init:PACKAGE_DATA_DIR"/default_maximise.png":12:1:10:10];
-	[maximise_button set_border_width:0];
-	[f add_child:(ZWidget *)maximise_button];
-	[maximise_button set_name:"MAX"];
-	[maximise_button attatch_cb:BUTTON_DOWN:(ZCallback *)on_maximise_button_down];
-	[maximise_button show];
-		
-	[minimise_button init:PACKAGE_DATA_DIR"/default_minimise.png":23:1:10:10];
-	[minimise_button set_border_width:0];
-	[f add_child:(ZWidget *)minimise_button];
-	[minimise_button set_name:"MAX"];
-	[minimise_button attatch_cb:BUTTON_DOWN:(ZCallback *)on_minimise_button_down];
-	[minimise_button show];
+	/* XXX FIXME SHOULD BE CONFIGURABLE FIXME XXX */
+	if(c->atoms[_NET_WM_WINDOW_TYPE_NORMAL]) {
+		[maximise_button init:PACKAGE_DATA_DIR"/default_maximise.png":12:1:10:10];
+		[maximise_button set_border_width:0];
+		[f add_child:(ZWidget *)maximise_button];
+		[maximise_button set_name:"MAX"];
+		[maximise_button attatch_cb:BUTTON_DOWN:(ZCallback *)on_maximise_button_down];
+		[maximise_button show];
+			
+		[minimise_button init:PACKAGE_DATA_DIR"/default_minimise.png":23:1:10:10];
+		[minimise_button set_border_width:0];
+		[f add_child:(ZWidget *)minimise_button];
+		[minimise_button set_name:"MAX"];
+		[minimise_button attatch_cb:BUTTON_DOWN:(ZCallback *)on_minimise_button_down];
+		[minimise_button show];
+	}
 	
 	[label init:0:0];
 	[f add_child:(ZWidget *)label];
