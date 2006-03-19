@@ -427,8 +427,7 @@ static ZWindow *create_frame_for_client(ZimClient *c)
 	ZWindow *bottom_handle = [ZWindow alloc];
 	ZWindow *bottom_right_handle = [ZWindow alloc];
 	ZLabel *label = [ZLabel alloc];
-	XGlyphInfo extents;
-	XftFont *font = XftFontOpenName(zdpy,DefaultScreen(zdpy),"sans-8"); /* This is bad... */
+	XGlyphInfo *extents;
 
 	[f init:root_window:
 		c->window->x:
@@ -492,12 +491,14 @@ static ZWindow *create_frame_for_client(ZimClient *c)
 	[label set_name:"TITLE"];
 	[label set_label:[c->window get_title]];
 
-	XftTextExtents8(zdpy,font,[label get_label],strlen([label get_label]),&extents);
+	extents = [label get_text_extents];
 	
-	[label move:(f->width / 2) - (extents.width / 2):0];
+	[label move:(f->width / 2) - (extents->width / 2):0];
 	[label attatch_cb:BUTTON_DOWN:(ZCallback *)on_frame_label_button_down];
 	[label show];
 
+	i_free(extents);
+	
 	return f;	
 }
 

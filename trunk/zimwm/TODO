@@ -3,7 +3,7 @@ If there are parenthesis after an item, that means that something needs updating
 the item can be completed.
 
 *Use ZLabel's get text extents function (zwl)
- -0% done
+ -100% done
  
 *Define a new widget to place in frame on edges that can be used to trigger resizing on clicking it.
  -100% done.

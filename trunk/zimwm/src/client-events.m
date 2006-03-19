@@ -205,8 +205,7 @@ void on_frame_configure(IMPObject *widget, void *data)
 	ZLabel *label = NULL;
 	IMPList *children;
 	ZWindow *window = NULL;
-	XGlyphInfo extents;
-	XftFont *font = XftFontOpenName(zdpy,DefaultScreen(zdpy),"sans-8"); /* This is bad... */
+	XGlyphInfo *extents;
 	char *name = NULL;
 
 	children = frame->children;
@@ -222,8 +221,10 @@ void on_frame_configure(IMPObject *widget, void *data)
 		if(!strncmp(name,"TITLE",5)) {
 			label = (ZLabel *)window;
 			
-			XftTextExtents8(zdpy,font,[label get_label],strlen([label get_label]),&extents);
-			[label move:(frame->width / 2) - (extents.width / 2):0];
+			extents = [label get_text_extents];
+			[label move:(frame->width / 2) - (extents->width / 2):0];
+
+			i_free(extents);
 			return;
 		}
 		children = children->next;
