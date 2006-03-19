@@ -141,6 +141,7 @@ void on_frame_button_down(IMPObject *widget, void *data)
 {
 	ZWindow *w = (ZWindow *)widget;
 	Window w1,w2;
+	XButtonEvent *button = (XButtonEvent *)data;
 	XEvent ev;
 	Cursor arrow = XCreateFontCursor(zdpy,XC_fleur);
 	ZimClient *c = NULL;
@@ -150,7 +151,6 @@ void on_frame_button_down(IMPObject *widget, void *data)
 	ZWindow *window = NULL;
 	IMPList *children = NULL;
 	char *name;
-
 	
 	/* Find the window by searching through the frame's children list. */
 	children = w->children;
@@ -164,6 +164,10 @@ void on_frame_button_down(IMPObject *widget, void *data)
 			
 		if(!strncmp(name,"XWINDOW",8)) {
 			c = zimwm_find_client_by_zwindow(window);
+			
+			if(button->subwindow != NULL && !(button->state & Mod1Mask))
+				return;
+			
 			break;
 		}
 

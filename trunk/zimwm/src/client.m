@@ -85,7 +85,7 @@ static inline int absmin(int a, int b);
 	[frame add_child:self->window]; 
 		
 	[self->window attatch_cb:UNMAP:(ZCallback *)on_win_unmap];
-	[self->window attatch_cb:CONFIGURE:(ZCallback *)on_win_configure];
+//	[self->window attatch_cb:CONFIGURE:(ZCallback *)on_win_configure];
 	[self->window attatch_cb:PROPERTY:(ZCallback *)on_win_property_notify];
 	[self->window attatch_cb:BUTTON_DOWN:(ZCallback *)on_win_button_down];
 	
@@ -463,12 +463,10 @@ static ZWindow *create_frame_for_client(ZimClient *c)
 	[f add_child:(ZWidget *)bottom_right_handle];
 	[bottom_right_handle show];
 	
-	//[close_button init:0:0:10:10];
 	[close_button init:PACKAGE_DATA_DIR"/default_close.png":1:1:10:10];
 	[close_button set_border_width:0];
 	[f add_child:(ZWidget *)close_button];
 	[close_button set_name:"CLOSE"];
-	//[close_button set_label:"X"];
 	[close_button attatch_cb:BUTTON_DOWN:(ZCallback *)on_close_button_down];
 	[close_button show];
 
