@@ -409,10 +409,8 @@ static inline int absmin(int a, int b);
 	
 	[self->window move:self->border:self->title_height];
 	[self->window resize:width - (self->border * 2):height - self->border - self->title_height];
-	[self->window raise];
 	
 	[frame resize:width:height];
-	[frame raise];
 	
 	[right move:frame->width - self->border:self->title_height];
 	[right resize:self->border:frame->height];
@@ -423,13 +421,27 @@ static inline int absmin(int a, int b);
 	[bottom_right move:frame->width - self->border:frame->height - self->border];
 	[bottom_right resize:self->border:self->border];
 	
-	[right raise];
-	[left raise];
-	[bottom raise];
-	[bottom_right raise];
+	[self raise];
 	
 	[self send_configure_message:self->window->x:self->window->y:self->window->width:self->window->height];
 	self->maximised = False;
+}
+
+- (void)raise
+{
+	ZWindow *w;
+	IMPList *tmp;
+	
+	[self->window->parent raise];
+
+	tmp = self->window->parent->children;
+
+	while(tmp) {
+		w = tmp->data;
+		[w raise];
+		
+		tmp = tmp->next;
+	}
 }
 
 @end

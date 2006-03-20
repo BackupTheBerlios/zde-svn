@@ -87,6 +87,9 @@
 /** Used internally so that we don't have to find the handles every resize. */
 - (void)resize:(int)width:(int)height:(ZWindow *)right:(ZWindow *)left:(ZWindow *)bottom:(ZWindow *)bottom_right;
 
+/** Raises the window to the top of the stacking list. */
+- (void)raise;
+
 @end
 
 #endif

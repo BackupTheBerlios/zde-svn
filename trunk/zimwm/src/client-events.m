@@ -177,7 +177,7 @@ void on_frame_button_down(IMPObject *widget, void *data)
 	XGrabPointer(zdpy,(Window)root_window->window,True,PointerMotionMask | ButtonReleaseMask,GrabModeAsync,GrabModeAsync,None,arrow,CurrentTime);
 	XQueryPointer(zdpy,(Window)w->window,&w1,&w2,&x,&y,&x1,&y1,&mask);
 
-	[w raise];
+	[c raise];
 	
 	while(1) {
 		XNextEvent(zdpy,&ev);
@@ -191,7 +191,7 @@ void on_frame_button_down(IMPObject *widget, void *data)
 				break;
 			case ButtonRelease:
 				XUngrabPointer(zdpy,CurrentTime);
-				[w raise];
+				[c raise];
 				return;
 			default:
 				zwl_receive_xevent(&ev);
