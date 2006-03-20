@@ -65,6 +65,14 @@
  */
 - (int)get_size;
 
+/**
+  Inverts the stack, i.e. if the stack was 1,2,3,4 it would become 4,3,2,1
+  This is optional, if it returns anything other than 1, it should be assumed that the operation had
+  no effect.
+  */
+
+- (int)invert;
+
 @end
 
 /** 

@@ -70,12 +70,20 @@
 	return self->data;
 }
 
+- (int)invert
+{
+	/* FIXME */
+	return -1;
+}
+
 @end
 
 @implementation IMPSimpleStack : IMPObject
 
 - init:(int)num
 {
+	[super init];
+
 	self->num = num;
 	self->stack = i_calloc(num,sizeof(Object));
 	self->head = -1;
@@ -123,7 +131,21 @@
 
 - (int)get_size
 {
-	return head + 1;
+	return self->head + 1;
+}
+
+- (int)invert
+{
+	IMPSimpleStack *tmp = [IMPSimpleStack alloc];
+
+	[tmp init:[self get_size] + 5];
+
+	[tmp push:[self pop]];
+
+	[self push:[tmp pop]];
+
+	[tmp release];
+	return 0;
 }
 
 @end
