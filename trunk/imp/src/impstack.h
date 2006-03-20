@@ -55,6 +55,12 @@
 - (void *)pop;
 
 /**
+  Returns the data on the top of the stack, i.e. what would be returned if the stack was popped.
+  Does not remove the data from the stack.
+  */
+- (void *)peek;
+
+/**
   Returns the size of the stack. 
  */
 - (int)get_size;
@@ -63,7 +69,7 @@
 
 /** 
   A stack implementation, built on top of an IMPList.
-  This means that you can use normal IMPList functions on the stack.
+  This is basically a list with a stack-like interface built on top.
  */
 @interface IMPStack : IMPList <IStack>
 {

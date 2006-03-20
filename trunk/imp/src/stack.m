@@ -65,6 +65,11 @@
 	return temp;	
 }
 
+- (void *)peek
+{
+	return self->data;
+}
+
 @end
 
 @implementation IMPSimpleStack : IMPObject
@@ -104,6 +109,11 @@
 	else {
 		return NULL;
 	}
+}
+
+- (void *)peek
+{
+	return self->stack[self->head];
 }
 
 - (Object *)get_array
