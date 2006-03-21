@@ -107,16 +107,20 @@
 - (void *)pop
 {
 	Object *tmp;
-	
-	if(self->stack[self->head] != NULL) {
-		tmp = self->stack[self->head];
-		self->stack[self->head--] = NULL;
 
-		return tmp;
+	if(self->head >= 0) {
+		if(self->stack[self->head] != NULL) {
+			tmp = self->stack[self->head];
+			self->stack[self->head--] = NULL;
+
+			return tmp;
+		}
+		else {
+			return NULL;
+		}
 	}
-	else {
-		return NULL;
-	}
+
+	return NULL;
 }
 
 - (void *)peek
