@@ -38,7 +38,7 @@
 - free
 {	
 	IMPObject *data = NULL;;
-	if(self->type == 0 && self-data)
+	if(self->type == 0 && self->data)
 		i_free(self->data);
 	else if(self->type == 1 && self->data) {
 		data = (IMPObject *)self->data;	
