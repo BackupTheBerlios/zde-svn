@@ -44,7 +44,6 @@
 		data = (IMPObject *)self->data;	
 		[data free];
 	}
-	else fprintf(stderr, "Error. list->type not 0 or 1.\n");
 
 	if(self->next)	
 		[self->next free];

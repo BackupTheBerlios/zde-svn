@@ -156,9 +156,11 @@ int main(void)
 		}
 
 		for(i=0;i<100000;i++) {
-			[[temp1 pop] free];	
+			[[temp1 pop] release];	
 		}
 
+		[temp1 release];
+		
 		printf(".");
 		fflush(stdout);
 	}

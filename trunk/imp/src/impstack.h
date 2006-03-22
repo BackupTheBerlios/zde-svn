@@ -83,6 +83,8 @@
 {
 }
 
+- init:(int)type;
+
 @end
 
 /**
@@ -104,6 +106,8 @@
   \param num The expected maximum size of the stack.
  */
 - init:(int)num;
+
+- free;
 
 /**
   Returns a copy of the array used to store the stack.

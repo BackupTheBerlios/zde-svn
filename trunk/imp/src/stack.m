@@ -25,6 +25,11 @@
 
 @implementation IMPStack : IMPList
 
+- init:(int)type
+{
+	[super init:type];
+}
+
 - (Protocol *)push:(int)type:(void *)user_data
 {
 	IMPStack *new_node;
@@ -85,8 +90,13 @@
 	[super init];
 
 	self->num = num;
-	self->stack = i_calloc(num,sizeof(Object));
+	self->stack = i_calloc(num,sizeof(Object *));
 	self->head = -1;
+}
+
+- free
+{
+	i_free(self->stack);
 }
 
 - (Protocol *)push:(int)type:(void *)data
@@ -109,15 +119,10 @@
 	Object *tmp;
 
 	if(self->head >= 0) {
-		if(self->stack[self->head] != NULL) {
-			tmp = self->stack[self->head];
-			self->stack[self->head--] = NULL;
+		tmp = self->stack[self->head];
+		self->stack[self->head--] = NULL;
 
-			return tmp;
-		}
-		else {
-			return NULL;
-		}
+		return (void *)tmp;
 	}
 
 	return NULL;
