@@ -38,6 +38,7 @@ extern int snap_px;
 
 extern ZWidget *root_window;
 extern IMPList *client_list;
+extern IMPSimpleStack *client_list_stacking;
 
 void zimwm_add_client(ZimClient *client);
 ZimClient *zimwm_find_client_by_zwindow(ZWindow *w);

@@ -98,7 +98,7 @@ static inline int absmin(int a, int b);
 	XGrabButton(zdpy,AnyButton,Mod1Mask,(Window)self->window->window,True,ButtonPressMask,GrabModeAsync,GrabModeAsync,None,None);
 
 	[self get_properties];
-	[self resize:self->window->width:self->window->height];
+	//[self resize:self->window->width:self->window->height];
 	
 	XSync(zdpy,False);
 	XUngrabServer(zdpy);
@@ -430,18 +430,52 @@ static inline int absmin(int a, int b);
 - (void)raise
 {
 	ZWindow *w;
+	IMPSimpleStack *temp = [IMPSimpleStack alloc];
+	IMPSimpleStack *list = client_list_stacking;
 	IMPList *tmp;
+	ZimClient *c;
 	
 	[self->window->parent raise];
 
+	[temp init:500];
+	
+	/* Update the stacking list. */
+	if(client_list_stacking) {
+		while([client_list_stacking get_size] > 0) {
+		
+			c = (ZimClient *)[client_list_stacking pop];
+			
+			if(c->window == self->window) {
+				while([temp get_size] > 0) {
+					c = (ZimClient *)[temp pop];
+					
+					[client_list_stacking push:(void *)c];
+				}
+				
+				[temp release];
+				[client_list_stacking push:(void *)self];
+				break;
+			}
+			else {
+				[temp push:c];	
+			}
+		}
+	}
+	
+	/* Raise the children of the window. */
 	tmp = self->window->parent->children;
-
 	while(tmp) {
 		w = tmp->data;
+
+		if(!w)
+			return;
+
 		[w raise];
 		
 		tmp = tmp->next;
 	}
+
+	update_client_list_stacking();
 }
 
 @end

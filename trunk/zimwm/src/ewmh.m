@@ -39,7 +39,9 @@ void setup_ewmh_root_properties(void)
 	net_supported[1] = (Atom *)z_atom[_NET_SUPPORTING_WM_CHECK];
 	net_supported[2] = (Atom *)z_atom[_NET_CLIENT_LIST];
 	net_supported[3] = (Atom *)z_atom[_NET_WORKAREA];
-	XChangeProperty(zdpy,(Window)root_window->window,z_atom[_NET_SUPPORTED],XA_ATOM,32,PropModeReplace,(unsigned char *)net_supported,4);
+	net_supported[4] = (Atom *)z_atom[_NET_CLIENT_LIST_STACKING];
+	
+	XChangeProperty(zdpy,(Window)root_window->window,z_atom[_NET_SUPPORTED],XA_ATOM,32,PropModeReplace,(unsigned char *)net_supported,5);
 
 	/* Setup window for EWMH compatiablity. */
 	ewmhwin = XCreateSimpleWindow(zdpy,(Window)root_window->window,-100,-100,1,1,0,0,0);
@@ -96,5 +98,31 @@ void update_client_list(IMPList *list)
 	}
 
 	XChangeProperty(zdpy,(Window)root_window->window,z_atom[_NET_CLIENT_LIST],XA_WINDOW,32,PropModeReplace,(unsigned char *)windows,i);
+}
+
+void update_client_list_stacking()
+{
+	IMPSimpleStack *stack = client_list_stacking;	
+	Window **windows = i_calloc([stack get_size],sizeof(Window));
+	ZimClient *c = NULL;
+	IMPSimpleStack *temp = [IMPSimpleStack alloc];
+	int i = 0;
+
+	[temp init:500];
+
+	printf("%d\n",[stack get_size]);
+	
+	while([stack get_size] > 0) {
+		c = [stack pop];
+
+		windows[i++] = c->window->window;
+		[temp push:c];
+	}
+	
+	XChangeProperty(zdpy,(Window)root_window->window,z_atom[_NET_CLIENT_LIST_STACKING],XA_WINDOW,32,PropModeReplace,(unsigned char *)windows,i);
+
+	[temp invert];
+	[client_list_stacking release];
+	client_list_stacking = temp;	
 }
 

@@ -27,6 +27,7 @@
 int snap_px = 5;
 
 IMPList *client_list = NULL;
+IMPSimpleStack *client_list_stacking = NULL;
 ZWidget *root_window = NULL;
 
 static void setup_root_window(void);
@@ -115,6 +116,7 @@ static void setup_root_window(void)
 
 void zimwm_add_client(ZimClient *client)
 {
+	/* regular client list */
 	if(client_list) {
 		if(client) {
 			client_list = [client_list prepend_data:client];
@@ -125,6 +127,17 @@ void zimwm_add_client(ZimClient *client)
 		client_list = [IMPList alloc];
 		[client_list init:1];
 		client_list->data = client;
+	}
+	
+	/* stacking client list */
+	if(client_list_stacking) {
+		[client_list_stacking push:client];
+		update_client_list_stacking();
+	}
+	else {
+		client_list_stacking = [IMPSimpleStack alloc]; 
+		[client_list_stacking init:500];
+		client_list_stacking = [client_list_stacking push:(void *)client];
 	}
 }
 

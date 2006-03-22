@@ -52,4 +52,7 @@ void handle_ewmh_client_message(XClientMessageEvent *ev);
 /** Updates the _NET_CLIENT_LIST property of the root window to the current client list, in order of mapping. */
 void update_client_list(IMPList *list);
 
+/** Updates the _NET_CLIENT_LIST_STACKING property of the root window to the current stacking list. */
+void update_client_list_stacking();
+
 #endif
