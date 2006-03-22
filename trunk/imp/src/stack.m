@@ -149,11 +149,16 @@
 
 	[tmp init:[self get_size] + 5];
 
-	[tmp push:[self pop]];
+	while([self get_size] > 0) {
+		[tmp push:[self pop]];
+	}
 
-	[self push:[tmp pop]];
+	while([tmp get_size] > 0) {
+		[self push:[tmp pop]];
+	}
 
 	[tmp release];
+	
 	return 0;
 }
 
