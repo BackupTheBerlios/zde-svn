@@ -28,22 +28,16 @@ void on_win_unmap(IMPObject *widget, void *data)
 	ZWindow *w = (ZWindow *)widget;
 	ZimClient *c = NULL;
 
-	//XGrabServer(zdpy);
-
 	w->window = NULL;
 	
 	c = zimwm_find_client_by_zwindow(w);
 	zimwm_remove_client(c);
 
-	//zimwm_find_and_remove_client(w);
-	
 	update_client_list(client_list);
-		
+	update_client_list_stacking();
+	
 	[w destroy];
 	[w->parent destroy];
-	
-	//zimwm_delete_client(c);
-	//XUngrabServer(zdpy);
 }
 
 void on_close_button_down(IMPObject *widget, void *data)

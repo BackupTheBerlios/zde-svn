@@ -246,7 +246,9 @@ void zimwm_remove_client(ZimClient *c)
 {
 	IMPList *list = client_list;
 	ZimClient *client = NULL;
-
+	IMPSimpleStack *temp = [IMPSimpleStack alloc];
+	
+	/* remove from client_list */
 	if(!c)
 		return;
 
@@ -254,18 +256,41 @@ void zimwm_remove_client(ZimClient *c)
 	if(client == c && client_list) {
 		list = [list delete_node];
 		client_list = list;
-		return;
 	}
-	
-	while(list) {
-		client = (ZimClient *)list->next->data;
+	else {
+		while(list) {
+			client = (ZimClient *)list->next->data;
 
-		if((client == c) && list->next) {
-			list = [list delete_next_node];
-			return;
+			if((client == c) && list->next) {
+				list = [list delete_next_node];
+				break;
+			}
+
+			list = list->next;
 		}
+	}
 
-		list = list->next;
+	/* remove from client_list_stacking */
+	[temp init:500];
+	
+	if(client_list_stacking) {
+		while([client_list_stacking get_size] > 0) {	
+			client = (ZimClient *)[client_list_stacking pop];
+			
+			if(client->window == c->window) {
+				while([temp get_size] > 0) {
+					client = (ZimClient *)[temp pop];
+					
+					[client_list_stacking push:(void *)client];
+				}
+				
+				[temp release];
+				break;
+			}
+			else {
+				[temp push:client];	
+			}
+		}
 	}
 }
 

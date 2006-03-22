@@ -439,7 +439,7 @@ static inline int absmin(int a, int b);
 
 	[temp init:500];
 	
-	/* Update the stacking list. */
+	/* Update the client_list_stacking variable. */
 	if(client_list_stacking) {
 		while([client_list_stacking get_size] > 0) {
 		

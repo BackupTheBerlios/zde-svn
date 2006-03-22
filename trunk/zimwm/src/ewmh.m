@@ -110,8 +110,6 @@ void update_client_list_stacking()
 
 	[temp init:500];
 
-	printf("%d\n",[stack get_size]);
-	
 	while([stack get_size] > 0) {
 		c = [stack pop];
 
