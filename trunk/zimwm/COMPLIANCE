@@ -1,0 +1,91 @@
+zimwm Standards Compliance Documentation
+----------------------------------------
+Created 3/22/06, last updated 3/22/06
+----------------------------------------
+
+[-] No compliance at all, intention of compliance
+[!] No compliance at all, no intention of compliance/not applicable
+[/] Some/partial compliance, intention of full compliance
+[%] Some/partial compliance, no intention of full compliance/not applicable
+[*] Fully compliant
+[?] Compliance is undetermined/may have bugs that prevent it from working correctly in some circumstances.
+
+If a section is omitted, assume that there is no compliance with intention of compliance([-])
+
+---------------------------------------------------------------------------------------------
+EWMH Compliance (see http://standards.freedesktop.org/wm-spec/wm-spec-1.4.html as of 3/22/06)
+---------------------------------------------------------------------------------------------
+Relevant source code files:
+	src/ewmh.c
+	src/ewmh.h
+
+Root Window Hints/Properties/Messages
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+[*] _NET_SUPPORTED
+[*] _NET_CLIENT_LIST
+[-] _NET_NUMBER_OF_DESKTOPS
+[-] _NET_DESKTOP_GEOMETRY
+[-] _NET_DESKTOP_VIEWPORT
+[-] _NET_CURRENT_DESKTOP
+[-] _NET_DESKTOP_NAMES
+[-] _NET_ACTIVE_WINDOW
+[*] _NET_WORKAREA
+[*] _NET_SUPPORTING_WM_CHECK
+[?] _NET_VIRTUAL_ROOTS
+[-] _NET_SHOWING_DESKTOP
+
+[*] _NET_CLOSE_WINDOW
+[/] _NET_MOVERESIZE_WINDOW
+[-] _NET_WM_MOVERESIZE
+[-] _NET_RESTACK_WINDOW
+[-] _NET_REQUEST_FRAME_EXTENTS
+
+Application Window Properties
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+[-] _NET_WM_NAME
+[-] _NET_WM_VISIBLE_NAME
+[-] _NET_WM_ICON_NAME
+[-] _NET_WM_VISIBLE_ICON_NAME
+[-] _NET_WM_DESKTOP
+[-] _NET_WM_WINDOW_TYPE
+[-] _NET_WM_STATE
+[-] _NET_WM_ALLOWED_ACTIONS
+[/] _NET_WM_STRUT
+[/] _NET_WM_STRUT_PARTIAL
+[-] _NET_WM_ICON_GEOMETRY
+[-] _NET_WM_ICON
+[-] _NET_WM_PID
+[-] _NET_WM_HANDLED_ICONS
+[-] _NET_WM_USER_TIME
+[-] _NET_FRAME_EXTENTS
+
+Window Manager Protocols
+~~~~~~~~~~~~~~~~~~~~~~~~
+[-] _NET_WM_PING
+[-] _NET_WM_SYNC_REQUEST
+
+--------------------------------------------------------------------
+ICCCM Compliance (see http://tronche.com/gui/x/icccm/ as of 3/22/06)
+--------------------------------------------------------------------
+Relevant source code files:
+	main.m
+	client.h
+	client.m
+	client-events.h
+	client-events.m
+	ewmh.h
+	ewmh.m
+
+This section is fairly incomplete, it will become more so as time goes by.
+	
+Client Properties (Section 4.1.2)
+[*] WM_NAME Property
+[-] WM_ICON_NAME Property
+[*] WM_NORMAL_HINTS Property
+[*] WM_HINTS Property
+[-] WM_CLASS Property
+[-] WM_TRANSIENT_FOR Property
+[/] WM_PROTOCOLS Property
+[-] WM_COLORMAP_WINDOWS Property
+[-] WM_CLIENT_MACHINE Property 
+

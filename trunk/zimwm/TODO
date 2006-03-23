@@ -2,21 +2,11 @@ These are all rough approximations of things that need to be done to zimwm, in n
 If there are parenthesis after an item, that means that something needs updating/fixing first before
 the item can be completed.
 
-*Use ZLabel's get text extents function (zwl)
- -100% done
- 
-*Define a new widget to place in frame on edges that can be used to trigger resizing on clicking it.
- -100% done.
-
-*Fix Resizing window
- -100% done, need the icccm and ewmh stuff in it so it works better and smoother.
+*Update COMPLIANCE file as needed
 
 *Focus system
  -50% done, right now its just sloppy focus. I also want just pointer focus, i.e. focus is strictly is under the mouse.
 
-*Snap window borders while moving
- -100% done, could use some speedups and cleanup of code so its more readable.
- 
 *Keybindings
  -5% done. So far, pressing ALT on a window and clicking moves it. There needs to be a sophisticated key:action
  configuration stored in a file, and a better subsystem to describe and implement this.
@@ -45,7 +35,7 @@ the item can be completed.
  -0% done
  
 *EWMH/ICCCM Support
- -15% done
+ -20% done
 
 *Virtual Desktops, including keybindings and edge flipping by border
  -0%
