@@ -63,23 +63,24 @@ silent only
 cd ~/zde/berlios/trunk/zimwm
 set shortmess=aoO
 badd +186 configure.in
-badd +11 README
+badd +15 README
 badd +1 Makefile.am
 badd +4 src/Makefile.am
 badd +83 src/main.m
-badd +29 src/zimwm.h
+badd +32 src/zimwm.h
 badd +32 src/events.h
 badd +124 src/events.m
-badd +68 src/client.h
+badd +52 src/client.h
 badd +87 src/client.m
-badd +38 TODO
-badd +1 src/ewmh.h
-badd +47 src/ewmh.m
+badd +54 TODO
+badd +46 src/ewmh.h
+badd +89 src/ewmh.m
 badd +34 src/client-events.h
 badd +121 src/client-events.m
 badd +2 data/Makefile.am
-badd +25 src/focus.h
-badd +1 src/focus.m
+badd +6 src/focus.h
+badd +38 src/focus.m
+badd +31 COMPLIANCE
 args configure.in README
 edit README
 set splitbelow splitright
@@ -165,11 +166,11 @@ setlocal nowinfixheight
 setlocal wrap
 setlocal wrapmargin=0
 silent! normal! zE
-let s:l = 11 - ((10 * winheight(0) + 26) / 52)
+let s:l = 15 - ((14 * winheight(0) + 26) / 52)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-11
+15
 normal! 0
 set winheight=1 winwidth=20 shortmess=filnxtToO
 let s:sx = expand("<sfile>:p:r")."x.vim"

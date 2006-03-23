@@ -81,7 +81,21 @@ void handle_ewmh_client_message(XClientMessageEvent *ev)
 		[c->window->parent move:c->window->parent->x:c->window->parent->y];
 		[c->window->parent resize:c->window->parent->width:c->window->parent->y];
 	}
+	else if(ev->message_type == z_atom[_NET_ACTIVE_WINDOW]) {
+		c = zimwm_find_client_by_window(&ev->window);
+
+		if(!c)
+			return;
+
+		focus_client(c);
+	}
 	
+}
+
+void update_active_window(ZimClient *c)
+{
+	XChangeProperty(zdpy,(Window)root_window->window,z_atom[_NET_ACTIVE_WINDOW],
+			XA_WINDOW,32,PropModeReplace,(unsigned char *)&c->window->window,1);
 }
 
 void update_client_list(IMPList *list)

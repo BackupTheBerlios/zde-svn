@@ -43,11 +43,16 @@ typedef struct {
 	
 } ZStrutExtents;
 
+#include "client.h"
+
 /** Sets the root window properties, like _NET_SUPPORTED, etc. */
 void setup_ewmh_root_properties(void);
 
 /** Responds to EWMH messages to the root window, like _NET_CLOSE_WINDOW, etc. */
 void handle_ewmh_client_message(XClientMessageEvent *ev);
+
+/** Updates the _NET_ACTIVE_WINDOW property. */
+void update_active_window(ZimClient *c);
 
 /** Updates the _NET_CLIENT_LIST property of the root window to the current client list, in order of mapping. */
 void update_client_list(IMPList *list);

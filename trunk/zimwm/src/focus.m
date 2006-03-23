@@ -35,15 +35,18 @@ int focus_client(ZimClient *c)
 		if(c->atoms[WM_TAKE_FOCUS]) {
 			[c send_client_message:32:XA_ATOM:z_atom[WM_TAKE_FOCUS]];
 			XSetInputFocus(zdpy,(Window)c->window->window,RevertToPointerRoot,CurrentTime);
+			update_active_window(c);
 			return 0;
 		}
 		else {
 			XSetInputFocus(zdpy,(Window)c->window->window,RevertToPointerRoot,CurrentTime);
+			update_active_window(c);
 			return 0;
 		}
 	}
 	else { /* We really shouldn't set the focus, but some misbehaved clients need this. */
 		XSetInputFocus(zdpy,(Window)c->window->window,RevertToPointerRoot,CurrentTime);
+		update_active_window(c);
 	}
 	
 	return -1;
