@@ -40,8 +40,9 @@ void setup_ewmh_root_properties(void)
 	net_supported[2] = (Atom *)z_atom[_NET_CLIENT_LIST];
 	net_supported[3] = (Atom *)z_atom[_NET_WORKAREA];
 	net_supported[4] = (Atom *)z_atom[_NET_CLIENT_LIST_STACKING];
+	net_supported[5] = (Atom *)z_atom[_NET_ACTIVE_WINDOW];
 	
-	XChangeProperty(zdpy,(Window)root_window->window,z_atom[_NET_SUPPORTED],XA_ATOM,32,PropModeReplace,(unsigned char *)net_supported,5);
+	XChangeProperty(zdpy,(Window)root_window->window,z_atom[_NET_SUPPORTED],XA_ATOM,32,PropModeReplace,(unsigned char *)net_supported,6);
 
 	/* Setup window for EWMH compatiablity. */
 	ewmhwin = XCreateSimpleWindow(zdpy,(Window)root_window->window,-100,-100,1,1,0,0,0);
