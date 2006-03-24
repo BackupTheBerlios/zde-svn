@@ -34,7 +34,7 @@ void on_win_unmap(IMPObject *widget, void *data)
 	zimwm_remove_client(c);
 
 	update_client_list(client_list);
-	update_client_list_stacking();
+	update_client_list_stacking(client_list_stacking);
 	
 	[w destroy];
 	[w->parent destroy];

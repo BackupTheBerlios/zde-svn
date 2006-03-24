@@ -25,7 +25,7 @@
 #define EWMH_H
 
 /**
-  	Holds values specified in _NET_WM_STRUT or _NET_WM_STRUT_PARTIAL
+   Holds values specified in _NET_WM_STRUT or _NET_WM_STRUT_PARTIAL
   */
 typedef struct {
 	int left;
@@ -51,16 +51,19 @@ void setup_ewmh_root_properties(void);
 /** Responds to EWMH messages to the root window, like _NET_CLOSE_WINDOW, etc. */
 void handle_ewmh_client_message(XClientMessageEvent *ev);
 
-/** Gets the window's _NET_WM_NAME property. If that doesn't exist, get the WM_NAME property. */
+/** 
+  Gets and return's the window's _NET_WM_NAME property. 
+  If that doesn't exist, get the WM_NAME property. 
+ */
 char *get_net_wm_name(Window *w);
 
-/** Updates the _NET_ACTIVE_WINDOW property. */
+/** Updates the _NET_ACTIVE_WINDOW property of the root window. */
 void update_active_window(ZimClient *c);
 
 /** Updates the _NET_CLIENT_LIST property of the root window to the current client list, in order of mapping. */
 void update_client_list(IMPList *list);
 
 /** Updates the _NET_CLIENT_LIST_STACKING property of the root window to the current stacking list. */
-void update_client_list_stacking();
+void update_client_list_stacking(IMPSimpleStack *list);
 
 #endif

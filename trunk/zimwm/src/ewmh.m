@@ -134,9 +134,9 @@ void update_client_list(IMPList *list)
 	XChangeProperty(zdpy,(Window)root_window->window,z_atom[_NET_CLIENT_LIST],XA_WINDOW,32,PropModeReplace,(unsigned char *)windows,i);
 }
 
-void update_client_list_stacking()
+void update_client_list_stacking(IMPSimpleStack *list)
 {
-	IMPSimpleStack *stack = client_list_stacking;	
+	IMPSimpleStack *stack = list;	
 	Window **windows = i_calloc([stack get_size],sizeof(Window));
 	ZimClient *c = NULL;
 	IMPSimpleStack *temp = [IMPSimpleStack alloc];

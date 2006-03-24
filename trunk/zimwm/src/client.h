@@ -25,8 +25,8 @@
 #define CLIENT_H
 
 /**
-	An Object used to represent a client in zimwm.  Abstracts the window and the frame in one
-	object, and allows easy manipulation of both at the same time.
+   An Object used to represent a client in zimwm.  Abstracts the window and the frame in one
+   object, and allows easy manipulation of both at the same time.
   */
 @interface ZimClient : IMPObject
 {
@@ -48,6 +48,9 @@
 	XSizeHints *size_hints; /**< Structure containing the size hints contained in the window's WM_NORMAL_HINTS property. */
 	ZStrutExtents *strut_extents;
 
+	/* FIXME These are used for remembering old maximisation values.
+	   This should probably be changed in the future.
+	   */
 	int oldx;
 	int oldy;
 	int oldwidth;
@@ -59,9 +62,6 @@
   */
 - init:(Window *)window;
 - free;
-
-/** Resizes the client, correctly moving the frame, etc. */
-//- (void)resize:(int)nwidth:(int)nheight;
 
 /** Used to get and store all atom properties of the client, such as WM_PROTOCOLS
   */

@@ -132,7 +132,7 @@ void zimwm_add_client(ZimClient *client)
 	/* stacking client list */
 	if(client_list_stacking) {
 		[client_list_stacking push:client];
-		update_client_list_stacking();
+		update_client_list_stacking(client_list_stacking);
 	}
 	else {
 		client_list_stacking = [IMPSimpleStack alloc]; 

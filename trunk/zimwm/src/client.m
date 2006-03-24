@@ -492,7 +492,7 @@ static inline int absmin(int a, int b);
 		tmp = tmp->next;
 	}
 
-	update_client_list_stacking();
+	update_client_list_stacking(client_list_stacking);
 }
 
 @end
