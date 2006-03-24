@@ -112,8 +112,9 @@ static inline int absmin(int a, int b);
 	int i,len,format;
 	int *data;
 	char *name;
-	Atom *atom = NULL;
+	Atom *atom;
 	Atom *prop;
+	Atom act_type;;
 	long sreturn;
 	XWindowAttributes attr;
 
@@ -160,9 +161,10 @@ static inline int absmin(int a, int b);
 			}
 		}
 	}
-
-	XGetWindowProperty(zdpy,(Window)self->window->window,z_atom[_NET_WM_WINDOW_TYPE],0,8,False,XA_ATOM,atom,
-			(int *)&format,(unsigned long *)&len,(unsigned long *)&i,(unsigned char **)&prop);
+	
+	if(XGetWindowProperty(zdpy,(Window)self->window->window,z_atom[_NET_WM_WINDOW_TYPE],0,8,False,XA_ATOM,&act_type,
+			(int *)&format,(unsigned long *)&len,(unsigned long *)&i,(unsigned char **)&prop) != Success)
+		return -1;
 
 	if(prop) {
 		self->atoms[_NET_WM_WINDOW_TYPE] = (Atom)prop;
@@ -173,8 +175,7 @@ static inline int absmin(int a, int b);
 			}
 			else if(prop[i] == z_atom[_NET_WM_WINDOW_TYPE_DIALOG]) {
 				self->atoms[_NET_WM_WINDOW_TYPE_DIALOG] = prop[i];
-			}
-			
+			}	
 		}
 	}
 	
@@ -202,7 +203,7 @@ static inline int absmin(int a, int b);
 	}
 	
 	/* _NET_WM_STRUT */
-	XGetWindowProperty(zdpy,(Window)self->window->window,z_atom[_NET_WM_STRUT],0,4,False,XA_CARDINAL,atom,
+	XGetWindowProperty(zdpy,(Window)self->window->window,z_atom[_NET_WM_STRUT],0,4,False,XA_CARDINAL,&act_type,
 			(int *)&format,(unsigned long *)&len,(unsigned long *)&i,(unsigned char **)&data);
 	
 	if(!self->strut_extents && len == 4) {
@@ -221,7 +222,7 @@ static inline int absmin(int a, int b);
 	}
 
 	/* _NET_WM_STRUT_PARTIAL */
-	XGetWindowProperty(zdpy,(Window)self->window->window,z_atom[_NET_WM_STRUT_PARTIAL],0,12,False,XA_CARDINAL,atom,
+	XGetWindowProperty(zdpy,(Window)self->window->window,z_atom[_NET_WM_STRUT_PARTIAL],0,12,False,XA_CARDINAL,&act_type,
 			(int *)&format,(unsigned long *)&len,(unsigned long *)&i,(unsigned char **)&data);
 	
 	if(!self->strut_extents && len == 12) {
