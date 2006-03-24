@@ -272,7 +272,6 @@ void on_win_property_notify(IMPObject *widget, void *data)
 	XPropertyEvent *ev = (XPropertyEvent *)data;
 	ZimClient *c = NULL;
 	XSizeHints *oldhints;
-	char *name = NULL;
 	char *name1 = NULL;
 	IMPList *list;
 	ZWindow *w;
@@ -289,15 +288,8 @@ void on_win_property_notify(IMPObject *widget, void *data)
 		[c resize:c->window->parent->width + c->size_hints->base_width - oldhints->base_width:
 			  c->window->parent->height + c->size_hints->base_height - oldhints->base_height];
 	}
-	else if(ev->atom == XA_WM_NAME) {
-		XFetchName(zdpy,c->window->window,&name);
-
-		if(name)
-			[c->window set_title:name:0];
-		else {
-			name = i_strdup("(null)");
-			[c->window set_title:name];
-		}
+	else if(ev->atom == XA_WM_NAME || ev->atom == z_atom[_NET_WM_NAME]) {
+		[c get_properties];
 		
 		list = c->window->parent->children;
 
@@ -306,23 +298,19 @@ void on_win_property_notify(IMPObject *widget, void *data)
 			name1 = [w get_name];
 
 			if(!strncmp(name1,"TITLE",5)) {
-				[w set_label:name];
+				[w set_label:[c->window get_title]];
 			
 				/* FIXME Need to make a function to recenter the title. */
 				on_frame_configure(c->window->parent,NULL);
-				
-				i_free(name);
 			}
 			
 			list = list->next;
-		}
-		
-		
+		}	
 	}
-/*	else if(ev->atom == z_atom[_NET_WM_STRUT] || ev->atom == z_atom[_NET_WM_STRUT_PARTIAL]) {
-		[c get_properties];
-	}
-*/}
+//	else if(ev->atom == z_atom[_NET_WM_STRUT] || ev->atom == z_atom[_NET_WM_STRUT_PARTIAL]) {
+//		[c get_properties];
+//	}
+}
 
 void resize(IMPObject *widget, void *data)
 {

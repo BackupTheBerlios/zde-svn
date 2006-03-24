@@ -93,6 +93,25 @@ void handle_ewmh_client_message(XClientMessageEvent *ev)
 	
 }
 
+char *get_net_wm_name(Window *w)
+{
+	char *name;
+	XTextProperty xtp;
+	
+	XGetTextProperty(zdpy,(Window)w,&xtp,z_atom[_NET_WM_NAME]);
+	
+	if(xtp.value)
+		return xtp.value;
+	else {
+		XFetchName(zdpy,(Window)w,name);
+
+		if(name)
+			return name;
+		else
+			return NULL;
+	}
+}
+
 void update_active_window(ZimClient *c)
 {
 	XChangeProperty(zdpy,(Window)root_window->window,z_atom[_NET_ACTIVE_WINDOW],

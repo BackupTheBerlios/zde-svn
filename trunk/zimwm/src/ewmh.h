@@ -51,6 +51,9 @@ void setup_ewmh_root_properties(void);
 /** Responds to EWMH messages to the root window, like _NET_CLOSE_WINDOW, etc. */
 void handle_ewmh_client_message(XClientMessageEvent *ev);
 
+/** Gets the window's _NET_WM_NAME property. If that doesn't exist, get the WM_NAME property. */
+char *get_net_wm_name(Window *w);
+
 /** Updates the _NET_ACTIVE_WINDOW property. */
 void update_active_window(ZimClient *c);
 

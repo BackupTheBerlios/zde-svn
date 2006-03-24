@@ -54,23 +54,14 @@ static inline int absmin(int a, int b);
 	w->window = window;
 	
 	self->window = w;
-	
+
 	[self get_properties];
-	
+		
 	XQueryPointer(zdpy,(Window)root_window->window,&w1,&w2,&x,&y,&x1,&y1,&mask);
 	self->window->x = x - self->window->width / 2;
 	self->window->y = y - self->window->height / 2;
 	
 	XChangeWindowAttributes(zdpy,(Window)self->window->window,CWEventMask,&sattr);
-	XFetchName(zdpy,(Window)self->window->window,&name);
-	
-	if(name) {
-		[self->window set_title:name:0];
-		XFree(name);
-	}
-	else {
-		[self->window set_title:strdup("(null)"):0];
-	}
 	
 	[self->window set_name:"XWINDOW"];
 	[self->window grab];
@@ -120,6 +111,7 @@ static inline int absmin(int a, int b);
 {
 	int i,len,format;
 	int *data;
+	char *name;
 	Atom *atom = NULL;
 	Atom *prop;
 	long sreturn;
@@ -141,6 +133,16 @@ static inline int absmin(int a, int b);
 	else {
 		i_free(self->size_hints);
 		self->size_hints = i_calloc(1,sizeof(XSizeHints));
+	}
+
+	/* Window title, either in _NET_WM_NAME or WM_NAME */
+	name = get_net_wm_name(self->window->window);
+	if(name) {
+		[self->window set_title:name:0];
+		XFree(name);
+	}
+	else {
+		[self->window set_title:strdup("(null)"):0];
 	}
 	
 	/* WM_PROTOCOLS */
