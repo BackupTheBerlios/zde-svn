@@ -56,7 +56,8 @@ static inline int absmin(int a, int b);
 	self->window = w;
 
 	[self get_properties];
-		
+	[self set_allowed_actions];
+	
 	XQueryPointer(zdpy,(Window)root_window->window,&w1,&w2,&x,&y,&x1,&y1,&mask);
 	self->window->x = x - self->window->width / 2;
 	self->window->y = y - self->window->height / 2;
@@ -162,9 +163,8 @@ static inline int absmin(int a, int b);
 		}
 	}
 	
-	if(XGetWindowProperty(zdpy,(Window)self->window->window,z_atom[_NET_WM_WINDOW_TYPE],0,8,False,XA_ATOM,&act_type,
-			(int *)&format,(unsigned long *)&len,(unsigned long *)&i,(unsigned char **)&prop) != Success)
-		return -1;
+	XGetWindowProperty(zdpy,(Window)self->window->window,z_atom[_NET_WM_WINDOW_TYPE],0,8,False,XA_ATOM,&act_type,
+			(int *)&format,(unsigned long *)&len,(unsigned long *)&i,(unsigned char **)&prop);
 
 	if(prop) {
 		self->atoms[_NET_WM_WINDOW_TYPE] = (Atom)prop;
@@ -259,6 +259,20 @@ static inline int absmin(int a, int b);
 
 		self->no_use_area = True;
 	}
+}
+
+- (void)set_allowed_actions
+{
+	Atom *allowed[5];
+
+	allowed[0] = (Atom *)z_atom[_NET_WM_ACTION_MOVE];
+	allowed[1] = (Atom *)z_atom[_NET_WM_ACTION_RESIZE];
+	allowed[2] = (Atom *)z_atom[_NET_WM_ACTION_MAXIMIZE_HORZ];
+	allowed[3] = (Atom *)z_atom[_NET_WM_ACTION_MAXIMIZE_VERT];
+	allowed[4] = (Atom *)z_atom[_NET_WM_ACTION_CLOSE];
+
+	XChangeProperty(zdpy,(Window)self->window->window,z_atom[_NET_WM_ALLOWED_ACTIONS],XA_ATOM,
+			32,PropModeReplace,(unsigned char *)allowed,5);
 }
 
 - (void)send_client_message:(int)format:(Atom)type:(Atom)data

@@ -67,6 +67,10 @@
   */
 - (void)get_properties;
 
+/** Sets the _NET_WM_ALLOWED_ACTIONS property of the client.
+  */
+- (void)set_allowed_actions;
+
 /** Sends a ClientMessage to the X11 Window represented by this client.
   */
 - (void)send_client_message:(int)format:(Atom)type:(Atom)data;

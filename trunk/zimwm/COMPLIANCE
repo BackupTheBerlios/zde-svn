@@ -16,6 +16,8 @@ If a section is omitted, assume that there is no compliance with intention of co
 EWMH Compliance (see http://standards.freedesktop.org/wm-spec/wm-spec-1.4.html as of 3/22/06)
 ---------------------------------------------------------------------------------------------
 Relevant source code files:
+	src/client.h
+	src/client.m
 	src/ewmh.c
 	src/ewmh.h
 
@@ -47,9 +49,9 @@ Application Window Properties
 [-] _NET_WM_ICON_NAME
 [-] _NET_WM_VISIBLE_ICON_NAME
 [-] _NET_WM_DESKTOP
-[-] _NET_WM_WINDOW_TYPE
+[/] _NET_WM_WINDOW_TYPE
 [-] _NET_WM_STATE
-[-] _NET_WM_ALLOWED_ACTIONS
+[*] _NET_WM_ALLOWED_ACTIONS
 [/] _NET_WM_STRUT
 [/] _NET_WM_STRUT_PARTIAL
 [-] _NET_WM_ICON_GEOMETRY
