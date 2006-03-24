@@ -12,7 +12,7 @@ the item can be completed.
  configuration stored in a file, and a better subsystem to describe and implement this.
  
 *Maximise windows, horizontally, vertically, or both
- -50% done, need horiz and vert seperatly but thats simple.  Need to recognize Struts.
+ -50% done, need horiz and vert seperately but thats simple.  Need to recognize Struts.
 
 *Tile windows
  -0% done
@@ -21,7 +21,7 @@ the item can be completed.
  -0% done
 
 *Titlebar buttons for Maximise, tile, other functions.  Should be images. (zwl?)
- -0% done
+ -40% done
  
 *Window context menu for functions and settings related to the window, anything not on the titlebar.(zwl ZMenu)
  -0%
@@ -35,7 +35,7 @@ the item can be completed.
  -0% done
  
 *EWMH/ICCCM Support
- -20% done
+ -25% done
 
 *Virtual Desktops, including keybindings and edge flipping by border
  -0%
