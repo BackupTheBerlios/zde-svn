@@ -21,3 +21,6 @@
 
 -Speedups, especially in the main loop when adding/removing widgets (imp)
  -15%
+
+-Become EWMH and ICCCM Compliant
+ -5%
