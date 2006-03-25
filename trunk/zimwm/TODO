@@ -38,7 +38,13 @@ the item can be completed.
  -25% done
 
 *Virtual Desktops, including keybindings and edge flipping by border
- -0%
+Outline of Implementation:
+-Each desktop can have multiple virtual "workspaces". Workspaces are the visible area of the screen.  Desktops have seperate backgrounds,
+and maybe even different configurations.  There can be multiple desktops arranged vertically. workspaces are arranged horizontally.
+Workspaces will be implemented as extensions of the coordinate space of the first workspace of that desktop.
+I am not yet sure if I want Desktops to be implemented with Virtual Roots or just extensions of the coordinate space that are arranged
+horizontally.  That would be simpler, but would allow less flexibility.
+ -0%, initial planning stages.
 
 *Various window states, i.e. sticky, withdrawn, shaded...
  -5% done
