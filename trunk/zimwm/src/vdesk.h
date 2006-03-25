@@ -68,6 +68,12 @@
 /** Gets all the clients in this workspace, including sticky clients. */
 - (const IMPList *)get_clients;
 
+/** Get the workspace's width. */
+- (int)get_width;
+
+/** Get the workspace's height. */
+- (int)get_height;
+
 @end
 
 /**
@@ -77,14 +83,14 @@
 {
 	@protected
 	unsigned int vdesk; /**< Numerical representation of the desktop. */
-	IMPList **workspaces; /**< List containing all workspaces in this desktop. */
-	VWorkspace *curr_workspace; /**< Current workspace this desktop is currently at. */
+	IMPList *workspaces; /**< List containing all workspaces in this desktop. */
+	VWorkspace *curr_workspace; /**< Current workspace this desktop is at. */
 	
 	int width; /**< Size of one of our workspace's width * number of workspaces. */
 	int height; /**> Size of one of our workspace's height * number of workspaces. */
 }
 
-- init:(unsigned int)vdesk;
+- init:(unsigned int)vdesk:(VWorkspace *)first;
 - free;
 
 /** Adds a workspace to this desktop. */
@@ -93,23 +99,33 @@
 /** Removes a workspace from this desktop. */
 - (void)remove_workspace:(VWorkspace *)workspace;
 
-/** Removes a workspace from this desktop, indexed by number. */
-- (void)remove_workspace_index:(unsigned int)vwork;
+/** Removes a workspace from this desktop, indexed by number. 
+ XXX Not sure if this is needed yet. XXX*/
+//- (void)remove_workspace_index:(unsigned int)vwork;
 
 /** Gets the current workspace. */
-- (VWorkspace *)get_current_workspace;
+- (const VWorkspace *)get_current_workspace;
 
 /**
   Switches to the next workspace in the desktop.
   Returns the new current workspace.
  */
-- (VWorkspace *)move_next;
+- (const VWorkspace *)move_next;
 
 /**
   Switches to the previous workspace in the desktop.
   Returns the new current workspace.
  */
-- (VWorkspace *)move_prev;
+- (const VWorkspace *)move_prev;
+
+/** Calculates the desktop's width and height. */
+- (void)calculate_dimensions;
+
+/** Get the desktop's width. */
+- (int)get_width;
+
+/** Get the desktop's height. */
+- (int)get_height;
 
 @end
 

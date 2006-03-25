@@ -39,7 +39,7 @@
 extern int snap_px;
 
 extern ZWidget *root_window;
-extern IMPList *client_list;
+extern IMPList *client_list; /**< List of ALL clients managed by zimwm, regardless of what workspace or desktop they belong to. */
 extern IMPSimpleStack *client_list_stacking;
 
 void zimwm_add_client(ZimClient *client);
