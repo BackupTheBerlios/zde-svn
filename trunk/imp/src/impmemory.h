@@ -21,6 +21,9 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
+#ifndef IMPMEMORY_H
+#define IMPMEMORY_H
+
 /** \addtogroup Memory Memory Management
    *  @{
    */
@@ -41,3 +44,5 @@ char *i_strdup(const char *str);
 void i_free(void *ptr);
 
 /** @} */
+
+#endif

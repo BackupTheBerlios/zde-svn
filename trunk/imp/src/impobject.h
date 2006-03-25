@@ -21,6 +21,9 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
+#ifndef IMPOBJECT_H
+#define IMPOBJECT_H
+
 /**
 
 The class from which all other objects in imp are derived from. 
@@ -49,3 +52,5 @@ Note that in get methods the pointer returned is NOT A COPY, SO YOU MAY NOT FREE
 - (int)get_id; /**< Returns the unique ID of this Object */
 
 @end
+
+#endif
