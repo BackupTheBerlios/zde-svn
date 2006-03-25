@@ -21,6 +21,11 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
+#ifndef FOCUS_H
+#define FOCUS_H
+
 /** Sets the focus of the window as described in the ICCCM section 4.1.7
  Returns zero if the focus was successfuly changed, other if it was not. */
 int focus_client(ZimClient *c);
+
+#endif
