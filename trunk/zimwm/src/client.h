@@ -55,6 +55,10 @@
 	int oldy;
 	int oldwidth;
 	int oldheight;
+
+	@protected	
+	unsigned int vdesk; /**< Specifies offset from the root coordinates vertically. Must be > 1. */
+	unsigned int vwork; /**< Specifies offset from the root corrdinates horizontally. Must be > 1. */
 }
 
 /** Register an new client with zimwm.
@@ -62,6 +66,18 @@
   */
 - init:(Window *)window;
 - free;
+
+/** Gets the vdesk that this client is on. */
+- (unsigned int)get_vdesk;
+
+/** Gets the vwork that this client is on. */
+- (unsigned int)get_vwork;
+
+/** Set the vdesk that this client is on. */
+- (void)set_vdesk:(unsigned int)nvdesk;
+
+/** Set the vwork that this client is on. */
+- (void)set_vwork:(unsigned int)nvwork;
 
 /** Used to get and store all atom properties of the client, such as WM_PROTOCOLS
   */

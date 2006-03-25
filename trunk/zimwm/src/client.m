@@ -50,7 +50,11 @@ static inline int absmin(int a, int b);
 	self->strut_extents = NULL;
 	self->no_use_area = False;
 	self->maximised = False;
+	self->sticky = False;
 
+	[self set_vdesk:1];
+	[self set_vwork:1];
+	
 	w->window = window;
 	
 	self->window = w;
@@ -106,6 +110,28 @@ static inline int absmin(int a, int b);
 		i_free(self->size_hints);
 	
 	[super free];
+}
+
+- (unsigned int)get_vdesk
+{
+	return self->vdesk;
+}
+
+- (unsigned int)get_vwork
+{
+	return self->vwork;
+}
+
+- (void)set_vdesk:(unsigned int)nvdesk
+{
+	if(nvdesk > 0)
+		self->vdesk = nvdesk;
+}
+
+- (void)set_vwork:(unsigned int)nvwork
+{
+	if(nvwork > 0)
+		self->vwork = nvwork;
 }
 
 - (void)get_properties
