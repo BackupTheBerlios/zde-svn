@@ -81,6 +81,8 @@ badd +2 data/Makefile.am
 badd +6 src/focus.h
 badd +38 src/focus.m
 badd +31 COMPLIANCE
+badd +1 src/vdesk.m
+badd +31 src/vdesk.h
 args configure.in README
 edit README
 set splitbelow splitright

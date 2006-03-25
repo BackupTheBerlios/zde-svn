@@ -27,12 +27,12 @@
 #include <zwl.h>
 
 #include "../zimwm-config.h"
-#include "vdesk.h"
 #include "ewmh.h"
 #include "client-events.h"
 #include "client.h"
 #include "events.h"
 #include "focus.h"
+#include "vdesk.h"
 
 /* FIXME */
 extern int snap_px;

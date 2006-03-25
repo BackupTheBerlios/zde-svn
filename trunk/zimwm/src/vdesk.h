@@ -48,8 +48,22 @@
   */
 @interface VWorkspace : IMPObject
 {
-	int vwork; /**< Numerical representation of the workspace. */
+	@protected
+	unsigned int vwork; /**< Numerical representation of the workspace. */
+	IMPList *clients; /**< List containing all clients on this workspace. */
+	
+	int width; /**< DisplayWidth(), minus any Struts? */
+	int height; /**< DisplayHeight(), minus any Struts? */
 }
+
+- init:(unsigned int)vwork;
+- free;
+
+/** Adds a client to this workspace. */
+- (void)add_client:(ZimClient *)client;
+
+/** Removes a client from this workspace. */
+- (void)remove_client:(ZimClient *)client;
 
 @end
 
@@ -58,8 +72,25 @@
   */
 @interface VDesk : IMPObject
 {
-
+	@protected
+	unsigned int vdesk; /**< Numerical representation of the desktop. */
+	IMPList **workspaces; /**< List containing all workspaces in this desktop. */
+	
+	int width; /**< Size of one of our workspace's width * number of workspaces. */
+	int height; /**> Size of one of our workspace's height * number of workspaces. */
 }
+
+- init:(unsigned int)vdesk;
+- free;
+
+/** Adds a workspace to this desktop. */
+- (void)add_workspace:(VWorkspace *)workspace;
+
+/** Removes a workspace from this desktop. */
+- (void)remove_workspace:(VWorkspace *)workspace;
+
+/** Removes a workspace from this desktop, indexed by number. */
+- (void)remove_workspace_index:(unsigned int)vwork;
 
 @end
 
