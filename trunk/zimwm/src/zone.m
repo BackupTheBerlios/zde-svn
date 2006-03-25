@@ -21,33 +21,3 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef ZIMWM_H
-#define ZIMWM_H
-
-#include <zwl.h>
-
-#include "../zimwm-config.h"
-#include "ewmh.h"
-#include "client-events.h"
-#include "client.h"
-#include "events.h"
-#include "focus.h"
-#include "vdesk.h"
-#include "zone.h"
-
-/* FIXME */
-extern int snap_px;
-
-extern ZWidget *root_window;
-extern IMPList *client_list;
-extern IMPSimpleStack *client_list_stacking;
-
-void zimwm_add_client(ZimClient *client);
-ZimClient *zimwm_find_client_by_zwindow(ZWindow *w);
-ZimClient *zimwm_find_client_by_window(Window *w);
-ZimClient *zimwm_find_client_by_window_frame(Window *w);
-void zimwm_delete_client(ZimClient *c);
-void zimwm_remove_client(ZimClient *c);
-void zimwm_find_and_remove_client(ZWindow *w);
-
-#endif

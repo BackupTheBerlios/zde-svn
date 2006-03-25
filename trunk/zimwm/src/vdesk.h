@@ -65,6 +65,9 @@
 /** Removes a client from this workspace. */
 - (void)remove_client:(ZimClient *)client;
 
+/** Gets all the clients in this workspace, including sticky clients. */
+- (IMPList *)get_clients;
+
 @end
 
 /**
@@ -75,6 +78,7 @@
 	@protected
 	unsigned int vdesk; /**< Numerical representation of the desktop. */
 	IMPList **workspaces; /**< List containing all workspaces in this desktop. */
+	VWorkspace *curr_workspace; /**< Current workspace this desktop is currently at. */
 	
 	int width; /**< Size of one of our workspace's width * number of workspaces. */
 	int height; /**> Size of one of our workspace's height * number of workspaces. */
@@ -91,6 +95,21 @@
 
 /** Removes a workspace from this desktop, indexed by number. */
 - (void)remove_workspace_index:(unsigned int)vwork;
+
+/** Gets the current workspace. */
+- (VWorkspace *)get_current_workspace;
+
+/**
+  Switches to the next workspace in the desktop.
+  Returns the new current workspace.
+ */
+- (VWorkspace *)move_next;
+
+/**
+  Switches to the previous workspace in the desktop.
+  Returns the new current workspace.
+ */
+- (VWorkspace *)move_prev;
 
 @end
 
