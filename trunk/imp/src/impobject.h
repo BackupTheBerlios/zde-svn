@@ -41,7 +41,7 @@ Note that in get methods the pointer returned is NOT A COPY, SO YOU MAY NOT FREE
 }
 
 - init;  /**< Sets refcount to one */
-- free;
+- (void)free;
 
 - (int)grab; /**< Increases the reference count of the object by one. Returns the new count.*/
 - (int)release; /**< Decreases the reference count of the object by one. Returns the new count.*/
