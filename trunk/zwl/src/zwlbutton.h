@@ -21,6 +21,9 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
+#ifndef ZWLBUTTON_H
+#define ZWLBUTTON_H
+
 /**
   A window that must be a child of a ZWindow, which is accomplished by calling [parent add_child:button]
   BEFORE showing the button.  It uses a ZLabel to draw the text in *label, and handles Expose events for
@@ -78,3 +81,5 @@
 - (void)set_window_surface:(cairo_surface_t *)window_surface;
 
 @end;
+
+#endif

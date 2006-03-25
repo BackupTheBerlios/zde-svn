@@ -21,6 +21,9 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
+#ifndef ZWLINIT_H
+#define ZWLINIT_H
+
 /** \addtogroup X11 Atoms and Events
    *  @{
    */
@@ -118,3 +121,5 @@ void zwl_main_loop_start(void);
 void zwl_main_loop_quit(void);
 
 /** @} */
+
+#endif

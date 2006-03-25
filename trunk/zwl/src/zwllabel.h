@@ -21,6 +21,9 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
+#ifndef ZWLLABEL_H
+#define ZWLLABEL_H
+
 /** A widget that displays text and must be a child of a ZWindow.  It can be set to 
    automatically set its own width and height if you are changing the label a lot.
    This widget DOES NOT perform word-wrapping or any other form of text-layout.
@@ -59,3 +62,5 @@
 - (const XftFont *)get_font;
 
 @end;
+
+#endif

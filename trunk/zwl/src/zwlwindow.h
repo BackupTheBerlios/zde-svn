@@ -21,6 +21,9 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
+#ifndef ZWLWINDOW_H
+#define ZWLWINDOW_H
+
 /**
 	A widget that represents a main window.  This is for windows that are not going to be children.
 	If you want a child window, for widgets or similiar, extend from this class.
@@ -65,3 +68,5 @@
 - (XftDraw *)get_xftdraw;
 
 @end
+
+#endif

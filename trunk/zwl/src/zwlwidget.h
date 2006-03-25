@@ -21,6 +21,9 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
+#ifndef ZWLWIDGET_H
+#define ZWLWIDGET_H
+
 /* Event defines. */
 #define SHOW 0  /**< When widget is shown. Data is NULL */
 #define BUTTON_DOWN 1 /**< When a mouse button is pressed on the widget. Data is an XButtonEvent structure. */
@@ -116,3 +119,5 @@ typedef void (ZCallback)(IMPObject *widget, void *data);
 - (void)attatch_internal_cb:(int)signal:(ZCallback *)callback;
 
 @end
+
+#endif
