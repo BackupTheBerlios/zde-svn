@@ -207,41 +207,6 @@ ZimClient *zimwm_find_client_by_window_frame(Window *w)
 	return NULL;
 }
 
-void zimwm_delete_client(ZimClient *c)
-{
-	IMPList *list = client_list;
-	XClientMessageEvent cv;
-	ZimClient *client;
-
-	if(!c || !c->window || !c->window->window)
-		return;
-	
-	client = (ZimClient *)client_list->data;
-	if(client == c) {
-		if(c->atoms[WM_DELETE_WINDOW] && c->window && c->window->window) {
-			[c send_client_message:32:z_atom[WM_PROTOCOLS]:z_atom[WM_DELETE_WINDOW]];
-		}
-		else {
-			[client->window->parent destroy];
-		}
-		return;
-	}
-	
-	while(list) {
-		client = (ZimClient *)list->next->data;
-
-		if((client == c) && list->next) {
-				[client send_client_message:32:z_atom[WM_PROTOCOLS]:z_atom[WM_DELETE_WINDOW]];
-				return;
-		}
-		else {
-			[client->window->parent destroy];
-		}
-		
-		list = list->next;
-	}
-}
-
 void zimwm_remove_client(ZimClient *c)
 {
 	IMPList *list = client_list;

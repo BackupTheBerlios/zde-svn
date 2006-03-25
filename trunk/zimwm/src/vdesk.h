@@ -56,7 +56,7 @@
 	int height; /**< DisplayHeight(), minus any Struts? */
 }
 
-- init:(unsigned int)vwork;
+- init:(unsigned int)vwork:(int)width:(int)height;
 - free;
 
 /** Adds a client to this workspace. */
@@ -66,7 +66,7 @@
 - (void)remove_client:(ZimClient *)client;
 
 /** Gets all the clients in this workspace, including sticky clients. */
-- (IMPList *)get_clients;
+- (const IMPList *)get_clients;
 
 @end
 

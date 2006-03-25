@@ -23,6 +23,9 @@
 
 #ifndef EWMH_H
 #define EWMH_H
+/** \addtogroup EWMH
+   *  @{
+   */
 
 /**
    Holds values specified in _NET_WM_STRUT or _NET_WM_STRUT_PARTIAL
@@ -48,6 +51,9 @@ typedef struct {
 /** Sets the root window properties, like _NET_SUPPORTED, etc. */
 void setup_ewmh_root_properties(void);
 
+/** Send WM_DELETE to the client. */
+void zimwm_delete_client(ZimClient *c);
+
 /** Responds to EWMH messages to the root window, like _NET_CLOSE_WINDOW, etc. */
 void handle_ewmh_client_message(XClientMessageEvent *ev);
 
@@ -65,5 +71,7 @@ void update_client_list(IMPList *list);
 
 /** Updates the _NET_CLIENT_LIST_STACKING property of the root window to the current stacking list. */
 void update_client_list_stacking(IMPSimpleStack *list);
+
+/** @} */
 
 #endif
