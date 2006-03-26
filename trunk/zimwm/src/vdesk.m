@@ -61,7 +61,6 @@
 	IMPList *list = self->clients;
 	ZimClient *tmp;
 	
-	/* remove from client_list */
 	if(!client)
 		return;
 
@@ -133,7 +132,6 @@
 	IMPList *list = self->workspaces;
 	VWorkspace *tmp;
 	
-	/* remove from client_list */
 	if(!workspace)
 		return;
 

@@ -39,6 +39,10 @@
 	VDesk *curr_desk; /**< Current desktop that this zone is currently at. */
 }
 
+- init:(Display *)dpy:(int)screen:(VDesk *)first;
+
+- free;
+
 /** Adds a vdesk to the zone. */
 - (void)add_vdesk:(VDesk *)vdesk;
 
@@ -51,20 +55,26 @@
 /** Set the screen for the zone. */
 - (void)set_screen:(int)scr;
 
+/** Get the display. */
+- (const Display *)get_dpy;
+
+/** Get the screen. */
+- (int)get_screen;
+
 /** Gets the current desktop. */
-- (VDesk *)get_current_desk;
+- (const VDesk *)get_current_desk;
 
 /** 
   Switches to the next desktop in the zone.
   Returns the new current desktop.
  */
-- (VDesk *)move_next;
+- (const VDesk *)move_next;
 
 /** 
   Switches to the previous desktop in the zone. 
   Returns the new current desktop.
  */
-- (VDesk *)move_prev;
+- (const VDesk *)move_prev;
 
 @end
 

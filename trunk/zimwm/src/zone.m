@@ -21,3 +21,100 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
+#include "zimwm.h"
+
+@implementation Zone : IMPObject
+
+- init:(Display *)dpy:(int)screen:(VDesk *)first
+{
+	if(dpy)
+		self->dpy = dpy;
+	else
+		dpy = NULL;
+
+	self->screen = screen;
+
+	self->vdesks = [IMPList alloc];
+	[self->vdesks init:1];
+
+	[self->vdesks append_data:first];
+
+	self->curr_desk = first;
+}
+
+- free
+{
+	[self->vdesks delete_list];
+}
+
+- (void)add_vdesk:(VDesk *)vdesk
+{
+	if(vdesk)
+		[self->vdesks append_data:vdesk];
+}
+
+- (void)remove_vdesk:(VDesk *)vdesk
+{
+	IMPList *list = self->vdesks;
+	VDesk *tmp;
+	
+	if(!vdesk)
+		return;
+
+	tmp = (VDesk *)self->vdesks->data;
+	if(vdesk == tmp && self->vdesks) {
+		list = [list delete_node];
+		self->vdesks = list;
+	}
+	else {
+		while(list) {
+			tmp = (VDesk *)list->next->data;
+
+			if((vdesk == tmp) && list->next) {
+				list = [list delete_next_node];
+				break;
+			}
+
+			list = list->next;
+		}
+	}
+}
+
+- (void)set_dpy:(Display *)disp
+{
+	if(disp)
+		self->dpy = disp;
+}
+
+- (void)set_screen:(int)scr
+{
+	self->screen = scr;
+}
+
+- (const Display *)get_dpy
+{
+	return self->dpy;
+}
+
+- (int)get_screen
+{
+	return self->screen;
+}
+
+- (const VDesk *)get_current_desk
+{
+	return self->curr_desk;
+}
+
+- (const VDesk *)move_next
+{
+
+}
+
+- (const VDesk *)move_prev
+{
+
+}
+
+@end
+
