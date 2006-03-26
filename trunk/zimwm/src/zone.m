@@ -25,7 +25,7 @@
 
 @implementation Zone : IMPObject
 
-- init:(Display *)dpy:(int)screen:(VDesk *)first
+- init:(Display *)dpy:(int)screen:(ZWidget *)root_window:(VDesk *)first
 {
 	VDesk *tmp;
 
@@ -38,6 +38,11 @@
 
 	self->screen = screen;
 
+	if(root_window) {
+		self->root_window = root_window;
+		[self->root_window grab];
+	}
+	
 	self->vdesks = [IMPList alloc];
 	[self->vdesks init:1];
 
@@ -110,6 +115,11 @@
 - (int)get_screen
 {
 	return self->screen;
+}
+
+- (const ZWidget *)get_root
+{
+	return self->root_window;
 }
 
 - (const VDesk *)get_current_desk

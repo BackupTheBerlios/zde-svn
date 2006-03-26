@@ -34,6 +34,7 @@
 	@protected;
 	Display *dpy; /**< The display that this zone is located on. */
 	int screen; /**< The screen that this zone is located on. */
+	ZWidget *root_window; /**< The root window this zone is on. */
 	
 	IMPList *vdesks; /**< List containing the desktops in this zone. */
 	VDesk *curr_desk; /**< Current desktop that this zone is currently at. */
@@ -42,7 +43,7 @@
 /**
   A NULL in first means that a default desk will be the first.
   */
-- init:(Display *)dpy:(int)screen:(VDesk *)first;
+- init:(Display *)dpy:(int)screen:(ZWidget *)root_window:(VDesk *)first;
 - free;
 
 /** Adds a vdesk to the zone. */
@@ -62,6 +63,9 @@
 
 /** Get the screen. */
 - (int)get_screen;
+
+/** Get the root window for this zone. */
+- (const ZWidget *)get_root;
 
 /** Gets the current desktop. */
 - (const VDesk *)get_current_desk;

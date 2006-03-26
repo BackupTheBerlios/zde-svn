@@ -26,23 +26,20 @@
 /* FIXME NEEDS TO BE A CONFIGURABLE VALUE */
 int snap_px = 5;
 
+int curr_zone = 0;
+
 IMPList *client_list = NULL;
 IMPSimpleStack *client_list_stacking = NULL;
 ZWidget *root_window = NULL;
 Zone **zones = NULL;
 
 static void setup_root_window(void);
-static void setup_zone(void);
+static void setup_zone(ZWidget *root);
 
 /* exported functions */
 void zimwm_add_client(ZimClient *client);
 ZimClient *zimwm_find_client_by_zwindow(ZWindow *w);
 void zimwm_delete_client(ZimClient *c);
-
-int handle_xerror(Display *dpy, XErrorEvent *ev)
-{
-
-}
 
 int main(int argc, char **argv)
 {	
@@ -50,9 +47,7 @@ int main(int argc, char **argv)
 
 	setup_root_window();
 
-	setup_zone();
-	
-//	XSetErrorHandler(handle_xerror);
+	setup_zone(root_window);
 	
 	zwl_main_loop_start();
 	
@@ -118,11 +113,14 @@ static void setup_root_window(void)
 	XFreeCursor(zdpy,rootc);
 }
 
-static void setup_zone(void)
+static void setup_zone(ZWidget *root)
 {
+	/* FIXME We are only working with a single zone for now. */
 	zones = i_calloc(1,sizeof(Zone *));
 	zones[0] = [Zone alloc];
-	[zones[0] init:zdpy:zscreen:NULL];	
+	[zones[0] init:zdpy:zscreen:root:NULL];	
+
+	curr_zone = 0;
 }
 
 void zimwm_add_client(ZimClient *client)

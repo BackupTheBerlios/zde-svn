@@ -35,8 +35,11 @@
 #include "vdesk.h"
 #include "zone.h"
 
-/* FIXME */
+/* FIXME Should be from config file. */
 extern int snap_px;
+
+/* Index into the array of zones for the one currently used. */
+extern int curr_zone;
 
 extern ZWidget *root_window;
 extern IMPList *client_list; /**< List of ALL clients managed by zimwm, regardless of what workspace or desktop they belong to. */
