@@ -91,6 +91,9 @@
 	int height; /**> Size of one of our workspace's height * number of workspaces. */
 }
 
+/**
+  A NULL in first means that a default workspace will be created as the first one.
+  */
 - init:(unsigned int)vdesk:(VWorkspace *)first;
 - free;
 

@@ -27,6 +27,8 @@
 
 - init:(unsigned int)vwork:(int)width:(int)height
 {
+	[super init];
+	
 	if(vwork > 0)
 		self->vwork = vwork;
 	else 
@@ -39,8 +41,6 @@
 		self->width = width;
 	if(height > 0)
 		self->height = height;
-	
-	[super init];
 }
 
 - free
@@ -104,15 +104,26 @@
 
 - init:(unsigned int)vdesk:(VWorkspace *)first
 {
+	VWorkspace *tmp;
+	
+	[super init];
+	
 	if(vdesk > 0)
 		self->vdesk = vdesk;
 	
 	self->workspaces = [IMPList alloc];
 	[self->workspaces init:1];
 
-	[self add_workspace:first];
-	
-	self->curr_workspace = first;
+	if(!first) {
+		tmp = [VWorkspace alloc];
+		[tmp init:1:XDisplayWidth(zdpy,zscreen):XDisplayHeight:(zdpy,zscreen)];
+		[self add_workspace:tmp];
+		self->curr_workspace = tmp;
+	}
+	else {
+		[self add_workspace:first];
+		self->curr_workspace = first;
+	}
 }
 
 - free

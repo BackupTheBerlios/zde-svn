@@ -41,6 +41,8 @@ static inline int absmin(int a, int b);
 	int x,x1;
 	int y,y1;
 	unsigned int mask;
+
+	[super init];
 	
 	sattr.event_mask = PropertyChangeMask;
 	

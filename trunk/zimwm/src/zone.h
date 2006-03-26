@@ -39,8 +39,10 @@
 	VDesk *curr_desk; /**< Current desktop that this zone is currently at. */
 }
 
+/**
+  A NULL in first means that a default desk will be the first.
+  */
 - init:(Display *)dpy:(int)screen:(VDesk *)first;
-
 - free;
 
 /** Adds a vdesk to the zone. */

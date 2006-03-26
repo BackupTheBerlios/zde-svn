@@ -120,16 +120,9 @@ static void setup_root_window(void)
 
 static void setup_zone(void)
 {
-	VWorkspace *first_w = [VWorkspace alloc];
-	[first_w init:1:XDisplayWidth(zdpy,zscreen):XDisplayHeight:(zdpy,zscreen)];
-	
-	VDesk *first_d = [VDesk alloc];
-	[first_d init:1:first_w];
-	
 	zones = i_calloc(1,sizeof(Zone *));
 	zones[0] = [Zone alloc];
-	[zones[0] init:zdpy:zscreen:first_d];
-	
+	[zones[0] init:zdpy:zscreen:NULL];	
 }
 
 void zimwm_add_client(ZimClient *client)

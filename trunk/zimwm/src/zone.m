@@ -27,6 +27,10 @@
 
 - init:(Display *)dpy:(int)screen:(VDesk *)first
 {
+	VDesk *tmp;
+
+	[super init];
+	
 	if(dpy)
 		self->dpy = dpy;
 	else
@@ -37,9 +41,16 @@
 	self->vdesks = [IMPList alloc];
 	[self->vdesks init:1];
 
-	[self->vdesks append_data:first];
-
-	self->curr_desk = first;
+	if(!first) {
+		tmp = [VDesk alloc];
+		[tmp init:1:NULL];
+		[self->vdesks append_data:tmp];
+		self->curr_desk = tmp;
+	}
+	else {
+		[self->vdesks append_data:first];
+		self->curr_desk = first;
+	}
 }
 
 - free
