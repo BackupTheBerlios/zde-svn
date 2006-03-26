@@ -51,6 +51,7 @@
 	@protected
 	unsigned int vwork; /**< Numerical representation of the workspace. */
 	IMPList *clients; /**< List containing all clients on this workspace. */
+	IMPSimpleStack *clients_stacking; /**< Stack containing all clients in stacking order. */
 	
 	int width; /**< DisplayWidth(), minus any Struts? */
 	int height; /**< DisplayHeight(), minus any Struts? */

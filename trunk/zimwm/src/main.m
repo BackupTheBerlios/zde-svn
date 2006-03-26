@@ -29,8 +29,10 @@ int snap_px = 5;
 IMPList *client_list = NULL;
 IMPSimpleStack *client_list_stacking = NULL;
 ZWidget *root_window = NULL;
+Zone **zones = NULL;
 
 static void setup_root_window(void);
+static void setup_zone(void);
 
 /* exported functions */
 void zimwm_add_client(ZimClient *client);
@@ -48,6 +50,8 @@ int main(int argc, char **argv)
 
 	setup_root_window();
 
+	setup_zone();
+	
 //	XSetErrorHandler(handle_xerror);
 	
 	zwl_main_loop_start();
@@ -112,6 +116,20 @@ static void setup_root_window(void)
 	}
 */
 	XFreeCursor(zdpy,rootc);
+}
+
+static void setup_zone(void)
+{
+	VWorkspace *first_w = [VWorkspace alloc];
+	[first_w init:1:XDisplayWidth(zdpy,zscreen):XDisplayHeight:(zdpy,zscreen)];
+	
+	VDesk *first_d = [VDesk alloc];
+	[first_d init:1:first_w];
+	
+	zones = i_calloc(1,sizeof(Zone *));
+	zones[0] = [Zone alloc];
+	[zones[0] init:zdpy:zscreen:first_d];
+	
 }
 
 void zimwm_add_client(ZimClient *client)

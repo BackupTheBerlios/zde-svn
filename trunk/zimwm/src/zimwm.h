@@ -40,7 +40,8 @@ extern int snap_px;
 
 extern ZWidget *root_window;
 extern IMPList *client_list; /**< List of ALL clients managed by zimwm, regardless of what workspace or desktop they belong to. */
-extern IMPSimpleStack *client_list_stacking;
+extern IMPSimpleStack *client_list_stacking; /**< List of ALL clients managed by zimwm in stacking order. FIXME this should be per-workspace. */
+extern Zone **zones; /**< Array of all zones used by zimwm. */
 
 void zimwm_add_client(ZimClient *client);
 ZimClient *zimwm_find_client_by_zwindow(ZWindow *w);
