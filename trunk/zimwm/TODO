@@ -44,7 +44,7 @@ and maybe even different configurations.  There can be multiple desktops arrange
 Workspaces will be implemented as extensions of the coordinate space of the first workspace of that desktop.
 I am not yet sure if I want Desktops to be implemented with Virtual Roots or just extensions of the coordinate space that are arranged
 horizontally.  That would be simpler, but would allow less flexibility.
- -0%, initial planning stages.
+ -10%, zones are implemented.
 
 *Various window states, i.e. sticky, withdrawn, shaded...
  -5% done
