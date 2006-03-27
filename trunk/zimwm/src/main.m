@@ -129,7 +129,9 @@ void zimwm_add_client(ZimClient *client)
 	/* regular client list */
 	if(client_list) {
 		if(client) {
-			client_list = [client_list prepend_data:client];
+			client_list = [client_list prepend_data:client];	
+			/* add the client to the current workspace. */
+			[[zones[curr_zone] get_current_workspace] add_client:client];
 			//[client_list append_data:client];
 		}
 	}
@@ -137,6 +139,9 @@ void zimwm_add_client(ZimClient *client)
 		client_list = [IMPList alloc];
 		[client_list init:1];
 		client_list->data = client;
+
+		/* add the client to the current workspace. */
+		[[zones[curr_zone] get_current_workspace] add_client:client];
 	}
 	
 	/* stacking client list */

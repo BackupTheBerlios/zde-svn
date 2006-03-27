@@ -66,6 +66,12 @@
 /** Removes a client from this workspace. */
 - (void)remove_client:(ZimClient *)client;
 
+/** Adds a client to this workspace's stacking list. */
+- (void)add_client_stacking:(ZimClient *)client;
+
+/** Removes a client from this workspace's stacking list. */
+- (void)remove_client_stacking:(ZimClient *)client;
+
 /** Gets all the clients in this workspace, including sticky clients. */
 - (const IMPList *)get_clients;
 
