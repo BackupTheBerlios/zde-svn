@@ -49,6 +49,8 @@ int main(int argc, char **argv)
 
 	setup_zone(root_window);
 	
+	setup_ewmh_root_properties();
+	
 	zwl_main_loop_start();
 	
 	return 0;
@@ -95,7 +97,6 @@ static void setup_root_window(void)
 	[root_window attatch_cb:CONFIGURE_REQUEST:(ZCallback *)on_configure_request];
 	//[root_window attatch_cb:PROPERTY:(ZCallback *)on_property_notify];
 	
-	setup_ewmh_root_properties();
 /*
 	XQueryTree(zdpy,root_window->window,&root,&parent,&children,&len);
 

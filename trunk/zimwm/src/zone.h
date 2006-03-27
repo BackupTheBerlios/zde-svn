@@ -70,6 +70,9 @@
 /** Gets the current desktop. */
 - (const VDesk *)get_current_desk;
 
+/** Convience function to get the current workspace of the current desktop. */
+- (const VWorkspace *)get_current_workspace;
+
 /** 
   Switches to the next desktop in the zone.
   Returns the new current desktop.

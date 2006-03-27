@@ -117,8 +117,10 @@ void on_maximise_button_down(IMPObject *widget, void *data)
 	c->oldwidth = frame->width;
 	c->oldheight = frame->height;
 	
-	frame->width = DisplayWidth(zdpy,zscreen) - c->border;
-	frame->height = DisplayHeight(zdpy,zscreen) - c->border;
+	//frame->width = DisplayWidth(zdpy,zscreen) - c->border;
+	//frame->height = DisplayHeight(zdpy,zscreen) - c->border;
+	frame->width = [[zones[curr_zone] get_current_workspace] get_width];
+	frame->height = [[zones[curr_zone] get_current_workspace] get_height];
 	
 	[c move:0:0];
 	[c resize:frame->width:frame->height];
@@ -168,7 +170,9 @@ void on_frame_button_down(IMPObject *widget, void *data)
 		children = children->next;
 	}
 	
-	XGrabPointer(zdpy,(Window)root_window->window,True,PointerMotionMask | ButtonReleaseMask,GrabModeAsync,GrabModeAsync,None,arrow,CurrentTime);
+//	XGrabPointer(zdpy,(Window)root_window->window,True,PointerMotionMask | ButtonReleaseMask,GrabModeAsync,GrabModeAsync,None,arrow,CurrentTime);
+	XGrabPointer(zdpy,(Window)[zones[curr_zone] get_root]->window,True,PointerMotionMask | ButtonReleaseMask,
+			GrabModeAsync,GrabModeAsync,None,arrow,CurrentTime);
 	XQueryPointer(zdpy,(Window)w->window,&w1,&w2,&x,&y,&x1,&y1,&mask);
 
 	[c raise];
@@ -331,7 +335,10 @@ void resize(IMPObject *widget, void *data)
 	
 	w = (ZWindow *)w->parent;
 	
-	XGrabPointer(zdpy,(Window)root_window->window,True,PointerMotionMask | ButtonReleaseMask,GrabModeAsync,GrabModeAsync,None,arrow,CurrentTime);
+//	XGrabPointer(zdpy,(Window)root_window->window,True,PointerMotionMask | ButtonReleaseMask,GrabModeAsync,GrabModeAsync,None,arrow,CurrentTime);
+
+	XGrabPointer(zdpy,(Window)[zones[curr_zone] get_root]->window,True,PointerMotionMask | ButtonReleaseMask,
+			GrabModeAsync,GrabModeAsync,None,arrow,CurrentTime);
 
 	/* Find the window by searching through the frame's children list. */
 	children = w->children;

@@ -116,7 +116,7 @@
 
 	if(!first) {
 		tmp = [VWorkspace alloc];
-		[tmp init:1:XDisplayWidth(zdpy,zscreen):XDisplayHeight:(zdpy,zscreen)];
+		[tmp init:1:XDisplayWidth(zdpy,zscreen):XDisplayHeight(zdpy,zscreen)];
 		[self add_workspace:tmp];
 		self->curr_workspace = tmp;
 	}

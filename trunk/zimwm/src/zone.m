@@ -127,6 +127,11 @@
 	return self->curr_desk;
 }
 
+- (const VWorkspace *)get_current_workspace
+{
+	return [self->curr_desk get_current_workspace];
+}
+
 - (const VDesk *)move_next
 {
 

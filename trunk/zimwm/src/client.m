@@ -64,7 +64,8 @@ static inline int absmin(int a, int b);
 	[self get_properties];
 	[self set_allowed_actions];
 	
-	XQueryPointer(zdpy,(Window)root_window->window,&w1,&w2,&x,&y,&x1,&y1,&mask);
+//	XQueryPointer(zdpy,(Window)root_window->window,&w1,&w2,&x,&y,&x1,&y1,&mask);
+	XQueryPointer(zdpy,(Window)[zones[curr_zone] get_root]->window,&w1,&w2,&x,&y,&x1,&y1,&mask);
 	self->window->x = x - self->window->width / 2;
 	self->window->y = y - self->window->height / 2;
 	
@@ -538,7 +539,8 @@ static ZWindow *create_frame_for_client(ZimClient *c)
 	ZLabel *label = [ZLabel alloc];
 	XGlyphInfo *extents;
 
-	[f init:root_window:
+	//[f init:root_window:
+	[f init:[zones[curr_zone] get_root]:
 		c->window->x:
 		c->window->y:
 		c->window->width + (c->border * 2):
