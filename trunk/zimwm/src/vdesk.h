@@ -75,6 +75,9 @@
 /** Gets all the clients in this workspace, including sticky clients. */
 - (const IMPList *)get_clients;
 
+/** Get the numerical number representing this workspace. */
+- (unsigned int)get_num;
+
 /** Get the workspace's width. */
 - (int)get_width;
 
@@ -130,6 +133,9 @@
 
 /** Calculates the desktop's width and height. */
 - (void)calculate_dimensions;
+
+/** Get the numerical number representing this desktop. */
+- (unsigned int)get_num;
 
 /** Get the desktop's width. */
 - (int)get_width;

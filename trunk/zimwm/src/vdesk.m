@@ -88,6 +88,11 @@
 	return self->clients;
 }
 
+- (unsigned int)get_num
+{
+	return self->vwork;
+}
+
 - (int)get_width
 {
 	return self->width;
@@ -196,6 +201,11 @@
 		
 		list = list->next;
 	}
+}
+
+- (unsigned int)get_num
+{
+	return self->vdesk;
 }
 
 - (int)get_width
