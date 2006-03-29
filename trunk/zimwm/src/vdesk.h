@@ -119,6 +119,9 @@
 /** Gets the current workspace. */
 - (const VWorkspace *)get_current_workspace;
 
+/** Gets the workspace number "n" on this desktop. */
+- (const VWorkspace *)get_nth_workspace:(int)n;
+
 /**
   Switches to the next workspace in the desktop.
   Returns the new current workspace.

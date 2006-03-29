@@ -239,7 +239,7 @@ void zimwm_remove_client(ZimClient *c)
 
 	client = (ZimClient *)client_list->data;
 	if(client == c && client_list) {
-		[[zones[curr_zone] get_current_workspace] remove_client:c];
+		[[[zones[curr_zone] get_current_desk] get_nth_workspace:[c get_vwork]] remove_client:c];
 		list = [list delete_node];
 		client_list = list;
 	}
@@ -248,7 +248,7 @@ void zimwm_remove_client(ZimClient *c)
 			client = (ZimClient *)list->next->data;
 
 			if((client == c) && list->next) {
-				[[zones[curr_zone] get_current_workspace] remove_client:c];
+				[[[zones[curr_zone] get_current_desk] get_nth_workspace:[c get_vwork]] remove_client:c];
 				list = [list delete_next_node];
 
 				break;

@@ -186,6 +186,24 @@
 	return self->curr_workspace;
 }
 
+- (const VWorkspace *)get_nth_workspace:(int)n
+{
+	IMPList *list = self->workspaces;
+	VWorkspace *tmp;
+
+	while(list) {
+		tmp = list->data;
+
+		if([tmp get_num] == n) {
+			return tmp;
+		}
+		
+		list = list->next;
+	}
+
+	return NULL;
+}
+
 - (const VWorkspace *)move_next
 {
 
