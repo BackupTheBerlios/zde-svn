@@ -132,6 +132,9 @@ void zimwm_add_client(ZimClient *client)
 			client_list = [client_list prepend_data:client];	
 			/* add the client to the current workspace. */
 			[[zones[curr_zone] get_current_workspace] add_client:client];
+			[client set_vwork:[[zones[curr_zone] get_current_workspace] get_num]];
+			[client set_vdesk:[[zones[curr_zone] get_current_desk] get_num]];
+
 			//[client_list append_data:client];
 		}
 	}
@@ -142,6 +145,8 @@ void zimwm_add_client(ZimClient *client)
 
 		/* add the client to the current workspace. */
 		[[zones[curr_zone] get_current_workspace] add_client:client];
+		[client set_vwork:[[zones[curr_zone] get_current_workspace] get_num]];
+		[client set_vdesk:[[zones[curr_zone] get_current_desk] get_num]];
 	}
 	
 	/* stacking client list */
@@ -234,6 +239,7 @@ void zimwm_remove_client(ZimClient *c)
 
 	client = (ZimClient *)client_list->data;
 	if(client == c && client_list) {
+		[[zones[curr_zone] get_current_workspace] remove_client:c];
 		list = [list delete_node];
 		client_list = list;
 	}
@@ -242,7 +248,9 @@ void zimwm_remove_client(ZimClient *c)
 			client = (ZimClient *)list->next->data;
 
 			if((client == c) && list->next) {
+				[[zones[curr_zone] get_current_workspace] remove_client:c];
 				list = [list delete_next_node];
+
 				break;
 			}
 
