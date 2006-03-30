@@ -69,6 +69,8 @@
 
 /** Gets the current desktop. */
 - (const VDesk *)get_current_desk;
+/** Gets the nth desktop in this zone. */
+- (const VDesk *)get_nth_desk:(int)num;
 
 /** Convience function to get the current workspace of the current desktop. */
 - (const VWorkspace *)get_current_workspace;

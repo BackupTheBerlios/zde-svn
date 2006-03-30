@@ -72,6 +72,9 @@
 /** Removes a client from this workspace's stacking list. */
 - (void)remove_client_stacking:(ZimClient *)client;
 
+/** Moves the client to the top of the stack if it exists in the stack. */
+- (void)raise_client:(ZimClient *)client;
+
 /** Gets all the clients in this workspace, including sticky clients. */
 - (const IMPList *)get_clients;
 

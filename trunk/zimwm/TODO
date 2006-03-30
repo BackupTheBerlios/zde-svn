@@ -27,7 +27,7 @@ the item can be completed.
  -0%
  
 *Fix windows resizing themselves.  Not sure how to do this yet.
- -70% done, still a few segvs and positioning problems, but its mostly there. Some windows set two different sizes I think,
+ -90% done, still a few positioning problems, but its mostly there. Some windows set two different sizes I think,
  one when they create the window and another in the properties of the window.  I need to use whichever one is most accurate,
  so that the windows are not smaller or bigger than they are intended.
 

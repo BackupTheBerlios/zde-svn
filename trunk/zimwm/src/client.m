@@ -486,7 +486,7 @@ static inline int absmin(int a, int b);
 	[temp init:500];
 	
 	/* Update the client_list_stacking variable. */
-	if(client_list_stacking) {
+/*	if(client_list_stacking) {
 		while([client_list_stacking get_size] > 0) {
 		
 			c = (ZimClient *)[client_list_stacking pop];
@@ -507,7 +507,7 @@ static inline int absmin(int a, int b);
 			}
 		}
 	}
-	
+*/	
 	/* Raise the children of the window. */
 	tmp = self->window->parent->children;
 	while(tmp) {
@@ -521,7 +521,7 @@ static inline int absmin(int a, int b);
 		tmp = tmp->next;
 	}
 
-	update_client_list_stacking(client_list_stacking);
+//	update_client_list_stacking(client_list_stacking);
 }
 
 @end

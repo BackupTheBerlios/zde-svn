@@ -150,7 +150,7 @@ void zimwm_add_client(ZimClient *client)
 	}
 	
 	/* stacking client list */
-	if(client_list_stacking) {
+/*	if(client_list_stacking) {
 		[client_list_stacking push:client];
 		update_client_list_stacking(client_list_stacking);
 	}
@@ -159,7 +159,7 @@ void zimwm_add_client(ZimClient *client)
 		[client_list_stacking init:500];
 		client_list_stacking = [client_list_stacking push:(void *)client];
 	}
-}
+*/}
 
 ZimClient *zimwm_find_client_by_zwindow(ZWindow *w)
 {
@@ -259,7 +259,7 @@ void zimwm_remove_client(ZimClient *c)
 	}
 
 	/* remove from client_list_stacking */
-	[temp init:500];
+/*	[temp init:500];
 	
 	if(client_list_stacking) {
 		while([client_list_stacking get_size] > 0) {	
@@ -280,7 +280,7 @@ void zimwm_remove_client(ZimClient *c)
 			}
 		}
 	}
-}
+*/}
 
 /* FIXME */
 void zimwm_find_and_remove_client(ZWindow *w)

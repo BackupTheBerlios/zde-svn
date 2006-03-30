@@ -34,6 +34,8 @@
 	else 
 		self->vwork = 1;
 
+	self->clients_stacking = NULL;
+	
 	self->clients = [IMPList alloc];
 	[self->clients init:1];
 	
@@ -63,6 +65,8 @@
 		[self->clients init:1];
 		self->clients->data = client;
 	}
+
+	[self add_client_stacking:client];
 }
 
 - (void)remove_client:(ZimClient *)client
@@ -88,6 +92,50 @@
 			}
 
 			list = list->next;
+		}
+	}
+
+	[self remove_client_stacking:client];
+}
+
+- (void)add_client_stacking:(ZimClient *)client
+{
+	if(self->clients_stacking) {
+		[self->clients_stacking push:client];
+	}
+	else {
+		self->clients_stacking = [IMPSimpleStack alloc];
+		[self->clients_stacking init:500];
+		[self->clients_stacking push:client];
+	}
+
+	update_client_list_stacking(self->clients_stacking);
+}
+
+- (void)remove_client_stacking:(ZimClient *)client
+{
+	ZimClient *c = NULL;
+	IMPSimpleStack *temp = [IMPSimpleStack alloc];
+
+	[temp init:500];
+	
+	if(self->clients_stacking) {
+		while([self->clients_stacking get_size] > 0) {	
+			c = (ZimClient *)[self->clients_stacking pop];
+			
+			if(c->window == client->window) {
+				while([temp get_size] > 0) {
+					c = (ZimClient *)[temp pop];
+					
+					[self->clients_stacking push:(void *)c];
+				}
+				
+				[temp release];
+				break;
+			}
+			else {
+				[temp push:c];	
+			}
 		}
 	}
 }

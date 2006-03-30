@@ -127,6 +127,25 @@
 	return self->curr_desk;
 }
 
+- (const VDesk *)get_nth_desk:(int)num
+{
+	IMPList *list = self->vdesks;
+	VDesk *tmp;
+
+	while(list) {
+		tmp = list->data;
+
+		if([tmp get_num] == num) {
+			return tmp;
+		}
+		
+		list = list->next;
+	}
+
+	return NULL;
+
+}
+
 - (const VWorkspace *)get_current_workspace
 {
 	return [self->curr_desk get_current_workspace];
