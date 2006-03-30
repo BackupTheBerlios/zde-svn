@@ -57,13 +57,11 @@
 	
 	if(self->clients) {
 		[self->clients append_data:client];
-		[client grab];
 	}
 	else {
 		self->clients = [IMPList alloc];
 		[self->clients init:1];
 		self->clients->data = client;
-		[client grab];
 	}
 }
 
