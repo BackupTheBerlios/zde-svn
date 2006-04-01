@@ -29,7 +29,7 @@ int snap_px = 5;
 int curr_zone = 0;
 
 IMPList *client_list = NULL;
-IMPSimpleStack *client_list_stacking = NULL;
+//IMPSimpleStack *client_list_stacking = NULL;
 ZWidget *root_window = NULL;
 Zone **zones = NULL;
 
@@ -86,8 +86,6 @@ static void setup_root_window(void)
 	attr.cursor = rootc;
 	XChangeWindowAttributes(zdpy,(Window)root_window->window,CWEventMask | CWCursor,&attr);
 
-	//XGrabKey(zdpy,XKeysymToKeycode(zdpy,XK_Alt_L),AnyModifier,root_window->window,True,GrabModeAsync,GrabModeAsync);
-	
 	zwl_main_loop_add_widget(root_window);
 
 	[root_window attatch_cb:BUTTON_DOWN:(ZCallback *)on_button_down];
@@ -95,7 +93,6 @@ static void setup_root_window(void)
 	[root_window attatch_cb:KEY_PRESS:(ZCallback *)on_key_press];
 	[root_window attatch_cb:CLIENT_MESSAGE:(ZCallback *)on_client_message];
 	[root_window attatch_cb:CONFIGURE_REQUEST:(ZCallback *)on_configure_request];
-	//[root_window attatch_cb:PROPERTY:(ZCallback *)on_property_notify];
 	
 /*
 	XQueryTree(zdpy,root_window->window,&root,&parent,&children,&len);
@@ -130,6 +127,7 @@ void zimwm_add_client(ZimClient *client)
 	if(client_list) {
 		if(client) {
 			client_list = [client_list prepend_data:client];	
+		
 			/* add the client to the current workspace. */
 			[[zones[curr_zone] get_current_workspace] add_client:client];
 			[client set_vwork:[[zones[curr_zone] get_current_workspace] get_num]];
@@ -257,6 +255,8 @@ void zimwm_remove_client(ZimClient *c)
 			list = list->next;
 		}
 	}
+
+	update_client_list(client_list);
 
 	/* remove from client_list_stacking */
 /*	[temp init:500];

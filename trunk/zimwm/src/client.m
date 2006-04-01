@@ -54,9 +54,6 @@ static inline int absmin(int a, int b);
 	self->maximised = False;
 	self->sticky = False;
 
-	[self set_vdesk:1];
-	[self set_vwork:1];
-	
 	w->window = window;
 	
 	self->window = w;
@@ -64,7 +61,6 @@ static inline int absmin(int a, int b);
 	[self get_properties];
 	[self set_allowed_actions];
 	
-//	XQueryPointer(zdpy,(Window)root_window->window,&w1,&w2,&x,&y,&x1,&y1,&mask);
 	XQueryPointer(zdpy,(Window)[zones[curr_zone] get_root]->window,&w1,&w2,&x,&y,&x1,&y1,&mask);
 	self->window->x = x - self->window->width / 2;
 	self->window->y = y - self->window->height / 2;
@@ -476,15 +472,10 @@ static inline int absmin(int a, int b);
 - (void)raise
 {
 	ZWindow *w;
-	IMPSimpleStack *temp = [IMPSimpleStack alloc];
-	IMPSimpleStack *list = client_list_stacking;
 	IMPList *tmp;
-	ZimClient *c;
 	
 	[self->window->parent raise];
 
-	[temp init:500];
-	
 	/* Update the client_list_stacking variable. */
 /*	if(client_list_stacking) {
 		while([client_list_stacking get_size] > 0) {
@@ -508,6 +499,9 @@ static inline int absmin(int a, int b);
 		}
 	}
 */	
+	
+	[[[zones[curr_zone] get_nth_desk:self->vdesk] get_nth_workspace:self->vwork] raise_client:self];
+	
 	/* Raise the children of the window. */
 	tmp = self->window->parent->children;
 	while(tmp) {

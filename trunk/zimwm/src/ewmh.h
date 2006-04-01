@@ -70,7 +70,8 @@ void update_active_window(ZimClient *c);
 void update_client_list(IMPList *list);
 
 /** Updates the _NET_CLIENT_LIST_STACKING property of the root window to the current stacking list. */
-void update_client_list_stacking(IMPSimpleStack *list);
+/** FIXME We should NOT have to return the "new" stack, this is ridiculous. */
+IMPSimpleStack *update_client_list_stacking(IMPSimpleStack *list);
 
 /** @} */
 

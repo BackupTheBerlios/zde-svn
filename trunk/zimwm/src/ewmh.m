@@ -31,8 +31,6 @@ void setup_ewmh_root_properties(void)
 
 	workarea[0] = 0;
 	workarea[1] = 0;
-//	workarea[2] = DisplayWidth(zdpy,zscreen);
-//	workarea[3] = DisplayHeight(zdpy,zscreen);
 	workarea[2] = [[zones[curr_zone] get_current_workspace] get_width];
 	workarea[3] = [[zones[curr_zone] get_current_workspace] get_height];
 	
@@ -48,20 +46,16 @@ void setup_ewmh_root_properties(void)
 	net_supported[8] = (Atom *)z_atom[_NET_WM_STRUT];
 	net_supported[9] = (Atom *)z_atom[_NET_WM_STRUT_PARTIAL];
 	
-//	XChangeProperty(zdpy,(Window)root_window->window,z_atom[_NET_SUPPORTED],XA_ATOM,32,PropModeReplace,(unsigned char *)net_supported,10);
 	XChangeProperty(zdpy,(Window)[zones[curr_zone] get_root]->window,z_atom[_NET_SUPPORTED],
 			XA_ATOM,32,PropModeReplace,(unsigned char *)net_supported,10);
 
 	/* Setup window for EWMH compatiablity. */
-//	ewmhwin = XCreateSimpleWindow(zdpy,(Window)root_window->window,-100,-100,1,1,0,0,0);
 	ewmhwin = XCreateSimpleWindow(zdpy,(Window)[zones[curr_zone] get_root]->window,-100,-100,1,1,0,0,0);
 	XChangeProperty(zdpy,ewmhwin,z_atom[_NET_WM_NAME],z_atom[UTF8_STRING],32,PropModeReplace,(unsigned char *)"zimwm",1);
 	XChangeProperty(zdpy,ewmhwin,z_atom[_NET_SUPPORTING_WM_CHECK],XA_WINDOW,32,PropModeReplace,(unsigned char *)&ewmhwin,1);
 
-//	XChangeProperty(zdpy,(Window)root_window->window,z_atom[_NET_SUPPORTING_WM_CHECK],XA_WINDOW,32,PropModeReplace,(unsigned char *)&ewmhwin,1);
 	XChangeProperty(zdpy,(Window)[zones[curr_zone] get_root]->window,z_atom[_NET_SUPPORTING_WM_CHECK],
 			XA_WINDOW,32,PropModeReplace,(unsigned char *)&ewmhwin,1);
-//	XChangeProperty(zdpy,(Window)root_window->window,z_atom[_NET_WORKAREA],XA_CARDINAL,32,PropModeReplace,(unsigned char *)workarea,4);
 	XChangeProperty(zdpy,(Window)[zones[curr_zone] get_root]->window,z_atom[_NET_WORKAREA],
 			XA_CARDINAL,32,PropModeReplace,(unsigned char *)workarea,4);
 
@@ -162,8 +156,6 @@ char *get_net_wm_name(Window *w)
 
 void update_active_window(ZimClient *c)
 {
-//	XChangeProperty(zdpy,(Window)root_window->window,z_atom[_NET_ACTIVE_WINDOW],
-//			XA_WINDOW,32,PropModeReplace,(unsigned char *)&c->window->window,1);
 	XChangeProperty(zdpy,(Window)[zones[curr_zone] get_root]->window,z_atom[_NET_ACTIVE_WINDOW],
 			XA_WINDOW,32,PropModeReplace,(unsigned char *)&c->window->window,1);
 }
@@ -181,15 +173,14 @@ void update_client_list(IMPList *list)
 		list = list->next;
 	}
 
-//	XChangeProperty(zdpy,(Window)root_window->window,z_atom[_NET_CLIENT_LIST],XA_WINDOW,32,PropModeReplace,(unsigned char *)windows,i);
 	XChangeProperty(zdpy,(Window)[zones[curr_zone] get_root]->window,z_atom[_NET_CLIENT_LIST],
 			XA_WINDOW,32,PropModeReplace,(unsigned char *)windows,i);
 
 }
 
-void update_client_list_stacking(IMPSimpleStack *list)
+IMPSimpleStack *update_client_list_stacking(IMPSimpleStack *list)
 {
-	IMPSimpleStack *stack = list;	
+	IMPSimpleStack *stack = list;
 	Window **windows = i_calloc([stack get_size],sizeof(Window));
 	ZimClient *c = NULL;
 	IMPSimpleStack *temp = [IMPSimpleStack alloc];
@@ -204,12 +195,13 @@ void update_client_list_stacking(IMPSimpleStack *list)
 		[temp push:c];
 	}
 	
-//	XChangeProperty(zdpy,(Window)root_window->window,z_atom[_NET_CLIENT_LIST_STACKING],XA_WINDOW,32,PropModeReplace,(unsigned char *)windows,i);
 	XChangeProperty(zdpy,(Window)[zones[curr_zone] get_root]->window,z_atom[_NET_CLIENT_LIST_STACKING],
 			XA_WINDOW,32,PropModeReplace,(unsigned char *)windows,i);
 
 	[temp invert];
-	[client_list_stacking release];
-	client_list_stacking = temp;	
+	[list release];
+	list = temp;
+
+	return temp;
 }
 
