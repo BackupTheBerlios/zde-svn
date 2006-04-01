@@ -42,7 +42,7 @@
 		i_free(self->data);
 	else if(self->type == 1 && self->data) {
 		data = (IMPObject *)self->data;	
-		[data free];
+		[data release];
 	}
 
 	if(self->next)	

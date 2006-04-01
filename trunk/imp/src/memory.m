@@ -89,3 +89,11 @@ void i_free(void *ptr)
 	if(ptr != NULL)
 		free(ptr);
 }
+
+void *i_memdup(unsigned int num, unsigned int size, void *data)
+{
+	void *tmp = i_calloc(num, size);
+
+	return memcpy(tmp, data, num);
+}
+

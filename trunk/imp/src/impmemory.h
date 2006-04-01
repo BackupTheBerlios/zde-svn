@@ -43,6 +43,9 @@ char *i_strdup(const char *str);
 /** Wrapper around the C Standard Library's free */
 void i_free(void *ptr);
 
+/** Convience function to duplicate memory. */
+void *i_memdup(unsigned int num, unsigned int size, void *data);
+
 /** @} */
 
 #endif
