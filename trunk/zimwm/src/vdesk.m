@@ -149,7 +149,7 @@
 
 	[temp init:500];
 	
-	if(self->clients_stacking) {
+	if(self->clients_stacking && client) {
 		while([self->clients_stacking get_size] > 0) {	
 			c = (ZimClient *)[self->clients_stacking pop];
 			
@@ -273,8 +273,10 @@
 	while(list) {
 		tmp = list->data;
 
-		if(!tmp)
-			return;
+		if(!tmp) {
+			list = list->next;
+			continue;
+		}
 		
 		if([tmp get_num] == n) {
 			return tmp;
@@ -350,6 +352,8 @@
 		
 		list = list->next;
 	}
+
+	[[self get_current_workspace] raise_client:NULL];
 }
 
 - (const VWorkspace *)move_prev
@@ -419,6 +423,7 @@
 		list = list->next;
 	}
 
+	[[self get_current_workspace] raise_client:NULL];
 }
 
 - (void)calculate_dimensions

@@ -397,6 +397,9 @@ static inline int absmin(int a, int b);
 - (void)move:(int)x:(int)y
 {
 	ZWindow *w = self->window->parent;
+
+	if(!self->window || !w)
+		return;
 	
 	[w move:x:y];	
 	[self send_configure_message:w->x:w->y:self->window->width:self->window->height];
