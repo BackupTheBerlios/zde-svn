@@ -135,6 +135,9 @@
 	while(list) {
 		tmp = list->data;
 
+		if(!tmp)
+			return;
+
 		if([tmp get_num] == num) {
 			return tmp;
 		}

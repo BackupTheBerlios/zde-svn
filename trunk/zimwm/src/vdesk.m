@@ -273,6 +273,9 @@
 	while(list) {
 		tmp = list->data;
 
+		if(!tmp)
+			return;
+		
 		if([tmp get_num] == n) {
 			return tmp;
 		}
@@ -285,11 +288,110 @@
 
 - (const VWorkspace *)move_next
 {
+	IMPList *list = self->workspaces;
+	VWorkspace *tmp = NULL;
+	ZimClient *c = NULL;
 
+	/* Move all windows on the current workspace over. */
+	list = [tmp get_clients];
+
+	while(list) {
+		c = list->data;
+
+		if(!c)
+			return;
+
+		[c move:c->window->x - [self get_width]:c->window->y];
+		
+		list = list->next;
+	}
+	
+	/* Get the next workspace. */
+	while(list) {
+		tmp = list->data;
+
+		if(!tmp)
+			return;
+		
+		if([tmp get_num] == [self get_num] + 1)
+			break;
+		
+		list = list->next;
+	}
+
+	if(!tmp)
+		return;
+	
+	list = [tmp get_clients];
+
+	/* Move all windows on the next workspace over. */
+	while(list) {
+		c = list->data;
+
+		if(!c)
+			return;
+
+		[c move:c->window->x - [tmp get_width]:c->window->y];
+		
+		list = list->next;
+	}
+
+	/* Set the current workspace. */
+	self->curr_workspace = tmp;	
 }
 
 - (const VWorkspace *)move_prev
 {
+	IMPList *list = self->workspaces;
+	VWorkspace *tmp = NULL;
+	ZimClient *c = NULL;
+
+	/* Move all windows on the current workspace over. */
+	list = [tmp get_clients];
+
+	while(list) {
+		c = list->data;
+
+		if(!c)
+			return;
+
+		[c move:c->window->x + [self get_width]:c->window->y];
+		
+		list = list->next;
+	}
+	
+	/* Get the next workspace. */
+	while(list) {
+		tmp = list->data;
+
+		if(!tmp)
+			return;
+		
+		if([tmp get_num] == [self get_num] - 1)
+			break;
+		
+		list = list->next;
+	}
+
+	if(!tmp)
+		return;
+	
+	list = [tmp get_clients];
+
+	/* Move all windows on the next workspace over. */
+	while(list) {
+		c = list->data;
+
+		if(!c)
+			return;
+
+		[c move:c->window->x + [tmp get_width]:c->window->y];
+		
+		list = list->next;
+	}
+
+	/* Set the current workspace. */
+	self->curr_workspace = tmp;	
 
 }
 
