@@ -29,7 +29,6 @@ int snap_px = 5;
 int curr_zone = 0;
 
 IMPList *client_list = NULL;
-//IMPSimpleStack *client_list_stacking = NULL;
 ZWidget *root_window = NULL;
 Zone **zones = NULL;
 
@@ -147,17 +146,7 @@ void zimwm_add_client(ZimClient *client)
 		[client set_vdesk:[[zones[curr_zone] get_current_desk] get_num]];
 	}
 	
-	/* stacking client list */
-/*	if(client_list_stacking) {
-		[client_list_stacking push:client];
-		update_client_list_stacking(client_list_stacking);
-	}
-	else {
-		client_list_stacking = [IMPSimpleStack alloc]; 
-		[client_list_stacking init:500];
-		client_list_stacking = [client_list_stacking push:(void *)client];
-	}
-*/}
+}
 
 ZimClient *zimwm_find_client_by_zwindow(ZWindow *w)
 {
