@@ -155,11 +155,11 @@ static inline int absmin(int a, int b);
 	}
 
 	if(!self->size_hints) {
-		self->size_hints = i_calloc(1,sizeof(XSizeHints));
+		self->size_hints = XAllocSizeHints();
 	}
 	else {
 		i_free(self->size_hints);
-		self->size_hints = i_calloc(1,sizeof(XSizeHints));
+		self->size_hints = XAllocSizeHints();
 	}
 
 	/* Window title, either in _NET_WM_NAME or WM_NAME */
@@ -210,25 +210,27 @@ static inline int absmin(int a, int b);
 	/* WM_NORMAL_HINTS */
 	XGetWMNormalHints(zdpy,(Window)self->window->window,self->size_hints,&sreturn);
 	
-	if(self->size_hints->flags & PMinSize) {
-		if(self->window->width < self->size_hints->min_width)
-			self->window->width = self->size_hints->min_width;
-		if(self->window->height < self->size_hints->min_height)
-			self->window->height = self->size_hints->min_height;
+	if(self->size_hints) {	
+		if(self->size_hints->flags & PMinSize) {
+			if(self->window->width < self->size_hints->min_width)
+				self->window->width = self->size_hints->min_width;
+			if(self->window->height < self->size_hints->min_height)
+				self->window->height = self->size_hints->min_height;
+		}
+
+		if(!(self->size_hints->flags & PMinSize)) {
+			self->size_hints->min_width = 5;
+			self->size_hints->min_height = 5;
+		}
+		
+		if(!(self->size_hints->flags & PMaxSize)) {
+			self->size_hints->max_width = 5000;
+			self->size_hints->max_height = 5000;
+		}
 	}
 
-	if(!(self->size_hints->flags & PMinSize)) {
-		self->size_hints->min_width = 5;
-		self->size_hints->min_height = 5;
-	}
-	
-	if(!(self->size_hints->flags & PMaxSize)) {
-		self->size_hints->max_width = 5000;
-		self->size_hints->max_height = 5000;
-	}
-	
 	/* _NET_WM_STRUT */
-	XGetWindowProperty(zdpy,(Window)self->window->window,z_atom[_NET_WM_STRUT],0,4,False,XA_CARDINAL,&act_type,
+/*	XGetWindowProperty(zdpy,(Window)self->window->window,z_atom[_NET_WM_STRUT],0,4,False,XA_CARDINAL,&act_type,
 			(int *)&format,(unsigned long *)&len,(unsigned long *)&i,(unsigned char **)&data);
 	
 	if(!self->strut_extents && len == 4) {
@@ -245,9 +247,9 @@ static inline int absmin(int a, int b);
 		self->strut_extents->top = data[2];
 		self->strut_extents->bottom = data[3];
 	}
-
+*/
 	/* _NET_WM_STRUT_PARTIAL */
-	XGetWindowProperty(zdpy,(Window)self->window->window,z_atom[_NET_WM_STRUT_PARTIAL],0,12,False,XA_CARDINAL,&act_type,
+/*	XGetWindowProperty(zdpy,(Window)self->window->window,z_atom[_NET_WM_STRUT_PARTIAL],0,12,False,XA_CARDINAL,&act_type,
 			(int *)&format,(unsigned long *)&len,(unsigned long *)&i,(unsigned char **)&data);
 	
 	if(!self->strut_extents && len == 12) {
@@ -284,7 +286,7 @@ static inline int absmin(int a, int b);
 
 		self->no_use_area = True;
 	}
-}
+*/}
 
 - (void)set_allowed_actions
 {

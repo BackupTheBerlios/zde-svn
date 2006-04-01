@@ -28,7 +28,7 @@ void on_button_down(IMPObject *widget, void *data)
 	ZWindow *w = (ZWindow *)widget;
 	XButtonEvent *ev = (XButtonEvent *)data;
 	
-	printf("KICKASS\n");
+	printf("OMG!!! PONIES!!!\n");
 }
 
 void on_map_request(IMPObject *widget, void *data)
@@ -53,7 +53,7 @@ void on_map_request(IMPObject *widget, void *data)
 
 void on_key_press(IMPObject *widget, void *data)
 {
-
+	printf("OMG!!! PONIES!!!\n");
 }
 
 void on_client_message(IMPObject *widget, void *data)

@@ -145,7 +145,7 @@ char *get_net_wm_name(Window *w)
 	if(xtp.value)
 		return xtp.value;
 	else {
-		XFetchName(zdpy,(Window)w,name);
+		XFetchName(zdpy,(Window)w,&name);
 
 		if(name)
 			return name;

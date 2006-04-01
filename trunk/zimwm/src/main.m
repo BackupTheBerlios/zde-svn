@@ -81,7 +81,9 @@ static void setup_root_window(void)
      			  KeyReleaseMask;
 
 	rootc = XCreateFontCursor(zdpy,XC_left_ptr);
-		
+	
+	XGrabKey(zdpy,50,Mod1Mask,(Window)root_window->window,False,GrabModeAsync,GrabModeAsync);
+	
 	attr.cursor = rootc;
 	XChangeWindowAttributes(zdpy,(Window)root_window->window,CWEventMask | CWCursor,&attr);
 
