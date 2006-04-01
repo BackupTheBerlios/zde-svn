@@ -27,7 +27,6 @@ void setup_ewmh_root_properties(void)
 {
 	Atom *net_supported[20];
 	int *workarea = i_calloc(4,sizeof(int));
-	int num_desktops = [zones[curr_zone] get_num_desktops];
 	Window ewmhwin;
 
 	workarea[0] = 0;
@@ -60,9 +59,9 @@ void setup_ewmh_root_properties(void)
 			XA_WINDOW,32,PropModeReplace,(unsigned char *)&ewmhwin,1);
 	XChangeProperty(zdpy,(Window)[zones[curr_zone] get_root]->window,z_atom[_NET_WORKAREA],
 			XA_CARDINAL,32,PropModeReplace,(unsigned char *)workarea,4);
-	XChangeProperty(zdpy,(Window)[zones[curr_zone] get_root]->window,z_atom[_NET_NUMBER_OF_DESKTOPS],
-			XA_CARDINAL,32,PropModeReplace,(unsigned char *)&num_desktops,1);
 
+	update_number_of_desktops();
+	
 	i_free(workarea);
 }
 
@@ -207,5 +206,13 @@ IMPSimpleStack *update_client_list_stacking(IMPSimpleStack *list)
 	list = temp;
 
 	return temp;
+}
+
+void update_number_of_desktops(void)
+{
+	int num_desktops = [[zones[curr_zone] get_current_desk] get_num_workspaces] - 1;
+
+	XChangeProperty(zdpy,(Window)[zones[curr_zone] get_root]->window,z_atom[_NET_NUMBER_OF_DESKTOPS],
+			XA_CARDINAL,32,PropModeReplace,(unsigned char *)&num_desktops,1);
 }
 

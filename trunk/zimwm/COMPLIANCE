@@ -27,6 +27,7 @@ Root Window Hints/Properties/Messages
 [*] _NET_CLIENT_LIST
 [*] _NET_CLIENT_LIST_STACKING
 [*] _NET_NUMBER_OF_DESKTOPS
+	-Virtual Workspaces are counted instead of desktops.
 [-] _NET_DESKTOP_GEOMETRY
 [-] _NET_DESKTOP_VIEWPORT
 [-] _NET_CURRENT_DESKTOP

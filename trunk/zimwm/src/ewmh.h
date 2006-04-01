@@ -69,6 +69,9 @@ void update_active_window(ZimClient *c);
 /** Updates the _NET_CLIENT_LIST property of the root window to the current client list, in order of mapping. */
 void update_client_list(IMPList *list);
 
+/** Updates the _NET_NUMBER_OF_DESKTOPS property of the root window to however many workspaces there are on the current zone and current desk. */
+void update_number_of_desktops(void);
+
 /** Updates the _NET_CLIENT_LIST_STACKING property of the root window to the current stacking list. */
 /** FIXME We should NOT have to return the "new" stack, this is ridiculous. */
 IMPSimpleStack *update_client_list_stacking(IMPSimpleStack *list);
