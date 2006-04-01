@@ -230,7 +230,7 @@ static inline int absmin(int a, int b);
 	}
 
 	/* _NET_WM_STRUT */
-/*	XGetWindowProperty(zdpy,(Window)self->window->window,z_atom[_NET_WM_STRUT],0,4,False,XA_CARDINAL,&act_type,
+	XGetWindowProperty(zdpy,(Window)self->window->window,z_atom[_NET_WM_STRUT],0,4,False,XA_CARDINAL,&act_type,
 			(int *)&format,(unsigned long *)&len,(unsigned long *)&i,(unsigned char **)&data);
 	
 	if(!self->strut_extents && len == 4) {
@@ -247,9 +247,9 @@ static inline int absmin(int a, int b);
 		self->strut_extents->top = data[2];
 		self->strut_extents->bottom = data[3];
 	}
-*/
+
 	/* _NET_WM_STRUT_PARTIAL */
-/*	XGetWindowProperty(zdpy,(Window)self->window->window,z_atom[_NET_WM_STRUT_PARTIAL],0,12,False,XA_CARDINAL,&act_type,
+	XGetWindowProperty(zdpy,(Window)self->window->window,z_atom[_NET_WM_STRUT_PARTIAL],0,12,False,XA_CARDINAL,&act_type,
 			(int *)&format,(unsigned long *)&len,(unsigned long *)&i,(unsigned char **)&data);
 	
 	if(!self->strut_extents && len == 12) {
@@ -286,7 +286,7 @@ static inline int absmin(int a, int b);
 
 		self->no_use_area = True;
 	}
-*/}
+}
 
 - (void)set_allowed_actions
 {
