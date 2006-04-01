@@ -288,25 +288,30 @@
 
 - (const VWorkspace *)move_next
 {
-	IMPList *list = self->workspaces;
-	VWorkspace *tmp = NULL;
+	IMPList *list = NULL;
+	VWorkspace *tmp = [self get_current_workspace];
 	ZimClient *c = NULL;
-
+	int swidth = 0;
+	
 	/* Move all windows on the current workspace over. */
 	list = [tmp get_clients];
 
+	swidth = [[self get_current_workspace] get_width];	
 	while(list) {
 		c = list->data;
 
-		if(!c)
-			return;
+		if(!c) {
+			list = list->next;
+			continue;
+		}
 
-		[c move:c->window->x - [self get_width]:c->window->y];
-		
+		[c move:c->window->x - swidth:c->window->y];
+		printf("MOVING\n");	
 		list = list->next;
 	}
 	
 	/* Get the next workspace. */
+	list = self->workspaces;
 	while(list) {
 		tmp = list->data;
 
@@ -325,13 +330,16 @@
 	list = [tmp get_clients];
 
 	/* Move all windows on the next workspace over. */
+	swidth = [[self get_current_workspace] get_width];
 	while(list) {
 		c = list->data;
 
-		if(!c)
-			return;
+		if(!c) {
+			list = list->next;
+			continue;
+		}
 
-		[c move:c->window->x - [tmp get_width]:c->window->y];
+		[c move:c->window->x - swidth:c->window->y];
 		
 		list = list->next;
 	}
@@ -342,25 +350,31 @@
 
 - (const VWorkspace *)move_prev
 {
-	IMPList *list = self->workspaces;
-	VWorkspace *tmp = NULL;
+	IMPList *list = NULL;
+	VWorkspace *tmp = [self get_current_workspace];
 	ZimClient *c = NULL;
+	int swidth = 0;
 
 	/* Move all windows on the current workspace over. */
 	list = [tmp get_clients];
 
+	swidth = [[self get_current_workspace] get_width];
+	
 	while(list) {
 		c = list->data;
 
-		if(!c)
-			return;
+		if(!c) {
+			list = list->next;
+			continue;
+		}
 
-		[c move:c->window->x + [self get_width]:c->window->y];
+		[c move:c->window->x + swidth:c->window->y];
 		
 		list = list->next;
 	}
 	
 	/* Get the next workspace. */
+	list = self->workspaces;
 	while(list) {
 		tmp = list->data;
 
@@ -378,14 +392,18 @@
 	
 	list = [tmp get_clients];
 
+	swidth = [[self get_current_workspace] get_width];
+	
 	/* Move all windows on the next workspace over. */
 	while(list) {
 		c = list->data;
 
-		if(!c)
-			return;
+		if(!c) {
+			list = list->next;
+			continue;
+		}
 
-		[c move:c->window->x + [tmp get_width]:c->window->y];
+		[c move:c->window->x + swidth:c->window->y];
 		
 		list = list->next;
 	}
