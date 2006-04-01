@@ -449,6 +449,11 @@
 	return self->vdesk;
 }
 
+- (unsigned int)get_num_workspaces
+{
+	return [self->workspaces get_size];
+}
+
 - (int)get_width
 {
 	return self->width;

@@ -25,8 +25,9 @@
 
 void setup_ewmh_root_properties(void)
 {
-	Atom *net_supported[10];
+	Atom *net_supported[20];
 	int *workarea = i_calloc(4,sizeof(int));
+	int num_desktops = [zones[curr_zone] get_num_desktops];
 	Window ewmhwin;
 
 	workarea[0] = 0;
@@ -45,9 +46,10 @@ void setup_ewmh_root_properties(void)
 	net_supported[7] = (Atom *)z_atom[_NET_WM_ALLOWED_ACTIONS];
 	net_supported[8] = (Atom *)z_atom[_NET_WM_STRUT];
 	net_supported[9] = (Atom *)z_atom[_NET_WM_STRUT_PARTIAL];
+	net_supported[10] = (Atom *)z_atom[_NET_NUMBER_OF_DESKTOPS];
 	
 	XChangeProperty(zdpy,(Window)[zones[curr_zone] get_root]->window,z_atom[_NET_SUPPORTED],
-			XA_ATOM,32,PropModeReplace,(unsigned char *)net_supported,10);
+			XA_ATOM,32,PropModeReplace,(unsigned char *)net_supported,11);
 
 	/* Setup window for EWMH compatiablity. */
 	ewmhwin = XCreateSimpleWindow(zdpy,(Window)[zones[curr_zone] get_root]->window,-100,-100,1,1,0,0,0);
@@ -58,6 +60,8 @@ void setup_ewmh_root_properties(void)
 			XA_WINDOW,32,PropModeReplace,(unsigned char *)&ewmhwin,1);
 	XChangeProperty(zdpy,(Window)[zones[curr_zone] get_root]->window,z_atom[_NET_WORKAREA],
 			XA_CARDINAL,32,PropModeReplace,(unsigned char *)workarea,4);
+	XChangeProperty(zdpy,(Window)[zones[curr_zone] get_root]->window,z_atom[_NET_NUMBER_OF_DESKTOPS],
+			XA_CARDINAL,32,PropModeReplace,(unsigned char *)&num_desktops,1);
 
 	i_free(workarea);
 }

@@ -156,6 +156,11 @@
 	return [self->curr_desk get_current_workspace];
 }
 
+- (unsigned int)get_num_desktops
+{
+	return [self->vdesks get_size] - 1;
+}
+
 - (const VDesk *)move_next
 {
 

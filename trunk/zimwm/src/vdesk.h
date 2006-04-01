@@ -143,6 +143,9 @@
 /** Get the numerical number representing this desktop. */
 - (unsigned int)get_num;
 
+/** Get how many workspaces there are. */
+- (unsigned int)get_num_workspaces;
+
 /** Get the desktop's width. */
 - (int)get_width;
 

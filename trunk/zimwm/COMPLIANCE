@@ -25,7 +25,8 @@ Root Window Hints/Properties/Messages
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 [*] _NET_SUPPORTED
 [*] _NET_CLIENT_LIST
-[-] _NET_NUMBER_OF_DESKTOPS
+[*] _NET_CLIENT_LIST_STACKING
+[*] _NET_NUMBER_OF_DESKTOPS
 [-] _NET_DESKTOP_GEOMETRY
 [-] _NET_DESKTOP_VIEWPORT
 [-] _NET_CURRENT_DESKTOP
