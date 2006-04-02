@@ -31,17 +31,36 @@ int open_ipc_fifo(char *path)
 	
 	mknod(path,S_IFIFO | 0666, 0);
 
-	fd = open(path,O_RDWR | O_NDELAY);
+	fd = open(path,O_RDWR);
 	
 	fcntl(fd, F_SETOWN, getpid());
 	
-	fcntl(fd,F_SETFL,O_ASYNC);
+	fcntl(fd,F_SETFL,O_ASYNC | O_NONBLOCK);
 	
 	return fd;
 }
 
 void ipc_handle(int sig)
 {
-	printf("OMG!!! PONIES!!!!\n");
+	char *buff = i_calloc(100,sizeof(char));
+	char *tmp = NULL;
+	char *tok = NULL;
+	int offset = 0;
+	
+	read(fd,buff,100);
+
+	tmp = buff;
+	while(1) {
+		tok = strtok(tmp," ");
+
+		if(!tok)
+			break;
+		
+		printf("%s\n",tok);
+
+		tmp = NULL;
+	}
+	
+	i_free(buff);
 }
 
