@@ -219,6 +219,8 @@
 		[self add_workspace:first];
 		self->curr_workspace = first;
 	}
+
+	update_current_desktop([[self get_current_workspace] get_num] - 1);
 }
 
 - free
@@ -354,6 +356,9 @@
 	}
 
 	[[self get_current_workspace] raise_client:NULL];
+	update_current_desktop([[self get_current_workspace] get_num] - 1);
+
+	return [self get_current_workspace];
 }
 
 - (const VWorkspace *)move_prev
@@ -424,6 +429,24 @@
 	}
 
 	[[self get_current_workspace] raise_client:NULL];
+	update_current_desktop([[self get_current_workspace] get_num] - 1);
+
+	return [self get_current_workspace];
+}
+
+- (const VWorkspace *)move_nth:(unsigned int)index
+{
+	int i = 0;
+
+	if(([[self get_current_workspace] get_num] - 1) < index) {
+		for(i=0;i<abs(([[self get_current_workspace] get_num] - 1) - index);i++)
+			[self move_prev];
+	}
+	else if(([[self get_current_workspace] get_num] - 1) > index) {
+		for(i=0;i<abs(([[self get_current_workspace] get_num] - 1) - index);i++)
+			[self move_next];
+	}
+	
 }
 
 - (void)calculate_dimensions

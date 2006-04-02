@@ -137,6 +137,12 @@
  */
 - (const VWorkspace *)move_prev;
 
+/**
+  Switches to the nth workspace in the desktop.
+  Returns the new current workspace.
+  */
+- (const VWorkspace *)move_nth:(unsigned int)index;
+
 /** Calculates the desktop's width and height. */
 - (void)calculate_dimensions;
 

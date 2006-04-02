@@ -46,9 +46,10 @@ void setup_ewmh_root_properties(void)
 	net_supported[8] = (Atom *)z_atom[_NET_WM_STRUT];
 	net_supported[9] = (Atom *)z_atom[_NET_WM_STRUT_PARTIAL];
 	net_supported[10] = (Atom *)z_atom[_NET_NUMBER_OF_DESKTOPS];
+	net_supported[11] = (Atom *)z_atom[_NET_CURRENT_DESKTOP];
 	
 	XChangeProperty(zdpy,(Window)[zones[curr_zone] get_root]->window,z_atom[_NET_SUPPORTED],
-			XA_ATOM,32,PropModeReplace,(unsigned char *)net_supported,11);
+			XA_ATOM,32,PropModeReplace,(unsigned char *)net_supported,12);
 
 	/* Setup window for EWMH compatiablity. */
 	ewmhwin = XCreateSimpleWindow(zdpy,(Window)[zones[curr_zone] get_root]->window,-100,-100,1,1,0,0,0);
@@ -135,6 +136,9 @@ void handle_ewmh_client_message(XClientMessageEvent *ev)
 
 		focus_client(c);
 	}
+	else if(ev->message_type == z_atom[_NET_CURRENT_DESKTOP]) {
+		
+	}
 	
 }
 
@@ -214,5 +218,11 @@ void update_number_of_desktops(void)
 
 	XChangeProperty(zdpy,(Window)[zones[curr_zone] get_root]->window,z_atom[_NET_NUMBER_OF_DESKTOPS],
 			XA_CARDINAL,32,PropModeReplace,(unsigned char *)&num_desktops,1);
+}
+
+void update_current_desktop(unsigned int index)
+{
+	XChangeProperty(zdpy,(Window)[zones[curr_zone] get_root]->window,z_atom[_NET_CURRENT_DESKTOP],
+			XA_CARDINAL,32,PropModeReplace,(unsigned char *)&index,1);
 }
 

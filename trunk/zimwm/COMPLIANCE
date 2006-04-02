@@ -30,7 +30,7 @@ Root Window Hints/Properties/Messages
 	-Virtual Workspaces are counted instead of desktops.
 [-] _NET_DESKTOP_GEOMETRY
 [-] _NET_DESKTOP_VIEWPORT
-[-] _NET_CURRENT_DESKTOP
+[*] _NET_CURRENT_DESKTOP
 [-] _NET_DESKTOP_NAMES
 [*] _NET_ACTIVE_WINDOW
 [*] _NET_WORKAREA
