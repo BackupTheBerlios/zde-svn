@@ -24,8 +24,11 @@
 #ifndef IPC_H
 #define IPC_H
 
-/** Opens a FIFO and sets up the ipc handler. */
-FILE *open_ipc_fifo(char *path);
+/** File descriptor of the FIFO. */
+static int fd;
+
+/** Creates and opens a FIFO and sets up the ipc handler. */
+int open_ipc_fifo(char *path);
 
 /** Called on SIGINT, when there is new data on the FIFO. */
 void ipc_handle(int sig);

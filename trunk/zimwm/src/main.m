@@ -49,6 +49,9 @@ int main(int argc, char **argv)
 	setup_zone(root_window);
 	
 	setup_ewmh_root_properties();
+
+	/* FIXME */
+	open_ipc_fifo("/tmp/zimwm-ipc");
 	
 	zwl_main_loop_start();
 	

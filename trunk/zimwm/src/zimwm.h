@@ -26,6 +26,11 @@
 
 #include <zwl.h>
 
+#include <signal.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+
 #include "../zimwm-config.h"
 #include "ewmh.h"
 #include "client-events.h"

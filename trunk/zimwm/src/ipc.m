@@ -22,3 +22,26 @@
  */
 
 #include "zimwm.h"
+
+static int fd;
+
+int open_ipc_fifo(char *path)
+{	
+	signal(SIGIO,ipc_handle);
+	
+	mknod(path,S_IFIFO | 0666, 0);
+
+	fd = open(path,O_RDWR | O_NDELAY);
+	
+	fcntl(fd, F_SETOWN, getpid());
+	
+	fcntl(fd,F_SETFL,O_ASYNC);
+	
+	return fd;
+}
+
+void ipc_handle(int sig)
+{
+	printf("OMG!!! PONIES!!!!\n");
+}
+
