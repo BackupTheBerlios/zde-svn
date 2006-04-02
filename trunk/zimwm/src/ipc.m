@@ -45,20 +45,32 @@ void ipc_handle(int sig)
 	char *buff = i_calloc(100,sizeof(char));
 	char *tmp = NULL;
 	char *tok = NULL;
-	int offset = 0;
+	char *args[5] = {NULL};
+	int i,j;
 	
 	read(fd,buff,100);
 
 	tmp = buff;
-	while(1) {
+	for(i=0;i<5;i++) {
 		tok = strtok(tmp," ");
 
 		if(!tok)
 			break;
 		
-		printf("%s\n",tok);
+		args[i] = tok;
 
 		tmp = NULL;
+	}
+
+	if(!args[0])
+		return;
+	
+	j = i;
+	
+	for(i=0;i<j;i++) {
+		if(!strncmp(args[0],"help",4)) {
+			write(fd,help_message,strlen(help_message));	
+		}
 	}
 	
 	i_free(buff);
