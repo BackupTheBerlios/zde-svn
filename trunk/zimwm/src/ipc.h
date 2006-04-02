@@ -21,36 +21,14 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef ZIMWM_H
-#define ZIMWM_H
+#ifndef IPC_H
+#define IPC_H
 
-#include <zwl.h>
+/** Opens a FIFO and sets up the ipc handler. */
+FILE *open_ipc_fifo(char *path);
 
-#include "../zimwm-config.h"
-#include "ewmh.h"
-#include "client-events.h"
-#include "client.h"
-#include "events.h"
-#include "focus.h"
-#include "vdesk.h"
-#include "zone.h"
-#include "ipc.h"
+/** Called on SIGINT, when there is new data on the FIFO. */
+void ipc_handle(int sig);
 
-/* FIXME Should be from config file. */
-extern int snap_px;
-
-/* Index into the array of zones for the one currently used. */
-extern int curr_zone;
-
-extern ZWidget *root_window;
-extern IMPList *client_list; /**< List of ALL clients managed by zimwm, regardless of what workspace or desktop they belong to. */
-extern Zone **zones; /**< Array of all zones used by zimwm. */
-
-void zimwm_add_client(ZimClient *client);
-ZimClient *zimwm_find_client_by_zwindow(ZWindow *w);
-ZimClient *zimwm_find_client_by_window(Window *w);
-ZimClient *zimwm_find_client_by_window_frame(Window *w);
-void zimwm_remove_client(ZimClient *c);
-void zimwm_find_and_remove_client(ZWindow *w);
 
 #endif
