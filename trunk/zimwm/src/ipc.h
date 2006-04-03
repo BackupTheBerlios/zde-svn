@@ -24,14 +24,12 @@
 #ifndef IPC_H
 #define IPC_H
 
-/** Creates and opens a FIFO and sets up the ipc handler. */
-int open_ipc_fifo(char *path);
+#include <sys/msg.h>
+
+/** Creates and opens a message queue and sets up the ipc handler. */
+int open_ipc(char *path);
 
 /** Called on SIGINT, when there is new data on the FIFO. */
 void ipc_handle(int sig);
-
-char *help_message = 
-	"zimwm IPC sub-system\n \
-	help\tversion\n";
 
 #endif

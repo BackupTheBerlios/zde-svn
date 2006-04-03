@@ -23,56 +23,28 @@
 
 #include "zimwm.h"
 
+char *help_message = 
+	"zimwm IPC sub-system\n \
+	help\tversion\n";
+
+
 static int fd;
 
-int open_ipc_fifo(char *path)
-{	
-	signal(SIGIO,ipc_handle);
-	
-	mknod(path,S_IFIFO | 0666, 0);
+int open_ipc(char *path)
+{
+	key_t key;
+	int msg;
 
-	fd = open(path,O_RDWR);
+	fd = open(path,O_RDWR | O_CREAT);
 	
-	fcntl(fd, F_SETOWN, getpid());
-	
-	fcntl(fd,F_SETFL,O_ASYNC | O_NONBLOCK);
+	key = ftok(path,"z");
+	msg = msgget(key, 0666 | IPC_CREAT);
 	
 	return fd;
 }
 
 void ipc_handle(int sig)
 {
-	char *buff = i_calloc(100,sizeof(char));
-	char *tmp = NULL;
-	char *tok = NULL;
-	char *args[5] = {NULL};
-	int i,j;
-	
-	read(fd,buff,100);
-
-	tmp = buff;
-	for(i=0;i<5;i++) {
-		tok = strtok(tmp," ");
-
-		if(!tok)
-			break;
 		
-		args[i] = tok;
-
-		tmp = NULL;
-	}
-
-	if(!args[0])
-		return;
-	
-	j = i;
-	
-	for(i=0;i<j;i++) {
-		if(!strncmp(args[0],"help",4)) {
-			write(fd,help_message,strlen(help_message));	
-		}
-	}
-	
-	i_free(buff);
 }
 

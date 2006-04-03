@@ -23,6 +23,8 @@
 
 #include "zimwm.h"
 
+static unsigned int quit = 0;
+
 /* FIXME NEEDS TO BE A CONFIGURABLE VALUE */
 int snap_px = 5;
 
@@ -51,11 +53,30 @@ int main(int argc, char **argv)
 	setup_ewmh_root_properties();
 
 	/* FIXME */
-	open_ipc_fifo("/tmp/zimwm-ipc");
+	open_ipc("/tmp/zimwm-ipc");
 	
-	zwl_main_loop_start();
+	zimwm_main_loop_start();
 	
 	return 0;
+}
+
+void zimwm_main_loop_start()
+{
+	XEvent ev;
+
+	while(!quit) {
+		/* Process X events */
+		XNextEvent(zdpy, &ev);
+		zwl_receive_xevent(&ev);
+
+		/* Check for Sys V IPC messages */
+	}
+}
+
+void zimwm_main_loop_quit()
+{
+	quit = 1;
+	/* FIXME CLEANUP OUR MESS */
 }
 
 static void setup_root_window(void)
