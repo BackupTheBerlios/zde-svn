@@ -24,9 +24,10 @@
 #ifndef IPC_H
 #define IPC_H
 
-#include <sys/msg.h>
+#include <sys/socket.h>
+#include <sys/un.h>
 
-/** Creates and opens a message queue and sets up the ipc handler. */
+/** Creates and opens a local socket and sets up the ipc handler. */
 int open_ipc(char *path);
 
 /** Called on SIGINT, when there is new data on the FIFO. */

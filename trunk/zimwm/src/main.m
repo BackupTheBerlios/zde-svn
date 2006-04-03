@@ -69,7 +69,6 @@ void zimwm_main_loop_start()
 		XNextEvent(zdpy, &ev);
 		zwl_receive_xevent(&ev);
 
-		/* Check for Sys V IPC messages */
 	}
 }
 
