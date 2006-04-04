@@ -32,15 +32,7 @@ static int fd;
 
 int open_ipc(char *path)
 {
-	key_t key;
-	int msg;
 
-	fd = open(path,O_RDWR | O_CREAT);
-	
-	key = ftok(path,"z");
-	msg = msgget(key, 0666 | IPC_CREAT);
-	
-	return fd;
 }
 
 void ipc_handle(int sig)
