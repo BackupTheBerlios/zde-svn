@@ -63,12 +63,29 @@ int main(int argc, char **argv)
 void zimwm_main_loop_start()
 {
 	XEvent ev;
+	Bool have_ev;
+	int xcon_fd = 0;
 
 	while(!quit) {
-		/* Process X events */
-		XNextEvent(zdpy, &ev);
-		zwl_receive_xevent(&ev);
+		have_ev = False;
+		
+		/* Process X events already off of the file descriptor but in memory. */	
+		//if(XPending(zdpy)) {
+		// Commented b/c we are not blocking until the FIXME below is fixed.
+			have_ev = True;
+			XNextEvent(zdpy, &ev);
+			zwl_receive_xevent(&ev);
+		//}
 
+		/* We don't need to watch the fd's then. */
+		if(have_ev)
+			continue;
+
+		xcon_fd = ConnectionNumber(zdpy);
+
+		/* FIXME use select() to check for new things on the xconnection and on
+		   the IPC connections. FIXME */
+		
 	}
 }
 
