@@ -53,6 +53,13 @@ int open_ipc(char *path)
 
 void ipc_receive_from_fd(int fd)
 {
-		
+	int num;
+	char *buff = i_calloc(256,1);
+
+	num = recv(fd,buff,1,0);
+
+	printf("%s\n",buff);
+	
+	i_free(buff);
 }
 
