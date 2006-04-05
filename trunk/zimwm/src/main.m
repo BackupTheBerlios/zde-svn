@@ -30,6 +30,8 @@ int snap_px = 5;
 
 int curr_zone = 0;
 
+static int ipc_fd = 0;
+
 IMPList *client_list = NULL;
 ZWidget *root_window = NULL;
 Zone **zones = NULL;
@@ -52,8 +54,8 @@ int main(int argc, char **argv)
 	
 	setup_ewmh_root_properties();
 
-	/* FIXME */
-	open_ipc("/tmp/zimwm-ipc");
+	/* FIXME path should be configurable or at leas adaptable*/
+	ipc_fd = open_ipc("/tmp/zimwm-ipc");
 	
 	zimwm_main_loop_start();
 	
@@ -65,27 +67,51 @@ void zimwm_main_loop_start()
 	XEvent ev;
 	Bool have_ev;
 	int xcon_fd = 0;
+	int i;
+	fd_set fds;
+	fd_set tmp;
+	int fd_max = 0;
 
+	xcon_fd = ConnectionNumber(zdpy);
+	
+	FD_ZERO(&fds);	
+	FD_ZERO(&tmp);
+	FD_SET(ipc_fd,&fds);	
+	FD_SET(xcon_fd,&fds);
+	
+	if(xcon_fd > ipc_fd)
+		fd_max = xcon_fd;
+	else
+		fd_max = ipc_fd;
+	
 	while(!quit) {
 		have_ev = False;
 		
+		tmp = fds;
+		
 		/* Process X events already off of the file descriptor but in memory. */	
-		//if(XPending(zdpy)) {
-		// Commented b/c we are not blocking until the FIXME below is fixed.
+		if(XPending(zdpy)) {
 			have_ev = True;
 			XNextEvent(zdpy, &ev);
 			zwl_receive_xevent(&ev);
-		//}
+		}
 
 		/* We don't need to watch the fd's then. */
 		if(have_ev)
 			continue;
-
-		xcon_fd = ConnectionNumber(zdpy);
-
-		/* FIXME use select() to check for new things on the xconnection and on
-		   the IPC connections. FIXME */
+	
+		if(!select(fd_max+1,&tmp,NULL,NULL,NULL))
+			perror("select");
 		
+		for(i=0;i<fd_max;i++) {
+			if(FD_ISSET(i,&tmp)) {
+				if(i == xcon_fd) /* This is an X event, return to top. */
+					continue;
+				else if(i == ipc_fd) { /* IPC has an event. */
+					printf("COOL\n");
+				}
+			}
+		}
 	}
 }
 

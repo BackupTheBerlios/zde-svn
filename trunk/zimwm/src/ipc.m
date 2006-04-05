@@ -44,6 +44,11 @@ int open_ipc(char *path)
 	
 	if(!bind(fd,(struct sockaddr *)&addr,sizeof(struct sockaddr_un)))
 		perror("bind");
+
+	if(!listen(fd,10))
+		perror("listen");
+	
+	return fd;
 }
 
 void ipc_handle(int sig)
