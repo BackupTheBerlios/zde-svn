@@ -27,12 +27,23 @@ char *help_message =
 	"zimwm IPC sub-system\n \
 	help\tversion\n";
 
-
 static int fd;
 
 int open_ipc(char *path)
 {
+	struct sockaddr_un addr;
+	
+	fd = socket(PF_UNIX,SOCK_STREAM,0);
 
+	if(!fd)
+		perror("socket");
+	
+	memset(&addr,0,sizeof(struct sockaddr_un));
+	addr.sun_family = AF_UNIX;
+	strncpy(addr.sun_path,path,sizeof(addr.sun_path) - 1);	
+	
+	if(!bind(fd,(struct sockaddr *)&addr,sizeof(struct sockaddr_un)))
+		perror("bind");
 }
 
 void ipc_handle(int sig)
