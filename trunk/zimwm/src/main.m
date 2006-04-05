@@ -71,7 +71,10 @@ void zimwm_main_loop_start()
 	fd_set fds;
 	fd_set tmp;
 	int fd_max = 0;
-
+	int newfd;
+	int addrlen;
+	struct sockaddr remoteaddr;
+	
 	xcon_fd = ConnectionNumber(zdpy);
 	
 	FD_ZERO(&fds);	
@@ -107,8 +110,18 @@ void zimwm_main_loop_start()
 			if(FD_ISSET(i,&tmp)) {
 				if(i == xcon_fd) /* This is an X event, return to top. */
 					continue;
-				else if(i == ipc_fd) { /* IPC has an event. */
-					printf("COOL\n");
+				else if(i == ipc_fd) { /* IPC has a new connection. */
+					addrlen = sizeof(remoteaddr);
+					if(!(newfd = accept(ipc_fd,(struct sockaddr *)&remoteaddr,&addrlen))) {
+						FD_SET(newfd,&fds);
+						if(newfd > fd_max)
+							fd_max = newfd;
+
+						printf("got a new connection.\n");
+					}
+				}
+				else { /* IPC has an event from an open connection. */
+					ipc_receive_from_fd(i);	
 				}
 			}
 		}

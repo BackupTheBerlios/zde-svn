@@ -27,7 +27,7 @@
 /** Creates and opens a local socket and sets up the ipc handler. */
 int open_ipc(char *path);
 
-/** Called on SIGINT, when there is new data on the FIFO. */
-void ipc_handle(int sig);
+/** Uses recv() on the fd to get an IPC command. */
+void ipc_receive_from_fd(int fd);
 
 #endif

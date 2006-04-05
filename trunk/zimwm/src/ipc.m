@@ -51,7 +51,7 @@ int open_ipc(char *path)
 	return fd;
 }
 
-void ipc_handle(int sig)
+void ipc_receive_from_fd(int fd)
 {
 		
 }
