@@ -65,7 +65,7 @@ set shortmess=aoO
 badd +186 configure.in
 badd +15 README
 badd +1 Makefile.am
-badd +4 src/Makefile.am
+badd +9 src/Makefile.am
 badd +83 src/main.m
 badd +32 src/zimwm.h
 badd +32 src/events.h
@@ -85,6 +85,7 @@ badd +1 src/vdesk.m
 badd +31 src/vdesk.h
 badd +1 src/ipc.h
 badd +28 src/ipc.m
+badd +6 src/zimsh
 args configure.in README
 edit README
 set splitbelow splitright

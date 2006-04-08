@@ -1,6 +1,10 @@
 #!/usr/bin/perl -w
 use strict;
 
-use IO::Socket::UNIX;
+socket(CLIENT,PF_UNIX,SOCK_STREAM,0);
+connect(CLIENT,sockaddr_un("/tmp/zimwm-ipc"))
+		or die "$!";
 
+print CLIENT "Hey";
+		
 0;

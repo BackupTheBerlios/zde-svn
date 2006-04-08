@@ -33,32 +33,32 @@ int open_ipc(char *path)
 {
 	struct sockaddr_un addr;
 	
-	fd = socket(PF_UNIX,SOCK_STREAM,0);
+	fd = socket(AF_UNIX,SOCK_STREAM,0);
 
 	if(!fd)
 		perror("socket");
 	
-	memset(&addr,0,sizeof(struct sockaddr_un));
 	addr.sun_family = AF_UNIX;
 	strncpy(addr.sun_path,path,sizeof(addr.sun_path) - 1);	
+	unlink(addr.sun_path);
 	
-	if(!bind(fd,(struct sockaddr *)&addr,sizeof(struct sockaddr_un)))
+	if(bind(fd,(struct sockaddr *)&addr,strlen(addr.sun_path) + sizeof(addr.sun_family)) == -1)
 		perror("bind");
 
-	if(!listen(fd,10))
+	if(listen(fd,5) == -1)
 		perror("listen");
 	
 	return fd;
 }
 
-void ipc_receive_from_fd(int fd)
+void ipc_receive_from_fd(int f)
 {
 	int num;
 	char *buff = i_calloc(256,1);
 
-	num = recv(fd,buff,1,0);
+	num = recv(f,buff,256,0);
 
-	printf("%s\n",buff);
+	printf("%s",buff);
 	
 	i_free(buff);
 }
