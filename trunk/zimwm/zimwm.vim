@@ -83,6 +83,8 @@ badd +38 src/focus.m
 badd +31 COMPLIANCE
 badd +1 src/vdesk.m
 badd +31 src/vdesk.h
+badd +1 src/ipc.h
+badd +28 src/ipc.m
 args configure.in README
 edit README
 set splitbelow splitright
