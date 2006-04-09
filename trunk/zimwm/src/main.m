@@ -114,12 +114,16 @@ void zimwm_main_loop_start()
 						perror("accept");
 						continue;
 					}
+					else {
+						printf("got new ipc connection\n");
+						ipc_receive_from_fd(newfd);
+					}
 				}
 				else if(i == xcon_fd) /* This is an X event, return to top. */				
 					continue;	
 				else { /* IPC has an event from an open connection. */
-					ipc_receive_from_fd(i);	
-					FD_CLR(i,&fds);
+					//ipc_receive_from_fd(i);	
+					//FD_CLR(i,&fds);
 				}
 			}
 		}

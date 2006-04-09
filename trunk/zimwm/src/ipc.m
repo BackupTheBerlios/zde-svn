@@ -23,9 +23,7 @@
 
 #include "zimwm.h"
 
-char *help_message = 
-	"zimwm IPC sub-system\n \
-	help\tversion\n";
+#include "ipc_commands.h"
 
 static int fd;
 
@@ -56,23 +54,28 @@ int open_ipc(char *path)
 
 void ipc_receive_from_fd(int f)
 {
-	int num;
+	int i;
+	Bool sent = False;
 	char *buff = i_calloc(256,1);
 	char *cmd;
 
-	recv(f,buff,1000000,0);
-	printf("%s",buff);
+	recv(f,buff,256,0);
+		
 	cmd = z_strdel(buff," ");
-	//printf("%s-%s",buff,z_strdel(buff," "));
 
-	if(cmd != NULL) {
-		send(f,cmd,strlen(cmd),0);
-		puts("SENT!!!");
+	for(i=0;i<ZIM_IPC_NUM_CMDS;i++) {
+		if(!strncmp(cmd,ipc_cmds[i],strlen(ipc_cmds[i]))) {
+			send(f,ipc_msgs[i],strlen(ipc_msgs[i]),0);
+			sent = True;
+		}
 	}
-//	printf(" - %s",z_strdel(buff," "));
-
-	close(f);
+	
+	if(!sent)
+		send(f,"Command not recognized",22,0);
+	
 	i_free(buff);
+	i_free(cmd);
+	close(f);
 }
 
 static char *z_strdel(char *string, char del)

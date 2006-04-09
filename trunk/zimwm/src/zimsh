@@ -2,17 +2,30 @@
 use strict;
 use Socket;
 
-socket(Client,PF_UNIX,SOCK_STREAM,0);
-connect(Client,sockaddr_un("/tmp/zimwm-ipc"))
-		or die "$!";
+while(1) {
+	print "zimwm> ";
+	my $input = <>;
 
-select((select(Client), $| = 1)[0]);
+	chop $input;
+	
+	if($input eq "exit" or $input eq "quit") {
+		last;
+	}
 
-print Client "help me";
+	socket(Client,PF_UNIX,SOCK_STREAM,0);
+	connect(Client,sockaddr_un("/tmp/zimwm-ipc"))
+			or die "$!";
+	
+	select((select(Client), $| = 1)[0]);	
+	
+	print Client $input;
 
-recv(Client,my $response, 5, 0);
+	recv(Client,my $response, 500, 0);
 
-print "$response\n";
+	print "$response\n";
+	close(Client);
+}
 
 close(Client);
+
 0;

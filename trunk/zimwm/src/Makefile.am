@@ -3,7 +3,7 @@ zimwm_SOURCES=main.m events.m client.m client-events.m widgets.m ewmh.m focus.m 
 
 bin_SCRIPTS=zimsh
 
-EXTRA_DIST=zimwm.h events.h client.h client-events.h widgets.h ewmh.h focus.h vdesk.h zone.h ipc.h zimsh
+EXTRA_DIST=zimwm.h events.h client.h client-events.h widgets.h ewmh.h focus.h vdesk.h zone.h ipc.h ipc_commands.h zimsh
 
 INCLUDES = \
 -I$(top_builddir) \
