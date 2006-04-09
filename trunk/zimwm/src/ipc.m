@@ -29,6 +29,9 @@ char *help_message =
 
 static int fd;
 
+/* Returns the string up to the first occurance of del. */
+static char *z_strdel(char *string, char del);
+
 int open_ipc(char *path)
 {
 	struct sockaddr_un addr;
@@ -55,11 +58,37 @@ void ipc_receive_from_fd(int f)
 {
 	int num;
 	char *buff = i_calloc(256,1);
+	char *cmd;
 
-	num = recv(f,buff,256,0);
-
+	recv(f,buff,1000000,0);
 	printf("%s",buff);
-	
+	cmd = z_strdel(buff," ");
+	//printf("%s-%s",buff,z_strdel(buff," "));
+
+	if(cmd != NULL) {
+		send(f,cmd,strlen(cmd),0);
+		puts("SENT!!!");
+	}
+//	printf(" - %s",z_strdel(buff," "));
+
+	close(f);
 	i_free(buff);
+}
+
+static char *z_strdel(char *string, char del)
+{
+	int i;
+	char *buff = i_calloc(strlen(string),1);
+
+	for(i=0;i<strlen(string);i++) {
+		if(string[i] == del) {
+			buff[i] = '\0';
+			return buff;
+		}	
+		else
+			buff[i] = string[i];
+	}
+
+	return buff;
 }
 

@@ -1,10 +1,18 @@
 #!/usr/bin/perl -w
 use strict;
+use Socket;
 
-socket(CLIENT,PF_UNIX,SOCK_STREAM,0);
-connect(CLIENT,sockaddr_un("/tmp/zimwm-ipc"))
+socket(Client,PF_UNIX,SOCK_STREAM,0);
+connect(Client,sockaddr_un("/tmp/zimwm-ipc"))
 		or die "$!";
 
-print CLIENT "Hey";
-		
+select((select(Client), $| = 1)[0]);
+
+print Client "help me";
+
+recv(Client,my $response, 5, 0);
+
+print "$response\n";
+
+close(Client);
 0;
