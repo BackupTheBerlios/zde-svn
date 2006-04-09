@@ -30,4 +30,7 @@ int open_ipc(char *path);
 /** Uses recv() on the fd to get an IPC command. */
 void ipc_receive_from_fd(int fd);
 
+/** Executes an IPC command. */
+void ipc_execute_command(int cmd_num);
+
 #endif

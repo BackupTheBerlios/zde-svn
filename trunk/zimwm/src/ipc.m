@@ -65,6 +65,7 @@ void ipc_receive_from_fd(int f)
 
 	for(i=0;i<ZIM_IPC_NUM_CMDS;i++) {
 		if(!strncmp(cmd,ipc_cmds[i],strlen(ipc_cmds[i]))) {
+			ipc_execute_command(i);
 			send(f,ipc_msgs[i],strlen(ipc_msgs[i]),0);
 			sent = True;
 		}
@@ -76,6 +77,45 @@ void ipc_receive_from_fd(int f)
 	i_free(buff);
 	i_free(cmd);
 	close(f);
+}
+
+void ipc_execute_command(int cmd_num)
+{
+	IMPList *list;
+	ZimClient *w;
+	char *tmp, *tmp2;
+	
+	switch(cmd_num) {
+		case IPC_CMD_WINDOW_LIST:
+			list = client_list;
+			
+			tmp = i_calloc(3000,1);
+			
+			while(list) {
+				w = (ZimClient *)list->data;
+
+				if(!w)
+					continue;
+			
+				tmp2 = i_calloc(500,1);
+				
+				snprintf(tmp2,500,"%s - %d\n",[w->window get_title],(int)w->window->window);
+				
+				strncat(tmp,tmp2,500);
+				
+				i_free(tmp2);
+				
+				list = list->next;
+			}
+			
+			if(ipc_msgs[IPC_CMD_WINDOW_LIST])
+				i_free(ipc_msgs[IPC_CMD_WINDOW_LIST]);
+			
+			ipc_msgs[IPC_CMD_WINDOW_LIST] = tmp;
+			break;
+		default:
+			break;
+	}
 }
 
 static char *z_strdel(char *string, char del)
