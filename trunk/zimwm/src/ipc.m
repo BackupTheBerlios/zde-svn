@@ -27,9 +27,6 @@
 
 static int fd;
 
-/* Returns the string up to the first occurance of del. */
-static char *z_strdel(char *string, char del);
-
 int open_ipc(char *path)
 {
 	struct sockaddr_un addr;
@@ -61,8 +58,8 @@ void ipc_receive_from_fd(int f)
 
 	recv(f,buff,256,0);
 		
-	cmd = z_strdel(buff," ");
-
+	cmd = strtok(buff," ");
+	
 	for(i=0;i<ZIM_IPC_NUM_CMDS;i++) {
 		if(!strncmp(cmd,ipc_cmds[i],strlen(ipc_cmds[i]))) {
 			ipc_execute_command(i);
@@ -75,31 +72,32 @@ void ipc_receive_from_fd(int f)
 		send(f,"Command not recognized",22,0);
 	
 	i_free(buff);
-	i_free(cmd);
 	close(f);
 }
 
 void ipc_execute_command(int cmd_num)
 {
 	IMPList *list;
-	ZimClient *w;
+	ZimClient *c;
 	char *tmp, *tmp2;
 	
 	switch(cmd_num) {
 		case IPC_CMD_WINDOW_LIST:
-			list = client_list;
+			list = [[zones[curr_zone] get_current_workspace] get_clients];
 			
 			tmp = i_calloc(3000,1);
 			
 			while(list) {
-				w = (ZimClient *)list->data;
+				c = (ZimClient *)list->data;
 
-				if(!w)
+				if(!c) {
+					list = list->next;
 					continue;
+				}
 			
 				tmp2 = i_calloc(500,1);
 				
-				snprintf(tmp2,500,"%s - %d\n",[w->window get_title],(int)w->window->window);
+				snprintf(tmp2,500,"%s - %d\n",[c->window get_title],(int)c->window->window);
 				
 				strncat(tmp,tmp2,500);
 				
@@ -112,26 +110,11 @@ void ipc_execute_command(int cmd_num)
 				i_free(ipc_msgs[IPC_CMD_WINDOW_LIST]);
 			
 			ipc_msgs[IPC_CMD_WINDOW_LIST] = tmp;
+			
 			break;
+	
 		default:
 			break;
 	}
-}
-
-static char *z_strdel(char *string, char del)
-{
-	int i;
-	char *buff = i_calloc(strlen(string),1);
-
-	for(i=0;i<strlen(string);i++) {
-		if(string[i] == del) {
-			buff[i] = '\0';
-			return buff;
-		}	
-		else
-			buff[i] = string[i];
-	}
-
-	return buff;
 }
 

@@ -178,6 +178,11 @@
 	return self->clients;
 }
 
+- (const IMPSimpleStack *)get_clients_stacking
+{
+	return self->clients_stacking;
+}
+
 - (unsigned int)get_num
 {
 	return self->vwork;

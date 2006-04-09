@@ -78,6 +78,9 @@
 /** Get all the clients in this workspace, including sticky clients. */
 - (const IMPList *)get_clients;
 
+/** Get all the clients in this workspace, including sticky clients, in stacking order. */
+- (const IMPSimpleStack *)get_clients_stacking;
+
 /** Get the numerical number representing this workspace. */
 - (unsigned int)get_num;
 
