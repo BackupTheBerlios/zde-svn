@@ -191,6 +191,7 @@ static void setup_root_window(void)
 static void setup_zone(ZWidget *root)
 {
 	VWorkspace *vwork = [VWorkspace alloc];
+	VWorkspace *vwork1 = [VWorkspace alloc];
 	
 	/* FIXME We are only working with a single zone for now. */
 	zones = i_calloc(1,sizeof(Zone *));
@@ -202,6 +203,10 @@ static void setup_zone(ZWidget *root)
 	/* FIXME Setup the second workspace. This should be configurable. */
 	[vwork init:2:XDisplayWidth(zdpy,zscreen):XDisplayHeight(zdpy,zscreen)];
 	[[zones[curr_zone] get_current_desk] add_workspace:vwork];
+
+	/* FIXME Setup the third workspace. */
+	[vwork1 init:3:XDisplayWidth(zdpy,zscreen):XDisplayHeight(zdpy,zscreen)];
+	[[zones[curr_zone] get_current_desk] add_workspace:vwork1];
 }
 
 void zimwm_add_client(ZimClient *client)
