@@ -126,8 +126,8 @@ static void on_add(IMPObject *widget, void *data)
 
 	XChangeWindowAttributes(zdpy,(Window)myself->window,CWEventMask,&attr);
 
-	myself->xftdraw = XftDrawCreate(zdpy,(Window)myself->window,DefaultVisual(zdpy,DefaultScreen(zdpy)),
-			DefaultColormap(zdpy,DefaultScreen(zdpy)));
+	myself->xftdraw = XftDrawCreate(zdpy,(Window)myself->window,DefaultVisual(zdpy,zscreen),
+			DefaultColormap(zdpy,zscreen));
 	
 	zwl_main_loop_add_widget(myself);
 }
@@ -140,9 +140,11 @@ static void on_expose(IMPObject *widget, void *data)
 	char *label = [myself get_label];
 
 	XClearWindow(zdpy,(Window)myself->window);
-
-	XftColorAllocName(zdpy,DefaultVisual(zdpy,DefaultScreen(zdpy)),DefaultColormap(zdpy,DefaultScreen(zdpy)),"white",&xftcolor);
-
+		
+	xftcolor.color.red = ~0;
+	xftcolor.color.green = ~0;
+	xftcolor.color.blue = ~0;
+	
 	if(myself->resize && label) {
 		extents = [myself get_text_extents];
 		
