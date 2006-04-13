@@ -80,7 +80,6 @@ static inline int absmin(int a, int b);
 	[frame add_child:self->window]; 
 		
 	[self->window attatch_cb:UNMAP:(ZCallback *)on_win_unmap];
-//	[self->window attatch_cb:CONFIGURE:(ZCallback *)on_win_configure];
 	[self->window attatch_cb:PROPERTY:(ZCallback *)on_win_property_notify];
 	[self->window attatch_cb:BUTTON_DOWN:(ZCallback *)on_win_button_down];
 	
@@ -480,30 +479,6 @@ static inline int absmin(int a, int b);
 	IMPList *tmp;
 	
 	[self->window->parent raise];
-
-	/* Update the client_list_stacking variable. */
-/*	if(client_list_stacking) {
-		while([client_list_stacking get_size] > 0) {
-		
-			c = (ZimClient *)[client_list_stacking pop];
-			
-			if(c->window == self->window) {
-				while([temp get_size] > 0) {
-					c = (ZimClient *)[temp pop];
-					
-					[client_list_stacking push:(void *)c];
-				}
-				
-				[temp release];
-				[client_list_stacking push:(void *)self];
-				break;
-			}
-			else {
-				[temp push:c];	
-			}
-		}
-	}
-*/	
 	
 	[[[zones[curr_zone] get_nth_desk:self->vdesk] get_nth_workspace:self->vwork] raise_client:self];
 	
@@ -519,8 +494,6 @@ static inline int absmin(int a, int b);
 		
 		tmp = tmp->next;
 	}
-
-//	update_client_list_stacking(client_list_stacking);
 }
 
 @end
@@ -538,7 +511,6 @@ static ZWindow *create_frame_for_client(ZimClient *c)
 	ZLabel *label = [ZLabel alloc];
 	XGlyphInfo *extents;
 
-	//[f init:root_window:
 	[f init:[zones[curr_zone] get_root]:
 		c->window->x:
 		c->window->y:
@@ -619,74 +591,5 @@ static inline int absmin(int a, int b)
                 return a;
         else
                 return b;
-}
-
-void on_win_configure(IMPObject *widget, void *data)
-{
-	ZWindow *win = (ZWindow *)widget;
-	ZWindow *frame;
-	XConfigureEvent *ev = (XConfigureEvent *)data;
-	ZimClient *c = NULL;
-	IMPList *children = NULL;
-	ZWindow *right,*left,*bottom,*bottom_right,*window;
-	char *name;
-
-	c = zimwm_find_client_by_zwindow(win);
-	
-	if(!c)
-		return;
-
-	[c get_properties];
-
-/*
-	children = win->children;
-
-	if(!children)
-		return;
-	
-	while(children) {
-		window = children->data;
-		name = [window get_name];
-		
-		if(!name)
-			name = "";
-			
-		if(!strncmp(name,"RIGHT_HANDLE",8)) {
-			right = window;
-		}
-		else if(!strncmp(name,"LEFT_HANDLE",7)) {
-			left = window;
-		}
-		else if(!strncmp(name,"BOTTOM_HANDLE",13)) {
-			bottom = window;
-		}
-		else if(!strncmp(name,"BOTTOM_RIGHT_HANDLE",19)) {
-			bottom_right = window;
-		}
-
-		children = children->next;
-	}
-	
-	frame = c->window->parent;
-
-	frame->width += ev->width - frame->width;
-	frame->height += ev->height - frame->height;
-
-	[frame resize:frame->width:frame->height];
-	
-	[right move:win->width - c->border:c->title_height];
-	[right resize:c->border:win->height];
-	[left move:0:c->title_height];
-	[left resize:c->border:win->height];
-	[bottom move:0:win->height - c->border];
-	[bottom resize:win->width:c->border];
-	[bottom_right move:win->width - c->border:win->height - c->border];
-	[bottom_right resize:c->border:c->border];
-	
-	[right raise];
-	[left raise];
-	[bottom raise];
-	[bottom_right raise];
-*/
 }
 
