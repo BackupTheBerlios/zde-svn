@@ -202,12 +202,6 @@ static void process_xevent(XEvent *ev)
 
 				[w receive:BUTTON_UP:&ev->xbutton];
 				break;
-			case DestroyNotify:
-				dest = ev->xdestroywindow;
-				w = find_widget((Window *)dest.window);
-				
-				[w receive:DESTROY:&ev->xdestroywindow];
-				break;
 			case Expose:
 				expose = ev->xexpose;
 				w = find_widget((Window *)expose.window);
