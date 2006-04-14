@@ -54,18 +54,16 @@ void on_map_request(IMPObject *widget, void *data)
 void on_key_press(IMPObject *widget, void *data)
 {
 	XKeyEvent *ev = (XKeyEvent *)data;
-//	printf("Pressed: keycode:%s state:%s\n",XKeysymToString(XKeycodeToKeysym(zdpy,ev->keycode,1)),XKeysymToString(XKeycodeToKeysym(zdpy,ev->state,1)));
+	
 	/* FIXME Should be configurable. */
 
 	if(ev->state != XKeysymToKeycode(zdpy,XStringToKeysym("Escape")))
 		return;
 	
 	if(ev->keycode == XKeysymToKeycode(zdpy,XStringToKeysym("Left"))) {
-		printf("Moving left.\n");
 		[[zones[curr_zone] get_current_desk] move_prev];
 	}
 	else if(ev->keycode == XKeysymToKeycode(zdpy,XStringToKeysym("Right"))) {
-		printf("Moving right.\n");
 		[[zones[curr_zone] get_current_desk] move_next];
 	}
 }
