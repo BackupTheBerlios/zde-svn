@@ -76,7 +76,7 @@ static inline int absmin(int a, int b);
 	frame = create_frame_for_client(self);
 
 	XReparentWindow(zdpy,(Window)self->window->window,(Window)frame->window,self->border,self->title_height);
-	
+
 	[frame add_child:self->window]; 
 		
 	[self->window attatch_cb:UNMAP:(ZCallback *)on_win_unmap];
@@ -87,7 +87,7 @@ static inline int absmin(int a, int b);
 	
 	[frame show];
 	[self->window show];
-
+		
 	/* Grab mouse buttons so we can intercept things like alt-click for moving, etc. */
 	XGrabButton(zdpy,AnyButton,Mod1Mask,(Window)self->window->window,True,ButtonPressMask,GrabModeAsync,GrabModeAsync,None,None);
 
@@ -510,12 +510,17 @@ static ZWindow *create_frame_for_client(ZimClient *c)
 	ZWindow *bottom_right_handle = [ZWindow alloc];
 	ZLabel *label = [ZLabel alloc];
 	XGlyphInfo *extents;
+	XSetWindowAttributes attr;
+
+	attr.override_redirect = True;
 
 	[f init:[zones[curr_zone] get_root]:
 		c->window->x:
 		c->window->y:
 		c->window->width + (c->border * 2):
 		c->window->height + (c->border + c->title_height)];
+
+	XChangeWindowAttributes(zdpy,f->window,CWOverrideRedirect,&attr);
 
 	[f attatch_cb:BUTTON_DOWN:(ZCallback *)on_frame_button_down];
 	[f attatch_cb:CONFIGURE:(ZCallback *)on_frame_configure];

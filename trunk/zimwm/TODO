@@ -26,7 +26,7 @@ the item can be completed.
 *Window context menu for functions and settings related to the window, anything not on the titlebar.(zwl ZMenu)
  -0%
  
-*Fix windows resizing themselves.  Not sure how to do this yet.
+*Fix windows resizing themselves.
  -90% done, still a few positioning problems, but its mostly there. Some windows set two different sizes I think,
  one when they create the window and another in the properties of the window.  I need to use whichever one is most accurate,
  so that the windows are not smaller or bigger than they are intended.
@@ -49,8 +49,8 @@ horizontally.  That would be simpler, but would allow less flexibility.
 *Various window states, i.e. sticky, withdrawn, shaded...
  -5% done
  
-*IPC for remote programs to have access to zimwm, such as for pagers or a zimwm_remote program to change settings.
- -0% I have a rough makeup of what it should be in my head.
+*IPC for remote programs to have access to zimwm runtime information and configuration settings.
+ -50%, the framework is in, just need more commands.
 
 *Module interface for more advanced functions than IPC, such as a Composite manager, additional behaviors.
  -0%

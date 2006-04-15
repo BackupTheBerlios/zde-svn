@@ -49,8 +49,6 @@ int main(int argc, char **argv)
 	zwl_init();
 
 	setup_root_window();
-
-	setup_zone(root_window);
 	
 	setup_ewmh_root_properties();
 
@@ -79,7 +77,7 @@ void zimwm_main_loop_start()
 	struct sockaddr_un remoteaddr;
 	
 	xcon_fd = ConnectionNumber(zdpy);
-	
+		
 	FD_ZERO(&fds);	
 	FD_ZERO(&tmp);
 	FD_SET(ipc_fd,&fds);	
@@ -141,7 +139,7 @@ static void setup_root_window(void)
 	Cursor rootc;
 	ZimClient *newc;
 	Window root,parent;
-	Window **children;
+	Window *children;
 	int i,len;
 	
 	root_window = [ZWidget alloc];
@@ -174,6 +172,7 @@ static void setup_root_window(void)
 	[root_window attatch_cb:CLIENT_MESSAGE:(ZCallback *)on_client_message];
 	[root_window attatch_cb:CONFIGURE_REQUEST:(ZCallback *)on_configure_request];
 	
+	setup_zone(root_window);
 /*
 	XQueryTree(zdpy,root_window->window,&root,&parent,&children,&len);
 
@@ -182,6 +181,7 @@ static void setup_root_window(void)
 
 		if(!winattr.override_redirect && winattr.map_state == IsViewable) {
 			newc = [ZimClient alloc];
+			XMapWindow(zdpy,children[i]);
 			[newc init:children[i]];
 			zimwm_add_client(newc);
 		}

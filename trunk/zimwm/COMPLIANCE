@@ -1,6 +1,6 @@
 zimwm Standards Compliance Documentation
 ----------------------------------------
-Created 3/22/06, last updated 3/24/06
+Created 3/22/06, last updated 4/15/06
 ----------------------------------------
 
 [-] No compliance at all, intention of compliance
@@ -31,7 +31,7 @@ Root Window Hints/Properties/Messages
 [-] _NET_DESKTOP_GEOMETRY
 [-] _NET_DESKTOP_VIEWPORT
 [*] _NET_CURRENT_DESKTOP
-[-] _NET_DESKTOP_NAMES
+[!] _NET_DESKTOP_NAMES
 [*] _NET_ACTIVE_WINDOW
 [*] _NET_WORKAREA
 [*] _NET_SUPPORTING_WM_CHECK
