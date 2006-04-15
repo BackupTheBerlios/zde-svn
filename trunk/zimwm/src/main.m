@@ -62,6 +62,9 @@ int main(int argc, char **argv)
 	return 0;
 }
 
+/**
+  A semi-asynchronous event loop that places priority on X events.
+  */
 void zimwm_main_loop_start()
 {
 	XEvent ev;
@@ -105,7 +108,7 @@ void zimwm_main_loop_start()
 	
 		if(select(fd_max+1,&tmp,NULL,NULL,NULL) == -1)
 			perror("select");
-		
+		/* FIXME Make sure the connection is still open, otherwise send() will segv */	
 		for(i=0;i<=fd_max;i++) {
 			if(FD_ISSET(i,&tmp)) {
 				if(i == ipc_fd) { /* IPC has a new connection. */

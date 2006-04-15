@@ -82,7 +82,7 @@ void ipc_execute_command(int cmd_num)
 	char *tmp, *tmp2;
 	
 	switch(cmd_num) {
-		case IPC_CMD_WINDOW_LIST:
+		case IPC_CMD_WORKSPACE_LIST:
 			list = [[zones[curr_zone] get_current_workspace] get_clients];
 			
 			tmp = i_calloc(3000,1);
@@ -106,13 +106,65 @@ void ipc_execute_command(int cmd_num)
 				list = list->next;
 			}
 			
-			if(ipc_msgs[IPC_CMD_WINDOW_LIST])
-				i_free(ipc_msgs[IPC_CMD_WINDOW_LIST]);
+			if(ipc_msgs[IPC_CMD_WORKSPACE_LIST])
+				i_free(ipc_msgs[IPC_CMD_WORKSPACE_LIST]);
 			
-			ipc_msgs[IPC_CMD_WINDOW_LIST] = tmp;
+			ipc_msgs[IPC_CMD_WORKSPACE_LIST] = tmp;
 			
 			break;
-	
+		case IPC_CMD_WORKSPACE_LIST_SIZE:
+			tmp = i_calloc(500,1);
+			
+			snprintf(tmp,500,"%d",[[[zones[curr_zone] get_current_workspace] get_clients] get_size] - 1);
+			
+			if(ipc_msgs[IPC_CMD_WORKSPACE_LIST_SIZE])
+				i_free(ipc_msgs[IPC_CMD_WORKSPACE_LIST_SIZE]);
+			
+			ipc_msgs[IPC_CMD_WORKSPACE_LIST_SIZE] = tmp;
+			
+			break;
+		case IPC_CMD_CLIENT_LIST:
+			list = client_list;
+			
+			tmp = i_calloc(3000,1);
+			
+			while(list) {
+				c = (ZimClient *)list->data;
+
+				if(!c) {
+					list = list->next;
+					continue;
+				}
+			
+				tmp2 = i_calloc(500,1);
+				
+				snprintf(tmp2,500,"%s - %d\n",[c->window get_title],(int)c->window->window);
+				
+				strncat(tmp,tmp2,500);
+				
+				i_free(tmp2);
+				
+				list = list->next;
+			}
+			
+			if(ipc_msgs[IPC_CMD_CLIENT_LIST])
+				i_free(ipc_msgs[IPC_CMD_CLIENT_LIST]);
+			
+			ipc_msgs[IPC_CMD_CLIENT_LIST] = tmp;
+
+			break;
+		case IPC_CMD_CLIENT_LIST_SIZE:
+			tmp = i_calloc(500,1);
+			
+			snprintf(tmp,500,"%d",[client_list get_size]);
+			
+			if(ipc_msgs[IPC_CMD_CLIENT_LIST_SIZE])
+				i_free(ipc_msgs[IPC_CMD_CLIENT_LIST_SIZE]);
+			
+			ipc_msgs[IPC_CMD_CLIENT_LIST_SIZE] = tmp;
+			
+			break;
+
 		default:
 			break;
 	}

@@ -33,8 +33,8 @@ void on_win_unmap(IMPObject *widget, void *data)
 	c = zimwm_find_client_by_zwindow(w);
 	zimwm_remove_client(c);
 	
-	[w destroy];
 	[w->parent destroy];
+	[w destroy];
 }
 
 void on_close_button_down(IMPObject *widget, void *data)

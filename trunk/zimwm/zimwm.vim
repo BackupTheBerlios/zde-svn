@@ -69,14 +69,14 @@ badd +9 src/Makefile.am
 badd +83 src/main.m
 badd +32 src/zimwm.h
 badd +32 src/events.h
-badd +124 src/events.m
+badd +67 src/events.m
 badd +52 src/client.h
 badd +87 src/client.m
 badd +54 TODO
 badd +46 src/ewmh.h
 badd +89 src/ewmh.m
 badd +34 src/client-events.h
-badd +121 src/client-events.m
+badd +36 src/client-events.m
 badd +2 data/Makefile.am
 badd +6 src/focus.h
 badd +38 src/focus.m
@@ -86,6 +86,7 @@ badd +31 src/vdesk.h
 badd +1 src/ipc.h
 badd +28 src/ipc.m
 badd +6 src/zimsh
+badd +1 src/ipc_commands.h
 args configure.in README
 edit README
 set splitbelow splitright
