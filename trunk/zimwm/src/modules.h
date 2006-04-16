@@ -24,6 +24,11 @@
 #ifndef Z_MODULES_H
 #define Z_MODULES_H
 
+/** \addtogroup Modules
+   *  @{
+   */
+
+/** Structure containing things zimwm needs to know about modules. */
 typedef struct
 {
 	char *path; /**< Name of the module, i.e. what was passed as the first
@@ -36,5 +41,7 @@ typedef struct
   Returns NULL if the module couldn't be opened.
   */
 ZimModule *zimwm_open_module(char *path);
+
+/** @} */
 
 #endif
