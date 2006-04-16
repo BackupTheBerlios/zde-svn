@@ -62,7 +62,7 @@ void ipc_receive_from_fd(int f)
 	
 	for(i=0;i<ZIM_IPC_NUM_CMDS;i++) {
 		if(!strncmp(cmd,ipc_cmds[i],strlen(ipc_cmds[i]))) {
-			ipc_execute_command(i);
+			ipc_execute_command(i,strtok(buff," "));
 			send(f,ipc_msgs[i],strlen(ipc_msgs[i]),0);
 			sent = True;
 		}
@@ -75,7 +75,7 @@ void ipc_receive_from_fd(int f)
 	close(f);
 }
 
-void ipc_execute_command(int cmd_num)
+void ipc_execute_command(int cmd_num,char *cmd)
 {
 	IMPList *list;
 	ZimClient *c;
