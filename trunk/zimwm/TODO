@@ -53,7 +53,7 @@ horizontally.  That would be simpler, but would allow less flexibility.
  -50%, the framework is in, just need more commands.
 
 *Module interface for more advanced functions than IPC, such as a Composite manager, additional behaviors.
- -0%
+ -5% Starting on the internals, such as the IPC interface.
 
 *Speedups, especially when mapping windows. (imp,zwl)
  -0% I'm not even thinking of optimizing right now.
@@ -62,4 +62,4 @@ horizontally.  That would be simpler, but would allow less flexibility.
  -??% you can never know when you have finished. Just do it.
  
 *Some kind of functionality to "remember" window settings, like place, size, etc. that are set/can be set by the window manager.
- -0%
+ -10% IPC is going to implement this.
