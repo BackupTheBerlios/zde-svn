@@ -33,6 +33,7 @@ typedef struct
 
 /** 
   Loads a module for use by zimwm.
+  Returns NULL if the module couldn't be opened.
   */
 ZimModule *zimwm_open_module(char *path);
 

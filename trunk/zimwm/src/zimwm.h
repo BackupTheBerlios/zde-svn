@@ -33,6 +33,7 @@
 #include <sys/stat.h>
 #include <arpa/inet.h>
 #include <fcntl.h>
+#include <dlfcn.h>
 #include <unistd.h>
 #include <errno.h>
 

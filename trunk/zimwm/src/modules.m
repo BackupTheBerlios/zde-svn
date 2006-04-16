@@ -23,4 +23,20 @@
 
 #include "zimwm.h"
 
+ZimModule *zimwm_open_module(char *path)
+{
+	ZimModule *modinfo = i_calloc(1,sizeof(ZimModule));
 
+	modinfo->path = i_strdup(path);
+	modinfo->handle = dlopen(path,RTLD_LAZY);
+
+	if(!modinfo->handle) {
+		fprintf(stderr,"Cannot find module %s - %s.\n",path,dlerror());
+		
+		i_free(modinfo);
+		return NULL;
+	}
+	else {
+		return modinfo;
+	}
+}
