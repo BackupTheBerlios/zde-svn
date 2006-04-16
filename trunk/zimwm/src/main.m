@@ -339,29 +339,7 @@ void zimwm_remove_client(ZimClient *c)
 
 	update_client_list(client_list);
 
-	/* remove from client_list_stacking */
-/*	[temp init:500];
-	
-	if(client_list_stacking) {
-		while([client_list_stacking get_size] > 0) {	
-			client = (ZimClient *)[client_list_stacking pop];
-			
-			if(client->window == c->window) {
-				while([temp get_size] > 0) {
-					client = (ZimClient *)[temp pop];
-					
-					[client_list_stacking push:(void *)client];
-				}
-				
-				[temp release];
-				break;
-			}
-			else {
-				[temp push:client];	
-			}
-		}
-	}
-*/}
+}
 
 /* FIXME */
 void zimwm_find_and_remove_client(ZWindow *w)
