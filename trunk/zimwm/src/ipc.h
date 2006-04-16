@@ -24,6 +24,10 @@
 #ifndef IPC_H
 #define IPC_H
 
+/** \addtogroup IPC
+   *  @{
+   */
+
 /** Creates and opens a local socket and sets up the ipc handler. */
 int open_ipc(char *path);
 
@@ -32,5 +36,7 @@ void ipc_receive_from_fd(int fd);
 
 /** Executes an IPC command. */
 void ipc_execute_command(int cmd_num);
+
+/** @} */
 
 #endif

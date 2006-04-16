@@ -1,6 +1,10 @@
 #ifndef IPC_CMDS_H
 #define IPC_CMDS_H
 
+/** \addtogroup IPC
+   *  @{
+   */
+
 #define ZIM_IPC_NUM_CMDS 5
 
 #define IPC_CMD_HELP 0
@@ -13,5 +17,7 @@
 char *ipc_cmds[ZIM_IPC_NUM_CMDS] = {"help","wlist","wlist_size","clist","clist_size"};
 
 char *ipc_msgs[ZIM_IPC_NUM_CMDS] = {"zimwm IPC Subsystem Commands List\n\nhelp\twlist\twlist_size\tclist\nclist_size",NULL,NULL,NULL,NULL};
+
+/** @} */
 
 #endif
