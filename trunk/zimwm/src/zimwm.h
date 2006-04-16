@@ -45,6 +45,7 @@
 #include "vdesk.h"
 #include "zone.h"
 #include "ipc.h"
+#include "modules.h"
 
 /* FIXME Should be from config file. */
 extern int snap_px;

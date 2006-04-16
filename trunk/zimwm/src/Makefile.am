@@ -1,9 +1,9 @@
 bin_PROGRAMS=zimwm
-zimwm_SOURCES=main.m events.m client.m client-events.m widgets.m ewmh.m focus.m vdesk.m zone.m ipc.m
+zimwm_SOURCES=main.m events.m client.m client-events.m widgets.m ewmh.m focus.m vdesk.m zone.m ipc.m modules.m
 
 bin_SCRIPTS=zimsh
 
-EXTRA_DIST=zimwm.h events.h client.h client-events.h widgets.h ewmh.h focus.h vdesk.h zone.h ipc.h ipc_commands.h zimsh
+EXTRA_DIST=zimwm.h events.h client.h client-events.h widgets.h ewmh.h focus.h vdesk.h zone.h ipc.h ipc_commands.h modules.h zimsh
 
 INCLUDES = \
 -I$(top_builddir) \
