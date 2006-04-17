@@ -31,7 +31,7 @@ int zimwm_init_module_subsystem(void)
 {
 	if(!initialized) {
 		modules_list = [IMPList alloc];
-		[modules_list init:1];
+		[modules_list init:0];
 		
 		initialized = True;
 		return 0;
@@ -57,7 +57,7 @@ ZimModule *zimwm_open_module(char *path)
 	modinfo->handle = dlopen(modinfo->path,RTLD_LAZY);
 
 	if(!modinfo->handle) {
-		fprintf(stderr,"Cannot find module %s - %s.\n",path,dlerror());
+		fprintf(stderr,"Couldn't load module %s - %s.\n",path,dlerror());
 		
 		i_free(modinfo);
 		return NULL;
