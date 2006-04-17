@@ -73,7 +73,7 @@ ZimModule *zimwm_open_module(char *path)
 				initialized = False;
 				zimwm_init_module_subsystem();
 			}
-
+			
 			modules_list = [modules_list append_data:modinfo];
 			return modinfo;
 		}
@@ -97,6 +97,8 @@ int zimwm_close_module(char *path)
 				
 		mod_close_handle();
 		dlclose(modinfo->handle);
+	
+		i_free(modinfo->path);
 		list = [list delete_node];
 		modules_list = list;
 		
@@ -116,6 +118,8 @@ int zimwm_close_module(char *path)
 				
 				mod_close_handle();
 				dlclose(modinfo->handle);
+				
+				i_free(modinfo->path);
 				list = [list delete_next_node];
 				return 0;
 			}

@@ -31,7 +31,6 @@
 /** Structure containing things zimwm needs to know about modules. */
 typedef struct
 {
-	char *version_string; /** Version string of the module. */
 	char *path; /**< Name of the module, i.e. what was passed as the first
 		      argument to dlopen() */
 	void *handle; /**< Handle returned by dlopen() */
