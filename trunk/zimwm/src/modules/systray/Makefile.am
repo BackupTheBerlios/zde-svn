@@ -3,6 +3,7 @@ MODULE = systray
 INCLUDES = \
 -I$(top_builddir) \
 -I$(top_srcdir) \
+-I$(top_srcdir)/modules \
 $(IMP_CFLAGS) $(X_CFLAGS) $(XFT_CFLAGS) $(CAIRO_CFLAGS) $(ZWL_CFLAGS)
 
 pkgdir = $(libdir)/zimwm/modules/$(MODULE)

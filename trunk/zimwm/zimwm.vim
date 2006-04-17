@@ -69,7 +69,7 @@ if expand('%') == '' && !&modified && line('$') <= 1 && getline(1) == ''
   let s:wipebuf = bufnr('%')
 endif
 set shortmess=aoO
-badd +186 configure.in
+badd +189 configure.in
 badd +13 README
 badd +1 Makefile.am
 badd +13 src/Makefile.am
@@ -95,9 +95,11 @@ badd +28 src/ipc.m
 badd +6 src/zimsh
 badd +1 src/ipc_commands.h
 badd +1 src/modules.m
-badd +1 src/modules.h
+badd +37 src/modules.h
 badd +2 src/modules/Makefile.am
-badd +9 src/modules/systray/Makefile.am
+badd +6 src/modules/systray/Makefile.am
+badd +5 src/modules/zimwm_module.h
+badd +4 src/modules/systray/systray.m
 args configure.in README
 edit README
 set splitbelow splitright
