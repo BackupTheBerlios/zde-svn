@@ -28,7 +28,9 @@ ZimModule *zimwm_open_module(char *path)
 	ZimModule *modinfo = i_calloc(1,sizeof(ZimModule));
 	char *path_buff = i_calloc(500,1);
 
-	//modinfo->path = i_strdup(path);
+	/* Function pointer for the module's zimwm_module_init() */
+	int(*mod_init_handle)(void);
+
 	/* FIXME Should be the REAL library path and such. */
 	snprintf(path_buff,500,"/usr/local/lib/zimwm/modules/%s/module.so",path,path);
 	modinfo->path = path_buff;
@@ -41,6 +43,10 @@ ZimModule *zimwm_open_module(char *path)
 		return NULL;
 	}
 	else {
+		/* Run the zimwm_module_init() for this module. */
+		mod_init_handle = dlsym(modinfo->handle,"zimwm_module_init");
+		(mod_init_handle)();
+
 		return modinfo;
 	}
 	
