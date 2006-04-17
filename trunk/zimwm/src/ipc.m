@@ -81,6 +81,8 @@ void ipc_execute_command(int cmd_num,char *cmd)
 	ZimClient *c;
 	char *tmp, *tmp2;
 	ZimModule *modinfo;
+	char *(*mod_version_handle)(void);
+	char *(*mod_about_handle)(void);
 	
 	switch(cmd_num) {
 		case IPC_CMD_WORKSPACE_LIST:
@@ -182,8 +184,29 @@ void ipc_execute_command(int cmd_num,char *cmd)
 
 			break;
 		case IPC_CMD_MOD_INFO:
-			/* FIXME */
-			ipc_msgs[IPC_CMD_MOD_INFO] = "Command not yet implemented.";
+			list = modules_list;
+			
+			while(list) {
+				modinfo = list->data;
+				list = list->next;
+
+				if(!strncmp(modinfo->path,strtok(NULL," "),50)) { /* FIXME XXX BAD NO STRTOK FOR YOU XXX FIXME */
+					mod_version_handle = dlsym(modinfo->handle,"zimwm_module_version");
+					mod_about_handle = dlsym(modinfo->handle,"zimwm_module_about");
+
+					if(ipc_msgs[IPC_CMD_MOD_INFO]) 
+						i_free(ipc_msgs[IPC_CMD_MOD_INFO]);
+
+					tmp = i_calloc(strlen((mod_version_handle)()) + strlen((mod_about_handle())) + 50,1);
+
+					sprintf(tmp,"Module Version:%s\n\nAbout this module:%s",(mod_version_handle)(),(mod_about_handle)());
+
+					ipc_msgs[IPC_CMD_MOD_INFO] = tmp;
+					
+					return;
+				}
+			}
+			ipc_msgs[IPC_CMD_MOD_INFO] = "Module was not found.";
 			break;
 		default:
 			break;
