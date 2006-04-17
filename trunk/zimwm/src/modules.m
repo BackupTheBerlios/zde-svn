@@ -53,9 +53,11 @@ ZimModule *zimwm_open_module(char *path)
 
 	/* FIXME Should be the REAL library path and such. */
 	snprintf(path_buff,500,"/usr/local/lib/zimwm/modules/%s/module.so",path,path);
-	modinfo->path = path_buff;
-	modinfo->handle = dlopen(modinfo->path,RTLD_LAZY);
-
+	
+	modinfo->path = i_strdup(path);
+	modinfo->handle = dlopen(path_buff,RTLD_LAZY);
+	i_free(path_buff);
+	
 	if(!modinfo->handle) {
 		fprintf(stderr,"Couldn't load module %s - %s.\n",path,dlerror());
 		
@@ -67,7 +69,12 @@ ZimModule *zimwm_open_module(char *path)
 		mod_init_handle = dlsym(modinfo->handle,"zimwm_module_init");
 		
 		if((mod_init_handle)() == 0) {
-			modules_list = [modules_list prepend_data:modinfo];
+			if(!modules_list) {
+				initialized = False;
+				zimwm_init_module_subsystem();
+			}
+
+			modules_list = [modules_list append_data:modinfo];
 			return modinfo;
 		}
 	}
@@ -79,26 +86,43 @@ int zimwm_close_module(char *path)
 {
 	IMPList *list = modules_list;
 	ZimModule *modinfo = NULL;
+	void(*mod_close_handle)(void);
 	
 	if(!path)
 		return;
 
 	modinfo = (ZimModule *)list->data;
 	if((!strncmp(modinfo->path,path,50)) && list) {
+		mod_close_handle = dlsym(modinfo->handle,"zimwm_module_quit");
+				
+		mod_close_handle();
+		dlclose(modinfo->handle);
 		list = [list delete_node];
 		modules_list = list;
+		
+		return 0;
 	}
 	else {
-		while(list) {
+		while(list && list->next) {
 			modinfo = (ZimModule *)list->next->data;
 
+			if(!modinfo) {
+				list = list->next;
+				continue;
+			}
+			
 			if((!strncmp(modinfo->path,path,50)) && list->next) {
-				/* FIXME close module */
+				mod_close_handle = dlsym(modinfo->handle,"zimwm_module_quit");
+				
+				mod_close_handle();
+				dlclose(modinfo->handle);
 				list = [list delete_next_node];
-				break;
+				return 0;
 			}
 
 			list = list->next;
 		}
 	}
+
+	return -1;
 }

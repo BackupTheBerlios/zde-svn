@@ -174,6 +174,13 @@ void ipc_execute_command(int cmd_num,char *cmd)
 				ipc_msgs[IPC_CMD_LOAD_MODULE] = "Module could not be loaded.";
 
 			break;
+		case IPC_CMD_UNLOAD_MODULE:
+			if(!zimwm_close_module(strtok(NULL, " "))) /* FIXME XXX BAD NO STRTOK FOR YOU XXX FIXME */
+				ipc_msgs[IPC_CMD_UNLOAD_MODULE] = "Module successfully unloaded.";
+			else
+				ipc_msgs[IPC_CMD_UNLOAD_MODULE] = "Module could not be unloaded.";
+
+			break;
 		default:
 			break;
 	}
