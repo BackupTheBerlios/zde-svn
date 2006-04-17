@@ -26,9 +26,13 @@
 ZimModule *zimwm_open_module(char *path)
 {
 	ZimModule *modinfo = i_calloc(1,sizeof(ZimModule));
+	char *path_buff = i_calloc(500,1);
 
-	modinfo->path = i_strdup(path);
-	modinfo->handle = dlopen(path,RTLD_LAZY);
+	//modinfo->path = i_strdup(path);
+	/* FIXME Should be the REAL library path and such. */
+	snprintf(path_buff,500,"/usr/local/lib/zimwm/modules/%s/module.so",path,path);
+	modinfo->path = path_buff;
+	modinfo->handle = dlopen(modinfo->path,RTLD_LAZY);
 
 	if(!modinfo->handle) {
 		fprintf(stderr,"Cannot find module %s - %s.\n",path,dlerror());
@@ -39,4 +43,6 @@ ZimModule *zimwm_open_module(char *path)
 	else {
 		return modinfo;
 	}
+	
+	return NULL;
 }

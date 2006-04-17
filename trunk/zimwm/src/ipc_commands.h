@@ -13,6 +13,8 @@
 #define IPC_CMD_WORKSPACE_LIST_SIZE 2 /**< Returns the number of clients managed on the current workspace. */
 #define IPC_CMD_CLIENT_LIST 3 /**< Lists all of the clients managed by zimwm. */
 #define IPC_CMD_CLIENT_LIST_SIZE 4 /**< Returns the number of clients managed by zimwm. */
+#define IPC_CMD_LOAD_MODULE 5 /**< Load module name in argument 1. */
+#define IPC_CMD_UNLOAD_MODULE 6 /**< Unload module name in argume 1. */
 
 char *ipc_cmds[ZIM_IPC_NUM_CMDS] = {"help","wlist","wlist_size","clist","clist_size","load_module","unload_module"};
 

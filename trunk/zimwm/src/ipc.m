@@ -62,7 +62,7 @@ void ipc_receive_from_fd(int f)
 	
 	for(i=0;i<ZIM_IPC_NUM_CMDS;i++) {
 		if(!strncmp(cmd,ipc_cmds[i],strlen(ipc_cmds[i]))) {
-			ipc_execute_command(i,strtok(buff," "));
+			ipc_execute_command(i,cmd);
 			send(f,ipc_msgs[i],strlen(ipc_msgs[i]),0);
 			sent = True;
 		}
@@ -80,6 +80,7 @@ void ipc_execute_command(int cmd_num,char *cmd)
 	IMPList *list;
 	ZimClient *c;
 	char *tmp, *tmp2;
+	ZimModule *modinfo;
 	
 	switch(cmd_num) {
 		case IPC_CMD_WORKSPACE_LIST:
@@ -164,7 +165,15 @@ void ipc_execute_command(int cmd_num,char *cmd)
 			ipc_msgs[IPC_CMD_CLIENT_LIST_SIZE] = tmp;
 			
 			break;
+		case IPC_CMD_LOAD_MODULE:
+			modinfo = zimwm_open_module(strtok(NULL," ")); /* FIXME XXX BAD NO STRTOK FOR YOU XXX FIXME */
 
+			if(modinfo)
+				ipc_msgs[IPC_CMD_LOAD_MODULE] = "Module successfully loaded.";
+			else
+				ipc_msgs[IPC_CMD_LOAD_MODULE] = "Module could not be loaded.";
+
+			break;
 		default:
 			break;
 	}
