@@ -38,10 +38,24 @@ typedef struct
 } ZimModule;
 
 /** 
+  Initializes the modules subsytem.  This MUST be called before loading any modules. 
+  Returns 0 on success.
+ */
+int zimwm_init_module_subsystem(void);
+
+/** 
   Loads a module for use by zimwm.
+  Path should be the name of the module.
   Returns NULL if the module couldn't be opened.
   */
 ZimModule *zimwm_open_module(char *path);
+
+/**
+  Unloads a module that has already been loaded by zimwm.
+  Path should be the same path passed to zimwm_open_module().
+  Returns 0 on success.
+  */
+int zimwm_close_module(char *path);
 
 /** @} */
 

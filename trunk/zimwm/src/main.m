@@ -54,7 +54,9 @@ int main(int argc, char **argv)
 
 	/* FIXME path should be configurable or at leas adaptable*/
 	ipc_fd = open_ipc("/tmp/zimwm-ipc");
-	
+
+	zimwm_init_module_subsystem();
+
 	zimwm_main_loop_start();
 	
 	return 0;

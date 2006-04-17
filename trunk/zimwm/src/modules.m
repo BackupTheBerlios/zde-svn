@@ -23,6 +23,23 @@
 
 #include "zimwm.h"
 
+IMPList *modules_list;
+
+static Bool initialized = False;
+
+int zimwm_init_module_subsystem(void)
+{
+	if(!initialized) {
+		modules_list = [IMPList alloc];
+		[modules_list init:1];
+		
+		initialized = True;
+		return 0;
+	}
+	else
+		return -1;
+}
+
 ZimModule *zimwm_open_module(char *path)
 {
 	ZimModule *modinfo = i_calloc(1,sizeof(ZimModule));
@@ -30,6 +47,9 @@ ZimModule *zimwm_open_module(char *path)
 
 	/* Function pointer for the module's zimwm_module_init() */
 	int(*mod_init_handle)(void);
+
+	if(!initialized)
+		return NULL;
 
 	/* FIXME Should be the REAL library path and such. */
 	snprintf(path_buff,500,"/usr/local/lib/zimwm/modules/%s/module.so",path,path);
@@ -45,10 +65,17 @@ ZimModule *zimwm_open_module(char *path)
 	else {
 		/* Run the zimwm_module_init() for this module. */
 		mod_init_handle = dlsym(modinfo->handle,"zimwm_module_init");
-		(mod_init_handle)();
-
-		return modinfo;
+		
+		if((mod_init_handle)() == 0) {
+			modules_list = [modules_list prepend_data:modinfo];
+			return modinfo;
+		}
 	}
 	
 	return NULL;
+}
+
+int zimwm_close_module(char *path)
+{
+	/* FIXME look through modules_list and find one with a matching path, then dlclose() it. */	
 }

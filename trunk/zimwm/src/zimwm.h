@@ -57,6 +57,7 @@ extern int curr_zone;
 extern ZWidget *root_window; 
 extern IMPList *client_list; /**< List of ALL clients managed by zimwm, regardless of what workspace or desktop they belong to. */
 extern Zone **zones; /**< Array of all zones used by zimwm. */
+extern IMPList *modules_list; /**< List of all modules loaded. */
 
 /** Main loop that goes through xevents and checks for IPC messages. */
 void zimwm_main_loop_start();
