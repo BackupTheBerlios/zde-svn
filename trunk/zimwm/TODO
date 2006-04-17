@@ -60,6 +60,9 @@ horizontally.  That would be simpler, but would allow less flexibility.
 
 *Fix all the stupid little bugs and memory leaks lying around
  -??% you can never know when you have finished. Just do it.
- 
+
+*Find all FIXMEs and XXXs and fix them.
+ -??% Do it all the time
+
 *Some kind of functionality to "remember" window settings, like place, size, etc. that are set/can be set by the window manager.
  -10% IPC is going to implement this.

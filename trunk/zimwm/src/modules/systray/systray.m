@@ -23,11 +23,10 @@ void zimwm_module_quit()
 {
 	printf("systray module is unloading.\n");
 	[win destroy];
-
-	zimwm_close_module(MODULE_NAME);
 }
 
 static void on_close(IMPObject *widget, void *data)
 {
 	zimwm_module_quit();
+	zimwm_close_module(MODULE_NAME);
 }

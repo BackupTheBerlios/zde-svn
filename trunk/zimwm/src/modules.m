@@ -77,5 +77,28 @@ ZimModule *zimwm_open_module(char *path)
 
 int zimwm_close_module(char *path)
 {
-	/* FIXME look through modules_list and find one with a matching path, then dlclose() it. */	
+	IMPList *list = modules_list;
+	ZimModule *modinfo = NULL;
+	
+	if(!path)
+		return;
+
+	modinfo = (ZimModule *)list->data;
+	if((!strncmp(modinfo->path,path,50)) && list) {
+		list = [list delete_node];
+		modules_list = list;
+	}
+	else {
+		while(list) {
+			modinfo = (ZimModule *)list->next->data;
+
+			if((!strncmp(modinfo->path,path,50)) && list->next) {
+				/* FIXME close module */
+				list = [list delete_next_node];
+				break;
+			}
+
+			list = list->next;
+		}
+	}
 }
