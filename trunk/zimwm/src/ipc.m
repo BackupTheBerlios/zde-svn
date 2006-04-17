@@ -89,7 +89,7 @@ void ipc_execute_command(int cmd_num,char *cmd)
 			tmp = i_calloc(3000,1);
 			
 			while(list) {
-				c = (ZimClient *)list->data;
+					c = (ZimClient *)list->data;
 
 				if(!c) {
 					list = list->next;
@@ -180,6 +180,10 @@ void ipc_execute_command(int cmd_num,char *cmd)
 			else
 				ipc_msgs[IPC_CMD_UNLOAD_MODULE] = "Module could not be unloaded.";
 
+			break;
+		case IPC_CMD_MOD_INFO:
+			/* FIXME */
+			ipc_msgs[IPC_CMD_MOD_INFO] = "Command not yet implemented.";
 			break;
 		default:
 			break;
