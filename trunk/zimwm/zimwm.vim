@@ -2,51 +2,51 @@ let SessionLoad = 1
 if &cp | set nocp | endif
 let s:cpo_save=&cpo
 set cpo&vim
-map! <F1> <F1>
-map! <F2> <F2>
-map! <F3> <F3>
-map! <F4> <F4>
-map! <S-F1> <S-F1>
-map! <S-F2> <S-F2>
-map! <S-F3> <S-F3>
-map! <S-F4> <S-F4>
-map! <End> <End>
 map! <Home> <Home>
-nmap s :cs find s =expand("<cword>")	
-nmap g :cs find g =expand("<cword>")	
-nmap c :cs find c =expand("<cword>")	
-nmap t :cs find t =expand("<cword>")	
-nmap e :cs find e =expand("<cword>")	
-nmap f :cs find f =expand("<cfile>")	
-nmap i :cs find i ^=expand("<cfile>")$
+map! <End> <End>
+map! <S-F4> <S-F4>
+map! <S-F3> <S-F3>
+map! <S-F2> <S-F2>
+map! <S-F1> <S-F1>
+map! <F4> <F4>
+map! <F3> <F3>
+map! <F2> <F2>
+map! <F1> <F1>
 nmap d :cs find d =expand("<cword>")	
+nmap i :cs find i ^=expand("<cfile>")$
+nmap f :cs find f =expand("<cfile>")	
+nmap e :cs find e =expand("<cword>")	
+nmap t :cs find t =expand("<cword>")	
+nmap c :cs find c =expand("<cword>")	
+nmap g :cs find g =expand("<cword>")	
+nmap s :cs find s =expand("<cword>")	
 nmap gx <Plug>NetrwBrowseX
-map <F1> <F1>
-map <F2> <F2>
-map <F3> <F3>
-map <F4> <F4>
-map <S-F1> <S-F1>
-map <S-F2> <S-F2>
-map <S-F3> <S-F3>
-map <S-F4> <S-F4>
-map <End> <End>
-map <Home> <Home>
-nmap <Nul>s :scs find s =expand("<cword>")	
-nmap <Nul>g :scs find g =expand("<cword>")	
-nmap <Nul>c :scs find c =expand("<cword>")	
-nmap <Nul>t :scs find t =expand("<cword>")	
-nmap <Nul>e :scs find e =expand("<cword>")	
-nmap <Nul>f :scs find f =expand("<cfile>")	
-nmap <Nul>i :scs find i ^=expand("<cfile>")$	
-nmap <Nul>d :scs find d =expand("<cword>")	
-nmap <Nul><Nul>s :vert scs find s =expand("<cword>")
-nmap <Nul><Nul>g :vert scs find g =expand("<cword>")
-nmap <Nul><Nul>c :vert scs find c =expand("<cword>")
-nmap <Nul><Nul>t :vert scs find t =expand("<cword>")
-nmap <Nul><Nul>e :vert scs find e =expand("<cword>")
-nmap <Nul><Nul>f :vert scs find f =expand("<cfile>")	
-nmap <Nul><Nul>i :vert scs find i ^=expand("<cfile>")$	
 nmap <Nul><Nul>d :vert scs find d =expand("<cword>")
+nmap <Nul><Nul>i :vert scs find i ^=expand("<cfile>")$	
+nmap <Nul><Nul>f :vert scs find f =expand("<cfile>")	
+nmap <Nul><Nul>e :vert scs find e =expand("<cword>")
+nmap <Nul><Nul>t :vert scs find t =expand("<cword>")
+nmap <Nul><Nul>c :vert scs find c =expand("<cword>")
+nmap <Nul><Nul>g :vert scs find g =expand("<cword>")
+nmap <Nul><Nul>s :vert scs find s =expand("<cword>")
+nmap <Nul>d :scs find d =expand("<cword>")	
+nmap <Nul>i :scs find i ^=expand("<cfile>")$	
+nmap <Nul>f :scs find f =expand("<cfile>")	
+nmap <Nul>e :scs find e =expand("<cword>")	
+nmap <Nul>t :scs find t =expand("<cword>")	
+nmap <Nul>c :scs find c =expand("<cword>")	
+nmap <Nul>g :scs find g =expand("<cword>")	
+nmap <Nul>s :scs find s =expand("<cword>")	
+map <Home> <Home>
+map <End> <End>
+map <S-F4> <S-F4>
+map <S-F3> <S-F3>
+map <S-F2> <S-F2>
+map <S-F1> <S-F1>
+map <F4> <F4>
+map <F3> <F3>
+map <F2> <F2>
+map <F1> <F1>
 nnoremap <silent> <Plug>NetrwBrowseX :call netrw#NetBrowseX(expand("<cWORD>"),0)
 let &cpo=s:cpo_save
 unlet s:cpo_save
@@ -72,7 +72,7 @@ set shortmess=aoO
 badd +186 configure.in
 badd +13 README
 badd +1 Makefile.am
-badd +9 src/Makefile.am
+badd +13 src/Makefile.am
 badd +83 src/main.m
 badd +32 src/zimwm.h
 badd +32 src/events.h
@@ -96,6 +96,8 @@ badd +6 src/zimsh
 badd +1 src/ipc_commands.h
 badd +1 src/modules.m
 badd +1 src/modules.h
+badd +2 src/modules/Makefile.am
+badd +9 src/modules/systray/Makefile.am
 args configure.in README
 edit README
 set splitbelow splitright

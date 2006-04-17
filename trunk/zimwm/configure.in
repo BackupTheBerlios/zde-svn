@@ -184,7 +184,9 @@ AC_CHECK_LIB(pot,coffee,,[
 AC_CONFIG_FILES([
                 Makefile \
 		data/Makefile \
-                src/Makefile
+                src/Makefile \
+		src/modules/Makefile \
+		src/modules/systray/Makefile
 		])
 AC_OUTPUT
 
