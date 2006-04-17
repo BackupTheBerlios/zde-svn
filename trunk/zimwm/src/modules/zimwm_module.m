@@ -7,9 +7,9 @@ ZWindow *zimwm_module_create_window(void)
 	XMapRequestEvent ev;
 
 	[w init:NULL:0:0:100:50];
+
 	[w show];
 	ev.window = w->window;
-
 	on_map_request(NULL,&ev);
 	
 	return w;
