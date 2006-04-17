@@ -11,6 +11,6 @@ INCLUDES = \
 $(IMP_CFLAGS) $(X_CFLAGS) $(XFT_CFLAGS) $(CAIRO_CFLAGS) $(ZWL_CFLAGS)
 
 zimwm_LDADD= -lobjc -lpthread $(IMP_LIBS) $(X_LIBS) $(XFT_LIBS) $(CAIRO_LIBS) $(ZWL_LIBS)
-
+zimwm_LDFLAGS = -rdynamic
 SUBDIRS = modules
 

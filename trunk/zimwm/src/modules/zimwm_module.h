@@ -1,7 +1,9 @@
 #ifndef ZIMWM_MODULE_H
 #define ZIMWM_MODULE_H
 
-/**
+/** \addtogroup ZModules Modules API
+   *  @{
+
   All modules should define AT LEAST these public functions.
   */
 
@@ -26,4 +28,19 @@ char *zimwm_module_version(void);
   Returns a string containing an "About" string for the module.
   */
 char *zimwm_module_about(void);
+
+/** }@ */
+
+/** \addtogroup ZModule Modules Helper Functions
+   *  @{
+   
+   Functions that modules can call to help do their module thing.
+   */
+
+/**
+  Creates a module window.
+  */
+ZWindow *zimwm_module_create_window(void);
+
+/** @} */
 #endif
