@@ -53,7 +53,10 @@ horizontally.  That would be simpler, but would allow less flexibility.
  -50%, the framework is in, just need more commands.
 
 *Module interface for more advanced functions than IPC, such as a Composite manager, additional behaviors.
- -5% Starting on the internals, such as the IPC interface.
+ -85% Modules can be loaded and unloaded through IPC, but there needs to be more convenience functions for them.
+
+*Create some modules
+ -10%, Some that might be useful: systray, composite manager, volume control(alsa), and a wifi signal meter.
 
 *Speedups, especially when mapping windows. (imp,zwl)
  -0% I'm not even thinking of optimizing right now.

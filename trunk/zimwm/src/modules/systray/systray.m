@@ -11,6 +11,8 @@
 #define _NET_SYSTEM_TRAY_ORIENTATION_HORZ 0
 #define _NET_SYSTEM_TRAY_ORIENTATION_VERT 1
 
+/* FIXME Need way of finding out when icons are unmapped so the num variable can keep track. */
+
 /* Variables */
 Window winlist[20]; /* Array holding icons in the window. */
 ZWindow *win = NULL; /* The window holding the icons. */
@@ -35,7 +37,7 @@ int zimwm_module_init(void)
 	xembed_info = XInternAtom(zdpy,"_XEMBED_INFO",False);
 
 	win = zimwm_module_create_window();
-	
+
 	//[win attatch_cb:CLOSE:on_systray_close];
 	[win attatch_cb:CLIENT_MESSAGE:on_systray_client_message];
 
