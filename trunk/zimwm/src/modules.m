@@ -88,7 +88,7 @@ int zimwm_close_module(char *path)
 	ZimModule *modinfo = NULL;
 	void(*mod_close_handle)(void);
 	
-	if(!path)
+	if(!path || !list)
 		return;
 
 	modinfo = (ZimModule *)list->data;
