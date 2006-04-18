@@ -45,9 +45,18 @@ int zimwm_module_init(void)
 	return 0;
 }
 
-void on_client_message(IMPObject *widget, void *data)
+void on_systray_client_message(IMPObject *widget, void *data)
 {
+	XClientMessageEvent *ev = (XClientMessageEvent *)data;
+	Window win;
 
+	if(ev->message_type == systray_opcode) {
+		if(ev->data.l[1] == SYSTEM_TRAY_REQUEST_DOCK) {
+			win = (Window)ev->data.l[2];
+			printf("Systray received request by %d\n",win);
+		}
+	}
+	
 }
 
 void zimwm_module_quit()
@@ -72,7 +81,3 @@ static void on_systray_close(IMPObject *widget, void *data)
 	zimwm_close_module(MOD_NAME);
 }
 
-static void on_systray_client_message(IMPObject *widget, void *data)
-{
-
-}
