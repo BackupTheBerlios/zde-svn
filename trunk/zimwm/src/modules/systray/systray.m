@@ -48,12 +48,15 @@ int zimwm_module_init(void)
 void on_systray_client_message(IMPObject *widget, void *data)
 {
 	XClientMessageEvent *ev = (XClientMessageEvent *)data;
-	Window win;
+	Window w;
 
 	if(ev->message_type == systray_opcode) {
 		if(ev->data.l[1] == SYSTEM_TRAY_REQUEST_DOCK) {
-			win = (Window)ev->data.l[2];
-			printf("Systray received request by %d\n",win);
+			w = (Window)ev->data.l[2];
+			printf("Systray received request by %d\n",w);
+
+			XReparentWindow(zdpy,w,(Window)win->window,0,0);
+			XMapWindow(zdpy,w);
 		}
 	}
 	
