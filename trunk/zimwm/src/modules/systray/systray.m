@@ -12,7 +12,7 @@
 #define _NET_SYSTEM_TRAY_ORIENTATION_VERT 1
 
 /* Variables */
-IMPList *winlist = NULL; /* List holding icons in the window. */
+Window winlist[20]; /* Array holding icons in the window. */
 ZWindow *win = NULL; /* The window holding the icons. */
 Atom systray_opcode;
 Atom xembed_info;
@@ -21,6 +21,7 @@ Atom xembed_info;
 Atom net_sys_tray_for_screen[3];
 
 int next_x = 0;
+int num = 0;
 
 /* Event handlers */
 static void on_systray_close(IMPObject *widget, void *data);
@@ -58,17 +59,13 @@ void on_systray_client_message(IMPObject *widget, void *data)
 			w = (Window)ev->data.l[2];
 			printf("systray received request by %d\n",w);
 
+			if(num < 19)
+				winlist[num++] = w;
+			else 
+				return;
+			
 			XReparentWindow(zdpy,w,(Window)win->window,next_x += 12,0);
-			XMapWindow(zdpy,w);
-
-			if(!winlist) {
-				winlist = [IMPList alloc];
-				[winlist init:0];
-				[winlist append_data:w];
-			}	
-			else {
-				[winlist append_data:w];
-			}
+			XMapWindow(zdpy,w);	
 		}
 	}
 	
@@ -77,28 +74,19 @@ void on_systray_client_message(IMPObject *widget, void *data)
 void zimwm_module_quit()
 {
 	IMPList *tmp = NULL;
+	Window *w = NULL;
+	int i;
+
 	printf("systray module is unloading.\n");
 	
+	for(i=0;i<num;i++) {
+		XUnmapWindow(zdpy,winlist[i]);
+		XReparentWindow(zdpy,winlist[i],[zones[curr_zone] get_root]->window,0,0);
+	}
+
 	[win destroy];
 	win = NULL;
 
-	while(winlist) {
-		if(winlist->next)
-			tmp = winlist->next;
-
-		if(!winlist->data) {
-			winlist = winlist->next;
-			continue;
-		}
-
-		XReparentWindow(zdpy,(Window)winlist->data,root_window->window,0,0);
-		
-		winlist->data = NULL;
-
-	//	[winlist delete_node];
-
-		winlist = tmp;
-	}
 }
 
 char *zimwm_module_version()
@@ -108,7 +96,7 @@ char *zimwm_module_version()
 
 char *zimwm_module_about()
 {
-	return "Module that acts as a systray per the System Tray Protocol Specification located at http://standards.freedesktop.org/systemtray-spec/systemtray-spec-0.2.html";
+	return "\nModule that acts as a systray per the System Tray Protocol Specification located at http://standards.freedesktop.org/systemtray-spec/systemtray-spec-0.2.html\nThis module is very buggy, as many applications do not follow the spec well or completely ignore some areas, so use this at your own risk.";
 }
 
 static void on_systray_close(IMPObject *widget, void *data)
