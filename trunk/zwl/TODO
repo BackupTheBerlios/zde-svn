@@ -19,8 +19,8 @@
 -Finish ZMenu
  -25%
 
--Speedups, especially in the main loop when adding/removing widgets (imp)
- -15%
+-Replace Xlib with XCB
+ -0%
 
 -Become EWMH and ICCCM Compliant
  -5%
