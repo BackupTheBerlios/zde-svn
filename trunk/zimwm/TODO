@@ -69,3 +69,6 @@ horizontally.  That would be simpler, but would allow less flexibility.
 
 *Some kind of functionality to "remember" window settings, like place, size, etc. that are set/can be set by the window manager.
  -10% IPC is going to implement this.
+
+*Convert to XCB (pending zwl conversion)
+ -0%

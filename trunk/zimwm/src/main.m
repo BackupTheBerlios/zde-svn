@@ -340,7 +340,6 @@ void zimwm_remove_client(ZimClient *c)
 	}
 
 	update_client_list(client_list);
-
 }
 
 /* FIXME */
