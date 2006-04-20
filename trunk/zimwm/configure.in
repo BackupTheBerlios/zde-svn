@@ -39,6 +39,20 @@ packagesrcdir=`cd $srcdir && pwd`
 AC_DEFINE_UNQUOTED(PACKAGE_SOURCE_DIR, "${packagesrcdir}", [Source code directory])
 
 dnl Objective C stuff
+
+AC_MSG_CHECKING(for Objective-C compiler)
+cc1objpath=`gcc -print-prog-name=cc1obj`
+if test "$cc1objpath" != "cc1obj"; then
+  AC_MSG_RESULT(yes)
+else
+    AC_MSG_ERROR(no)
+fi
+
+AC_CHECK_HEADERS(objc/objc.h)
+if test $ac_cv_header_objc_objc_h = no; then
+  AC_MSG_ERROR(Objective-C headers were not found.)  
+fi
+
 _AM_DEPENDENCIES([OBJC])
 OBJC="gcc"
 OBJCFLAGS="-g"
