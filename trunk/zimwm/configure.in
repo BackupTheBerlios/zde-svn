@@ -200,7 +200,8 @@ AC_CONFIG_FILES([
 		data/Makefile \
                 src/Makefile \
 		src/modules/Makefile \
-		src/modules/systray/Makefile
+		src/modules/systray/Makefile \
+		src/modules/pager/Makefile
 		])
 AC_OUTPUT
 
