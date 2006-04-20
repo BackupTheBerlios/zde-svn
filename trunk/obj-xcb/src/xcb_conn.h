@@ -18,8 +18,23 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 	XCBConnection *c;
 }
 
-- init; /**< Starts a new connection to the X Server on the default display and screen. */
-- init:(const char *)display:(int *)display; /**< Starts a new connection to the X Server on the specified display and screen. */
+/** Starts a new connection to the X Server on the default display and screen. */
+- init;
+
+/**< Starts a new connection to the X Server on the specified display and screen. */
+- init:(const char *)display:(int *)display; 
+
+/** 
+   Starts a new connection to the X Server on the specified display and screen with
+   authentication info. 
+*/
+- init_auth:(const char *)display:(XCBAuthInfo *)auth:(int *)screen; 
+
+/**
+  Starts a new connection to the X Server on the specified file descriptor with
+  authentication info.
+  */
+- init_auth:(int)fd:(XCBAuthInfo *)auth;
 
 @end
 

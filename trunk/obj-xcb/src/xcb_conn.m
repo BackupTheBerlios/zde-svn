@@ -16,6 +16,8 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 /* FIXME error handling */
 - init
 {
+	[super init];
+
 	self->c = XCBConnect(NULL,NULL);
 
 	if(!self->c)
@@ -27,11 +29,44 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 /* FIXME error handling */
 - init:(const char *)display:(int *)screen
 {
+	[super init];
+
 	self->c = XCBConnect(display,screen);
 
 	if(!self->c)
 		return NULL;
 	else 
+		return self;
+}
+/* FIXME error handling */
+- init_auth:(const char *)display:(XCBAuthInfo *)auth:(int *)screen
+{
+	[super init];
+
+	if(!auth)
+		return NULL;
+
+	self->c = XCBConnectToDisplayWithAuthInfo(display,auth,screen);
+
+	if(!self->c)
+		return NULL;
+	else
+		return self;
+}
+
+/* FIXME error handling */
+- init_auth:(int)fd:(XCBAuthInfo *)auth
+{
+	[super init];
+
+	if(!auth)
+		return NULL;
+
+	self->c = XCBConnectToFD(fd,auth);
+
+	if(!self->c)
+		return NULL;
+	else
 		return self;
 }
 
