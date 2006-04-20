@@ -1,1 +1,1 @@
-Objective-C XCB bindings.
+Objective-C XCB bindings. I am hoping to have this project accepted to the Google SoC so that I don't have to get a "real" job instead, and continue working on a cool project.  Either way, this will eventually be used in ZDE as the backend for zwl and zimwm when it is in a useable state.  Hopefully, it will also be useful for other projects.
