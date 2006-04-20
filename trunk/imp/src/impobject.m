@@ -32,7 +32,9 @@ static unsigned long int id_count = 0;
 	[super init];
 	
 	self->ID = id_count++;
-	self->refcount = 1;	
+	self->refcount = 1;
+
+	return self;
 }
 
 - (void)free
