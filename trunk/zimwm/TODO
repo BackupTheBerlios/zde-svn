@@ -72,3 +72,6 @@ horizontally.  That would be simpler, but would allow less flexibility.
 
 *Convert to XCB (pending zwl conversion)
  -0%
+
+*IPC Command to find all windows and what workspace/desktop they are on by name/id/etc.
+ -0%
