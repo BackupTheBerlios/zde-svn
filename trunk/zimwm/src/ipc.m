@@ -83,6 +83,7 @@ void ipc_execute_command(int cmd_num,char *cmd)
 	ZimModule *modinfo;
 	char *(*mod_version_handle)(void);
 	char *(*mod_about_handle)(void);
+	char *name = NULL;
 	
 	switch(cmd_num) {
 		case IPC_CMD_WORKSPACE_LIST:
@@ -185,12 +186,18 @@ void ipc_execute_command(int cmd_num,char *cmd)
 			break;
 		case IPC_CMD_MOD_INFO:
 			list = modules_list;
-			
+			name = strtok(NULL," "); /* FIXME XXX BAD NO STRTOK FOR YOU XXX FIXME */
+
 			while(list) {
 				modinfo = list->data;
 				list = list->next;
 
-				if(!strncmp(modinfo->path,strtok(NULL," "),50)) { /* FIXME XXX BAD NO STRTOK FOR YOU XXX FIXME */
+				if(!modinfo) {
+					list = list->next;
+					continue;
+				}
+
+				if(!strncmp(modinfo->path,name,50)) { 
 					mod_version_handle = dlsym(modinfo->handle,"zimwm_module_version");
 					mod_about_handle = dlsym(modinfo->handle,"zimwm_module_about");
 

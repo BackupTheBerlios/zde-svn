@@ -74,7 +74,8 @@ ZimModule *zimwm_open_module(char *path)
 				zimwm_init_module_subsystem();
 			}
 			
-			modules_list = [modules_list append_data:modinfo];
+			//[modules_list append_data:modinfo];
+			modules_list = [modules_list prepend_data:modinfo];
 			return modinfo;
 		}
 	}
