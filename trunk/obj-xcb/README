@@ -1,1 +1,3 @@
 Objective-C XCB bindings and test suite. I am hoping to have this project accepted to the Google SoC so that I don't have to get a "real" job instead, and continue working on a cool project.  Either way, this will eventually be used in ZDE as the backend for zwl and zimwm when it is in a useable state.  Hopefully, it will also be useful for other projects.
+
+The scope of the bindings is intended to not just cover XCB but extensions as well, such as XCBrender, although the core XCB bindings will be the main focus.

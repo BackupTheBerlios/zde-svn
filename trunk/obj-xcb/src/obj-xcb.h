@@ -9,19 +9,16 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
  */
 
-#ifndef OBJXCB_CONN_H
-#define OBJXCB_CONN_H
+/* Objc includes */
+#include <objc/Object.h>
 
-@interface ObjXCBConnection : Object
-{
-	@protected
-	XCBConnection *c;
-}
+/* XCB includes */
+#include <X11/XCB/xcb.h>
 
-- init; /**< Starts a new connection to the X Server on the default display and screen. */
-- init:(const char *)display:(int *)display; /**< Starts a new connection to the X Server on the specified display and screen. */
+/* C Standard library includes */
+#include <stdio.h>
+#include <stdlib.h>
 
-@end
-
-#endif
+/* obj-xcb includes */
+#include "xcb_conn.h"
 
