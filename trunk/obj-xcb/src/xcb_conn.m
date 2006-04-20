@@ -70,4 +70,16 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 		return self;
 }
 
+- (int)get_fd;
+{
+	return XCBGetFileDescriptor(self->c);
+}
+
+- free
+{
+	XCBDisconnect(self->c);
+
+	[super free];
+}
+
 @end

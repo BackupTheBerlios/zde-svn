@@ -36,6 +36,16 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
   */
 - init_auth:(int)fd:(XCBAuthInfo *)auth;
 
+/**
+  Returns the file descriptor associated with the running connection to the X Server.
+  */
+- (int)get_fd;
+
+/**
+  Closes connection to the X Server.
+  */
+- free;
+
 @end
 
 #endif
