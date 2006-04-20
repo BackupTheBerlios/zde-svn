@@ -1,0 +1,75 @@
+# Process this file with autoconf to produce a configure script.
+
+AC_PREREQ(2.57)
+        AC_INIT([obj-xcb],[0.0.1])
+        AM_INIT_AUTOMAKE(AC_PACKAGE_NAME,AC_PACKAGE_VERSION)
+        AC_PROG_MAKE_SET
+
+AC_CONFIG_SRCDIR([.])
+AC_CONFIG_SRCDIR([src])
+AC_CONFIG_SRCDIR([tests])
+
+# Checks for programs.
+AC_PROG_CC
+AC_PROG_CC_STDC
+AC_ISC_POSIX
+AC_PROG_INSTALL
+AC_PROG_CPP
+AC_PROG_LIBTOOL
+
+dnl Set PACKAGE_LOCALE_DIR in config.h
+if test "x${prefix}" = "xNONE"; then
+  AC_DEFINE_UNQUOTED(PACKAGE_LOCALE_DIR, "${ac_default_prefix}/${DATADIRNAME}/locale", [Locale data directory])
+else
+  AC_DEFINE_UNQUOTED(PACKAGE_LOCALE_DIR, "${prefix}/${DATADIRNAME}/locale", [Locale data directory])
+fi
+
+dnl Set PACKAGE_DATA_DIR in config.h
+if test "x${datadir}" = 'x${prefix}/share'; then
+  if test "x${prefix}" = "xNONE"; then
+    AC_DEFINE_UNQUOTED(PACKAGE_DATA_DIR, "${ac_default_prefix}/share/${PACKAGE}", [Shared data directory])
+  else
+    AC_DEFINE_UNQUOTED(PACKAGE_DATA_DIR, "${prefix}/share/${PACKAGE}", [Shared data directory])
+  fi
+else
+  AC_DEFINE_UNQUOTED(PACKAGE_DATA_DIR, "${datadir}/${PACKAGE}", [Shared data directory])
+fi
+
+dnl Set PACKAGE_SOURCE_DIR in config.h
+packagesrcdir=`cd $srcdir && pwd`
+AC_DEFINE_UNQUOTED(PACKAGE_SOURCE_DIR, "${packagesrcdir}", [Source code directory])
+
+
+dnl Objective C stuff
+_AM_DEPENDENCIES([OBJC])
+OBJC="gcc"
+OBJCFLAGS="-g"
+OBJCLDFLAGS="-lobjc -lpthread"
+AC_SUBST(OBJC)
+AC_SUBST(OBJCFLAGS)
+AC_SUBST(OBJCLDFLAGS)
+
+AC_CONFIG_HEADER(objxcb-config.h)
+AC_CHECK_HEADERS(stdio.h stdlib.h unistd.h errno.h string.h)
+AC_C_CONST
+AC_FUNC_SELECT_ARGTYPES
+
+AC_CHECK_FUNCS([strdup])
+AC_CHECK_FUNCS([malloc])
+AC_CHECK_FUNCS([calloc])
+AC_CHECK_FUNCS([realloc])
+
+AC_CHECK_LIB(pot,coffee,,[
+                echo "Your coffee pot is empty, time to make some coffee!"
+                ])
+
+AC_CONFIG_FILES([
+                Makefile \
+		obj-xcb.pc \
+                src/Makefile \
+		tests/Makefile
+		])
+AC_OUTPUT
+
+echo "obj-xcb is now ready to be built.  Make sure you reade the README first."
+	

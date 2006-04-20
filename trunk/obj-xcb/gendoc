@@ -1,0 +1,6 @@
+#!/bin/sh
+rm -rf ./doc/html ./doc/latex ./doc/man
+mkdir -p doc/html doc/man doc/latex
+doxygen
+exit 0
+	    
