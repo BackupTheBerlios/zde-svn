@@ -16,6 +16,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 {
 	@protected
 	XCBConnection *c;
+	Protocol *event_handler; /**< Object that we use to handle events. */
 }
 
 /** Starts a new connection to the X Server on the default display and screen. */
@@ -45,6 +46,13 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
   Set the event handler object for the connection.
   */
 - (void)set_event_handler:(<ObjXCBEventHandler> *)handler;
+
+/**
+  Polls for the next X event on the connection, calls the appropriate event handler function,
+  and returns NULL.  If there is no event handler available, it returns an XCBGenericEvent that
+  can be handled or ignored.  If there is no event, it returns NULL immediatly (does not block).
+  */
+- (XCBGenericEvent *)poll_event;
 
 /**
   Closes connection to the X Server and frees associated memory.
