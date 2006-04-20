@@ -1,7 +1,7 @@
 lib_LTLIBRARIES = libXCBobjc.la
 libXCBobjc_la_SOURCES = xcb_conn.m
 
-EXTRA_DIST = xcb_conn.h
+EXTRA_DIST = xcb_conn.h xcb_events.h obj-xcb.h
 
 installed_headersdir = $(prefix)/include/X11/XCB/bindings/objc
 #installed_headers_DATA = $(XCBOBJCHEADERS)

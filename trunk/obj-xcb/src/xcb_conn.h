@@ -42,7 +42,12 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 - (int)get_fd;
 
 /**
-  Closes connection to the X Server.
+  Set the event handler object for the connection.
+  */
+- (void)set_event_handler:(<ObjXCBEventHandler> *)handler;
+
+/**
+  Closes connection to the X Server and frees associated memory.
   */
 - free;
 

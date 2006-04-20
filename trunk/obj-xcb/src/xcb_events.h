@@ -9,17 +9,13 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
  */
 
-/* Objc includes */
-#include <objc/Object.h>
+/**
+  Protocol for an object that handles events.
+  Specified formally are the methods that MUST be defined.
+  In other contexts, more methods can and should be defined.
+ */
+@protocol ObjXCBEventHandler
 
-/* XCB includes */
-#include <X11/XCB/xcb.h>
+- (void)ExposeHandler:(XCBExposeEvent *)ev;
 
-/* C Standard library includes */
-#include <stdio.h>
-#include <stdlib.h>
-
-/* obj-xcb includes */
-#include "xcb_events.h"
-#include "xcb_conn.h"
-
+@end
