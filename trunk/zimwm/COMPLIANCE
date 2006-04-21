@@ -1,6 +1,6 @@
 zimwm Standards Compliance Documentation
 ----------------------------------------
-Created 3/22/06, last updated 4/15/06
+Created 3/22/06, last updated 4/21/06
 ----------------------------------------
 
 [-] No compliance at all, intention of compliance
@@ -28,8 +28,8 @@ Root Window Hints/Properties/Messages
 [*] _NET_CLIENT_LIST_STACKING
 [*] _NET_NUMBER_OF_DESKTOPS
 	-Virtual Workspaces are counted instead of desktops.
-[-] _NET_DESKTOP_GEOMETRY
-[-] _NET_DESKTOP_VIEWPORT
+[?] _NET_DESKTOP_GEOMETRY
+[?] _NET_DESKTOP_VIEWPORT
 [*] _NET_CURRENT_DESKTOP
 [!] _NET_DESKTOP_NAMES
 [*] _NET_ACTIVE_WINDOW
@@ -47,9 +47,9 @@ Root Window Hints/Properties/Messages
 Application Window Properties
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 [*] _NET_WM_NAME
-[-] _NET_WM_VISIBLE_NAME
-[-] _NET_WM_ICON_NAME
-[-] _NET_WM_VISIBLE_ICON_NAME
+[!] _NET_WM_VISIBLE_NAME
+[!] _NET_WM_ICON_NAME
+[!] _NET_WM_VISIBLE_ICON_NAME
 [-] _NET_WM_DESKTOP
 [/] _NET_WM_WINDOW_TYPE
 [-] _NET_WM_STATE
