@@ -34,6 +34,9 @@ ZWindow *workwins[5]; /* Sub-windows representing workspaces. */
 
 VDesk *curr_desk;
 
+
+static void on_workwin_click(IMPObject *widget, void *data);
+
 int zimwm_module_init(void)
 {
 	int i;
@@ -42,19 +45,21 @@ int zimwm_module_init(void)
 
 	w = zimwm_module_create_window(200,50);
 	
-	for(i=0;i<[curr_desk get_num_workspaces];i++) {
+	for(i=0;i<[curr_desk get_num_workspaces] - 1;i++) {
 		workwins[i] = [ZWindow alloc];
-		[workwins[i] init:w:0:0:40:50];
-		[workwins[i] show];
-	}
+		[workwins[i] init:w:i * 40:0:40:50];
 
+		[workwins[i] show];
+
+		[workwins[i] attatch_cb:BUTTON_DOWN:(ZCallback *)on_workwin_click];
+	}
 
 	return 0;
 }
 
 void zimwm_module_quit(void)
 {
-
+	[w destroy];
 }
 
 char *zimwm_module_version(void)
@@ -64,6 +69,19 @@ char *zimwm_module_version(void)
 
 char *zimwm_module_about(void)
 {
-	return "Pager module that graphically displays workspaces and desktops and the windows contained in them.";
+	return "Pager module that graphically displays workspaces, desktops and the windows contained in them.";
+}
+
+static void on_workwin_click(IMPObject *widget, void *data)
+{
+	int i;
+	ZWindow *win = (ZWindow *)widget;
+
+	for(i=0;i<5;i++) {
+		if(win == workwins[i]) {
+			printf("Switching to desktop %d\n",i);
+			return;
+		}
+	}
 }
 
