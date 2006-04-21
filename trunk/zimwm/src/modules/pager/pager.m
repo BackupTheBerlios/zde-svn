@@ -28,8 +28,26 @@
 #define MOD_NAME "pager"
 #define MOD_VERSION_STRING "pager 0.0.1"
 
+ZWindow *w = NULL; /* Main window */
+/* FIXME should be dynamically allocated. */
+ZWindow *workwins[5]; /* Sub-windows representing workspaces. */
+
+VDesk *curr_desk;
+
 int zimwm_module_init(void)
 {
+	int i;
+
+	curr_desk = [zones[curr_zone] get_current_desk];
+
+	w = zimwm_module_create_window(200,50);
+	
+	for(i=0;i<[curr_desk get_num_workspaces];i++) {
+		workwins[i] = [ZWindow alloc];
+		[workwins[i] init:w:0:0:40:50];
+		[workwins[i] show];
+	}
+
 
 	return 0;
 }

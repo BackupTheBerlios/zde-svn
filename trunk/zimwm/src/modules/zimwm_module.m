@@ -1,13 +1,13 @@
 #include "../zimwm.h"
 #include "zimwm_module.h"
 
-ZWindow *zimwm_module_create_window(void)
+ZWindow *zimwm_module_create_window(int width, int height)
 {
 	ZWindow *w = [ZWindow alloc];
 	XMapRequestEvent ev;
 	XSizeHints shints;
 
-	[w init:NULL:0:0:100:50];
+	[w init:NULL:0:0:width:height];
 
 	shints.min_width = 20;
 	shints.min_height = 20;

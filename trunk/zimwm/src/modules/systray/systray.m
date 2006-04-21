@@ -59,7 +59,7 @@ int zimwm_module_init(void)
 	systray_opcode = XInternAtom(zdpy,"_NET_SYSTEM_TRAY_OPCODE",False);
 	xembed_info = XInternAtom(zdpy,"_XEMBED_INFO",False);
 
-	win = zimwm_module_create_window();
+	win = zimwm_module_create_window(100,50);
 
 	//[win attatch_cb:CLOSE:on_systray_close];
 	[win attatch_cb:CLIENT_MESSAGE:on_systray_client_message];

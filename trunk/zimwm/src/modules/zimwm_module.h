@@ -40,7 +40,7 @@ char *zimwm_module_about(void);
 /**
   Creates a module window.
   */
-ZWindow *zimwm_module_create_window(void);
+ZWindow *zimwm_module_create_window(int width, int height);
 
 /** @} */
 #endif
