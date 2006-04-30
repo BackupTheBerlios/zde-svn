@@ -1,5 +1,5 @@
 lib_LTLIBRARIES = libXCBobjc.la
-libXCBobjc_la_SOURCES = xcb_conn.m
+libXCBobjc_la_SOURCES = xcb_conn.m xcb_events.m
 
 EXTRA_DIST = xcb_conn.h xcb_events.h obj-xcb.h
 

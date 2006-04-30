@@ -16,7 +16,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 {
 	@protected
 	XCBConnection *c;
-	Protocol *event_handler; /**< Object that we use to handle events. */
+	<ObjXCBEventHandler> *event_handler; /**< Object that we use to handle events. */
 }
 
 /** Starts a new connection to the X Server on the default display and screen. */

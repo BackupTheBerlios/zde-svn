@@ -10,6 +10,7 @@ set autoindent
 set background=dark
 set backspace=indent,eol,start
 set cindent
+set iminsert=0
 set mouse=a
 set omnifunc=ccomplete#Complete
 set tags=./tags,tags,~/.vim/systags
@@ -25,11 +26,14 @@ if expand('%') == '' && !&modified && line('$') <= 1 && getline(1) == ''
 endif
 set shortmess=aoO
 badd +1 configure.in
-badd +0 Makefile.am
-badd +0 src/Makefile.am
+badd +1 Makefile.am
+badd +1 src/Makefile.am
 badd +1 README
 badd +1 src/xcb_conn.m
-badd +1 src/xcb_conn.h
+badd +34 src/xcb_conn.h
+badd +1 src/xcb_events.h
+badd +1 src/xcb_events.m
+badd +1 src/obj-xcb.h
 args configure.in Makefile.am src/Makefile.am
 edit README
 set splitbelow splitright
@@ -135,7 +139,7 @@ if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
 1
-normal! 049l
+normal! 0
 if exists('s:wipebuf')
   exe 'bwipe ' . s:wipebuf
 endif
