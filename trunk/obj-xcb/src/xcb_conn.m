@@ -119,6 +119,9 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 {
 	XCBDisconnect(self->c);
 
+	if(self->event_handler)
+		[self->event_handler free];
+
 	[super free];
 }
 
