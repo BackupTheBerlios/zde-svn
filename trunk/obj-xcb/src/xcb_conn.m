@@ -32,11 +32,13 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 	[super init];
 
 	self->c = XCBConnect(display,screen);
+	self->event_handler = NULL;
 
 	if(!self->c)
 		return NULL;
-	else 
-		return self;
+	
+
+	return self;
 }
 /* FIXME error handling */
 - init_auth:(const char *)display:(XCBAuthInfo *)auth:(int *)screen
@@ -50,8 +52,10 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 	if(!self->c)
 		return NULL;
-	else
-		return self;
+	
+
+	[self init];
+	return self;
 }
 
 /* FIXME error handling */
@@ -66,13 +70,45 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 	if(!self->c)
 		return NULL;
-	else
-		return self;
+	
+	[self init];
+	return self;
 }
 
 - (int)get_fd;
 {
 	return XCBGetFileDescriptor(self->c);
+}
+
+- (XCBConnection *)get_connection
+{
+	return self->c;
+}
+
+- (void)set_event_handler:(<ObjXCBEventHandler> *)handler
+{
+	
+	if(self->event_handler)
+		[self->event_handler free];
+
+	self->event_handler = handler;
+}
+
+- (XCBGenericEvent *)poll_event
+{
+	XCBGenericEvent *ev;
+
+	while((ev = XCBPollForEvent(self->c, 0))) {
+     		switch(ev->response_type) {
+			case XCBExpose:
+				/* Check if the event_handler has a method for expose. */	
+				break;
+			default:
+				break;
+		}
+    	}
+
+	return NULL;
 }
 
 - free

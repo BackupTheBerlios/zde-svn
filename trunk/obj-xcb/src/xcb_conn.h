@@ -42,6 +42,9 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
   */
 - (int)get_fd;
 
+/** Get the XCBConnection used. */
+- (XCBConnection *)get_connection;
+
 /**
   Set the event handler object for the connection.
   */
