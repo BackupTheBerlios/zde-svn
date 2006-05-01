@@ -16,7 +16,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 {
 	@protected
 	XCBConnection *c;
-	<ObjXCBEventHandler> *event_handler; /**< Object that we use to handle events. */
+	Object *event_handler; /**< Object that we use to handle events. */
 }
 
 /** Starts a new connection to the X Server on the default display and screen. */
@@ -48,7 +48,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 /**
   Set the event handler object for the connection.
   */
-- (void)set_event_handler:(<ObjXCBEventHandler> *)handler;
+- (void)set_event_handler:(Object *)handler;
 
 /**
   Polls for the next X event on the connection, calls the appropriate event handler function,
