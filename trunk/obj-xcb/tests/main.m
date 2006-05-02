@@ -3,8 +3,12 @@
 int main(void)
 {
 	ObjXCBConnection *c = [ObjXCBConnection alloc];
+	ObjXCBWindow *w = [ObjXCBWindow alloc];
 
 	[c init];
+	
+	[w init:c];
+	[w map];
 
 	[c free];
 

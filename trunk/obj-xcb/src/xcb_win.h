@@ -9,18 +9,20 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
  */
 
-/* Objc includes */
-#include <objc/Object.h>
+@interface ObjXCBWindow : Object
+{
+	XCBWINDOW win_id;
+	ObjXCBConnection *c;
+}
 
-/* XCB includes */
-#include <X11/XCB/xcb.h>
+/** Creates a new window with default parameters. */
+- init:(ObjXCBConnection *)con;
 
-/* C Standard library includes */
-#include <stdio.h>
-#include <stdlib.h>
+/** Creates a new window with parameters. FIXME VISUAL? */
+- init:(ObjXCBConnection *)con:(int)depth:(int)x:(int)y:(int)width:(int)height:(int)border_width;
 
-/* obj-xcb includes */
-#include "xcb_events.h"
-#include "xcb_conn.h"
-#include "xcb_win.h"
+- (void)map;
 
+- free;
+
+@end

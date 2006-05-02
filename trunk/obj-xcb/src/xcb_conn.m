@@ -19,11 +19,16 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 	[super init];
 
 	self->c = XCBConnect(NULL,NULL);
-
+	
 	if(!self->c)
 		return NULL;
-	else 
-		return self;
+
+	self->s = XCBConnSetupSuccessRepRootsIter(XCBGetSetup(self->c)).data;
+
+	if(!self->s) 
+		return NULL;
+
+	return self;
 }
 
 /* FIXME error handling */
@@ -83,6 +88,11 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 - (XCBConnection *)get_connection
 {
 	return self->c;
+}
+
+- (XCBSCREEN *)get_screen
+{
+	return self->s;
 }
 
 - (void)set_event_handler:(Object *)handler

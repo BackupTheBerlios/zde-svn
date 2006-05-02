@@ -16,6 +16,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 {
 	@protected
 	XCBConnection *c;
+	XCBSCREEN *s;
 	Object *event_handler; /**< Object that we use to handle events. */
 }
 
@@ -44,6 +45,9 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 /** Get the XCBConnection used. */
 - (XCBConnection *)get_connection;
+
+/** Get the screen on the connection. */
+- (XCBSCREEN *)get_screen;
 
 /**
   Set the event handler object for the connection.
