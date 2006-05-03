@@ -10,6 +10,7 @@ int main(void)
 	[w init:c];
 	[w map];
 
+	pause();
 	[c free];
 
 	return 0;

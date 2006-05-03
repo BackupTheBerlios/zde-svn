@@ -20,26 +20,27 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 - init:(ObjXCBConnection *)con:(int)depth:(int)x:(int)y:(int)width:(int)height:(int)border_width
 {
-	self->win_id = XCBWINDOWNew([con get_connection]);
+	self->draw.window = XCBWINDOWNew([con get_connection]);
 	self->c = con;
-
-	XCBCreateWindow(c,                        /* Connection          */
- 		   depth,                        /* depth               */
-		   self->win_id,               /* window Id           */
-		   [con get_screen]->root,             /* parent window       */
-		   x, y,                     /* x, y                */
+	
+	XCBCreateWindow([con get_connection],                        /* Connection          */
+ 		   depth,                         /* depth               */
+		   self->draw.window,             /* window Id           */
+		   [con get_screen]->root,        /* parent window       */
+		   x, y,                          /* x, y                */
 		   width, height,                 /* width, height       */
-		   border_width,                       /* border_width        */
-		   InputOutput,              /* class               */
-		   [con get_screen]->root_visual,      /* visual              */
-		   0, NULL);                 /* masks, not used yet */
-
+		   border_width,                  /* border_width        */
+		   InputOutput,                   /* class               */
+		   [con get_screen]->root_visual, /* visual              */
+		   0, NULL);                      /* masks, not used yet */
+	
 	return self;
 }
 
 - (void)map
 {
-	XCBMapWindow([self->c get_connection],self->win_id);
+	XCBMapWindow([self->c get_connection],self->draw.window);
+	XCBSync([self->c get_connection],0);
 }
 
 @end
