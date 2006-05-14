@@ -29,13 +29,15 @@ badd +85 configure.in
 badd +1 Makefile.am
 badd +9 src/Makefile.am
 badd +1 README
-badd +47 src/xcb_conn.m
-badd +19 src/xcb_conn.h
+badd +94 src/xcb_conn.m
+badd +31 src/xcb_conn.h
 badd +10 src/xcb_events.h
 badd +14 src/xcb_events.m
 badd +1 src/obj-xcb.h
 badd +4 tests/Makefile.am
 badd +1 tests/main.m
+badd +1 src/xcb_win.h
+badd +1 src/xcb_win.m
 args configure.in Makefile.am src/Makefile.am
 edit README
 set splitbelow splitright

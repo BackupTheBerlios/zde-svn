@@ -57,9 +57,11 @@ fi
 
 
 _AM_DEPENDENCIES([OBJC])
-OBJC="gcc"
+#CC="g++"
+OBJC="g++"
 OBJCFLAGS="-g"
 OBJCLDFLAGS="-lobjc -lpthread"
+AC_SUBST(CC)
 AC_SUBST(OBJC)
 AC_SUBST(OBJCFLAGS)
 AC_SUBST(OBJCLDFLAGS)
@@ -68,6 +70,15 @@ AC_CONFIG_HEADER(objxcb-config.h)
 AC_CHECK_HEADERS(stdio.h stdlib.h unistd.h errno.h string.h)
 AC_C_CONST
 AC_FUNC_SELECT_ARGTYPES
+
+# xcb-proto check
+PKG_CHECK_MODULES(XCBPROTO, xcb-proto >= 0.9)
+
+# Find the xcb-proto protocol descriptions
+AC_MSG_CHECKING(XCBPROTO_XCBINCLUDEDIR)
+XCBPROTO_XCBINCLUDEDIR=`$PKG_CONFIG --variable=xcbincludedir xcb-proto`
+AC_MSG_RESULT($XCBPROTO_XCBINCLUDEDIR)
+AC_SUBST(XCBPROTO_XCBINCLUDEDIR)
 
 AC_CHECK_FUNCS([strdup])
 AC_CHECK_FUNCS([malloc])

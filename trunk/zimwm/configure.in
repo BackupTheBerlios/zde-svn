@@ -54,7 +54,7 @@ if test $ac_cv_header_objc_objc_h = no; then
 fi
 
 _AM_DEPENDENCIES([OBJC])
-OBJC="gcc"
+OBJC="g++"
 OBJCFLAGS="-g"
 OBJCLDFLAGS="-lobjc -lpthread"
 AC_SUBST(OBJC)
