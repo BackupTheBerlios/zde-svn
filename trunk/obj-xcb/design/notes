@@ -1,0 +1,16 @@
+Getting xid's and requests from xml files
+	-xcb_types.h
+		-rip out xid's and make objects for them
+	-xproto.xml
+		-take requests and group them by first field type that 
+		is also an xid class. For example, the CreateWindow class would
+		be in ObjXCBWindow, as the first field type isn't an xid, but
+		the second is. For a request like GetGeometry, it should be in
+		the class that is highest in the hierarchy.  Drawable, while
+		not an xid, will be treated as a "superclass" for windows and
+		pixmaps, therefore, GetGeometry will go in ObjXCBDrawable and
+		then be available to ObjXCBWindow through inheritance.
+
+Also need to follow the rules for prefixing XCB in from of requests so that
+CreateWindow can be correctly called in the method as XCBCreateWindow, not just
+CreateWindow.
