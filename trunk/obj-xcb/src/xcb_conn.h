@@ -14,7 +14,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 /**
  *  Abstracts an XCBConnection and associated functions.
- * 
+ *  FIXME Need to implement the event functions 
  * */
 @interface ObjXCBConnection : Object
 {
@@ -23,36 +23,57 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 	XCBSCREEN *s;
 }
 
-/** Starts a new connection to the X Server on the default display and screen. */
+/** 
+ * Starts a new connection to the X Server on the default display and screen. 
+ */
 - init;
 
-/**< Starts a new connection to the X Server on the specified display and screen. */
+/**
+ * Starts a new connection to the X Server on the specified display and screen. 
+ */
 - init:(const char *)display:(int *)display; 
 
 /** 
-   Starts a new connection to the X Server on the specified display and screen with
-   authentication info. 
-*/
+ * Starts a new connection to the X Server on the specified display and screen with
+ * authentication info. 
+ */
 - init_auth:(const char *)display:(XCBAuthInfo *)auth:(int *)screen; 
 
 /**
-  Starts a new connection to the X Server on the specified file descriptor with
-  authentication info.
-  */
+ * Starts a new connection to the X Server on the specified file descriptor with
+ * authentication info.
+ */
 - init_auth:(int)fd:(XCBAuthInfo *)auth;
 
 /**
-  Returns the file descriptor associated with the running connection to the X Server.
-  */
+ * Returns the file descriptor associated with the running connection to the X Server.
+ */
 - (int)get_fd;
 
-/** Get the XCBConnection used. */
+/** 
+ * Get the XCBConnection used. 
+ */
 - (XCBConnection *)get_connection;
 
-/** Get the screen on the connection. */
+/** 
+ * Get the screen on the connection. 
+ */
 - (XCBSCREEN *)get_screen;
 
+/**
+ * Returns some misc. xserver data.
+ */
+- (const XCBSetup *)get_setup_data;
+
+/**
+ * Flushes pending requests to the server.
+ */
+- (int)flush;
+
+- (const XCBQueryExtensionRep *)get_extension_data:(XCBExtension *)ext;
+
 #if 0
+DEPRECATED
 /**
   Set the event handler object for the connection.
   */

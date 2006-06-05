@@ -37,7 +37,6 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 	[super init];
 
 	self->c = XCBConnect(display,screen);
-	self->event_handler = NULL;
 
 	if(!self->c)
 		return NULL;
@@ -94,6 +93,23 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 {
 	return self->s;
 }
+
+- (const XCBSetup *)get_setup_data
+{
+	return XCBGetSetup(self->c);
+}
+
+- (int)flush
+{
+	return XCBFlush(self->c);
+}
+
+- (const XCBQueryExtensionRep *)get_extension_data:(XCBExtension *)ext
+{
+	return XCBGetExtensionData(self->c,ext);
+}
+
+
 
 #if 0
 - (void)set_event_handler:(Object *)handler
