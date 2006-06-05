@@ -119,39 +119,6 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 	return XCBPollForEvent(self->c,error);
 }
 
-
-#if 0
-- (void)set_event_handler:(Object *)handler
-{
-	if(![handler conformsTo:@protocol(ObjXCBEventHandler)])
-		return;
-
-	if(self->event_handler)
-		[self->event_handler free];
-
-	self->event_handler = handler;
-}
-
-- (XCBGenericEvent *)poll_event
-{
-	XCBGenericEvent *ev;
-
-	while((ev = XCBPollForEvent(self->c, 0))) {
-     		switch(ev->response_type) {
-			case XCBExpose:
-				if([self->event_handler respondsTo:@selector(exposeHandler:)]) {
-					[self->event_handler exposeHandler:ev];
-				}
-				break;
-			default:
-				break;
-		}
-    	}
-
-	return NULL;
-}
-#endif
-
 - free
 {
 	XCBDisconnect(self->c);
