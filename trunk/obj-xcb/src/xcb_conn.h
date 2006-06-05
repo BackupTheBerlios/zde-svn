@@ -72,6 +72,18 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 - (const XCBQueryExtensionRep *)get_extension_data:(XCBExtension *)ext;
 
+/**
+ * Blocks while waiting for the next event.
+ * Returns NULL on error.
+ */
+- (XCBGenericEvent *)next_event;
+
+/**
+ * Non-blocking version of next_event.
+ * Returns NULL and the error code on error.
+ */
+- (XCBGenericEvent *)poll_next_event:(int *)error;
+
 #if 0
 DEPRECATED
 /**

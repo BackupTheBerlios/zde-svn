@@ -109,6 +109,15 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 	return XCBGetExtensionData(self->c,ext);
 }
 
+- (XCBGenericEvent *)next_event
+{
+	return XCBWaitForEvent(self->c);
+}
+
+- (XCBGenericEvent *)poll_next_event:(int *)error
+{
+	return XCBPollForEvent(self->c,error);
+}
 
 
 #if 0
