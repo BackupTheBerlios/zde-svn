@@ -49,7 +49,7 @@ set omnifunc=ccomplete#Complete
 set printoptions=paper:a4
 set ruler
 set runtimepath=~/.vim,/var/lib/vim/addons,/usr/share/vim/addons,/usr/share/vim/vimfiles,/usr/share/vim/vim70,/usr/share/vim/vimfiles/after,/usr/share/vim/addons/after,/var/lib/vim/addons/after,~/.vim/after
-set suffixes=.bak,~,.swp,.o,.info,.aux,.log,.dvi,.bbl,.blg,.brf,.cb,.ind,.idx,.ilg,.inx,.out,.toc
+set suffixes=.bak,~,.swp,.o,.info,.aux,.log,.dvi,.bbl,.blg,.brf,.cb,.ind,.idx,.ilg,.inx,.out,.toc,.asv
 set tags=./tags,tags,~/.vim/systags
 set termencoding=utf-8
 set visualbell
@@ -64,18 +64,16 @@ endif
 set shortmess=aoO
 badd +85 configure.in
 badd +1 Makefile.am
-badd +9 src/Makefile.am
+badd +4 src/Makefile.am
 badd +1 README
-badd +94 src/xcb_conn.m
-badd +31 src/xcb_conn.h
-badd +10 src/xcb_events.h
-badd +14 src/xcb_events.m
-badd +1 src/obj-xcb.h
+badd +128 src/xcb_conn.m
+badd +64 src/xcb_conn.h
+badd +23 src/obj-xcb.h
 badd +4 tests/Makefile.am
 badd +1 tests/main.m
 badd +1 src/xcb_win.h
 badd +1 src/xcb_win.m
-badd +1 design/notes
+badd +16 design/notes
 args configure.in Makefile.am src/Makefile.am
 edit README
 set splitbelow splitright

@@ -1,0 +1,25 @@
+/* SAMPLE OF WHAT MAY BE DONE BY SCRIPT STEP-BY-STEP, EXTREMELY SIMPLIFIED */
+
+/* first pass */
+
+Go through xcb_types.h
+----------------------
+-Ignore struct's
+-First XID is named WINDOW, create files ObjXCBWindow.m and ObjXCBWindow.h
+-Same for XIDs PIXMAP,CURSOR,FONT,GCONTEXT,COLORMAP,ATOM
+-See union named DRAWABLE, special case that is parent of field types WINDOW and PIXMAP
+-FONTABLE todo
+-Ignore structs
+
+Go through xproto.xml
+---------------------
+-Ignore enums, events, eventcopy,error
+-Request named CreateWindow
+	-Parse name, see the word "Create", so it should be a constructor
+	-Every request's first implied "field" when translated to XCB is an ObjXCBConnection
+	-Go through field types, first one that is an XID is wid, so this request goes into ObjXCBWindow
+	-Ignore valueparam
+	
+
+
+Output in order of xid processing, then constructor/Create - regular requests - free

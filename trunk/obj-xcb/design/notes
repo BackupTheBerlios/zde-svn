@@ -1,3 +1,6 @@
+Code-generation from xml files
+------------------------------
+
 Getting xid's and requests from xml files
 	-xcb_types.h
 		-rip out xid's and make objects for them
