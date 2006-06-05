@@ -95,6 +95,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 	return self->s;
 }
 
+#if 0
 - (void)set_event_handler:(Object *)handler
 {
 	if(![handler conformsTo:@protocol(ObjXCBEventHandler)])
@@ -124,6 +125,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 	return NULL;
 }
+#endif
 
 - free
 {

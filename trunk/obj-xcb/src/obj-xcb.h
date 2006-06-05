@@ -20,7 +20,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 #include <stdlib.h>
 
 /* obj-xcb includes */
-#include "xcb_events.h"
+//#include "xcb_events.h"
 #include "xcb_conn.h"
 #include "xcb_win.h"
 

@@ -49,18 +49,19 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 /** Get the screen on the connection. */
 - (XCBSCREEN *)get_screen;
 
+#if 0
 /**
   Set the event handler object for the connection.
   */
-- (void)set_event_handler:(Object *)handler;
+//- (void)set_event_handler:(Object *)handler;
 
 /**
   Polls for the next X event on the connection, calls the appropriate event handler function,
   and returns NULL.  If there is no event handler available, it returns an XCBGenericEvent that
   can be handled or ignored.  If there is no event, it returns NULL immediatly (does not block).
   */
-- (XCBGenericEvent *)poll_event;
-
+//- (XCBGenericEvent *)poll_event;
+#endif
 /**
   Closes connection to the X Server and frees associated memory.
   */

@@ -2,21 +2,58 @@ let SessionLoad = 1
 if &cp | set nocp | endif
 let s:cpo_save=&cpo
 set cpo&vim
+map! <S-Insert> <MiddleMouse>
+nmap d :cs find d =expand("<cword>")	
+nmap i :cs find i ^=expand("<cfile>")$
+nmap f :cs find f =expand("<cfile>")	
+nmap e :cs find e =expand("<cword>")	
+nmap t :cs find t =expand("<cword>")	
+nmap c :cs find c =expand("<cword>")	
+nmap g :cs find g =expand("<cword>")	
+nmap s :cs find s =expand("<cword>")	
+vmap [% [%m'gv``
+vmap ]% ]%m'gv``
+vmap a% [%v]%
 nmap gx <Plug>NetrwBrowseX
+nmap <Nul><Nul>d :vert scs find d =expand("<cword>")
+nmap <Nul><Nul>i :vert scs find i ^=expand("<cfile>")$	
+nmap <Nul><Nul>f :vert scs find f =expand("<cfile>")	
+nmap <Nul><Nul>e :vert scs find e =expand("<cword>")
+nmap <Nul><Nul>t :vert scs find t =expand("<cword>")
+nmap <Nul><Nul>c :vert scs find c =expand("<cword>")
+nmap <Nul><Nul>g :vert scs find g =expand("<cword>")
+nmap <Nul><Nul>s :vert scs find s =expand("<cword>")
+nmap <Nul>d :scs find d =expand("<cword>")	
+nmap <Nul>i :scs find i ^=expand("<cfile>")$	
+nmap <Nul>f :scs find f =expand("<cfile>")	
+nmap <Nul>e :scs find e =expand("<cword>")	
+nmap <Nul>t :scs find t =expand("<cword>")	
+nmap <Nul>c :scs find c =expand("<cword>")	
+nmap <Nul>g :scs find g =expand("<cword>")	
+nmap <Nul>s :scs find s =expand("<cword>")	
 nnoremap <silent> <Plug>NetrwBrowseX :call netrw#NetBrowseX(expand("<cWORD>"),0)
+map <S-Insert> <MiddleMouse>
 let &cpo=s:cpo_save
 unlet s:cpo_save
 set autoindent
 set background=dark
 set backspace=indent,eol,start
 set cindent
+set cscopetag
+set cscopeverbose
+set guifont=Bitstream\ Vera\ Sans\ Mono\ 8
+set helplang=en
 set iminsert=0
 set mouse=a
 set omnifunc=ccomplete#Complete
+set printoptions=paper:a4
+set ruler
+set runtimepath=~/.vim,/var/lib/vim/addons,/usr/share/vim/addons,/usr/share/vim/vimfiles,/usr/share/vim/vim70,/usr/share/vim/vimfiles/after,/usr/share/vim/addons/after,/var/lib/vim/addons/after,~/.vim/after
+set suffixes=.bak,~,.swp,.o,.info,.aux,.log,.dvi,.bbl,.blg,.brf,.cb,.ind,.idx,.ilg,.inx,.out,.toc
 set tags=./tags,tags,~/.vim/systags
 set termencoding=utf-8
 set visualbell
-set window=52
+set window=71
 let s:so_save = &so | let s:siso_save = &siso | set so=0 siso=0
 let v:this_session=expand("<sfile>:p")
 silent only
@@ -38,6 +75,7 @@ badd +4 tests/Makefile.am
 badd +1 tests/main.m
 badd +1 src/xcb_win.h
 badd +1 src/xcb_win.m
+badd +1 design/notes
 args configure.in Makefile.am src/Makefile.am
 edit README
 set splitbelow splitright
@@ -47,6 +85,7 @@ wincmd t
 set winheight=1 winwidth=1
 argglobal
 edit README
+setlocal noarabic
 setlocal autoindent
 setlocal autoread
 setlocal balloonexpr=
@@ -96,6 +135,7 @@ setlocal indentexpr=
 setlocal indentkeys=0{,0},:,0#,!^F,o,O,e
 setlocal noinfercase
 setlocal iskeyword=@,48-57,_,192-255
+setlocal keymap=
 setlocal keywordprg=
 setlocal nolinebreak
 setlocal nolisp
@@ -114,6 +154,8 @@ setlocal nopreserveindent
 setlocal nopreviewwindow
 setlocal quoteescape=\\
 setlocal noreadonly
+setlocal norightleft
+setlocal rightleftcmd=search
 setlocal noscrollbind
 setlocal shiftwidth=8
 setlocal noshortname
@@ -139,14 +181,15 @@ setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
 silent! normal! zE
-let s:l = 1 - ((0 * winheight(0) + 26) / 52)
+let s:l = 1 - ((0 * winheight(0) + 35) / 71)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
 1
 normal! 0
+tabnext 1
 if exists('s:wipebuf')
-  exe 'bwipe ' . s:wipebuf
+  silent exe 'bwipe ' . s:wipebuf
 endif
 unlet! s:wipebuf
 set winheight=1 winwidth=20 shortmess=filnxtToO

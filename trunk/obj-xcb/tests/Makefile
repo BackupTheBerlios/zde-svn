@@ -79,7 +79,7 @@ AUTOMAKE = ${SHELL} /home/thisnukes4u/zde/berlios/trunk/obj-xcb/missing --run au
 AWK = mawk
 CC = gcc -std=gnu99
 CCDEPMODE = depmode=gcc3
-CFLAGS = -O2 -march=pentium-m -mfpmath=sse,387 -ffast-math -pipe
+CFLAGS = -g -O2
 CPP = gcc -std=gnu99 -E
 CPPFLAGS = 
 CXX = g++
@@ -95,8 +95,8 @@ ECHO_N = -n
 ECHO_T = 
 EGREP = /bin/grep -E
 EXEEXT = 
-F77 = g77
-FFLAGS = -g -O2
+F77 = 
+FFLAGS = 
 GREP = /bin/grep
 INSTALL_DATA = ${INSTALL} -m 644
 INSTALL_PROGRAM = ${INSTALL}
@@ -132,7 +132,7 @@ XCBPROTO_LIBS =
 XCBPROTO_XCBINCLUDEDIR = /usr/local/include/X11/XCB
 ac_ct_CC = gcc
 ac_ct_CXX = g++
-ac_ct_F77 = g77
+ac_ct_F77 = 
 am__fastdepCC_FALSE = #
 am__fastdepCC_TRUE = 
 am__fastdepCXX_FALSE = #
