@@ -12,12 +12,15 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 #ifndef OBJXCB_CONN_H
 #define OBJXCB_CONN_H
 
+/**
+ *  Abstracts an XCBConnection and associated functions.
+ * 
+ * */
 @interface ObjXCBConnection : Object
 {
 	@protected
 	XCBConnection *c;
 	XCBSCREEN *s;
-	Object *event_handler; /**< Object that we use to handle events. */
 }
 
 /** Starts a new connection to the X Server on the default display and screen. */
@@ -62,6 +65,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
   */
 //- (XCBGenericEvent *)poll_event;
 #endif
+
 /**
   Closes connection to the X Server and frees associated memory.
   */
