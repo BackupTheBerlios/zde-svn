@@ -17,3 +17,7 @@ Getting xid's and requests from xml files
 Also need to follow the rules for prefixing XCB in from of requests so that
 CreateWindow can be correctly called in the method as XCBCreateWindow, not just
 CreateWindow.
+
+NOTE
+----
+Bindings to XCBConnection, etc. are going to be hand-written b/c they are not described in xml only core X requests, etc. are in xml

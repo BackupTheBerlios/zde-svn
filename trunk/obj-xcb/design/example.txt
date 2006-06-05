@@ -20,6 +20,11 @@ Go through xproto.xml
 	-Go through field types, first one that is an XID is wid, so this request goes into ObjXCBWindow
 	-Ignore valueparam
 	
+-General case
+	-Name has Create, constructor
+	-Name has Get, returns a reply of form XCB*Reply, ex. XCBGetWindowAttributesReply for a request named GetWindowAttributes
+	-Others I haven't seen yet
+	
 
 
 Output in order of xid processing, then constructor/Create - regular requests - free
