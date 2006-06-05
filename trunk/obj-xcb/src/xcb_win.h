@@ -1,3 +1,12 @@
+/* XXX
+ *
+ * This is deprecated testing code that will be thrown out in favor
+ * of auto-generated code in the future.
+ *
+ * XXX
+ */
+
+
 /*
    Copyright (c) 2005, 2006 Thomas Coppi
 

@@ -22,5 +22,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 /* obj-xcb includes */
 //#include "xcb_events.h"
 #include "xcb_conn.h"
+
+/* XXX Currently deprecated. */
 #include "xcb_win.h"
 
