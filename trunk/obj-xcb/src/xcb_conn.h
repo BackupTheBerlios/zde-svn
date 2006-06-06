@@ -15,7 +15,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 /**
  *  Abstracts an XCBConnection and associated functions, as well as
  *  miscellaneous helper functions from the XCB tutorial and elsewhere that are useful.
- *  FIXME Need to implement the event functions 
+ *  FIXME Need to figure out if the event functions presented are optimal/acceptable. 
  * */
 @interface ObjXCBConnection : Object
 {
