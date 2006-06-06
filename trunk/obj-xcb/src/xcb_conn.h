@@ -13,7 +13,8 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 #define OBJXCB_CONN_H
 
 /**
- *  Abstracts an XCBConnection and associated functions.
+ *  Abstracts an XCBConnection and associated functions, as well as
+ *  miscellaneous helper functions from the XCB tutorial and elsewhere that are useful.
  *  FIXME Need to implement the event functions 
  * */
 @interface ObjXCBConnection : Object
@@ -21,6 +22,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 	@protected
 	XCBConnection *c;
 	XCBSCREEN *s;
+	int defscreen;
 }
 
 /** 
@@ -64,6 +66,89 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
  * Returns some misc. xserver data.
  */
 - (const XCBSetup *)get_setup_data;
+
+/**
+ * Returns the default screen number of the connected display.
+ */
+- (int)get_default_screen;
+
+/**
+ * Returns the number of screens on the connected display.
+ */
+- (int)get_screen_count;
+
+/**
+ * Returns the name of the server vendor.
+ */
+- (char *)get_vendor;
+
+/**
+ * Returns the major version of the X11 protocol used.
+ */
+- (int)get_major_protover;
+
+/**
+ * Returns the minor version of the X11 protocol used.
+ */
+- (int)get_minor_protoversion;
+
+/**
+ * Returns the vendor release number.
+ */
+- (int)get_vendor_version;
+
+/**
+ * Returns the root window of the default screen.
+ * Returns a raw XCB window, not an obj-xcb window!
+ */
+- (XCBWINDOW)get_root_window_raw;
+
+/**
+ * Returns the root window of the default screen.
+ * Returns an obj-xcb window, not a raw XCB window!
+ * FIXME Need to do autogeneration first.
+ */
+//- (ObjXCBWindow)get_root_window;
+
+/**
+ * Returns the default black pixel value.
+ */
+- (int)get_black_pixel;
+
+/**
+ * Returns the default white pixel value.
+ */
+- (int)get_white_pixel;
+
+/**
+ * Returns the screen width in pixels.
+ */
+- (int)get_width;
+
+/**
+ * Returns the screen height in pixels.
+ */
+- (int)get_height;
+
+/**
+ * Returns the display bit depth.
+ */
+- (int)get_depth;
+
+/**
+ * Returns true if screen supports save unders, false otherwise.
+ */
+- (BOOL)has_saveunders;
+
+/**
+ * Returns the value of the screen's backing store.
+ */
+- (int)get_backing_store;
+
+/**
+ * Returns the current input masks value.
+ */
+- (int)get_input_masks;
 
 /**
  * Flushes pending requests to the server.

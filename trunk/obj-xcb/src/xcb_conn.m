@@ -18,12 +18,12 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 {
 	[super init];
 
-	self->c = XCBConnect(NULL,NULL);
+	self->c = XCBConnect(NULL,&defscreen);
 	
 	if(!self->c)
 		return NULL;
 
-	self->s = XCBConnSetupSuccessRepRootsIter(XCBGetSetup(self->c)).data;
+	self->s = ((XCBSCREENIter)XCBSetupRootsIter([self get_setup_data])).data;
 
 	if(!self->s) 
 		return NULL;
@@ -37,10 +37,12 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 	[super init];
 
 	self->c = XCBConnect(display,screen);
+	self->defscreen = *screen;
 
 	if(!self->c)
 		return NULL;
-	
+
+	self->s = ((XCBSCREENIter)XCBSetupRootsIter([self get_setup_data])).data;
 
 	return self;
 }
@@ -53,10 +55,12 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 		return NULL;
 
 	self->c = XCBConnectToDisplayWithAuthInfo(display,auth,screen);
+	self->defscreen = *screen;
 
 	if(!self->c)
 		return NULL;
 	
+	self->s = ((XCBSCREENIter)XCBSetupRootsIter([self get_setup_data])).data;
 
 	[self init];
 	return self;
@@ -71,9 +75,13 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 		return NULL;
 
 	self->c = XCBConnectToFD(fd,auth);
-
+	
+	/* FIXME XXX defscreen? XXX FIXME */
+	
 	if(!self->c)
 		return NULL;
+	
+	self->s = ((XCBSCREENIter)XCBSetupRootsIter([self get_setup_data])).data;
 	
 	[self init];
 	return self;
@@ -98,6 +106,101 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 {
 	return XCBGetSetup(self->c);
 }
+
+/*
+ *
+ * Handy functions, mostly just members of structures.
+ *
+ */
+
+- (int)get_default_screen
+{
+	return self->defscreen;
+}
+
+- (int)get_screen_count
+{
+	return XCBSetupRootsLength([self get_setup_data]);
+}
+
+- (char *)get_vendor
+{
+	char *vendor = NULL;
+	int len;
+
+	len = XCBSetupVendorLength([self get_setup_data]);
+	vendor = calloc(len + 1,1);
+	
+	if(!vendor)
+		return NULL;
+	
+	memcpy(vendor,XCBSetupVendor([self get_setup_data]),len);
+	vendor[len] = '\0';
+}
+
+- (int)get_major_protover
+{
+	return [self get_setup_data]->protocol_major_version;
+}
+
+- (int)get_minor_protoversion
+{
+	return [self get_setup_data]->protocol_minor_version;
+}
+
+- (int)get_vendor_version
+{
+	return [self get_setup_data]->release_number;
+}
+
+- (XCBWINDOW)get_root_window_raw
+{
+	return self->s->root;	
+}
+
+- (int)get_black_pixel
+{
+	return self->s->black_pixel;
+}
+
+- (int)get_white_pixel
+{
+	return self->s->white_pixel;
+}
+
+- (int)get_width
+{
+	return self->s->width_in_pixels;
+}
+
+- (int)get_height
+{
+	return self->s->height_in_pixels;
+}
+
+- (int)get_depth
+{
+	return self->s->root_depth;
+}
+
+- (BOOL)has_saveunders
+{
+	return self->s->save_unders;
+}
+
+- (int)get_backing_store
+{
+	return self->s->backing_stores;
+}
+
+- (int)get_input_masks
+{
+	return self->s->current_input_masks;
+}
+
+/*
+ * Functions that do stuff.
+ */
 
 - (int)flush
 {
