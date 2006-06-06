@@ -1,6 +1,8 @@
 Code-generation from xml files
 ------------------------------
 
+use XML::Twig as perl parser
+
 Getting xid's and requests from xml files
 	-xcb_types.h
 		-rip out xid's and make objects for them
