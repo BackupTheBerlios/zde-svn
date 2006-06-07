@@ -25,6 +25,11 @@ Go through xproto.xml
 	-Go through field types, first one that is an XID is wid, so this request goes into ObjXCBWindow
 	-valueparam
 		-value-mask-type is data type for value-mask-name(actual mask) and value-list-name(is a pointer to values)
+	-reply
+		-prescence indicates that we will be returning an XCBGet"RequestName"Rep, and that the XCB function must be called like
+		return XCBGetRequestNameReply(c,XCBRequestName(c,field1,field2,...));
+		-not so concerned about what the reply fields are.
+		-I don't think that creating new objects to encapsulate replies is appropriate, structures are good.
 	
 -General case
 	-Name has Create, constructor
