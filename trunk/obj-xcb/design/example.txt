@@ -1,5 +1,9 @@
 /* SAMPLE OF WHAT MAY BE DONE BY SCRIPT STEP-BY-STEP, EXTREMELY SIMPLIFIED */
 
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+REMINDER:Ask list!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
 /* first pass */
 
 Go through xcb_types.h
@@ -13,12 +17,14 @@ Go through xcb_types.h
 
 Go through xproto.xml
 ---------------------
--Ignore enums, events, eventcopy,error
+-Ignore events, eventcopy,error
+-Store all enums in internal representation for possible later use(?)
 -Request named CreateWindow
 	-Parse name, see the word "Create", so it should be a constructor
 	-Every request's first implied "field" when translated to XCB is an ObjXCBConnection
 	-Go through field types, first one that is an XID is wid, so this request goes into ObjXCBWindow
-	-Ignore valueparam
+	-valueparam
+		-value-mask-type is data type for value-mask-name(actual mask) and value-list-name(is a pointer to values)
 	
 -General case
 	-Name has Create, constructor
@@ -26,5 +32,8 @@ Go through xproto.xml
 	-Others I haven't seen yet
 	
 
-
 Output in order of xid processing, then constructor/Create - regular requests - free
+
+There are some requests, like ConfigureWindow, that could be better objectified if the valueparam fields were abstracted away, but I 
+don't know how to do this accuratly.  For example, the possible values for value_mask are in the enum ConfigWindow, but there is no way
+of relating that back to ConfigureWindow that I can see.  This might be too high-level for a language binding anyway. 
