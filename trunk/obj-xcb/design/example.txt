@@ -1,4 +1,7 @@
-/* SAMPLE OF WHAT MAY BE DONE BY SCRIPT STEP-BY-STEP, EXTREMELY SIMPLIFIED */
+/* 
+ SAMPLE OF WHAT MAY BE DONE BY SCRIPT STEP-BY-STEP, EXTREMELY SIMPLIFIED INTO RULES 
+ MESSY
+ */
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 REMINDER:Ask list!!!!!!!!!!!!!!!!!!!!
@@ -9,7 +12,7 @@ REMINDER:Ask list!!!!!!!!!!!!!!!!!!!!
 Go through xcb_types.h
 ----------------------
 -Ignore struct's
--First XID is named WINDOW, create files ObjXCBWindow.m and ObjXCBWindow.h
+-First XID is named WINDOW, create files ObjXCBWindow.m and ObjXCBWindow.h (putting all into one file would be easier for starters)
 -Same for XIDs PIXMAP,CURSOR,FONT,GCONTEXT,COLORMAP,ATOM
 -See union named DRAWABLE, special case that is parent of field types WINDOW and PIXMAP
 -FONTABLE todo
@@ -17,23 +20,29 @@ Go through xcb_types.h
 
 Go through xproto.xml
 ---------------------
--Ignore events, eventcopy,error
--Store all enums in internal representation for possible later use(?)
+-Store all enums in internal representation for possible later use(?)(XML::Twig does this for us)
 -Request named CreateWindow
 	-Parse name, see the word "Create", so it should be a constructor
-	-Every request's first implied "field" when translated to XCB is an ObjXCBConnection
+	-Every request's first implied "field" when translated to XCB is an XCBConnection
 	-Go through field types, first one that is an XID is wid, so this request goes into ObjXCBWindow
+		-if there are no field types, becomes static method of first XID in its reply field.
+		-no XID in reply fields, I dunno :( maybe a static function in ObjXCBConnection, but there would have to be some way of inserting
+		that dynamically generated code into the only static object. hmm...
 	-valueparam
 		-value-mask-type is data type for value-mask-name(actual mask) and value-list-name(is a pointer to values)
 	-reply
-		-prescence indicates that we will be returning an XCBGet"RequestName"Rep, and that the XCB function must be called like
+		-prescence indicates that we will be returning a *pointer* to a XCBGet"RequestName"Rep, and that the XCB function must be called like
 		return XCBGetRequestNameReply(c,XCBRequestName(c,field1,field2,...));
 		-not so concerned about what the reply fields are.
 		-I don't think that creating new objects to encapsulate replies is appropriate, structures are good.
+	-list
+		-always represents a pointer, or in other words, an array.
 	
 -General case
 	-Name has Create, constructor
 	-Name has Get, returns a reply of form XCB*Reply, ex. XCBGetWindowAttributesReply for a request named GetWindowAttributes
+	-Some cases like GrabPointer and GrabButton would, following the above rules, go into ObjXCBWindow, but that probably isn't
+	where they should be... Something such as TranslateCoordinates might make sense, though...
 	-Others I haven't seen yet
 	
 
@@ -42,3 +51,5 @@ Output in order of xid processing, then constructor/Create - regular requests - 
 There are some requests, like ConfigureWindow, that could be better objectified if the valueparam fields were abstracted away, but I 
 don't know how to do this accuratly.  For example, the possible values for value_mask are in the enum ConfigWindow, but there is no way
 of relating that back to ConfigureWindow that I can see.  This might be too high-level for a language binding anyway. 
+
+Once these problems are sorted, this should cover every case I have come across by throughly scanning the xml files.
