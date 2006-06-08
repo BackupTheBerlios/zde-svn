@@ -39,7 +39,7 @@ Go through xproto.xml
 		-always represents a pointer, or in other words, an array.
 	
 -General case
-	-Name has Create, constructor
+	-Name has Create, constructor (InternAtom is special case constructor for ObjXCBAtom)
 	-Name has Get, returns a reply of form XCB*Reply, ex. XCBGetWindowAttributesReply for a request named GetWindowAttributes
 	-Some cases like GrabPointer and GrabButton would, following the above rules, go into ObjXCBWindow, but that probably isn't
 	where they should be... Something such as TranslateCoordinates might make sense, though...
@@ -52,4 +52,4 @@ There are some requests, like ConfigureWindow, that could be better objectified 
 don't know how to do this accuratly.  For example, the possible values for value_mask are in the enum ConfigWindow, but there is no way
 of relating that back to ConfigureWindow that I can see.  This might be too high-level for a language binding anyway. 
 
-Once these problems are sorted, this should cover every case I have come across by throughly scanning the xml files.
+Once these problems are sorted, this should cover every case I have come across by looking through the xml files.
