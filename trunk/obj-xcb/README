@@ -1,3 +1,4 @@
 Objective-C XCB bindings and test suite. 
 
 The scope of the bindings is intended to not just cover XCB but extensions as well, such as XCBrender, although the core XCB bindings will be the main focus.
+Note that you will need Perl 5.6 or higher and the XML::Twig module to compile obj-xcb.

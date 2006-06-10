@@ -44,6 +44,7 @@ set cscopeverbose
 set guifont=Bitstream\ Vera\ Sans\ Mono\ 8
 set helplang=en
 set iminsert=0
+set isfname=@,48-57,/,.,-,_,+,,,#,$,%,~,=,:
 set mouse=a
 set omnifunc=ccomplete#Complete
 set printoptions=paper:a4
@@ -64,16 +65,18 @@ endif
 set shortmess=aoO
 badd +85 configure.in
 badd +1 Makefile.am
-badd +4 src/Makefile.am
+badd +18 src/Makefile.am
 badd +1 README
 badd +128 src/xcb_conn.m
 badd +64 src/xcb_conn.h
 badd +23 src/obj-xcb.h
 badd +4 tests/Makefile.am
 badd +1 tests/main.m
-badd +1 src/xcb_win.h
+badd +20 src/xcb_win.h
 badd +1 src/xcb_win.m
 badd +16 design/notes
+badd +1 design/example.txt
+badd +4 scripts/codegen.pl
 args configure.in Makefile.am src/Makefile.am
 edit README
 set splitbelow splitright
@@ -179,12 +182,12 @@ setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
 silent! normal! zE
-let s:l = 1 - ((0 * winheight(0) + 35) / 71)
+let s:l = 4 - ((3 * winheight(0) + 35) / 71)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-1
-normal! 0
+4
+normal! 086l
 tabnext 1
 if exists('s:wipebuf')
   silent exe 'bwipe ' . s:wipebuf
