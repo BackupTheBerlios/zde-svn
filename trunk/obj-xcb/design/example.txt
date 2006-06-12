@@ -25,18 +25,14 @@ Go through xproto.xml
 	-Parse name, see the word "Create", so it should be a constructor
 	-Every request's first implied "field" when translated to XCB is an XCBConnection
 	-Go through field types, first one that is an XID is wid, so this request goes into ObjXCBWindow
-		-if there are no field types, becomes static method of first XID in its reply field.
-		-no XID in reply fields, I dunno :( maybe a static function in ObjXCBConnection, but there would have to be some way of inserting
-		that dynamically generated code into the only static object. hmm...
+		-if there are no field types, becomes method of ObjXCBConnection
 	-valueparam
 		-value-mask-type is data type for value-mask-name(actual mask) and value-list-name(is a pointer to values)
 	-reply
-		-prescence indicates that we will be returning a *pointer* to a XCBGet"RequestName"Rep, and that the XCB function must be called like
-		return XCBGetRequestNameReply(c,XCBRequestName(c,field1,field2,...));
-		-not so concerned about what the reply fields are.
-		-I don't think that creating new objects to encapsulate replies is appropriate, structures are good.
+		-prescence indicates that we will be creating a new Object that encapsulates the reply and makes the fields available as accessor functions,
+		and only calls XCB*Reply when an accessor method is called, as per Jamey's suggestion.
 	-list
-		-always represents a pointer, or in other words, an array.
+		-usually represents a pointer, although it can be considered something more of a list:) NOTE:Read XCB's iterator code.
 	
 -General case
 	-Name has Create, constructor (InternAtom is special case constructor for ObjXCBAtom)
