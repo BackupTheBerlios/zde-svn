@@ -32,8 +32,9 @@ sub xcb_handle()
 
 sub xid_handle()
 { my( $twig, $section)= @_;
+	my $xprotopath = $ARGV[1] . "/xproto.xml";
 	#print "$section->{'att'}->{'name'}\n";
-	`../scripts/xidgen.pl $section->{'att'}->{'name'} $ARGV[1] . "/xproto.xml"`; 
+	print `../scripts/xidgen.pl $section->{'att'}->{'name'} $xprotopath`; 
 }
 
 
