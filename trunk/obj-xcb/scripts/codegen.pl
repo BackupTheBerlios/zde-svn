@@ -21,17 +21,19 @@ if($outfile eq "objxcb_types.h") {
 		);
 
 	$twig->parsefile("$infile");
+	$twig->purge;
 }
 
 
 sub xcb_handle()
-{
+{ my($twig, $section)= @_;
 
 }
 
 sub xid_handle()
-{
-
+{ my( $twig, $section)= @_;
+	#print "$section->{'att'}->{'name'}\n";
+	`../scripts/xidgen.pl $section->{'att'}->{'name'} $ARGV[1] . "/xproto.xml"`; 
 }
 
 
