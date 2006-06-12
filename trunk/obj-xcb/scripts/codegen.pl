@@ -1,6 +1,9 @@
 #!/usr/bin/perl -w
 use strict;
 
+#Master control script
+#Arguments: file to generate, and file to use as input
+
 use XML::Twig;
 
 #figure out what we are creating and what the input should be
