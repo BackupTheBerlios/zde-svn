@@ -6,7 +6,14 @@ use strict;
 
 use XML::Twig;
 
+sub start_class_header($);
+sub start_class_source($);
+sub request_handle();
+
 #create the output filenames
+my $headerfh;
+my $sourcefh;
+
 my $xid = $ARGV[0];
 $xid =~ tr/A-Z/a-z/;
 my $outfile = "xcb_" . $xid;
@@ -22,9 +29,34 @@ my $twig = XML::Twig->new(twig_handlers=> {
 $twig->parsefile($ARGV[1]);
 $twig->purge;
 
+start_class_header($outheaderfile);
+start_class_source($outsourcefile);
+
 sub request_handle()
 { my($twig, $section) = @_;
-	print $section->first_child('field')->{'att'}->{'name'};
+	my $xid = $ARGV[0];
+	$xid =~ tr/A-Z/a-z/;
+
+	my $firstfield = $section->first_child('field');
+
+	if(!defined $firstfield) {
+		#print "No fields\n";
+		return;
+	}
+
+	if($firstfield->{'att'}->{'name'} eq $xid) {
+			
+	}
+
 }
 
+sub start_class_header($)
+{
+	open($headerfh,">>",$_[0]) or die("Couldn't open header file.");
+}
+
+sub start_class_source($)
+{
+
+}
 0;
