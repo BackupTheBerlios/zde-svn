@@ -7,11 +7,24 @@ use strict;
 use XML::Twig;
 
 #create the output filenames
-my $outfile = $ARGV[0];
-$outfile =~ tr/A-Z/a-z/;
-$outfile = "xcb_" . $outfile;
+my $xid = $ARGV[0];
+$xid =~ tr/A-Z/a-z/;
+my $outfile = "xcb_" . $xid;
 
 my $outheaderfile = $outfile . ".h";
 my $outsourcefile = $outfile . ".m";
+
+#create twig
+my $twig = XML::Twig->new(twig_handlers=> {
+		request => \&request_handle
+		});
+
+$twig->parsefile($ARGV[1]);
+$twig->purge;
+
+sub request_handle()
+{ my($twig, $section) = @_;
+	print $section->first_child('field')->{'att'}->{'name'};
+}
 
 0;
