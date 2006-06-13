@@ -59,7 +59,7 @@ fi
 _AM_DEPENDENCIES([OBJC])
 #CC="g++"
 OBJC="g++"
-OBJCFLAGS="-g"
+OBJCFLAGS="-g -fobjc-exceptions"
 OBJCLDFLAGS="-lobjc -lpthread"
 AC_SUBST(CC)
 AC_SUBST(OBJC)

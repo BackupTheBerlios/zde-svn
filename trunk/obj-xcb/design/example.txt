@@ -22,7 +22,6 @@ Go through xproto.xml
 ---------------------
 -Store all enums in internal representation for possible later use(?)(XML::Twig does this for us)
 -Request named CreateWindow
-	-Parse name, see the word "Create", so it should be a constructor
 	-Every request's first implied "field" when translated to XCB is an XCBConnection
 	-Go through field types, first one that is an XID is wid, so this request goes into ObjXCBWindow
 		-if there are no field types, becomes method of ObjXCBConnection
@@ -35,14 +34,13 @@ Go through xproto.xml
 		-usually represents a pointer, although it can be considered something more of a list:) NOTE:Read XCB's iterator code.
 	
 -General case
-	-Name has Create, constructor (InternAtom is special case constructor for ObjXCBAtom)
-	-Name has Get, returns a reply of form XCB*Reply, ex. XCBGetWindowAttributesReply for a request named GetWindowAttributes
+	-Name has Get, returns a reply Object with accessor methods to the reply fields. 
 	-Some cases like GrabPointer and GrabButton would, following the above rules, go into ObjXCBWindow, but that probably isn't
 	where they should be... Something such as TranslateCoordinates might make sense, though...
 	-Others I haven't seen yet
 	
 
-Output in order of xid processing, then constructor/Create - regular requests - free
+Output in order of xid processing, then constructor - regular requests - free
 
 There are some requests, like ConfigureWindow, that could be better objectified if the valueparam fields were abstracted away, but I 
 don't know how to do this accuratly.  For example, the possible values for value_mask are in the enum ConfigWindow, but there is no way
