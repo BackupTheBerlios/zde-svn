@@ -8,6 +8,8 @@ use XML::Twig;
 
 sub start_class_header($);
 sub start_class_source($$);
+sub end_class_header();
+sub end_class_source();
 sub request_handle();
 
 #create the output filenames
@@ -31,6 +33,9 @@ my $twig = XML::Twig->new(twig_handlers=> {
 
 $twig->parsefile($ARGV[1]);
 $twig->purge;
+
+end_class_header();
+end_class_source();
 
 sub request_handle()
 { my($twig, $section) = @_;
@@ -58,7 +63,7 @@ sub start_class_header($)
 	$xid =~ s/(\w+)/\u\L$1/g;
 	my $capxid = $xid;
 
-	open($headerfh,">",$_[0]) or die("Couldn't open header file.");
+	open($headerfh,">",$_[0]) or die("Couldn't open header file $_[0].");
 	#copyright
 	print $headerfh '/*
    Copyright (c) 2005, 2006 Thomas Coppi
@@ -77,16 +82,42 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 	#interface declaration (needs to take into accout WINDOW and PIXMAP, which inherit from DRAWABLE
 	print $headerfh "\@interface ObjXCB$capxid : Object \n{\n ";
 
+	#variables
+	print $headerfh "XCB".$ARGV[0] . ' xid;';
+
+	print $headerfh "\n}\n";
+
 	#all classes have init and free
 	print $headerfh '/** Creates a new XID and initializes the object. */' . "\n";
 	print $headerfh '- (id)init;' . "\n";
 	print $headerfh '/** Takes in an XID and initializes the object. */' . "\n";
 	print $headerfh '- (id)init:(' . "XCB".$ARGV[0] . ')xid;' . "\n";
-	print $headerfh '- free;' ."\n";
+	print $headerfh '- free;' . "\n";
 }
 
 sub start_class_source($$)
 {
+	my $xid = $ARGV[0];
+	$xid =~ tr/A-Z/a-z/;
 
+	$xid =~ s/(\w+)/\u\L$1/g;
+	my $capxid = $xid;
+
+	open($sourcefh,">",$_[0]) or die("Couldn't open source file $_[0].");
+
+	#include
+	print $sourcefh '#include<obj-xcb.h>' . "\n";
+	print $sourcefh '#include<' . "$_[1]" . '>' . "\n";
 }
+
+sub end_class_header()
+{
+	print $headerfh "\n\@end\n";
+}
+
+sub end_class_source()
+{
+	print $sourcefh "\n\@end\n";
+}
+
 0;

@@ -1,7 +1,7 @@
 lib_LTLIBRARIES = libXCBobjc.la
 libXCBobjc_la_SOURCES = xcb_conn.m xcb_window.m 
 
-XCBOBJCHEADERS = xcb_conn.h xcb_win.h obj-xcb.h objxcb_types.h xcb_window.h
+XCBOBJCHEADERS = xcb_conn.h obj-xcb.h objxcb_types.h xcb_window.h
 
 EXTRA_DIST = $(XCBOBJCHEADERS)
 
