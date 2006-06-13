@@ -17,6 +17,11 @@ obj%.h: %.xml ../scripts/codegen.pl
 #	../scripts/codegen.pl $@ $<
 	../scripts/codegen.pl $@ $(XCBPROTO_XCBINCLUDEDIR)
 
+xcb_conn.m: objxcb_types.h
+
 xcb_window.m: objxcb_types.h
 
-xcb_window.h: objxcb_types.h
+xcb_windo.h: objxcb_types.h
+
+clean-local:
+	rm -f objxcb_types.h xcb_window.h xcb_window.m
