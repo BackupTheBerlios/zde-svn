@@ -52,7 +52,29 @@ sub request_handle()
 
 sub start_class_header($)
 {
-	open($headerfh,">>",$_[0]) or die("Couldn't open header file.");
+	my $xid = $ARGV[0];
+	$xid =~ tr/A-Z/a-z/;
+
+	$xid =~ s/(\w+)/\u\L$1/g;
+	my $capxid = $xid;
+
+	open($headerfh,">",$_[0]) or die("Couldn't open header file.");
+	#copyright
+	print $headerfh '
+/*
+   Copyright (c) 2005, 2006 Thomas Coppi
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+ */
+';
+
+	#interface declaration (needs to take into accout WINDOW and PIXMAP, which inherit from DRAWABLE
+	print $headerfh "\@interface ObjXCB$capxid : Object \n{ ";
 }
 
 sub start_class_source($)
