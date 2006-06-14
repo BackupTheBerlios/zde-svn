@@ -8,14 +8,15 @@ use XML::Twig;
 
 sub start_class_header($);
 sub start_class_source($$);
+sub output_method_header($$@$);
 sub end_class_header();
 sub end_class_source();
 sub request_handle();
 
-#create the output filenames
 my $headerfh;
 my $sourcefh;
 
+#create the output filenames
 my $xid = $ARGV[0];
 $xid =~ tr/A-Z/a-z/;
 my $outfile = "xcb_" . $xid;
@@ -42,16 +43,33 @@ sub request_handle()
 	my $xid = $ARGV[0];
 	$xid =~ tr/A-Z/a-z/;
 
-	my $firstfield = $section->first_child('field');
+#my $firstfield = $section->first_child('field');
 
-	if(!defined $firstfield) {
-		#print "No fields\n";
+#	if(!defined $firstfield) {
+#		#print "No fields\n";
+#		return;
+#	}
+	
+	my @fields = $section->children('field');
+
+	#orphan
+	if(!@fields) {
 		return;
 	}
 
-	if($firstfield->{'att'}->{'name'} eq $xid) {
-			
+	#this is wrong
+	foreach my $field (@fields) {
+#print "going\n";	
+		#it belongs here
+		if($field->{'att'}->{'type'} eq $ARGV[0]) {
+			output_method_header($xid,$section->{'att'}->{'name'},@fields,$section->children('valueparam'));
+
+		}
 	}
+
+#if($firstfield->{'att'}->{'name'} eq $xid) {
+			
+#	}
 
 }
 
@@ -80,18 +98,19 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 ';
 
 	#interface declaration (needs to take into accout WINDOW and PIXMAP, which inherit from DRAWABLE
-	print $headerfh "\@interface ObjXCB$capxid : Object \n{\n ";
+	print $headerfh "\@interface ObjXCB$capxid : Object \n{\n";
 
 	#variables
-	print $headerfh "XCB".$ARGV[0] . ' xid;';
+	print $headerfh "\tXCB$ARGV[0]" . ' xid;' . "\n";
+	print $headerfh "\t" . 'ObjXCBConnection *c;' . "\n";
 
 	print $headerfh "\n}\n";
 
 	#all classes have init and free
 	print $headerfh '/** Creates a new XID and initializes the object. */' . "\n";
-	print $headerfh '- (id)init;' . "\n";
+	print $headerfh '- (id)init:(ObjXCBConnection *)c;' . "\n";
 	print $headerfh '/** Takes in an XID and initializes the object. */' . "\n";
-	print $headerfh '- (id)init:(' . "XCB".$ARGV[0] . ')xid;' . "\n";
+	print $headerfh '- (id)init:(ObjXCBConnection *) c:(' . "XCB$ARGV[0]" . ')xid;' . "\n";
 	print $headerfh '- free;' . "\n";
 }
 
@@ -107,7 +126,19 @@ sub start_class_source($$)
 
 	#include
 	print $sourcefh '#include<obj-xcb.h>' . "\n";
-	print $sourcefh '#include<' . "$_[1]" . '>' . "\n";
+	print $sourcefh '#include<' . "$_[1]" . '>' . "\n\n";
+
+	#generic init and free code
+	print $sourcefh "\@implementation ObjXCB$capxid : Object \n\n";
+	print $sourcefh '- (id)init:(ObjXCBConnection *)c' . "\n" . '{' . "\n" .
+		'self->c = c;'.
+		'self->xid = XCB'.$ARGV[0] . 'New([self->c get_connection]);' . "\n" . '}' . "\n";
+	print $sourcefh '- (id)init:(ObjXCBConnection *)c:(' . "XCB$ARGV[0]" . ')xid;' . "\n" . '{' . "\n" .
+		'self->c = c;'.
+		'self->xid = xid;' . "\n" . '}' . "\n";
+	print $sourcefh '- free' . "\n" . '{' . "\n" .
+		'self->c = NULL;' . "\n" . '[super free];' . "\n" . '}';
+
 }
 
 sub end_class_header()
@@ -120,4 +151,10 @@ sub end_class_source()
 	print $sourcefh "\n\@end\n";
 }
 
+sub output_method_header($$@$)
+{ my($xid,$reqname,@fields,$valuparam) = @_;
+	foreach my $field (@fields) {
+		print $field->{'att'}->{'name'};
+	}
+}
 0;

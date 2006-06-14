@@ -6,12 +6,18 @@ use strict;
 
 use XML::Twig;
 
+sub start_file($);
+
+my $filefh;
+
 #figure out what we are creating and what the input should be
 my $outfile = $ARGV[0];
 my $infile;
 
 if($outfile eq "objxcb_types.h") {
 	$infile = $ARGV[1] . "/xcb_types.xml";
+
+	start_file($outfile);
 
 	#create twig
 	my $twig = XML::Twig->new(twig_handlers=> {
@@ -39,5 +45,9 @@ sub xid_handle()
 	exit 0;
 }
 
+sub start_file($)
+{
+	open($filefh,">",$_[0]) or die("Couldn't open file $_[0].");
+}
 
 0;
