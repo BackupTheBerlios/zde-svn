@@ -63,6 +63,12 @@ sub xid_handle()
 	$xids[@xids] = $section->{'att'}->{'name'};
 }
 
+#
+#
+#TODO
+#Need to put in the other rules to decide what is an orphan, see mailing list discussion
+#
+#
 sub request_handle()
 { my($twig, $section) = @_;
 	my $xid = $ARGV[0];
