@@ -71,7 +71,8 @@ sub request_handle()
 	my $firstxid;
 	my $numfirstxid;
 	my $numotherxid;
-	
+	my $lastreqname;
+
 	my @fields = $section->children('field');
 
 	#orphan
@@ -98,15 +99,19 @@ sub request_handle()
 #
 			#if we find a field with an XID and that XID is not what we are doing, skip this request, it belongs elsewhere.
 			if(($field->{'att'}->{'type'} eq $xidtmp) and ($xidtmp ne $ARGV[0])) {
-				return;
+				next;
 			}
+		}
+
+		if((defined $lastreqname) and $lastreqname eq $section->{'att'}->{'name'}) {
+			return;
 		}
 
 		#it belongs here
 		if($field->{'att'}->{'type'} eq $ARGV[0]) {
+			$lastreqname = $section->{'att'}->{'name'};
 			output_method_header($xid,$section);
-
-		}	
+		}
 	}
 }
 
