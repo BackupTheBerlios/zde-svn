@@ -16,6 +16,8 @@ sub request_handle();
 my $headerfh;
 my $sourcefh;
 
+my @xids;
+
 #create the output filenames
 my $xid = $ARGV[0];
 $xid =~ tr/A-Z/a-z/;
@@ -29,6 +31,7 @@ start_class_source($outsourcefile,$outheaderfile);
 
 #create twig
 my $twig = XML::Twig->new(twig_handlers=> {
+		xcb => \&xid_handle,
 		request => \&request_handle
 		});
 
@@ -38,17 +41,26 @@ $twig->purge;
 end_class_header();
 end_class_source();
 
+#loads @xids with the name of every xid
+sub xid_handle()
+{ my($twig, $section) = @_;
+	my @xidstmp = $section->children('xidtype');
+	my $i = 0;
+
+	foreach my $xidtmp (@xidstmp) {
+		$xids[$i] = $xidtmp->{'att'}->{'name'};
+		$i++;
+	}
+
+#foreach my $xid (@xids) {
+#		print $xid;
+#	}
+}
+
 sub request_handle()
 { my($twig, $section) = @_;
 	my $xid = $ARGV[0];
 	$xid =~ tr/A-Z/a-z/;
-
-#my $firstfield = $section->first_child('field');
-
-#	if(!defined $firstfield) {
-#		#print "No fields\n";
-#		return;
-#	}
 	
 	my @fields = $section->children('field');
 
@@ -59,18 +71,18 @@ sub request_handle()
 
 	#this is wrong
 	foreach my $field (@fields) {
-#print "going\n";	
+		foreach my $xidtmp (@xids) {
+			#if we find a field with an XID and that XID is not what we are doing, skip this request, it belongs elsewhere.
+			if(($field->{'att'}->{'type'} eq $xidtmp) and ($xidtmp ne $ARGV[0])) {
+				return;
+			}
+		}
 		#it belongs here
 		if($field->{'att'}->{'type'} eq $ARGV[0]) {
 			output_method_header($xid,$section->{'att'}->{'name'},@fields,$section->children('valueparam'));
 
-		}
+		}	
 	}
-
-#if($firstfield->{'att'}->{'name'} eq $xid) {
-			
-#	}
-
 }
 
 sub start_class_header($)

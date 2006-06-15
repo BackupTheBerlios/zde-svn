@@ -12,11 +12,9 @@ my $filefh;
 
 #figure out what we are creating and what the input should be
 my $outfile = $ARGV[0];
-my $infile;
+my $infile = $ARGV[1];
 
-if($outfile eq "objxcb_types.h") {
-	$infile = $ARGV[1] . "/xcb_types.xml";
-
+if($outfile eq "objxproto.h") {
 	start_file($outfile);
 
 	#create twig
@@ -38,9 +36,8 @@ sub xcb_handle()
 
 sub xid_handle()
 { my( $twig, $section)= @_;
-	my $xprotopath = $ARGV[1] . "/xproto.xml";
 	#print "$section->{'att'}->{'name'}\n";
-	print `../scripts/xidgen.pl $section->{'att'}->{'name'} $xprotopath`;
+	print `../scripts/xidgen.pl $section->{'att'}->{'name'} $infile`;
 #only do the first one for now
 	exit 0;
 }
