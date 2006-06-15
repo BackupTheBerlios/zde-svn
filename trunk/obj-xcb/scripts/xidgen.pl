@@ -6,6 +6,20 @@ use strict;
 
 use XML::Twig;
 
+my $copyright = '/*
+   Copyright (c) 2005, 2006 Thomas Coppi
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+ This code has been automatically generated, modify at your own risk.
+
+ */
+';
+
 sub start_class_header($);
 sub start_class_source($$);
 sub output_method_header($$);
@@ -53,6 +67,10 @@ sub request_handle()
 { my($twig, $section) = @_;
 	my $xid = $ARGV[0];
 	$xid =~ tr/A-Z/a-z/;
+
+	my $firstxid;
+	my $numfirstxid;
+	my $numotherxid;
 	
 	my @fields = $section->children('field');
 
@@ -61,17 +79,31 @@ sub request_handle()
 		return;
 	}
 	
-	#this is wrong
 	foreach my $field (@fields) {
+		
 		foreach my $xidtmp (@xids) {
+#	if(($field->{'att'}->{'type'} eq $xidtmp) {	
+#				if(!defined $firstxid) {
+#					$firstxid = $xidtmp;
+#					$numfirstxid++;
+#				}
+#			}	
+#
+#			if(defined $firstxid and $xidtmp eq $firstxid) {
+#				$numfirstxid++;
+#			}
+#			elsif($field->{'att'}->{'type'} eq $xidtmp) {
+#				$numotherxid++;
+#			}
+#
 			#if we find a field with an XID and that XID is not what we are doing, skip this request, it belongs elsewhere.
 			if(($field->{'att'}->{'type'} eq $xidtmp) and ($xidtmp ne $ARGV[0])) {
 				return;
 			}
 		}
+
 		#it belongs here
 		if($field->{'att'}->{'type'} eq $ARGV[0]) {
-#output_method_header($xid,$section->{'att'}->{'name'},@fields,$section->children('valueparam'));
 			output_method_header($xid,$section);
 
 		}	
@@ -88,19 +120,7 @@ sub start_class_header($)
 
 	open($headerfh,">",$_[0]) or die("Couldn't open header file $_[0].");
 	#copyright
-	print $headerfh '/*
-   Copyright (c) 2005, 2006 Thomas Coppi
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
- This code has been automatically generated, modify at your own risk.
-
- */
-';
+	print $headerfh "$copyright";
 
 	#interface declaration (needs to take into accout WINDOW and PIXMAP, which inherit from DRAWABLE
 	print $headerfh "\@interface ObjXCB$capxid : Object \n{\n";
@@ -162,17 +182,50 @@ sub output_method_header($$)
 	my @fields = $request->children('field');
 	my @valueparam = $request->children('valueparam');
 	my @reply = $request->children('reply');
-	
-#if(!@reply) {
+
+	if(!@reply) {
 		print $headerfh '- (void)' . "$request->{'att'}->{'name'}";
-#	}
-	
+	}
+	else {	
+		#create a new header file for the reply
+		my @repfields = $reply[0]->children('field');
+		my $repname = $request->{'att'}->{'name'};
+		$repname =~ tr/A-Z/a-z/;
+		my $repnamefull = $repname . "reply";
+
+		open(my $repfh,">","objxcb_$repnamefull.h") or die("Couldn't open file.");
+		print $repfh $copyright;
+		print $repfh "\@interface ObjXCB$request->{'att'}->{'name'}Reply : Object\n{\n";
+		print $repfh "\tXCB$request->{'att'}->{'name'}" . "Cookie repcookie;\n}\n\n";
+		
+		foreach my $repfield (@repfields) {
+			my $rtype = $repfield->{'att'}->{'type'};
+			foreach my $xidtmp (@xids) {
+				if($rtype eq $xidtmp) {
+					$rtype = ("XCB" . $xidtmp);
+				}
+			}
+			print $repfh "- \($rtype\)get_$repfield->{'att'}->{'name'};\n";	
+		}
+
+		print $repfh "\@end\n";
+
+		#include us in objxproto.h
+		open(my $xprotofh,">>","objxproto.h") or die("Couldn't open objxproto.h");
+		print $xprotofh '#include<' . "objxcb_$repnamefull.h" . ">\n";
+		close($xprotofh);
+
+		#output the correct method declaration now
+		print $headerfh '- (' . "ObjXCB$request->{'att'}->{'name'}Reply *" . "\)$request->{'att'}->{'name'}";
+	}
+
 	foreach my $field (@fields) {
 		my $ftype = $field->{'att'}->{'type'};
 		#print $field->{'att'}->{'name'};
-		
+		if(!defined $field) {
+			last;
+		}
 		foreach my $xidtmp (@xids) {
-
 			if($ftype eq $xidtmp) {
 				$ftype = ("XCB" . $xidtmp);
 			}

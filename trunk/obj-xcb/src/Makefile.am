@@ -29,4 +29,4 @@ xcb_window.m: objxproto.h
 xcb_window.h: objxproto.h
 
 clean-local:
-	rm -f objxproto.h xcb_window.h xcb_window.m
+	rm -f objxproto.h xcb_window.h xcb_window.m objxcb*
