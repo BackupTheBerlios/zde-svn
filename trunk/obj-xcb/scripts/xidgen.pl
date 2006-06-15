@@ -181,6 +181,14 @@ sub end_class_source()
 	print $sourcefh "\n\@end\n";
 }
 
+#
+#
+# TODO Things to be fixed
+# Valueparams must be put in
+# Parameters that are XIDs should be turned into ObjXCBEquivilants
+# The first XID is always redundant, we store that within the class
+#
+#
 sub output_method_header($$)
 { my($xid,$request) = @_;
 	
