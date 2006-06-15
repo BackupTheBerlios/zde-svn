@@ -1,7 +1,7 @@
 lib_LTLIBRARIES = libXCBobjc.la
 libXCBobjc_la_SOURCES = xcb_conn.m xcb_window.m 
 
-XCBOBJCHEADERS = xcb_conn.h obj-xcb.h objxcb_types.h xcb_window.h
+XCBOBJCHEADERS = xcb_conn.h obj-xcb.h objxproto.h xcb_window.h
 
 EXTRA_DIST = $(XCBOBJCHEADERS)
 
@@ -15,13 +15,13 @@ vpath %.xml $(XCBPROTO_XCBINCLUDEDIR) $(XCBPROTO_XCBINCLUDEDIR)/extensions
 
 obj%.h: %.xml ../scripts/codegen.pl 
 #	../scripts/codegen.pl $@ $<
-	../scripts/codegen.pl $@ $(XCBPROTO_XCBINCLUDEDIR)
+	../scripts/codegen.pl $@ $<
 
-xcb_conn.m: objxcb_types.h
+xcb_conn.m: objxproto.h
 
-xcb_window.m: objxcb_types.h
+xcb_window.m: objxproto.h
 
-xcb_windo.h: objxcb_types.h
+xcb_windo.h: objxproto.h
 
 clean-local:
-	rm -f objxcb_types.h xcb_window.h xcb_window.m
+	rm -f objxproto.h xcb_window.h xcb_window.m
