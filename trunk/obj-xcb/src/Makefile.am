@@ -1,3 +1,8 @@
+#
+# I wish there was a way to dynamically tell it to compile all .m files... 
+#
+#
+
 lib_LTLIBRARIES = libXCBobjc.la
 libXCBobjc_la_SOURCES = xcb_conn.m xcb_window.m 
 
@@ -21,7 +26,7 @@ xcb_conn.m: objxproto.h
 
 xcb_window.m: objxproto.h
 
-xcb_windo.h: objxproto.h
+xcb_window.h: objxproto.h
 
 clean-local:
 	rm -f objxproto.h xcb_window.h xcb_window.m

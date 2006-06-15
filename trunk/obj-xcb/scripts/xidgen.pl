@@ -8,7 +8,7 @@ use XML::Twig;
 
 sub start_class_header($);
 sub start_class_source($$);
-sub output_method_header($$@$);
+sub output_method_header($$);
 sub end_class_header();
 sub end_class_source();
 sub request_handle();
@@ -79,7 +79,8 @@ sub request_handle()
 		}
 		#it belongs here
 		if($field->{'att'}->{'type'} eq $ARGV[0]) {
-			output_method_header($xid,$section->{'att'}->{'name'},@fields,$section->children('valueparam'));
+#output_method_header($xid,$section->{'att'}->{'name'},@fields,$section->children('valueparam'));
+			output_method_header($xid,$section);
 
 		}	
 	}
@@ -144,12 +145,12 @@ sub start_class_source($$)
 	print $sourcefh "\@implementation ObjXCB$capxid : Object \n\n";
 	print $sourcefh '- (id)init:(ObjXCBConnection *)c' . "\n" . '{' . "\n" .
 		'self->c = c;'.
-		'self->xid = XCB'.$ARGV[0] . 'New([self->c get_connection]);' . "\n" . '}' . "\n";
+		'self->xid = XCB'.$ARGV[0] . 'New([self->c get_connection]);' . "\n" . '}' . "\n\n";
 	print $sourcefh '- (id)init:(ObjXCBConnection *)c:(' . "XCB$ARGV[0]" . ')xid;' . "\n" . '{' . "\n" .
 		'self->c = c;'.
-		'self->xid = xid;' . "\n" . '}' . "\n";
+		'self->xid = xid;' . "\n" . '}' . "\n\n";
 	print $sourcefh '- free' . "\n" . '{' . "\n" .
-		'self->c = NULL;' . "\n" . '[super free];' . "\n" . '}';
+		'self->c = NULL;' . "\n" . '[super free];' . "\n" . '}' . "\n\n";
 
 }
 
@@ -163,10 +164,24 @@ sub end_class_source()
 	print $sourcefh "\n\@end\n";
 }
 
-sub output_method_header($$@$)
-{ my($xid,$reqname,@fields,$valuparam) = @_;
+sub output_method_header($$)
+{ my($xid,$request) = @_;
+	
+	my @fields = $request->children('field');
+	my @valueparam = $request->children('valueparam');
+	my @reply = $request->children('reply');
+	
+#if(!@reply) {
+		print $headerfh '- (void)' . "$request->{'att'}->{'name'}";
+#	}
+	
 	foreach my $field (@fields) {
-		print $field->{'att'}->{'name'};
+		#print $field->{'att'}->{'name'};
+		#no reply, its a lot easier
+		
+		print $headerfh ":\($field->{'att'}->{'type'}\)$field->{'att'}->{'name'}";	
 	}
+
+	print $headerfh ";\n";
 }
 0;
