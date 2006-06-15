@@ -31,7 +31,9 @@ start_class_source($outsourcefile,$outheaderfile);
 
 #create twig
 my $twig = XML::Twig->new(twig_handlers=> {
-		xcb => \&xid_handle,
+		xidtype => \&xid_handle,
+		union => \&xid_handle,
+		struct => \&xid_handle,
 		request => \&request_handle
 		});
 
@@ -44,17 +46,7 @@ end_class_source();
 #loads @xids with the name of every xid
 sub xid_handle()
 { my($twig, $section) = @_;
-	my @xidstmp = $section->children('xidtype');
-	my $i = 0;
-
-	foreach my $xidtmp (@xidstmp) {
-		$xids[$i] = $xidtmp->{'att'}->{'name'};
-		$i++;
-	}
-
-#foreach my $xid (@xids) {
-#		print $xid;
-#	}
+	$xids[@xids] = $section->{'att'}->{'name'};
 }
 
 sub request_handle()
@@ -68,7 +60,7 @@ sub request_handle()
 	if(!@fields) {
 		return;
 	}
-
+	
 	#this is wrong
 	foreach my $field (@fields) {
 		foreach my $xidtmp (@xids) {
@@ -176,10 +168,17 @@ sub output_method_header($$)
 #	}
 	
 	foreach my $field (@fields) {
+		my $ftype = $field->{'att'}->{'type'};
 		#print $field->{'att'}->{'name'};
-		#no reply, its a lot easier
 		
-		print $headerfh ":\($field->{'att'}->{'type'}\)$field->{'att'}->{'name'}";	
+		foreach my $xidtmp (@xids) {
+
+			if($ftype eq $xidtmp) {
+				$ftype = ("XCB" . $xidtmp);
+			}
+		}
+
+		print $headerfh ":\($ftype\)$field->{'att'}->{'name'}";	
 	}
 
 	print $headerfh ";\n";
