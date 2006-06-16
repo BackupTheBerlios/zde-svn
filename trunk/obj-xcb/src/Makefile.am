@@ -5,9 +5,10 @@
 
 lib_LTLIBRARIES = libXCBobjc.la
 libXCBobjc_la_SOURCES = xcb_conn.m xcb_window.m \
-			xcb_atom.m xcb_colormap.m xcb_cursor.m xcb_font.m xcb_gcontext.m xcb_pixmap.m
+			xcb_atom.m xcb_colormap.m xcb_cursor.m xcb_font.m xcb_gcontext.m xcb_pixmap.m xcb_drawable.m xcb_fontable.m
 
-XCBOBJCHEADERS = xcb_conn.h obj-xcb.h objxproto.h xcb_window.h xcb_atom.h xcb_colormap.h xcb_cursor.h xcb_font.h xcb_gcontext.h xcb_pixmap.h
+XCBOBJCHEADERS = xcb_conn.h obj-xcb.h objxproto.h xcb_window.h xcb_atom.h xcb_colormap.h xcb_cursor.h xcb_font.h xcb_gcontext.h xcb_pixmap.h \
+		 xcb_drawable.h xcb_fontable.h
 
 EXTRA_DIST = $(XCBOBJCHEADERS)
 
@@ -23,6 +24,7 @@ obj%.h: %.xml ../scripts/codegen.pl
 #	../scripts/codegen.pl $@ $<
 	../scripts/codegen.pl $@ $<
 
+#core files
 xcb_conn.m: objxproto.h
 xcb_window.m: objxproto.h
 xcb_window.h: objxproto.h
@@ -38,7 +40,15 @@ xcb_gcontext.m: objxproto.h
 xcb_gcontext.h: objxproto.h
 xcb_pixmap.m: objxproto.h
 xcb_pixmap.h: objxproto.h
+xcb_drawable.m: objxproto.h
+xcb_drawable.h: objxproto.h
+xcb_fontable.h: objxproto.h
+xcb_fontable.m: objxproto.h
+
+#replies
+
 
 clean-local:
 	rm -f objxproto.h xcb_window.h xcb_window.m xcb_atom.m xcb_colormap.m xcb_cursor.m xcb_font.m xcb_gcontext.m xcb_pixmap.m \
-		xcb_atom.h xcb_colormap.h xcb_cursor.h xcb_font.h xcb_gcontext.h xcb_pixmap.h objxcb* *.loT
+		xcb_atom.h xcb_colormap.h xcb_cursor.h xcb_font.h xcb_gcontext.h xcb_pixmap.h xcb_drawable.h xcb_drawable.m xcb_fontable.h xcb_fontable.m \
+		objxcb* *.loT

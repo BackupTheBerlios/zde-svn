@@ -40,6 +40,12 @@ my $outfile = "xcb_" . $xid;
 my $outheaderfile = $outfile . ".h";
 my $outsourcefile = $outfile . ".m";
 
+my $inherits = "Object";
+
+if($ARGV[0] eq "WINDOW" or $ARGV[0] eq "PIXMAP") {
+	$inherits = "ObjXCBDrawable";
+}
+
 start_class_header($outheaderfile);
 start_class_source($outsourcefile,$outheaderfile);
 
@@ -134,20 +140,23 @@ sub start_class_header($)
 	print $headerfh "$copyright";
 
 	#interface declaration (needs to take into accout WINDOW and PIXMAP, which inherit from DRAWABLE
-	print $headerfh "\@interface ObjXCB$capxid : Object \n{\n";
+	print $headerfh "\@interface ObjXCB$capxid : $inherits \n{\n";
 
 	#variables
-	print $headerfh "\tXCB$ARGV[0]" . ' xid;' . "\n";
-	print $headerfh "\t" . 'ObjXCBConnection *c;' . "\n";
-
+	if($ARGV[0] ne "DRAWABLE" and $ARGV[0] ne "FONTABLE") {
+		print $headerfh "\tXCB$ARGV[0]" . ' xid;' . "\n";
+		print $headerfh "\t" . 'ObjXCBConnection *c;' . "\n";
+	}
 	print $headerfh "\n}\n";
 
-	#all classes have init and free
-	print $headerfh '/** Creates a new XID and initializes the object. */' . "\n";
-	print $headerfh '- (id)init:(ObjXCBConnection *)c;' . "\n";
-	print $headerfh '/** Takes in an XID and initializes the object. */' . "\n";
-	print $headerfh '- (id)init:(ObjXCBConnection *) c:(' . "XCB$ARGV[0]" . ')xid;' . "\n";
-	print $headerfh '- free;' . "\n";
+	#most classes have init and free
+	if($ARGV[0] ne "DRAWABLE" and $ARGV[0] ne "FONTABLE") {
+		print $headerfh '/** Creates a new XID and initializes the object. */' . "\n";
+		print $headerfh '- (id)init:(ObjXCBConnection *)c;' . "\n";
+		print $headerfh '/** Takes in an XID and initializes the object. */' . "\n";
+		print $headerfh '- (id)init:(ObjXCBConnection *) c:(' . "XCB$ARGV[0]" . ')xid;' . "\n";
+		print $headerfh '- free;' . "\n";
+	}
 }
 
 sub start_class_source($$)
@@ -162,18 +171,20 @@ sub start_class_source($$)
 
 	#include
 	print $sourcefh '#include <obj-xcb.h>' . "\n";
-	print $sourcefh '#include <' . "$_[1]" . '>' . "\n";
+	print $sourcefh '#include <' . "$_[1]" . '>' . "\n\n";
 
 	#generic init and free code
-	print $sourcefh "\@implementation ObjXCB$capxid : Object \n\n";
-	print $sourcefh '- (id)init:(ObjXCBConnection *)c' . "\n" . '{' . "\n" .
-		'self->c = c;'.
-		'self->xid = XCB'.$ARGV[0] . 'New([self->c get_connection]);' . "\n" . '}' . "\n\n";
-	print $sourcefh '- (id)init:(ObjXCBConnection *)c:(' . "XCB$ARGV[0]" . ')xid;' . "\n" . '{' . "\n" .
-		'self->c = c;'.
-		'self->xid = xid;' . "\n" . '}' . "\n\n";
-	print $sourcefh '- free' . "\n" . '{' . "\n" .
-		'self->c = NULL;' . "\n" . '[super free];' . "\n" . '}' . "\n\n";
+	print $sourcefh "\@implementation ObjXCB$capxid : $inherits \n\n";
+	if($ARGV[0] ne "DRAWABLE" and $ARGV[0] ne "FONTABLE") {
+		print $sourcefh '- (id)init:(ObjXCBConnection *)c' . "\n" . '{' . "\n" .
+			"\t" . 'self->c = c;'. "\n" .
+			"\t" . 'self->xid = XCB'.$ARGV[0] . 'New([self->c get_connection]);' . "\n" . '}' . "\n\n";
+		print $sourcefh '- (id)init:(ObjXCBConnection *)c:(' . "XCB$ARGV[0]" . ')xid;' . "\n" . '{' . "\n" .
+			"\t" . 'self->c = c;'. "\n" .
+			"\t" . 'self->xid = xid;' . "\n" . '}' . "\n\n";
+		print $sourcefh '- free' . "\n" . '{' . "\n" .
+			"\t" . 'self->c = NULL;' . "\n" . '[super free];' . "\n" . '}' . "\n\n";
+	}
 
 }
 

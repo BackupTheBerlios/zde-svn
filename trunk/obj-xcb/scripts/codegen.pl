@@ -20,7 +20,8 @@ if($outfile eq "objxproto.h") {
 	#create twig
 	my $twig = XML::Twig->new(twig_handlers=> {
 		xcb => \&xcb_handle,
-		xidtype => \&xid_handle
+		xidtype => \&xid_handle,
+		union => \&xid_handle,
 		}
 		);
 
@@ -37,6 +38,11 @@ sub xcb_handle()
 sub xid_handle()
 { my( $twig, $section)= @_;
 	#print "$section->{'att'}->{'name'}\n";
+	
+	if($section->{'att'}->{'name'} =~ /"ClientMessageData"/) {
+		return;
+	}
+
 	print `../scripts/xidgen.pl $section->{'att'}->{'name'} $infile`;
 #only do the first one for now
 #	exit 0;
