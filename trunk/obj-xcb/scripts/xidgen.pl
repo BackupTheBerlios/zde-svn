@@ -115,6 +115,7 @@ sub request_handle()
 			}
 		}
 
+		#remove duplicates, sometimes XML::Twig likes to go batty
 		if((defined $lastreqname) and $lastreqname eq $section->{'att'}->{'name'}) {
 			return;
 		}
@@ -204,8 +205,8 @@ sub end_class_source($)
 #
 # TODO Things to be fixed
 # Valueparams must be put in
-# Parameters that are XIDs should be turned into ObjXCBEquivilants
-# The first XID is always redundant, we store that within the class
+# DONE - Parameters that are XIDs should be turned into ObjXCBEquivilants
+# DONE - The first XID is always redundant, we store that within the class
 #
 #
 sub output_method_header($$)
