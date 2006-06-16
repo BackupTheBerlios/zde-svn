@@ -21,8 +21,6 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 /* obj-xcb includes */
 //#include "xcb_events.h"
-#include "objxproto.h"
-
 #include "xcb_conn.h"
 
 typedef Object ObjXCBPixmap;
@@ -36,6 +34,8 @@ typedef Object ObjXCBVisualid;
 typedef Object ObjXCBTimestamp;
 typedef Object ObjXCBKeycode;
 typedef Object ObjXCBDrawable;
+
+#include "objxproto.h"
 
 /*
 #include "xcb_pixmap.h"

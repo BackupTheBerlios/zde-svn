@@ -235,7 +235,15 @@ sub output_method_header($$)
 			my $rtype = $repfield->{'att'}->{'type'};
 			foreach my $xidtmp (@xids) {
 				if($rtype eq $xidtmp) {
-					$rtype = ("XCB" . $xidtmp);
+					my $capxid = $xidtmp;
+					$capxid =~ s/(\w+)/\u\L$1/g;
+					#$rtype = ("XCB" . $xidtmp);
+					if($xidtmp eq "CHARINFO") {
+						$rtype = ("XCB" . $xidtmp);
+					}
+					else {
+						$rtype = "ObjXCB$capxid *";
+					}
 				}
 			}
 			print $repfh "- \($rtype\)get_$repfield->{'att'}->{'name'};\n";	
