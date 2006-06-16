@@ -260,8 +260,8 @@ sub output_method_header($$)
 			if($ftype eq $xidtmp) {
 				my $capxid = $xidtmp;
 				$capxid =~ s/(\w+)/\u\L$1/g;
-				$ftype = ("XCB" . $xidtmp);
-				#$ftype = "ObjXCB$capxid *";
+				#$ftype = ("XCB" . $xidtmp);
+				$ftype = "ObjXCB$capxid *";
 			}
 		}
 

@@ -25,6 +25,18 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 #include "xcb_conn.h"
 
+typedef Object ObjXCBPixmap;
+typedef Object ObjXCBGcontext;
+typedef Object ObjXCBFont;
+typedef Object ObjXCBCursor;
+typedef Object ObjXCBColormap;
+typedef Object ObjXCBAtom;
+typedef Object ObjXCBWindow;
+typedef Object ObjXCBVisualid;
+typedef Object ObjXCBTimestamp;
+typedef Object ObjXCBKeycode;
+typedef Object ObjXCBDrawable;
+
 /*
 #include "xcb_pixmap.h"
 #include "xcb_gcontext.h"
