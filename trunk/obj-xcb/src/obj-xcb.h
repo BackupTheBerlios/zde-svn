@@ -21,10 +21,19 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 /* obj-xcb includes */
 //#include "xcb_events.h"
-#include "xcb_conn.h"
-
 #include "objxproto.h"
 
+#include "xcb_conn.h"
+
+/*
+#include "xcb_pixmap.h"
+#include "xcb_gcontext.h"
+#include "xcb_font.h"
+#include "xcb_cursor.h"
+#include "xcb_colormap.h"
+#include "xcb_atom.h"
+#include "xcb_window.h"
+*/
 /* XXX Currently deprecated. */
 //#include "xcb_window.h"
 

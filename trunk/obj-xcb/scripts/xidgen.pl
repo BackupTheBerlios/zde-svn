@@ -24,7 +24,7 @@ sub start_class_header($);
 sub start_class_source($$);
 sub output_method_header($$);
 sub end_class_header($);
-sub end_class_source();
+sub end_class_source($);
 sub request_handle();
 
 my $headerfh;
@@ -55,7 +55,7 @@ $twig->parsefile($ARGV[1]);
 $twig->purge;
 
 end_class_header($outheaderfile);
-end_class_source();
+end_class_source($outsourcefile);
 
 #loads @xids with the name of every xid
 sub xid_handle()
@@ -161,8 +161,13 @@ sub start_class_source($$)
 	open($sourcefh,">",$_[0]) or die("Couldn't open source file $_[0].");
 
 	#include
-	print $sourcefh '#include<obj-xcb.h>' . "\n";
-	print $sourcefh '#include<' . "$_[1]" . '>' . "\n\n";
+	print $sourcefh '#include <obj-xcb.h>' . "\n";
+	print $sourcefh '#include <' . "$_[1]" . '>' . "\n";
+	print $sourcefh '#include <' . "xcb_atom.h" . '>' . "\n";
+	print $sourcefh '#include <' . "xcb_colormap.h" . '>' . "\n";
+	print $sourcefh '#include <' . "xcb_font.h" . '>' . "\n";
+	print $sourcefh '#include <' . "xcb_cursor.h" . '>' . "\n";
+	print $sourcefh '#include <' . "xcb_gcontext.h" . '>' . "\n";
 
 	#generic init and free code
 	print $sourcefh "\@implementation ObjXCB$capxid : Object \n\n";
@@ -180,11 +185,13 @@ sub start_class_source($$)
 sub end_class_header($)
 {
 	print $headerfh "\n\@end\n";
+	close $headerfh;
 }
 
-sub end_class_source()
+sub end_class_source($)
 {
 	print $sourcefh "\n\@end\n";
+	close $sourcefh;
 }
 
 #
