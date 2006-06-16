@@ -163,11 +163,6 @@ sub start_class_source($$)
 	#include
 	print $sourcefh '#include <obj-xcb.h>' . "\n";
 	print $sourcefh '#include <' . "$_[1]" . '>' . "\n";
-	print $sourcefh '#include <' . "xcb_atom.h" . '>' . "\n";
-	print $sourcefh '#include <' . "xcb_colormap.h" . '>' . "\n";
-	print $sourcefh '#include <' . "xcb_font.h" . '>' . "\n";
-	print $sourcefh '#include <' . "xcb_cursor.h" . '>' . "\n";
-	print $sourcefh '#include <' . "xcb_gcontext.h" . '>' . "\n";
 
 	#generic init and free code
 	print $sourcefh "\@implementation ObjXCB$capxid : Object \n\n";
@@ -265,8 +260,8 @@ sub output_method_header($$)
 			if($ftype eq $xidtmp) {
 				my $capxid = $xidtmp;
 				$capxid =~ s/(\w+)/\u\L$1/g;
-				#$ftype = ("XCB" . $xidtmp);
-				$ftype = "ObjXCB$capxid *";
+				$ftype = ("XCB" . $xidtmp);
+				#$ftype = "ObjXCB$capxid *";
 			}
 		}
 
