@@ -23,7 +23,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 sub start_class_header($);
 sub start_class_source($$);
 sub output_method_header($$);
-sub end_class_header();
+sub end_class_header($);
 sub end_class_source();
 sub request_handle();
 
@@ -54,7 +54,7 @@ my $twig = XML::Twig->new(twig_handlers=> {
 $twig->parsefile($ARGV[1]);
 $twig->purge;
 
-end_class_header();
+end_class_header($outheaderfile);
 end_class_source();
 
 #loads @xids with the name of every xid
@@ -128,7 +128,7 @@ sub start_class_header($)
 
 	$xid =~ s/(\w+)/\u\L$1/g;
 	my $capxid = $xid;
-
+	
 	open($headerfh,">",$_[0]) or die("Couldn't open header file $_[0].");
 	#copyright
 	print $headerfh "$copyright";
@@ -177,7 +177,7 @@ sub start_class_source($$)
 
 }
 
-sub end_class_header()
+sub end_class_header($)
 {
 	print $headerfh "\n\@end\n";
 }
@@ -201,6 +201,7 @@ sub output_method_header($$)
 	my @fields = $request->children('field');
 	my @valueparam = $request->children('valueparam');
 	my @reply = $request->children('reply');
+	my $firstxid;
 
 	if(!@reply) {
 		print $headerfh '- (void)' . "$request->{'att'}->{'name'}";
@@ -231,7 +232,7 @@ sub output_method_header($$)
 
 		#include us in objxproto.h
 		open(my $xprotofh,">>","objxproto.h") or die("Couldn't open objxproto.h");
-		print $xprotofh '#include<' . "objxcb_$repnamefull.h" . ">\n";
+		print $xprotofh '#import <' . "objxcb_$repnamefull.h" . ">\n";
 		close($xprotofh);
 
 		#output the correct method declaration now
@@ -240,13 +241,25 @@ sub output_method_header($$)
 
 	foreach my $field (@fields) {
 		my $ftype = $field->{'att'}->{'type'};
+		
 		#print $field->{'att'}->{'name'};
 		if(!defined $field) {
-			last;
+			next;
 		}
+		
+		#if the type of this field is the type we want, and this is the first one, skip it, we keep it inside the object
+		if(($ftype eq $ARGV[0]) and !defined $firstxid) {
+			$firstxid = 0;
+			next;
+		}
+
 		foreach my $xidtmp (@xids) {
+			#if its an xid. we need to Objectify its name to the form ObjXCBXid
 			if($ftype eq $xidtmp) {
-				$ftype = ("XCB" . $xidtmp);
+				my $capxid = $xidtmp;
+				$capxid =~ s/(\w+)/\u\L$1/g;
+				#$ftype = ("XCB" . $xidtmp);
+				$ftype = "ObjXCB$capxid *";
 			}
 		}
 

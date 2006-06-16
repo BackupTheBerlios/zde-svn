@@ -39,7 +39,7 @@ sub xid_handle()
 	#print "$section->{'att'}->{'name'}\n";
 	print `../scripts/xidgen.pl $section->{'att'}->{'name'} $infile`;
 #only do the first one for now
-	exit 0;
+#	exit 0;
 }
 
 sub start_file($)
