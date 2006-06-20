@@ -289,6 +289,7 @@ sub output_method_header($$)
 		print $headerfh '- (' . "ObjXCB$request->{'att'}->{'name'}Reply *" . "\)$request->{'att'}->{'name'}";
 	}
 
+	#for all the regular fields
 	foreach my $field (@fields) {
 		my $ftype = $field->{'att'}->{'type'};
 		
@@ -314,6 +315,22 @@ sub output_method_header($$)
 		}
 
 		print $headerfh ":\($ftype\)$field->{'att'}->{'name'}";	
+	}
+
+	foreach my $vparam (@valueparam) {
+		my $vtype = $vparam->{'att'}->{'value-mask-type'};
+
+		foreach my $xidtmp (@xids) {
+			#if its an xid. we need to Objectify its name to the form ObjXCBXid
+			if($vtype eq $xidtmp) {
+				my $capxid = $xidtmp;
+				$capxid =~ s/(\w+)/\u\L$1/g;
+				$vtype = "ObjXCB$capxid *";
+			}
+		}
+		
+		print $headerfh ":\($vtype\)$vparam->{'att'}->{'value-mask-name'}";
+		print $headerfh ":\($vtype *\)$vparam->{'att'}->{'value-list-name'}";
 	}
 
 	print $headerfh ";\n";
