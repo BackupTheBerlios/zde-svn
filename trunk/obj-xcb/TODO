@@ -1,13 +1,16 @@
 Code Generation
 ---------------
--Finish implementing the rules on where requests go as per mailing list discussions
--Valueparams and lists must be put in as fields
+DONE-Finish implementing the rules on where requests go as per mailing list discussions
+DONE-Valueparams and lists must be put in as fields
 DONE-Parameters that are XIDs should be turned into ObjXCBEquivilants
 DONE-The first XID is always redundant, we store that within the class
+-Handle Orphans
 
 Code
 ----
--
+-Generate reply object code
+-Generate xid object code
+-Generate Orphan code
 
 Documentation
 -------------
