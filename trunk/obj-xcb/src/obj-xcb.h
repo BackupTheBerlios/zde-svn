@@ -30,10 +30,21 @@ typedef Object ObjXCBCursor;
 typedef Object ObjXCBColormap;
 typedef Object ObjXCBAtom;
 typedef Object ObjXCBWindow;
-typedef XCBVISUALID ObjXCBVisualid;
-typedef XCBTIMESTAMP ObjXCBTimestamp;
+//typedef XCBVISUALID ObjXCBVisualid;
+//typedef XCBTIMESTAMP ObjXCBTimestamp;
 typedef Object ObjXCBKeycode;
 typedef Object ObjXCBDrawable;
+
+/* This should all be handled in the codegeneration script, but for now it'll do... */
+#define VISUALID XCBVISUALID
+#define RGB XCBRGB
+#define CHARINFO XCBCHARINFO
+#define FONTPROP XCBFONTPROP
+#define COLORITEM XCBCOLORITEM
+#define SEGMENT XCBSEGMENT
+#define RECTANGLE XCBRECTANGLE
+#define ARC XCBARC
+#define CHAR2B XCBCHAR2B
 
 #include "objxproto.h"
 

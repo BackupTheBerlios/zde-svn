@@ -53,7 +53,7 @@ start_class_source($outsourcefile,$outheaderfile);
 my $twig = XML::Twig->new(twig_handlers=> {
 		xidtype => \&xid_handle,
 		union => \&xid_handle,
-		struct => \&xid_handle,
+#	struct => \&xid_handle,
 		request => \&request_handle
 		});
 
@@ -243,6 +243,7 @@ sub output_method_header($$)
 	my @fields = $request->children('field');
 	my @valueparam = $request->children('valueparam');
 	my @reply = $request->children('reply');
+	my @list = $request->children('list');
 	my $firstxid;
 
 	if(!@reply) {
@@ -251,6 +252,7 @@ sub output_method_header($$)
 	else {	
 		#create a new header file for the reply
 		my @repfields = $reply[0]->children('field');
+		my @replist = $reply[0]->children('list');
 		my $repname = $request->{'att'}->{'name'};
 		$repname =~ tr/A-Z/a-z/;
 		my $repnamefull = $repname . "reply";
@@ -276,6 +278,20 @@ sub output_method_header($$)
 				}
 			}
 			print $repfh "- \($rtype\)get_$repfield->{'att'}->{'name'};\n";	
+		}
+
+		foreach my $lfield (@replist) {
+			my $ltype = $lfield->{'att'}->{'type'};
+			
+			#if its an xid, we need to Objectify its name to the form ObjXCBXid
+			foreach my $xidtmp (@xids) {
+				if($ltype eq $xidtmp) {
+					my $capxid = $xidtmp;
+					$capxid =~ s/(\w+)/\u\L$1/g;
+					$ltype = "ObjXCB$capxid *";
+				}
+			}
+			print $repfh "- \($ltype*\)get_$lfield->{'att'}->{'name'};\n";
 		}
 
 		print $repfh "\@end\n";
@@ -315,6 +331,21 @@ sub output_method_header($$)
 		}
 
 		print $headerfh ":\($ftype\)$field->{'att'}->{'name'}";	
+	}
+
+	foreach my $lfield (@list) {
+		my $ltype = $lfield->{'att'}->{'type'};
+
+		#if its an xid, we need to Objectify its name to the form ObjXCBXid
+		foreach my $xidtmp (@xids) {
+			if($ltype eq $xidtmp) {
+				my $capxid = $xidtmp;
+				$capxid =~ s/(\w+)/\u\L$1/g;
+				$ltype = "ObjXCB$capxid *";
+			}
+		}
+		
+		print $headerfh ":\($ltype *\)$lfield->{'att'}->{'name'}";
 	}
 
 	foreach my $vparam (@valueparam) {
