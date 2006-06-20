@@ -39,7 +39,7 @@ sub xid_handle()
 { my( $twig, $section)= @_;
 	#print "$section->{'att'}->{'name'}\n";
 	
-	if($section->{'att'}->{'name'} =~ /"ClientMessageData"/) {
+	if($section->{'att'}->{'name'} eq "ClientMessageData") {
 		return;
 	}
 

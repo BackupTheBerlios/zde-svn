@@ -94,24 +94,16 @@ sub request_handle()
 	
 	foreach my $field (@fields) {
 		
-		foreach my $xidtmp (@xids) {
-#	if(($field->{'att'}->{'type'} eq $xidtmp) {	
-#				if(!defined $firstxid) {
-#					$firstxid = $xidtmp;
-#					$numfirstxid++;
-#				}
-#			}	
-#
-#			if(defined $firstxid and $xidtmp eq $firstxid) {
-#				$numfirstxid++;
-#			}
-#			elsif($field->{'att'}->{'type'} eq $xidtmp) {
-#				$numotherxid++;
-#			}
-#
-			#if we find a field with an XID and that XID is not what we are doing, skip this request, it belongs elsewhere.
-			if(($field->{'att'}->{'type'} eq $xidtmp) and ($xidtmp ne $ARGV[0])) {
-				next;
+		foreach my $xidtmp (@xids) {			
+			#then this is the first xid
+			if(($field->{'att'}->{'type'} eq $xidtmp) and !defined $firstxid) {
+				$firstxid = $xidtmp;
+				
+				#see if this isn't the xid we want.  If so, get outa here
+				if($firstxid ne $ARGV[0]) {
+					return;
+				}
+
 			}
 		}
 
@@ -120,11 +112,16 @@ sub request_handle()
 			return;
 		}
 
-		#it belongs here
-		if($field->{'att'}->{'type'} eq $ARGV[0]) {
-			$lastreqname = $section->{'att'}->{'name'};
-			output_method_header($xid,$section);
-		}
+	}
+
+	if(!defined $firstxid) {
+		return;
+	}
+
+	#it belongs here
+	if($firstxid eq $ARGV[0]) {
+		$lastreqname = $section->{'att'}->{'name'};
+		output_method_header($xid,$section);
 	}
 }
 
