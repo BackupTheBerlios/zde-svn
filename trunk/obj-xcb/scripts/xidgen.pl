@@ -82,44 +82,75 @@ sub request_handle()
 
 	my $firstxid;
 	my $numfirstxid;
-	my $numotherxid;
+	my $isxid = undef;
 	my $lastreqname;
 
 	my @fields = $section->children('field');
+	my %numeachtype;
 
 	#orphan
 	if(!@fields) {
 		return;
 	}
 	
-	foreach my $field (@fields) {
-		
+	foreach my $field (@fields) {	
 		foreach my $xidtmp (@xids) {			
 			#then this is the first xid
-			if(($field->{'att'}->{'type'} eq $xidtmp) and !defined $firstxid) {
+			if(($field->{'att'}->{'type'} eq $xidtmp) and (!defined $firstxid)) {
 				$firstxid = $xidtmp;
-				
+				$isxid = defined;
+
 				#see if this isn't the xid we want.  If so, get outa here
 				if($firstxid ne $ARGV[0]) {
 					return;
 				}
-
+			}
+			#even if its not the first xid, it might be an xid
+			elsif($field->{'att'}->{'type'} eq $xidtmp) {
+				$isxid = defined;
 			}
 		}
-
 		#remove duplicates, sometimes XML::Twig likes to go batty
 		if((defined $lastreqname) and $lastreqname eq $section->{'att'}->{'name'}) {
 			return;
 		}
+	
+		if((defined $isxid) and $field->{'att'}->{'type'} eq $firstxid) { 
+			$numfirstxid++;
+		}
 
+		if(!defined $isxid) {
+			$numeachtype{"$field->{'att'}->{'type'}"}++;
+		}
+
+		$isxid = undef;
 	}
 
 	if(!defined $firstxid) {
 		return;
 	}
-
-	#it belongs here
+	
+	#it might belong here
 	if($firstxid eq $ARGV[0]) {
+		my @values = (values %numeachtype);
+		#see if the number of any other field type is higher than how many of the first xid
+		if($section->{'att'}->{'name'} =~ /$firstxid/i) {
+			$lastreqname = $section->{'att'}->{'name'};
+			output_method_header($xid,$section);
+			return;
+		}
+		foreach my $num (@values) {
+			#then there is only one way for it to redeem itself...
+			if($num >= $numfirstxid){
+				if($firstxid eq "WINDOW" and $section->{'att'}->{'name'} eq "ClearArea") {
+					$lastreqname = $section->{'att'}->{'name'};
+					output_method_header($xid,$section);
+					return;
+				}
+				#send off to the orphan script
+				return;
+			}
+		}
 		$lastreqname = $section->{'att'}->{'name'};
 		output_method_header($xid,$section);
 	}

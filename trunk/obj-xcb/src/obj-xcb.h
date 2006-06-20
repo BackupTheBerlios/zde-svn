@@ -30,8 +30,8 @@ typedef Object ObjXCBCursor;
 typedef Object ObjXCBColormap;
 typedef Object ObjXCBAtom;
 typedef Object ObjXCBWindow;
-typedef Object ObjXCBVisualid;
-typedef Object ObjXCBTimestamp;
+typedef XCBVISUALID ObjXCBVisualid;
+typedef XCBTIMESTAMP ObjXCBTimestamp;
 typedef Object ObjXCBKeycode;
 typedef Object ObjXCBDrawable;
 
