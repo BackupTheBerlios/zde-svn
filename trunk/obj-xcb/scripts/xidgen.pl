@@ -23,6 +23,8 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 sub start_class_header($);
 sub start_class_source($$);
 sub output_method_header($$);
+sub output_method_source($$);
+sub output_decl($$);
 sub end_class_header($);
 sub end_class_source($);
 sub request_handle();
@@ -69,12 +71,6 @@ sub xid_handle()
 	$xids[@xids] = $section->{'att'}->{'name'};
 }
 
-#
-#
-#TODO
-#Need to put in the other rules to decide what is an orphan, see mailing list discussion
-#
-#
 sub request_handle()
 { my($twig, $section) = @_;
 	my $xid = $ARGV[0];
@@ -137,6 +133,7 @@ sub request_handle()
 		if($section->{'att'}->{'name'} =~ /$firstxid/i) {
 			$lastreqname = $section->{'att'}->{'name'};
 			output_method_header($xid,$section);
+			output_method_source($xid,$section);
 			return;
 		}
 		foreach my $num (@values) {
@@ -145,6 +142,7 @@ sub request_handle()
 				if($firstxid eq "WINDOW" and $section->{'att'}->{'name'} eq "ClearArea") {
 					$lastreqname = $section->{'att'}->{'name'};
 					output_method_header($xid,$section);
+					output_method_source($xid,$section);
 					return;
 				}
 				#send off to the orphan script
@@ -153,6 +151,7 @@ sub request_handle()
 		}
 		$lastreqname = $section->{'att'}->{'name'};
 		output_method_header($xid,$section);
+		output_method_source($xid,$section);
 	}
 }
 
@@ -229,14 +228,6 @@ sub end_class_source($)
 	close $sourcefh;
 }
 
-#
-#
-# TODO Things to be fixed
-# Valueparams must be put in
-# DONE - Parameters that are XIDs should be turned into ObjXCBEquivilants
-# DONE - The first XID is always redundant, we store that within the class
-#
-#
 sub output_method_header($$)
 { my($xid,$request) = @_;
 	
@@ -268,13 +259,7 @@ sub output_method_header($$)
 				if($rtype eq $xidtmp) {
 					my $capxid = $xidtmp;
 					$capxid =~ s/(\w+)/\u\L$1/g;
-					#$rtype = ("XCB" . $xidtmp);
-					if($xidtmp eq "CHARINFO") {
-						$rtype = ("XCB" . $xidtmp);
-					}
-					else {
-						$rtype = "ObjXCB$capxid *";
-					}
+					$rtype = "ObjXCB$capxid *";
 				}
 			}
 			print $repfh "- \($rtype\)get_$repfield->{'att'}->{'name'};\n";	
@@ -305,6 +290,48 @@ sub output_method_header($$)
 		print $headerfh '- (' . "ObjXCB$request->{'att'}->{'name'}Reply *" . "\)$request->{'att'}->{'name'}";
 	}
 
+	output_decl($headerfh,$request);
+	
+	print $headerfh ";\n";
+}
+
+sub output_method_source($$)
+{ my ($xid, $request) = @_;
+	
+	my @fields = $request->children('field');
+	my @valueparam = $request->children('valueparam');
+	my @reply = $request->children('reply');
+	my @list = $request->children('list');
+	my $firstxid;
+
+	if(!@reply) {
+		print $sourcefh '- (void)' . "$request->{'att'}->{'name'}";
+	}
+	else {	
+		print $sourcefh "- \(ObjXCB$request->{'att'}->{'name'}Reply *\) $request->{'att'}->{'name'}";
+	}
+
+	#output parameters
+	
+	output_decl($sourcefh,$request);
+
+	print $sourcefh "\n{\n";
+
+
+
+
+	print $sourcefh "\n}\n\n";
+}
+
+sub output_decl($$)
+{ my ($fh, $request) = @_;
+
+	my @fields = $request->children('field');
+	my @valueparam = $request->children('valueparam');
+	my @reply = $request->children('reply');
+	my @list = $request->children('list');
+	my $firstxid;
+
 	#for all the regular fields
 	foreach my $field (@fields) {
 		my $ftype = $field->{'att'}->{'type'};
@@ -330,9 +357,10 @@ sub output_method_header($$)
 			}
 		}
 
-		print $headerfh ":\($ftype\)$field->{'att'}->{'name'}";	
+		print $fh ":\($ftype\)$field->{'att'}->{'name'}";	
 	}
 
+	#lists
 	foreach my $lfield (@list) {
 		my $ltype = $lfield->{'att'}->{'type'};
 
@@ -345,9 +373,10 @@ sub output_method_header($$)
 			}
 		}
 		
-		print $headerfh ":\($ltype *\)$lfield->{'att'}->{'name'}";
+		print $fh ":\($ltype *\)$lfield->{'att'}->{'name'}";
 	}
 
+	#valueparams
 	foreach my $vparam (@valueparam) {
 		my $vtype = $vparam->{'att'}->{'value-mask-type'};
 
@@ -360,10 +389,9 @@ sub output_method_header($$)
 			}
 		}
 		
-		print $headerfh ":\($vtype\)$vparam->{'att'}->{'value-mask-name'}";
-		print $headerfh ":\($vtype *\)$vparam->{'att'}->{'value-list-name'}";
+		print $fh ":\($vtype\)$vparam->{'att'}->{'value-mask-name'}";
+		print $fh ":\($vtype *\)$vparam->{'att'}->{'value-list-name'}";
 	}
-
-	print $headerfh ";\n";
 }
+
 0;
