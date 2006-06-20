@@ -42,7 +42,7 @@ my $outfile = "xcb_" . $xid;
 my $outheaderfile = $outfile . ".h";
 my $outsourcefile = $outfile . ".m";
 
-my $inherits = "ObjXCBXID";
+my $inherits = "Object";
 
 if($ARGV[0] eq "WINDOW" or $ARGV[0] eq "PIXMAP") {
 	$inherits = "ObjXCBDrawable";
@@ -337,12 +337,12 @@ sub output_method_source($$)
 					if($xid eq $field->{'att'}->{'type'}) {
 						print $sourcefh ",[$field->{'att'}->{'name'} get_xid]";
 						$isxid = defined;
-						last;
 					}
 				}
 				if(!defined $isxid) {
 					print $sourcefh ",$field->{'att'}->{'name'}";
 				}
+				$isxid = undef;
 			}
 		}
 

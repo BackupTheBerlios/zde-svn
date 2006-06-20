@@ -23,7 +23,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 //#include "xcb_events.h"
 #include "xcb_conn.h"
 
-typedef Object ObjXCBPixmap;
+/*typedef Object ObjXCBPixmap;
 typedef Object ObjXCBGcontext;
 typedef Object ObjXCBFont;
 typedef Object ObjXCBCursor;
@@ -43,7 +43,19 @@ typedef Object ObjXCBQueryPointerReply;
 typedef Object ObjXCBListInstalledColormapsReply;
 typedef Object ObjXCBQueryTreeReply;
 typedef Object ObjXCBListPropertiesReply; 
+*/
 
+@class ObjXCBPixmap;
+@class ObjXCBGcontext;
+@class ObjXCBFont;
+@class ObjXCBCursor;
+@class ObjXCBColormap;
+@class ObjXCBAtom;
+@class ObjXCBWindow;
+@class ObjXCBKeycode;
+@class ObjXCBDrawable;
+@class ObjXCBQueryColorsReply;
+@class ObjXCBGetAtomNameReply;
 
 /* This should all be handled in the codegeneration script, but for now it'll do... */
 #define VISUALID XCBVISUALID
@@ -56,17 +68,17 @@ typedef Object ObjXCBListPropertiesReply;
 #define ARC XCBARC
 #define CHAR2B XCBCHAR2B
 
-
-/*
-#include "xcb_pixmap.h"
-#include "xcb_gcontext.h"
-#include "xcb_font.h"
-#include "xcb_cursor.h"
-#include "xcb_colormap.h"
-#include "xcb_atom.h"
-#include "xcb_window.h"
-*/
 #include "objxproto.h"
+
+#import "xcb_drawable.h"
+#import "xcb_pixmap.h"
+#import "xcb_gcontext.h"
+#import "xcb_font.h"
+#import "xcb_cursor.h"
+#import "xcb_colormap.h"
+#import "xcb_atom.h"
+#import "xcb_window.h"
+
 /* XXX Currently deprecated. */
 //#include "xcb_window.h"
 
