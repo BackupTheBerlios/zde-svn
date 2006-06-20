@@ -34,6 +34,16 @@ typedef Object ObjXCBWindow;
 //typedef XCBTIMESTAMP ObjXCBTimestamp;
 typedef Object ObjXCBKeycode;
 typedef Object ObjXCBDrawable;
+typedef Object ObjXCBQueryColorsReply;
+typedef Object ObjXCBGetAtomNameReply;
+typedef Object ObjXCBGetSelectionOwnerReply;
+typedef Object ObjXCBGetWindowAttributesReply;
+typedef Object ObjXCBGetListPropertiesReply;
+typedef Object ObjXCBQueryPointerReply;
+typedef Object ObjXCBListInstalledColormapsReply;
+typedef Object ObjXCBQueryTreeReply;
+typedef Object ObjXCBListPropertiesReply; 
+
 
 /* This should all be handled in the codegeneration script, but for now it'll do... */
 #define VISUALID XCBVISUALID
@@ -46,7 +56,6 @@ typedef Object ObjXCBDrawable;
 #define ARC XCBARC
 #define CHAR2B XCBCHAR2B
 
-#include "objxproto.h"
 
 /*
 #include "xcb_pixmap.h"
@@ -57,6 +66,7 @@ typedef Object ObjXCBDrawable;
 #include "xcb_atom.h"
 #include "xcb_window.h"
 */
+#include "objxproto.h"
 /* XXX Currently deprecated. */
 //#include "xcb_window.h"
 

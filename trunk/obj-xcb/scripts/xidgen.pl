@@ -42,7 +42,7 @@ my $outfile = "xcb_" . $xid;
 my $outheaderfile = $outfile . ".h";
 my $outsourcefile = $outfile . ".m";
 
-my $inherits = "Object";
+my $inherits = "ObjXCBXID";
 
 if($ARGV[0] eq "WINDOW" or $ARGV[0] eq "PIXMAP") {
 	$inherits = "ObjXCBDrawable";
@@ -183,6 +183,8 @@ sub start_class_header($)
 		print $headerfh '- (id)init:(ObjXCBConnection *)c;' . "\n";
 		print $headerfh '/** Takes in an XID and initializes the object. */' . "\n";
 		print $headerfh '- (id)init:(ObjXCBConnection *) c:(' . "XCB$ARGV[0]" . ')xid;' . "\n";
+		print $headerfh '/** Returns the XID the object represents. */' . "\n";
+		print $headerfh '- (' . "XCB$ARGV[0]\)get_xid;\n";
 		print $headerfh '- free;' . "\n";
 	}
 }
@@ -210,6 +212,8 @@ sub start_class_source($$)
 		print $sourcefh '- (id)init:(ObjXCBConnection *)c:(' . "XCB$ARGV[0]" . ')xid;' . "\n" . '{' . "\n" .
 			"\t" . 'self->c = c;'. "\n" .
 			"\t" . 'self->xid = xid;' . "\n" . '}' . "\n\n";
+		print $sourcefh '- (' . "XCB$ARGV[0]\)get_xid\n" . '{' . "\n" .
+			"\t" . 'return self->xid;' . "\n" . '}' . "\n\n";
 		print $sourcefh '- free' . "\n" . '{' . "\n" .
 			"\t" . 'self->c = NULL;' . "\n" . '[super free];' . "\n" . '}' . "\n\n";
 	}
@@ -303,6 +307,7 @@ sub output_method_source($$)
 	my @reply = $request->children('reply');
 	my @list = $request->children('list');
 	my $firstxid;
+	my $isxid;
 
 	if(!@reply) {
 		print $sourcefh '- (void)' . "$request->{'att'}->{'name'}";
@@ -316,9 +321,43 @@ sub output_method_source($$)
 	output_decl($sourcefh,$request);
 
 	print $sourcefh "\n{\n";
+		
+	if(!@reply) {
+		print $sourcefh "\t" . "XCB$request->{'att'}->{'name'}" . '([self->c get_connection]';
 
+		foreach my $field (@fields) {
+			#if its the first xid, we have it stored within the object
+			if(($field->{'att'}->{'type'} eq $ARGV[0]) and !defined $firstxid) {
+				$firstxid = defined;
+				print $sourcefh ',self->xid';
+			}
+			else {	
+				foreach my $xid (@xids) {
+					#if its an xid, output code to get it from the object.
+					if($xid eq $field->{'att'}->{'type'}) {
+						print $sourcefh ",[$field->{'att'}->{'name'} get_xid]";
+						$isxid = defined;
+						last;
+					}
+				}
+				if(!defined $isxid) {
+					print $sourcefh ",$field->{'att'}->{'name'}";
+				}
+			}
+		}
 
+		foreach my $lfield (@list) {
+			print $sourcefh ",$lfield->{'att'}->{'name'}";
+		}
 
+		foreach my $vfield (@valueparam) {
+			print $sourcefh ",$vfield->{'att'}->{'value-mask-name'}";
+			print $sourcefh ",$vfield->{'att'}->{'value-list-name'}";
+		}
+
+		print $sourcefh "\);\n";
+	}
+	
 
 	print $sourcefh "\n}\n\n";
 }

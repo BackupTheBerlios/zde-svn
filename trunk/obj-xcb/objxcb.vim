@@ -65,17 +65,17 @@ endif
 set shortmess=aoO
 badd +85 configure.in
 badd +1 Makefile.am
-badd +22 src/Makefile.am
+badd +7 src/Makefile.am
 badd +4 README
 badd +46 src/xcb_conn.m
 badd +20 src/xcb_conn.h
-badd +47 src/obj-xcb.h
+badd +68 src/obj-xcb.h
 badd +4 tests/Makefile.am
 badd +20 tests/main.m
 badd +16 design/notes
 badd +35 design/example.txt
 badd +47 scripts/codegen.pl
-badd +348 scripts/xidgen.pl
+badd +22 scripts/xidgen.pl
 badd +13 TODO
 args configure.in Makefile.am src/Makefile.am
 edit README
