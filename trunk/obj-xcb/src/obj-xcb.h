@@ -67,6 +67,10 @@ typedef Object ObjXCBListPropertiesReply;
 #define RECTANGLE XCBRECTANGLE
 #define ARC XCBARC
 #define CHAR2B XCBCHAR2B
+#define POINT XCBPOINT
+#define TIMESTAMP XCBTIMESTAMP
+#define TIMECOORD XCBTIMECOORD
+#define KEYCODE XCBKEYCODE
 
 #include "objxproto.h"
 

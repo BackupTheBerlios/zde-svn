@@ -122,6 +122,7 @@ sub request_handle()
 		$isxid = undef;
 	}
 
+	#orphan
 	if(!defined $firstxid) {
 		return;
 	}
@@ -129,30 +130,37 @@ sub request_handle()
 	#it might belong here
 	if($firstxid eq $ARGV[0]) {
 		my @values = (values %numeachtype);
-		#see if the number of any other field type is higher than how many of the first xid
-		if($section->{'att'}->{'name'} =~ /$firstxid/i) {
+		if($section->{'att'}->{'name'} =~ /grab/ig or $section->{'att'}->{'name'} =~ /pointer/ig or $section->{'att'}->{'name'} =~ /event/ig) {
+			return;
+		}
+
+		if($section->{'att'}->{'name'} =~ /$firstxid/ig) {
 			$lastreqname = $section->{'att'}->{'name'};
 			output_method_header($xid,$section);
 			output_method_source($xid,$section);
 			return;
 		}
-		foreach my $num (@values) {
+
+		#see if the number of any other field type is higher than how many of the first xid		
+		#	foreach my $num (@values) {
 			#then there is only one way for it to redeem itself...
-			if($num >= $numfirstxid){
-				if($firstxid eq "WINDOW" and $section->{'att'}->{'name'} eq "ClearArea") {
-					$lastreqname = $section->{'att'}->{'name'};
-					output_method_header($xid,$section);
-					output_method_source($xid,$section);
-					return;
-				}
+		#	if($num > $numfirstxid){
+		#		if($firstxid eq "WINDOW" and $section->{'att'}->{'name'} eq "ClearArea") {
+		#			$lastreqname = $section->{'att'}->{'name'};
+		#			output_method_header($xid,$section);
+		#			output_method_source($xid,$section);
+		#			return;
+		#		}
 				#send off to the orphan script
-				return;
-			}
-		}
+		#		return;
+		#	}
+		#}
+		
 		$lastreqname = $section->{'att'}->{'name'};
 		output_method_header($xid,$section);
 		output_method_source($xid,$section);
-	}
+		return;
+	}	
 }
 
 sub start_class_header($)
