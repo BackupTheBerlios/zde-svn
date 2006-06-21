@@ -175,18 +175,18 @@ sub start_class_header($)
 	#copyright
 	print $headerfh "$copyright";
 
-	#interface declaration (needs to take into accout WINDOW and PIXMAP, which inherit from DRAWABLE
+	#interface declaration 
 	print $headerfh "\@interface ObjXCB$capxid : $inherits \n{\n";
 
 	#variables
-	if($ARGV[0] ne "DRAWABLE" and $ARGV[0] ne "FONTABLE") {
+	if($ARGV[0] ne "WINDOW" and $ARGV[0] ne "PIXMAP") {
 		print $headerfh "\tXCB$ARGV[0]" . ' xid;' . "\n";
 		print $headerfh "\t" . 'ObjXCBConnection *c;' . "\n";
 	}
 	print $headerfh "\n}\n";
 
 	#most classes have init and free
-	if($ARGV[0] ne "DRAWABLE" and $ARGV[0] ne "FONTABLE") {
+#if($ARGV[0] ne "DRAWABLE" and $ARGV[0] ne "FONTABLE") {
 		print $headerfh '/** Creates a new XID and initializes the object. */' . "\n";
 		print $headerfh '- (id)init:(ObjXCBConnection *)c;' . "\n";
 		print $headerfh '/** Takes in an XID and initializes the object. */' . "\n";
@@ -194,7 +194,7 @@ sub start_class_header($)
 		print $headerfh '/** Returns the XID the object represents. */' . "\n";
 		print $headerfh '- (' . "XCB$ARGV[0]\)get_xid;\n";
 		print $headerfh '- free;' . "\n";
-	}
+#	}
 }
 
 sub start_class_source($$)
@@ -213,6 +213,28 @@ sub start_class_source($$)
 
 	#generic init and free code
 	print $sourcefh "\@implementation ObjXCB$capxid : $inherits \n\n";
+	
+	if($ARGV[0] eq "WINDOW" or $ARGV[0] eq "PIXMAP") {
+		my $var;
+		if($ARGV[0] eq "WINDOW") {
+			$var = "window";
+		}
+		else {
+			$var = "pixmap";
+		}
+		print $sourcefh '- (id)init:(ObjXCBConnection *)c' . "\n" . '{' . "\n" .
+			"\t" . 'self->c = c;'. "\n" .
+			"\t" . 'self->xid.' . "$var" . ' = XCB'.$ARGV[0] . 'New([self->c get_connection]);' . "\n" . '}' . "\n\n";
+		print $sourcefh '- (id)init:(ObjXCBConnection *)c:(' . "XCB$ARGV[0]" . ')xid;' . "\n" . '{' . "\n" .
+			"\t" . 'self->c = c;'. "\n" .
+			"\t" . 'self->xid.' . "$var" . ' = xid;' . "\n" . '}' . "\n\n";
+		print $sourcefh '- (' . "XCB$ARGV[0]\)get_xid\n" . '{' . "\n" .
+			"\t" . 'return self->xid.' . "$var" . ';' . "\n" . '}' . "\n\n";
+		print $sourcefh '- free' . "\n" . '{' . "\n" .
+			"\t" . 'self->c = NULL;' . "\n" . '[super free];' . "\n" . '}' . "\n\n";
+		return;
+	}
+
 	if($ARGV[0] ne "DRAWABLE" and $ARGV[0] ne "FONTABLE") {
 		print $sourcefh '- (id)init:(ObjXCBConnection *)c' . "\n" . '{' . "\n" .
 			"\t" . 'self->c = c;'. "\n" .
@@ -337,7 +359,12 @@ sub output_method_source($$)
 			#if its the first xid, we have it stored within the object
 			if(($field->{'att'}->{'type'} eq $ARGV[0]) and !defined $firstxid) {
 				$firstxid = defined;
-				print $sourcefh ',self->xid';
+				if($ARGV[0] eq "WINDOW" or $ARGV[0] eq "PIXMAP") {
+					print $sourcefh ',[self get_xid]';
+				}
+				else {
+					print $sourcefh ',self->xid';
+				}
 			}
 			else {	
 				foreach my $xid (@xids) {
@@ -355,6 +382,16 @@ sub output_method_source($$)
 		}
 
 		foreach my $lfield (@list) {
+			my @lfref = $lfield->children('fieldref');
+			my @lop = $lfield->children('op');
+			if(@lop) {
+				@lop = $lop[0]->children('op');
+			}
+
+			if(!@lfref and !@lop) {
+				print $sourcefh ",$lfield->{'att'}->{'name'}_len";
+			}
+
 			print $sourcefh ",$lfield->{'att'}->{'name'}";
 		}
 
@@ -410,6 +447,11 @@ sub output_decl($$)
 	#lists
 	foreach my $lfield (@list) {
 		my $ltype = $lfield->{'att'}->{'type'};
+		my @lfref = $lfield->children('fieldref');
+		my @lop = $lfield->children('op');
+		if(@lop) {
+			@lop = $lop[0]->children('op');
+		}
 
 		#if its an xid, we need to Objectify its name to the form ObjXCBXid
 		foreach my $xidtmp (@xids) {
@@ -419,7 +461,11 @@ sub output_decl($$)
 				$ltype = "ObjXCB$capxid *";
 			}
 		}
-		
+	
+		if(!@lfref and !@lop) {
+			print $fh ":\(CARD16\)$lfield->{'att'}->{'name'}_len";
+		}
+
 		print $fh ":\($ltype *\)$lfield->{'att'}->{'name'}";
 	}
 
