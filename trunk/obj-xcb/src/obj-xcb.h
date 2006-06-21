@@ -20,30 +20,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 #include <stdlib.h>
 
 /* obj-xcb includes */
-//#include "xcb_events.h"
 #include "xcb_conn.h"
-
-/*typedef Object ObjXCBPixmap;
-typedef Object ObjXCBGcontext;
-typedef Object ObjXCBFont;
-typedef Object ObjXCBCursor;
-typedef Object ObjXCBColormap;
-typedef Object ObjXCBAtom;
-typedef Object ObjXCBWindow;
-//typedef XCBVISUALID ObjXCBVisualid;
-//typedef XCBTIMESTAMP ObjXCBTimestamp;
-typedef Object ObjXCBKeycode;
-typedef Object ObjXCBDrawable;
-typedef Object ObjXCBQueryColorsReply;
-typedef Object ObjXCBGetAtomNameReply;
-typedef Object ObjXCBGetSelectionOwnerReply;
-typedef Object ObjXCBGetWindowAttributesReply;
-typedef Object ObjXCBGetListPropertiesReply;
-typedef Object ObjXCBQueryPointerReply;
-typedef Object ObjXCBListInstalledColormapsReply;
-typedef Object ObjXCBQueryTreeReply;
-typedef Object ObjXCBListPropertiesReply; 
-*/
 
 @class ObjXCBPixmap;
 @class ObjXCBGcontext;
@@ -72,7 +49,7 @@ typedef Object ObjXCBListPropertiesReply;
 #define TIMECOORD XCBTIMECOORD
 #define KEYCODE XCBKEYCODE
 
-#include "objxproto.h"
+#import "objxproto.h"
 
 #import "xcb_drawable.h"
 #import "xcb_pixmap.h"
@@ -82,7 +59,4 @@ typedef Object ObjXCBListPropertiesReply;
 #import "xcb_colormap.h"
 #import "xcb_atom.h"
 #import "xcb_window.h"
-
-/* XXX Currently deprecated. */
-//#include "xcb_window.h"
 

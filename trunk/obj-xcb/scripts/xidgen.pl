@@ -179,7 +179,7 @@ sub start_class_header($)
 	print $headerfh "\@interface ObjXCB$capxid : $inherits \n{\n";
 
 	#variables
-	if($ARGV[0] ne "WINDOW" and $ARGV[0] ne "PIXMAP") {
+	if($ARGV[0] ne "WINDOW" or $ARGV[0] ne "PIXMAP") {
 		print $headerfh "\tXCB$ARGV[0]" . ' xid;' . "\n";
 		print $headerfh "\t" . 'ObjXCBConnection *c;' . "\n";
 	}
@@ -317,7 +317,7 @@ sub output_method_header($$)
 
 		#include us in objxproto.h
 		open(my $xprotofh,">>","objxproto.h") or die("Couldn't open objxproto.h");
-		print $xprotofh '#import <' . "objxcb_$repnamefull.h" . ">\n";
+		print $xprotofh '#import "' . "objxcb_$repnamefull.h" . "\"\n";
 		close($xprotofh);
 
 		#output the correct method declaration now
