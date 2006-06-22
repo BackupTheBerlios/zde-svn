@@ -105,10 +105,9 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 /**
  * Returns the root window of the default screen.
- * Returns an obj-xcb window, not a raw XCB window!
- * FIXME Need to do autogeneration first.
+ * Returns an obj-xcb window, not a raw XCB window! 
  */
-//- (ObjXCBWindow)get_root_window;
+- (ObjXCBWindow *)get_root_window;
 
 /**
  * Returns the default black pixel value.

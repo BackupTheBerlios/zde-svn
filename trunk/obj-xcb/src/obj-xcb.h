@@ -19,9 +19,6 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 #include <stdio.h>
 #include <stdlib.h>
 
-/* obj-xcb includes */
-#include "xcb_conn.h"
-
 @class ObjXCBPixmap;
 @class ObjXCBGcontext;
 @class ObjXCBFont;
@@ -49,8 +46,10 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 #define TIMECOORD XCBTIMECOORD
 #define KEYCODE XCBKEYCODE
 
+/* obj-xcb includes */
 #import "objxproto.h"
 
+#import "xcb_conn.h"
 #import "xcb_drawable.h"
 #import "xcb_pixmap.h"
 #import "xcb_gcontext.h"

@@ -12,7 +12,7 @@ int main(void)
 	
 	/* Get the default screen and root window */
 	s = [c get_screen];
-	[root init:c:s->root];
+	root = [c get_root_window];
 
 	/* Initialize and create a window */
 	[w init:c];

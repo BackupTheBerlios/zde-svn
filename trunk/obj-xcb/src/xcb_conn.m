@@ -158,6 +158,15 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 	return self->s->root;	
 }
 
+- (ObjXCBWindow *)get_root_window
+{
+	ObjXCBWindow *root = [ObjXCBWindow alloc];
+
+	[root init:self:self->s->root];
+
+	return root;
+}
+
 - (int)get_black_pixel
 {
 	return self->s->black_pixel;
