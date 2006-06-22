@@ -373,15 +373,17 @@ sub output_method_source($$)
 	
 		#constructor
 		print $repsourcefh "- \(id\)init:\(ObjXCBConnection *)c:\(XCB$request->{'att'}->{'name'}Cookie\)repcookie\n{\n";
-		print $repsourcefh "\tself->repcookie = repcookie;\n\tself->got_rep = 0;\n}\n\n";
+		print $repsourcefh "\tself->repcookie = repcookie;\n\tself->got_rep = 0;\n\tself->c = c;\n}\n\n";
 
 		foreach my $repfield (@repfields) {
 			my $rtype = $repfield->{'att'}->{'type'};
+			my $rtypenonpoint;
 			foreach my $xidtmp (@xids) {
 				if($rtype eq $xidtmp) {
 					my $capxid = $xidtmp;
 					$capxid =~ s/(\w+)/\u\L$1/g;
 					$rtype = "ObjXCB$capxid *";
+					$rtypenonpoint = "ObjXCB$capxid";
 				}
 			}
 			#TODO: ERROR HANDLING
@@ -406,6 +408,10 @@ sub output_method_source($$)
 				}
 				
 				print $repsourcefh "\n\treturn self->reply->$rname;";
+			}
+			else {
+				print $repsourcefh "\n\t$rtype repobj = [$rtypenonpoint alloc];\n\t[repobj init:self->c:self->reply->$repfield->{'att'}->{'name'}];\n";
+				print $repsourcefh "\treturn repobj;";
 			}
 
 			print $repsourcefh "\n}\n\n";
