@@ -292,8 +292,9 @@ sub output_method_header($$)
 		print $repfh "\tObjXCBConnection *c;\n";
 		print $repfh "\tunsigned int got_rep;\n}\n\n";
 		
-		#constructor
+		#constructor and deconstructor
 		print $repfh "- \(id\)init:\(ObjXCBConnection *\)c:\(XCB$request->{'att'}->{'name'}Cookie\)repcookie;\n";
+		print $repfh "- \(void\)free;\n";
 
 		foreach my $repfield (@repfields) {
 			my $rtype = $repfield->{'att'}->{'type'};
@@ -373,9 +374,10 @@ sub output_method_source($$)
 		print $repsourcefh '#include "obj-xcb.h"' . "\n\n";
 		print $repsourcefh '@implementation ObjXCB' . "$request->{'att'}->{'name'}Reply : Object\n\n";
 	
-		#constructor
+		#constructor and deconstructor
 		print $repsourcefh "- \(id\)init:\(ObjXCBConnection *)c:\(XCB$request->{'att'}->{'name'}Cookie\)repcookie\n{\n";
-		print $repsourcefh "\tself->repcookie = repcookie;\n\tself->got_rep = 0;\n\tself->c = c;\n}\n\n";
+		print $repsourcefh "\tself->repcookie = repcookie;\n\tself->reply=NULL;\n\tself->got_rep = 0;\n\tself->c = c;\n}\n\n";
+		print $repsourcefh "- \(void\)free\n{\n\tif(self->reply) {\n\t\tfree\(self->reply\);\n\t}\n\t[super free];\n}\n\n";
 
 		foreach my $repfield (@repfields) {
 			my $rtype = $repfield->{'att'}->{'type'};
@@ -440,7 +442,7 @@ sub output_method_source($$)
 
 		#now put code in the method to access the reply
 		print $sourcefh "\tObjXCB$request->{'att'}->{'name'}Reply *rep = [ObjXCB$request->{'att'}->{'name'}Reply alloc];\n";
-		print $sourcefh "\treturn [rep init:self->c:XCB$request->{'att'}->{'name'}\([self->c get_connection]";
+		print $sourcefh "\t[rep init:self->c:XCB$request->{'att'}->{'name'}\([self->c get_connection]";
 		
 		foreach my $field (@fields) {
 			#if its the first xid, we have it stored within the object
@@ -489,6 +491,7 @@ sub output_method_source($$)
 		}
 
 		print $sourcefh "\)];\n";
+		print $sourcefh "\treturn rep;";
 	}
 	else {
 		$isxid = undef;

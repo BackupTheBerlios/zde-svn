@@ -17,15 +17,20 @@ int main(void)
 
 	/* Initialize and create a window */
 	[w init:c];
-	[w CreateWindow:XCBCopyFromParent:root:10:10:100:200:1:XCBWindowClassInputOutput:s->root_visual:0:NULL];
+	[w CreateWindow:XCBCopyFromParent:root:0:0:100:200:1:XCBWindowClassInputOutput:s->root_visual:0:NULL];
 	[w MapWindow];
-	
+
+	geomrep = [w GetGeometry];
+
 	/* Flush all requests to the server */
 	[c flush];
 
-	/* Wait so we can actually see the window */
-	//pause();
+	printf("The window is positioned at x:%d:y:%d with width:%d and height:%d.\n",[geomrep get_x],[geomrep get_y],[geomrep get_width],[geomrep get_height]);
 
+	/* Wait for a second so we can actually see the window */
+	sleep(1);
+
+	[geomrep free];
 	[c free];
 	[root free];
 	[w free];
