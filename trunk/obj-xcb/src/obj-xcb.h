@@ -19,6 +19,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 #include <stdio.h>
 #include <stdlib.h>
 
+@class ObjXCBConnection;
 @class ObjXCBPixmap;
 @class ObjXCBGcontext;
 @class ObjXCBFont;

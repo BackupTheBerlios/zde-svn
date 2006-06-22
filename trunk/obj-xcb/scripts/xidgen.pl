@@ -285,8 +285,14 @@ sub output_method_header($$)
 		open(my $repfh,">","objxcb_$repnamefull.h") or die("Couldn't open file.");
 		print $repfh $copyright;
 		print $repfh "\@interface ObjXCB$request->{'att'}->{'name'}Reply : Object\n{\n";
-		print $repfh "\tXCB$request->{'att'}->{'name'}" . "Cookie repcookie;\n}\n\n";
+		print $repfh "\tXCB$request->{'att'}->{'name'}" . "Cookie repcookie;\n";
+		print $repfh "\tXCB$request->{'att'}->{'name'}" . "Rep *reply;\n";
+		print $repfh "\tObjXCBConnection *c;\n";
+		print $repfh "\tunsigned int got_rep;\n}\n\n";
 		
+		#constructor
+		print $repfh "- \(id\)init:\(ObjXCBConnection *\)c:\(XCB$request->{'att'}->{'name'}Cookie\)repcookie;\n";
+
 		foreach my $repfield (@repfields) {
 			my $rtype = $repfield->{'att'}->{'type'};
 			foreach my $xidtmp (@xids) {
@@ -351,8 +357,67 @@ sub output_method_source($$)
 	output_decl($sourcefh,$request);
 
 	print $sourcefh "\n{\n";
-		
-	if(!@reply) {
+	
+	if(@reply) {
+		#create the source file for the reply
+		my @repfields = $reply[0]->children('field');
+		my @replist = $reply[0]->children('list');
+		my $repname = $request->{'att'}->{'name'};
+		$repname =~ tr/A-Z/a-z/;
+		my $repnamefull = $repname . "reply";
+		my $isxid;
+
+		open(my $repsourcefh,">","objxcb_$repnamefull.m") or die("Couldn't open file.");
+		print $repsourcefh '#include "obj-xcb.h"' . "\n\n";
+		print $repsourcefh '@implementation ObjXCB' . "$request->{'att'}->{'name'}Reply : Object\n\n";
+	
+		#constructor
+		print $repsourcefh "- \(id\)init:\(ObjXCBConnection *)c:\(XCB$request->{'att'}->{'name'}Cookie\)repcookie\n{\n";
+		print $repsourcefh "\tself->repcookie = repcookie;\n\tself->got_rep = 0;\n}\n\n";
+
+		foreach my $repfield (@repfields) {
+			my $rtype = $repfield->{'att'}->{'type'};
+			foreach my $xidtmp (@xids) {
+				if($rtype eq $xidtmp) {
+					my $capxid = $xidtmp;
+					$capxid =~ s/(\w+)/\u\L$1/g;
+					$rtype = "ObjXCB$capxid *";
+				}
+			}
+			#TODO: ERROR HANDLING
+			print $repsourcefh "- \($rtype\)get_$repfield->{'att'}->{'name'}\n{\n";
+			print $repsourcefh "\t" . 'if(!self->got_rep) {' . "\n\t\t" . 'self->reply = XCB' . "$request->{'att'}->{'name'}Reply\(" . 
+				'[self->c get_connection],self->repcookie,0);' . "\n\t\tself->got_rep = 1;" ."\n\t}\n";
+
+			#figure out if its an xid, this determines how we need to return
+			$isxid = undef;
+			foreach my $xidtmp (@xids) {
+				if($repfield->{'att'}->{'type'} eq $xidtmp) {
+					$isxid = defined;
+					last;
+				}
+			}
+
+			if(!defined $isxid) {
+				my $rname = $repfield->{'att'}->{'name'};
+
+				if($rname eq "class") {
+					$rname = "_$rname";
+				}
+				
+				print $repsourcefh "\n\treturn self->reply->$rname;";
+			}
+
+			print $repsourcefh "\n}\n\n";
+			
+		}
+
+		print $repsourcefh "\n" . '@end';
+
+		#now put code in the method to access the reply
+	}
+	else {
+		$isxid = undef;
 		print $sourcefh "\t" . "XCB$request->{'att'}->{'name'}" . '([self->c get_connection]';
 
 		foreach my $field (@fields) {
