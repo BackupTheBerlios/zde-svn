@@ -13,6 +13,7 @@ my $filefh;
 #figure out what we are creating and what the input should be
 my $outfile = $ARGV[0];
 my $infile = $ARGV[1];
+my $orphan;
 
 if($outfile eq "objxproto.h") {
 	start_file($outfile);
@@ -43,7 +44,13 @@ sub xid_handle()
 		return;
 	}
 
-	print `../scripts/xidgen.pl $section->{'att'}->{'name'} $infile`;
+	if(!defined $orphan) {
+		print `../scripts/xidgen.pl $section->{'att'}->{'name'} $infile 1`;
+		$orphan = defined;
+	}
+	else {
+		print `../scripts/xidgen.pl $section->{'att'}->{'name'} $infile 0`;
+	}
 #only do the first one for now
 #	exit 0;
 }

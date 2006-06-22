@@ -2,7 +2,7 @@
 use strict;
 
 #Generates output source code from xproto.xml
-#Arguments: xid and xml to use as input
+#Arguments: xid,xml to use as input,and whether to do orphans or not.
 
 use XML::Twig;
 
@@ -33,6 +33,7 @@ my $headerfh;
 my $sourcefh;
 
 my @xids;
+my $orphan;
 
 #create the output filenames
 my $xid = $ARGV[0];
@@ -43,6 +44,10 @@ my $outheaderfile = $outfile . ".h";
 my $outsourcefile = $outfile . ".m";
 
 my $inherits = "Object";
+
+if($ARGV[2] == 1) {
+	$orphan = defined;
+}
 
 if($ARGV[0] eq "WINDOW" or $ARGV[0] eq "PIXMAP") {
 	$inherits = "ObjXCBDrawable";
@@ -86,6 +91,9 @@ sub request_handle()
 
 	#orphan
 	if(!@fields) {
+		if(defined $orphan) {
+			print $section->{'att'}->{'name'}. "\n";
+		}
 		return;
 	}
 	
@@ -124,6 +132,9 @@ sub request_handle()
 
 	#orphan
 	if(!defined $firstxid) {
+		if(defined $orphan) {
+			print $section->{'att'}->{'name'} . "\n";
+		}
 		return;
 	}
 	
@@ -133,6 +144,9 @@ sub request_handle()
 		if($section->{'att'}->{'name'} =~ /grab/ig or $section->{'att'}->{'name'} =~ /pointer/ig or $section->{'att'}->{'name'} =~ /event/ig
 #		or $section->{'att'}->{'name'} =~ /translate/ig or $section->{'att'}->{'name'} =~ /selection/ig) {
 		) {
+			if(defined $orphan) {
+				print $section->{'att'}->{'name'} . "\n";			
+			}
 			return;
 		}
 

@@ -42,7 +42,6 @@ int main(void)
 	p[1].x = 80;
 	p[1].y = 100;
 
-
 	/* Flush all requests to the server */
 	[c flush];
 
