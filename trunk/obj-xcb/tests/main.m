@@ -5,6 +5,7 @@ int main(void)
 	ObjXCBConnection *c = [ObjXCBConnection alloc];
 	ObjXCBWindow *w = [ObjXCBWindow alloc];
 	ObjXCBWindow *root = [ObjXCBWindow alloc];
+	ObjXCBGetGeometryReply *geomrep;
 	XCBSCREEN *s;
 
 	/* Create a connection to the server. */
@@ -23,7 +24,7 @@ int main(void)
 	[c flush];
 
 	/* Wait so we can actually see the window */
-	pause();
+	//pause();
 
 	[c free];
 	[root free];

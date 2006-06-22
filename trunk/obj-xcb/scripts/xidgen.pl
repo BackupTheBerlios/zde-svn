@@ -130,7 +130,9 @@ sub request_handle()
 	#it might belong here
 	if($firstxid eq $ARGV[0]) {
 		my @values = (values %numeachtype);
-		if($section->{'att'}->{'name'} =~ /grab/ig or $section->{'att'}->{'name'} =~ /pointer/ig or $section->{'att'}->{'name'} =~ /event/ig) {
+		if($section->{'att'}->{'name'} =~ /grab/ig or $section->{'att'}->{'name'} =~ /pointer/ig or $section->{'att'}->{'name'} =~ /event/ig
+#		or $section->{'att'}->{'name'} =~ /translate/ig or $section->{'att'}->{'name'} =~ /selection/ig) {
+		) {
 			return;
 		}
 
@@ -417,10 +419,76 @@ sub output_method_source($$)
 			print $repsourcefh "\n}\n\n";
 			
 		}
+		
+		foreach my $lfield (@replist) {
+			my $ltype = $lfield->{'att'}->{'type'};
+			
+			#if its an xid, we need to Objectify its name to the form ObjXCBXid
+			foreach my $xidtmp (@xids) {
+				if($ltype eq $xidtmp) {
+					my $capxid = $xidtmp;
+					$capxid =~ s/(\w+)/\u\L$1/g;
+					$ltype = "ObjXCB$capxid *";
+				}
+			}
+			print $repsourcefh "- \($ltype*\)get_$lfield->{'att'}->{'name'}\n{\n";
+
+			print $repsourcefh "\n}\n\n";
+		}
 
 		print $repsourcefh "\n" . '@end';
 
 		#now put code in the method to access the reply
+		print $sourcefh "\tObjXCB$request->{'att'}->{'name'}Reply *rep = [ObjXCB$request->{'att'}->{'name'}Reply alloc];\n";
+		print $sourcefh "\treturn [rep init:self->c:XCB$request->{'att'}->{'name'}\([self->c get_connection]";
+		
+		foreach my $field (@fields) {
+			#if its the first xid, we have it stored within the object
+			if(($field->{'att'}->{'type'} eq $ARGV[0]) and !defined $firstxid) {
+				$firstxid = defined;
+				if($ARGV[0] eq "WINDOW" or $ARGV[0] eq "PIXMAP") {
+					print $sourcefh ',[self get_xid]';
+				}
+				else {
+					print $sourcefh ',self->xid';
+				}
+			}
+			else {
+				foreach my $xid (@xids) {
+					#if its an xid, output code to get it from the object.
+					if($xid eq $field->{'att'}->{'type'}) {
+						print $sourcefh ",[$field->{'att'}->{'name'} get_xid]";
+						$isxid = defined;
+					}
+				}
+				if(!defined $isxid) {
+					print $sourcefh ",$field->{'att'}->{'name'}";
+				}
+				$isxid = undef;
+
+			}
+		}
+		
+		foreach my $lfield (@list) {
+			my @lfref = $lfield->children('fieldref');
+			my @lop = $lfield->children('op');
+			if(@lop) {
+				@lop = $lop[0]->children('op');
+			}
+
+			if(!@lfref and !@lop) {
+				print $sourcefh ",$lfield->{'att'}->{'name'}_len";
+			}
+
+			print $sourcefh ",$lfield->{'att'}->{'name'}";
+		}
+
+		foreach my $vfield (@valueparam) {
+			print $sourcefh ",$vfield->{'att'}->{'value-mask-name'}";
+			print $sourcefh ",$vfield->{'att'}->{'value-list-name'}";
+		}
+
+		print $sourcefh "\)];\n";
 	}
 	else {
 		$isxid = undef;
