@@ -12,7 +12,7 @@ int main(void)
 	ObjXCBGcontext *rgc = [ObjXCBGcontext alloc];
 	ObjXCBGcontext *ggc = [ObjXCBGcontext alloc];
 	ObjXCBGcontext *blugc = [ObjXCBGcontext alloc];
-	ObjXCBColormap *cmap = [ObjXCBColormap alloc];
+	ObjXCBColormap *cmap;
 	ObjXCBAllocColorReply *acolorrep;
 	int random;
 
@@ -40,8 +40,8 @@ int main(void)
 
 	geomrep = [w GetGeometry];
 
-	/* Setup the default colormap FIXME: Should be a helper function in ObjXCBConnection */
-	[cmap init:c:s->default_colormap];
+	/* Setup the default colormap */
+	cmap = [c get_default_colormap];
 
 	/* Create graphics contexts, with b,w,r,g,blu for the window */
 	[wgc init:c];
@@ -128,6 +128,10 @@ int main(void)
 	[w free];
 	[bgc free];
 	[wgc free];
+	[rgc free];
+	[ggc free];
+	[blugc free];
+	[cmap free];
 
 	return 0;
 }

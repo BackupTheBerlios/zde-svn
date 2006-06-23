@@ -150,6 +150,11 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 - (int)get_input_masks;
 
 /**
+ * Returns the default colormap.
+ */
+- (ObjXCBColormap *)get_default_colormap;
+
+/**
  * Flushes pending requests to the server.
  */
 - (int)flush;

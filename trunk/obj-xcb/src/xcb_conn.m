@@ -207,6 +207,15 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 	return self->s->current_input_masks;
 }
 
+- (ObjXCBColormap *)get_default_colormap
+{
+	ObjXCBColormap *cmap = [ObjXCBColormap alloc];
+
+	[cmap init:self:self->s->default_colormap];
+
+	return cmap;
+}
+
 /*
  * Functions that do stuff.
  */
