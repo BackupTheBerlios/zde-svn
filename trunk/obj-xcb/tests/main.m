@@ -9,6 +9,11 @@ int main(void)
 	ObjXCBGcontext *gc;
 	ObjXCBGcontext *bgc = [ObjXCBGcontext alloc];
 	ObjXCBGcontext *wgc = [ObjXCBGcontext alloc];
+	ObjXCBGcontext *rgc = [ObjXCBGcontext alloc];
+	ObjXCBGcontext *ggc = [ObjXCBGcontext alloc];
+	ObjXCBGcontext *blugc = [ObjXCBGcontext alloc];
+	ObjXCBColormap *cmap = [ObjXCBColormap alloc];
+	ObjXCBAllocColorReply *acolorrep;
 
 	XCBGenericEvent *e;
 	XCBSCREEN *s;
@@ -34,16 +39,33 @@ int main(void)
 
 	geomrep = [w GetGeometry];
 
-	/* Create a graphics context for the window */
+	/* Setup the default colormap FIXME: Should be a helper function in ObjXCBConnection */
+	[cmap init:c:s->default_colormap];
+
+	/* Create graphics contexts, with b,w,r,g,blu for the window */
 	[wgc init:c];
 	[bgc init:c];
+	[rgc init:c];
+	[ggc init:c];
+	[blugc init:c];
 
 	value[0] = [c get_white_pixel];
 	[wgc CreateGC:w:XCBGCForeground:value];
 	value[0] = [c get_black_pixel];
 	[bgc CreateGC:w:XCBGCForeground:value];
+	
+	acolorrep = [cmap AllocColor:65535:0:0];
+	value[0] = [acolorrep get_pixel];
+	[rgc CreateGC:w:XCBGCForeground:value];
 
+	acolorrep = [cmap AllocColor:0:65535:0];
+	value[0] = [acolorrep get_pixel];
+	[ggc CreateGC:w:XCBGCForeground:value];
 
+	acolorrep = [cmap AllocColor:0:0:65535];
+	value[0] = [acolorrep get_pixel];
+	[blugc CreateGC:w:XCBGCForeground:value];
+	
 	rect[0].x = 0;
 	rect[0].y = 0;
 	rect[0].width = [geomrep get_width];
@@ -70,12 +92,22 @@ int main(void)
 
 			free(e);
 			e = NULL;
-		}	
-		if(rand() % 2 == 1) {
+		}
+		
+		if(rand() % 5 == 4) {
 			gc = bgc;
 		}
-		else {
+		else if(rand() % 5 == 3) {
 			gc = wgc;
+		}
+		else if(rand() % 5 == 2) {
+			gc = rgc;
+		}
+		else if(rand() % 5 == 1) {
+			gc = ggc;
+		}
+		else {
+			gc = blugc;
 		}
 
 		rect[0].x = rand() % [geomrep get_width];
