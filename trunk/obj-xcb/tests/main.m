@@ -14,6 +14,7 @@ int main(void)
 	ObjXCBGcontext *blugc = [ObjXCBGcontext alloc];
 	ObjXCBColormap *cmap = [ObjXCBColormap alloc];
 	ObjXCBAllocColorReply *acolorrep;
+	int random;
 
 	XCBGenericEvent *e;
 	XCBSCREEN *s;
@@ -93,17 +94,19 @@ int main(void)
 			free(e);
 			e = NULL;
 		}
+
+		random = rand();
 		
-		if(rand() % 5 == 4) {
+		if(random % 5 == 4) {
 			gc = bgc;
 		}
-		else if(rand() % 5 == 3) {
+		else if(random % 5 == 3) {
 			gc = wgc;
 		}
-		else if(rand() % 5 == 2) {
+		else if(random % 5 == 2) {
 			gc = rgc;
 		}
-		else if(rand() % 5 == 1) {
+		else if(random % 5 == 1) {
 			gc = ggc;
 		}
 		else {
