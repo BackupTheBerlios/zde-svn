@@ -28,11 +28,13 @@ sub output_decl($$);
 sub end_class_header($);
 sub end_class_source($);
 sub request_handle();
+sub output_orphans();
 
 my $headerfh;
 my $sourcefh;
 
 my @xids;
+my @orphans;
 my $orphan;
 
 #create the output filenames
@@ -70,6 +72,9 @@ $twig->purge;
 end_class_header($outheaderfile);
 end_class_source($outsourcefile);
 
+output_orphans();
+
+
 #loads @xids with the name of every xid
 sub xid_handle()
 { my($twig, $section) = @_;
@@ -92,7 +97,8 @@ sub request_handle()
 	#orphan
 	if(!@fields) {
 		if(defined $orphan) {
-			print $section->{'att'}->{'name'}. "\n";
+#			print $section->{'att'}->{'name'}. "\n";
+			$orphans[@orphans] = $section;
 		}
 		return;
 	}
@@ -133,7 +139,8 @@ sub request_handle()
 	#orphan
 	if(!defined $firstxid) {
 		if(defined $orphan) {
-			print $section->{'att'}->{'name'} . "\n";
+#			print $section->{'att'}->{'name'} . "\n";
+			$orphans[@orphans] = $section;
 		}
 		return;
 	}
@@ -145,7 +152,8 @@ sub request_handle()
 #		or $section->{'att'}->{'name'} =~ /translate/ig or $section->{'att'}->{'name'} =~ /selection/ig) {
 		) {
 			if(defined $orphan) {
-				print $section->{'att'}->{'name'} . "\n";			
+#				print $section->{'att'}->{'name'} . "\n";			
+				$orphans[@orphans] = $section;
 			}
 			return;
 		}
@@ -641,6 +649,87 @@ sub output_decl($$)
 		print $fh ":\($vtype\)$vparam->{'att'}->{'value-mask-name'}";
 		print $fh ":\($vtype *\)$vparam->{'att'}->{'value-list-name'}";
 	}
+}
+
+sub output_orphans()
+{
+	my $ftype;
+	my $isxid;
+	my $firstxid;
+	open(my $orphanfh,">","xcb_conn_orphan.h");
+
+	#header
+	print $orphanfh '@interface ObjXCBConnection (Orphan)' . "\n\n";
+	
+	foreach my $orphan (@orphans) {
+		output_decl($orphanfh,$orphan);	
+	}
+
+	print $orphanfh "\n" . '@end';
+	close($orphanfh);
+
+	open($orphanfh,">","xcb_conn_orphan.m");
+
+	#source
+	print $orphanfh '#include "obj-xcb.h"' . "\n\n";
+	print $orphanfh '@implementation ObjXCBConnection (Orphan)' . "\n\n";
+
+	foreach my $orphan (@orphans) {
+		my @fields = $orphan->children('field');
+		my @list = $orphan->children('list');
+		my @valueparam = $orphan->children('valueparam');
+
+		output_decl($orphanfh,$orphan);
+
+		print $orphanfh "\n{\n";
+	
+		$isxid = undef;
+		print $orphanfh "\t" . "XCB$orphan->{'att'}->{'name'}" . '([self->c get_connection]';
+
+		foreach my $field (@fields) {
+			#if its the first xid, we have it stored within the object
+			if(($field->{'att'}->{'type'} eq $ARGV[0]) and !defined $firstxid) {
+				$firstxid = defined;
+				print $orphanfh ',self->xid';
+			}
+			else {
+				foreach my $xid (@xids) {
+					#if its an xid, output code to get it from the object.
+					if($xid eq $field->{'att'}->{'type'}) {
+						print $orphanfh ",[$field->{'att'}->{'name'} get_xid]";
+						$isxid = defined;
+					}
+
+				}
+				if(!defined $isxid) {
+					print $orphanfh ",$field->{'att'}->{'name'}";
+				}
+				$isxid = undef;
+			}
+
+			foreach my $lfield (@list) {
+				my @lfref = $lfield->children('fieldref');
+				my @lop = $lfield->children('op');
+				if(@lop) {
+					@lop = $lop[0]->children('op');
+				}
+
+				if(!@lfref and !@lop) {
+					print $orphanfh ",$lfield->{'att'}->{'name'}_len";
+				}
+
+				print $orphanfh ",$lfield->{'att'}->{'name'}";
+			}
+
+			foreach my $vfield (@valueparam) {
+				print $orphanfh ",$vfield->{'att'}->{'value-mask-name'}";
+				print $orphanfh ",$vfield->{'att'}->{'value-list-name'}";
+			}
+		}
+	}
+
+	print $orphanfh "\n" . '@end' . "\n";
+	close($orphanfh);
 }
 
 0;

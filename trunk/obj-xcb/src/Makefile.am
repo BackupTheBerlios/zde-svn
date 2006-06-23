@@ -15,7 +15,7 @@ libXCBobjc_la_SOURCES = xcb_conn.m xcb_window.m \
 			objxcb_getimagereply.m             objxcb_querytextextentsreply.m \
 			objxcb_getpropertyreply.m          objxcb_querytreereply.m \
 			objxcb_getselectionownerreply.m    objxcb_translatecoordinatesreply.m \
-			objxcb_getwindowattributesreply.m
+			objxcb_getwindowattributesreply.m  xcb_conn_orphan.m
 
 
 XCBOBJCHEADERS = xcb_conn.h obj-xcb.h objxproto.h xcb_window.h xcb_atom.h xcb_colormap.h xcb_cursor.h xcb_font.h xcb_gcontext.h xcb_pixmap.h \
@@ -29,7 +29,7 @@ XCBOBJCHEADERS = xcb_conn.h obj-xcb.h objxproto.h xcb_window.h xcb_atom.h xcb_co
 		 objxcb_getimagereply.h             objxcb_querytextextentsreply.h \
 		 objxcb_getpropertyreply.h          objxcb_querytreereply.h \
 		 objxcb_getselectionownerreply.h    objxcb_translatecoordinatesreply.h \
-		 objxcb_getwindowattributesreply.h 
+		 objxcb_getwindowattributesreply.h  xcb_conn_orphan.h 
 
 
 EXTRA_DIST = $(XCBOBJCHEADERS)
@@ -66,6 +66,8 @@ xcb_drawable.m: objxproto.h
 xcb_drawable.h: objxproto.h
 xcb_fontable.h: objxproto.h
 xcb_fontable.m: objxproto.h
+
+xcb_conn_orphan.m: objxproto.h
 
 #replies
 objxcb_alloccolorcellsreply.m: objxproto.h      
