@@ -36,6 +36,7 @@ my $sourcefh;
 my @xids;
 my @orphans;
 my $orphan;
+my $orphanct = 0;
 
 #create the output filenames
 my $xid = $ARGV[0];
@@ -72,7 +73,9 @@ $twig->purge;
 end_class_header($outheaderfile);
 end_class_source($outsourcefile);
 
-output_orphans();
+#if(defined $orphan) {
+#	output_orphans();
+#}
 
 
 #loads @xids with the name of every xid
@@ -98,7 +101,7 @@ sub request_handle()
 	if(!@fields) {
 		if(defined $orphan) {
 #			print $section->{'att'}->{'name'}. "\n";
-			$orphans[@orphans] = $section;
+			$orphans[$orphanct++] = $section;
 		}
 		return;
 	}
@@ -140,7 +143,7 @@ sub request_handle()
 	if(!defined $firstxid) {
 		if(defined $orphan) {
 #			print $section->{'att'}->{'name'} . "\n";
-			$orphans[@orphans] = $section;
+			$orphans[$orphanct++] = $section;
 		}
 		return;
 	}
@@ -153,7 +156,7 @@ sub request_handle()
 		) {
 			if(defined $orphan) {
 #				print $section->{'att'}->{'name'} . "\n";			
-				$orphans[@orphans] = $section;
+				$orphans[$orphanct++] = $section;
 			}
 			return;
 		}
@@ -662,7 +665,8 @@ sub output_orphans()
 	print $orphanfh '@interface ObjXCBConnection (Orphan)' . "\n\n";
 	
 	foreach my $orphan (@orphans) {
-		output_decl($orphanfh,$orphan);	
+		output_decl($orphanfh,$orphan);
+		print $orphanfh ";\n";
 	}
 
 	print $orphanfh "\n" . '@end';
