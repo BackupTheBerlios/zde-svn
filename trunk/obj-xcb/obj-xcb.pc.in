@@ -6,6 +6,6 @@ includedir=@includedir@
 Name: obj-xcb
 Description: Objective-C XCB bindings
 Version: @VERSION@
-Libs: -L${libdir} -lXCB
-Cflags: -I${includedir}/obj-xcb
+Libs: -L${libdir} -lXCB -lXCBobjc
+Cflags: -I${includedir}/X11/XCB/bindings/objc
 
