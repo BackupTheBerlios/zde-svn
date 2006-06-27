@@ -19,7 +19,10 @@
 -Finish ZMenu
  -25%
 
--Replace Xlib with XCB
+-Replace Xlib with XCB through obj-xcb
+ -0%
+
+-Add RENDER and Cairo abstractions
  -0%
 
 -Become EWMH and ICCCM Compliant
