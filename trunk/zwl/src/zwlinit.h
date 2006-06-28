@@ -32,7 +32,8 @@
   Referenced by something like \code z_atom[ATOM] \endcode Where ATOM is defined in the enum ATOM 
   These are created when zwl_init is called.
  */
-extern Atom *z_atom;
+//extern Atom *z_atom;
+extern ObjXCBAtom **zwl_atom;
 
 /** Enumeration of some commonly used Atoms. For use with the z_atom array. */
 typedef enum {
@@ -93,23 +94,22 @@ typedef enum {
 	END_ATOM
 }ATOM;
 
-/** Publicly available variable that is the display opened by zwl. 
-  It is better to call zwl_get_display instead of referencing this directly. */
-extern Display *zdpy;
+/** zwl's connection to the X server. */
+ObjXCBConnection *zc;
 
 /** Number of the screen on which zwl opened a display. */
-extern int zscreen;
+//extern int zscreen;
 
 /** You must call this function before you use any zwl widgets. 
-  It opens the display and initializes the z_atom array.
+  It opens the display and initializes the zwl_atom array.
  */
 void zwl_init(void);
 
 /** Used when you want zwl to process an XEvent you have received and do not want to deal with. */
-void zwl_receive_xevent(XEvent *ev);
+//void zwl_receive_xevent(XEvent *ev);
 
-/** Gets the display zwl has opened. Use this in preference to referencing zdpy */
-Display *zwl_get_display(void);
+/** Returns the ObjXCBConnection used by zwl. */
+ObjXCBConnection *zwl_get_connection(void);
 
 /** Adds a widget to the list of widgets that zwl will process events for. */
 void zwl_main_loop_add_widget(ZWidget *w);

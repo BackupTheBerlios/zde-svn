@@ -58,8 +58,7 @@ am__installdirs = "$(DESTDIR)$(libdir)" \
 libLTLIBRARIES_INSTALL = $(INSTALL)
 LTLIBRARIES = $(lib_LTLIBRARIES)
 libzwl_la_LIBADD =
-am_libzwl_la_OBJECTS = widget.lo init.lo window.lo button.lo label.lo \
-	menu.lo
+am_libzwl_la_OBJECTS = init.lo
 libzwl_la_OBJECTS = $(am_libzwl_la_OBJECTS)
 DEFAULT_INCLUDES = -I. -I$(srcdir) -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
@@ -198,7 +197,8 @@ sharedstatedir = @sharedstatedir@
 sysconfdir = @sysconfdir@
 target_alias = @target_alias@
 lib_LTLIBRARIES = libzwl.la
-libzwl_la_SOURCES = widget.m init.m window.m button.m label.m menu.m
+libzwl_la_SOURCES = init.m
+#widget.m init.m window.m button.m label.m menu.m
 INCLUDES = \
 -I$(top_builddir) \
 -I$(top_srcdir) \
@@ -287,12 +287,7 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/button.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/init.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/label.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/menu.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/widget.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/window.Plo@am__quote@
 
 .m.o:
 @am__fastdepOBJC_TRUE@	if $(OBJCCOMPILE) -MT $@ -MD -MP -MF "$(DEPDIR)/$*.Tpo" -c -o $@ $<; \

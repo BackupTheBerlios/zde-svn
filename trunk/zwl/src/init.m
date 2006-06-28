@@ -23,24 +23,23 @@
 
 #include "zwl.h"
 
-Display *zdpy = NULL;
-int zscreen = 0;
+ObjXCBConnection *zc;
 IMPList *window_list = NULL;
 
 /* Atoms */
-Atom *z_atom;
+ObjXCBAtom **zwl_atom;
 
 static unsigned short int quit = 0;
 
 /* Helper functions */
 static ZWidget *find_widget(Window *w);
-static void process_xevent(XEvent *ev);
+//static void process_xevent(XEvent *ev);
 
 void zwl_init(void)
 {
-	zdpy = XOpenDisplay(NULL);
-	zscreen = DefaultScreen(zdpy);
-	
+	zc = [ObjXCBConnection alloc];
+	[zc init];
+#if 0	
 	z_atom = i_calloc(100,sizeof(Atom));
 	
 	z_atom[UTF8_STRING] = XInternAtom(zdpy,"UTF8_STRING",False);
@@ -97,19 +96,22 @@ void zwl_init(void)
 	z_atom[_NET_WM_ACTION_FULLSCREEN] = XInternAtom(zdpy,"_NET_WM_ACTION_FULLSCREEN",False);
 	z_atom[_NET_WM_ACTION_CHANGE_DESKTOP] = XInternAtom(zdpy,"_NET_WM_ACTION_CHANGE_DESKTOP",False);
 	z_atom[_NET_WM_ACTION_CLOSE] = XInternAtom(zdpy,"_NET_WM_ACTION_CLOSE",False);
+#endif
 }
 
-Display *zwl_get_display(void)
+ObjXCBConnection *zwl_get_connection(void)
 {
-	return zdpy;
+	return zc;
 }
 
+/*
 void zwl_receive_xevent(XEvent *ev)
 {
 	if(ev) {
 		process_xevent(ev);
 	}
 }
+*/
 
 void zwl_main_loop_add_widget(ZWidget *w)
 {
@@ -160,13 +162,15 @@ void zwl_main_loop_remove_widget(ZWidget *w)
 void zwl_main_loop_start(void)
 {
 	XEvent ev;
-	
+#if 0	
 	while(!quit) {
 		XNextEvent(zdpy,&ev);
 		process_xevent(&ev);	
 	}
+#endif
 }
 
+#if 0
 static void process_xevent(XEvent *ev)
 {	
 	XKeyEvent key;
@@ -266,6 +270,7 @@ static void process_xevent(XEvent *ev)
 				[w receive:DEFAULT:ev];
 		}
 }
+#endif
 
 void zwl_main_loop_quit(void)
 {

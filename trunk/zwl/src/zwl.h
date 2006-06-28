@@ -24,8 +24,10 @@
 #ifndef ZWL_H
 #define ZWL_H
 
+#include <obj-xcb.h>
 #include <imp.h>
 
+#if 0
 #include <X11/Xlib.h>
 #include <X11/Xcms.h>
 #include <X11/Xutil.h>
@@ -33,6 +35,8 @@
 #include <X11/keysym.h>
 #include <X11/cursorfont.h>
 #include <X11/Xproto.h>
+#endif
+
 #include <X11/Xft/Xft.h>
 
 #include <cairo.h>

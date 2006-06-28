@@ -1,5 +1,6 @@
 lib_LTLIBRARIES = libzwl.la
-libzwl_la_SOURCES = widget.m init.m window.m button.m label.m menu.m
+libzwl_la_SOURCES = init.m
+#widget.m init.m window.m button.m label.m menu.m
 
 INCLUDES = \
 -I$(top_builddir) \
