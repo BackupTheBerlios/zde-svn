@@ -53,6 +53,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 #import "objxproto.h"
 
 #import "xcb_conn.h"
+#import "xcb_conn_orphan.h"
 #import "xcb_drawable.h"
 #import "xcb_pixmap.h"
 #import "xcb_gcontext.h"
