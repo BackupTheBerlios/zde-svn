@@ -736,7 +736,7 @@ sub output_orphans()
 		print $orphanfh ";\n";
 	}
 
-	print $orphanfh "\n" . '@end';
+	print $orphanfh "\n" . '@end' . "\n";
 	close($orphanfh);
 
 	open($orphanfh,">","xcb_conn_orphan.m");
