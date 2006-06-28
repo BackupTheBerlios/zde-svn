@@ -27,7 +27,7 @@ int main(void)
 	int i;
 	
 	zwl_init();
-	
+/*	
 	win = [ZWindow alloc];
 	[win init:NULL:0:0:150:100];
 	
@@ -63,24 +63,12 @@ int main(void)
 	
 	[win show];
 
-/*	
-	for(i=0;i<1000;i++) {
-		win2 = [ZWindow alloc];
-		[win2 init:NULL:100:100:100:100];
-		[win2 set_name:"Test Window 2"];
-		[win2 set_title:"Test Window 2"];
-		[win2 attatch_cb:SHOW:(ZCallback *)on_show];
-		[win2 attatch_cb:KEY_PRESS:(ZCallback *)on_keypress];
-		[win2 show];
-		
-		[win2 destroy];
-	}
-*/		
 	zwl_main_loop_start();
-	
+*/	
 	return 0;
 }
 
+#if 0
 static void on_show(IMPObject *widget, void *data)
 {
 	ZWindow *w = (ZWindow *)widget;	
@@ -149,4 +137,5 @@ static void on_button_buttondown(IMPObject *widget, void *data)
 {
 	printf("AH! You pressed me!\n");
 }
+#endif
 

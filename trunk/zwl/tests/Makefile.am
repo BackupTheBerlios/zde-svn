@@ -1,5 +1,5 @@
-#bin_PROGRAMS  = zwltest
-#zwltest_SOURCES = zwl_test.m
+bin_PROGRAMS  = zwltest
+zwltest_SOURCES = zwl_test.m
 
 INCLUDES = \
 	   $(OBJXCB_CFLAGS) $(IMP_CFLAGS) $(XFT_CFLAGS) $(CAIRO_CFLAGS)
