@@ -5,7 +5,7 @@
 
 lib_LTLIBRARIES = libXCBobjc.la
 libXCBobjc_la_SOURCES = xcb_conn.m xcb_window.m \
-			xcb_atom.m xcb_colormap.m xcb_cursor.m xcb_font.m xcb_gcontext.m xcb_pixmap.m xcb_drawable.m xcb_fontable.m \
+			xcb_atom.m xcb_colormap.m xcb_cursor.m xcb_font.m xcb_gcontext.m xcb_pixmap.m xcb_drawable.m xcb_fontable.m xcb_conn_orphan.m \
 			objxcb_alloccolorcellsreply.m      objxcb_listinstalledcolormapsreply.m \
 			objxcb_alloccolorplanesreply.m     objxcb_listpropertiesreply.m \
 			objxcb_alloccolorreply.m           objxcb_lookupcolorreply.m \
@@ -15,11 +15,21 @@ libXCBobjc_la_SOURCES = xcb_conn.m xcb_window.m \
 			objxcb_getimagereply.m             objxcb_querytextextentsreply.m \
 			objxcb_getpropertyreply.m          objxcb_querytreereply.m \
 			objxcb_getselectionownerreply.m    objxcb_translatecoordinatesreply.m \
-			objxcb_getwindowattributesreply.m  
+			objxcb_getwindowattributesreply.m  objxcb_internatomreply.m \
+			objxcb_grabpointerreply.m	   objxcb_grabkeyboardreply.m \
+			objxcb_querypointerreply.m	   objxcb_getmotioneventsreply.m \
+			objxcb_getinputfocusreply.m	   objxcb_querykeymapreply.m \
+			objxcb_listfontsreply.m		   objxcb_listfontswithinforeply.m \
+			objxcb_getfontpathreply.m	   objxcb_queryextensionreply.m \
+			objxcb_listextensionsreply.m	   objxcb_getkeyboardmappingreply.m \
+			objxcb_getkeyboardcontrolreply.m   objxcb_getscreensaverreply.m \
+			objxcb_listhostsreply.m		   objxcb_setpointermappingreply.m \
+			objxcb_getpointermappingreply.m	    \
+			objxcb_getmodifiermappingreply.m   objxcb_getpointercontrolreply.m
 
 
 XCBOBJCHEADERS = xcb_conn.h obj-xcb.h objxproto.h xcb_window.h xcb_atom.h xcb_colormap.h xcb_cursor.h xcb_font.h xcb_gcontext.h xcb_pixmap.h \
-		 xcb_drawable.h xcb_fontable.h \
+		 xcb_drawable.h xcb_fontable.h xcb_conn_orphan.h \
 		 objxcb_alloccolorcellsreply.h      objxcb_listinstalledcolormapsreply.h \
 		 objxcb_alloccolorplanesreply.h     objxcb_listpropertiesreply.h \
 		 objxcb_alloccolorreply.h           objxcb_lookupcolorreply.h \
@@ -29,7 +39,17 @@ XCBOBJCHEADERS = xcb_conn.h obj-xcb.h objxproto.h xcb_window.h xcb_atom.h xcb_co
 		 objxcb_getimagereply.h             objxcb_querytextextentsreply.h \
 		 objxcb_getpropertyreply.h          objxcb_querytreereply.h \
 		 objxcb_getselectionownerreply.h    objxcb_translatecoordinatesreply.h \
-		 objxcb_getwindowattributesreply.h  
+		 objxcb_getwindowattributesreply.h  objxcb_internatomreply.h \
+		 objxcb_grabpointerreply.h	    objxcb_grabkeyboardreply.h \
+         	 objxcb_querypointerreply.h	    objxcb_getmotioneventsreply.h \
+		 objxcb_getinputfocusreply.h	    objxcb_querykeymapreply.h \
+		 objxcb_listfontsreply.h	    objxcb_listfontswithinforeply.h \
+		 objxcb_getfontpathreply.h	    objxcb_queryextensionreply.h \
+		 objxcb_listextensionsreply.h	    objxcb_getkeyboardmappingreply.h \
+		 objxcb_getkeyboardcontrolreply.h   objxcb_getscreensaverreply.h \
+		 objxcb_listhostsreply.h	    objxcb_setpointermappingreply.h \
+		 objxcb_getpointermappingreply.h     \
+		 objxcb_getmodifiermappingreply.h   objxcb_getpointercontrolreply.h
 
 
 EXTRA_DIST = $(XCBOBJCHEADERS)
@@ -88,6 +108,26 @@ objxcb_querytreereply.m: objxproto.h
 objxcb_getselectionownerreply.m: objxproto.h
 objxcb_translatecoordinatesreply.m: objxproto.h
 objxcb_getwindowattributesreply.m: objxproto.h
+objxcb_internatomreply.m: objxproto.h
+objxcb_grabpointerreply.m: objxproto.h	   
+objxcb_grabkeyboardreply.m: objxproto.h
+objxcb_querypointerreply.m: objxproto.h	   
+objxcb_getmotioneventsreply.m: objxproto.h
+objxcb_getinputfocusreply.m: objxproto.h
+objxcb_querykeymapreply.m: objxproto.h
+objxcb_listfontsreply.m: objxproto.h
+objxcb_listfontswithinforeply.m: objxproto.h
+objxcb_getfontpathreply.m: objxproto.h
+objxcb_queryextensionreply.m: objxproto.h
+objxcb_listextensionsreply.m: objxproto.h
+objxcb_getkeyboardmappingreply.m: objxproto.h
+objxcb_getkeyboardcontrolreply.m: objxproto.h
+objxcb_getscreensaverreply.m: objxproto.h
+objxcb_listhostsreply.m: objxproto.h
+objxcb_setpointermappingreply.m: objxproto.h
+objxcb_getpointermappingreply.m: objxproto.h
+objxcb_getmodifiermappingreply.m: objxproto.h
+objxcb_getpointercontrolreply.m: objxproto.h
 
 
 clean-local:
