@@ -23,6 +23,8 @@
 
 #include "imp.h"
 
+#if 0
+
 @implementation IMPStack : IMPList
 
 - init:(int)type
@@ -81,9 +83,11 @@
 	return -1;
 }
 
+#endif
+
 @end
 
-@implementation IMPSimpleStack : IMPObject
+@implementation IMPStack : IMPObject
 
 - init:(int)num
 {
@@ -145,7 +149,7 @@
 
 - (int)invert
 {
-	IMPSimpleStack *tmp = [IMPSimpleStack alloc];
+	IMPStack *tmp = [IMPStack alloc];
 
 	[tmp init:[self get_size] + 5];
 

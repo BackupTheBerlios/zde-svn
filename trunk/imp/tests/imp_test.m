@@ -25,6 +25,7 @@
 
 int main(void)
 {
+#if 0
 	IMPObject *obj;
 	IMPList *temp = NULL;
 	IMPList *cur = NULL;
@@ -166,7 +167,7 @@ int main(void)
 	}
 
 	puts("");
-	
+#endif
 	return 0;
 }
 

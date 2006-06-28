@@ -24,29 +24,7 @@
 #ifndef IMPLIST_H
 #define IMPLIST_H
 
-/** A singly-linked list implementation, non-circular(the tail doesn't know where the head is, and vice-versa).
- Here is a simple example of iterating over an IMPList from zwl, assuming that *list is a pointer to where you want to start:
- \verbatim
- ZWidget *find_widget(Window *w)
- {
-	int i;
-	IMPList *list = window_list;
-	ZWidget *widget;
-	
-	while(list) {
-
-		widget = (ZWidget *)list->data;
-		
-		if(widget->window == w) {
-			return widget;
-		}
-		
-		list = list->next;
-	}
-	return NULL;
- }
- \endverbatim
- As you can see, it is fairly similar to other linked list implementations.
+/** A singly-linked list implementation, non-circular.
  */
 @interface IMPList : IMPObject
 {

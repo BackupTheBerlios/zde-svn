@@ -21,21 +21,34 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef IMP_H
-#define IMP_H
+#ifndef IMPITERATOR_H
+#define IMPITERATOR_H
 
-#include <objc/Object.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <time.h>
-#include <unistd.h>
-#include <errno.h>
-#include <string.h>
+/**
+ * Defines standard methods that all data structure's iterators should implement, if applicable.
+ */
+@protocol Iterator
 
-#include "impobject.h"
-#include "impiterator.h"
-#include "implists.h"
-#include "impstack.h"
-#include "impmemory.h"
+/**
+ * Returns the current data structure object the iterator is positioned at.
+ */
+- (IMPObject *)get_current;
+
+/**
+ * Moves the iterator to the next object in the data structure, returns 0 if there are no more elements.
+ */
+- (int)next;
+
+/**
+ * Returns 0 if there are still elements to be traversed, non-zero if there are no more.
+ */
+- (int)empty;
+
+/**
+ * Inserts data into the next position in the structure.
+ */
+- (void)ins_next:(IMPObject *)data;
+
+@end
 
 #endif

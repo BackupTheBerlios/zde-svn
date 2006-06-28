@@ -25,7 +25,7 @@
 #define IMPSTACK_H
 
 /** 
-  Protocol that defines a standard way of using both IMPStack and IMPSimpleStack.	
+  Protocol that defines a standard way of using IMPStack.	
  */
 @protocol IStack
 
@@ -75,6 +75,8 @@
 
 @end
 
+#if 0
+
 /** 
   A stack implementation, built on top of an IMPList.
   This is basically a list with a stack-like interface built on top.
@@ -87,12 +89,12 @@
 
 @end
 
+#endif
+
 /**
-  A simple stack implementation built ontop of an Array instead of an IMPList.
-  Use this instead of IMPStack for most uses, unless you need to insert and delete
-  things in the middle of the stack.
+  A simple stack implementation built ontop of an Array.
  */
-@interface IMPSimpleStack : IMPObject <IStack>
+@interface IMPStack : IMPObject <IStack>
 {
 	@protected
 	Object **stack;
