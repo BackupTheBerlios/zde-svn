@@ -33,7 +33,6 @@
 	if(head) {
 		self->prev = NULL;
 		self->curr = head;
-		[self->curr grab];
 		valid = 1;
 
 		return self;
@@ -101,6 +100,17 @@
 	self->valid = 0;
 }
 
+- (void)del
+{
+	[self->prev set_next:[self->curr get_next]];
+	
+	[self->curr set_next:NULL];
+
+	[self->curr release];
+	
+	self->curr = [self->prev get_next];
+}
+
 @end
 
 @implementation IMPListNode : IMPObject
@@ -124,11 +134,11 @@
 
 - (void)free
 {
-	if(self->data)
-		[self->data release];
-
 	if(self->next)
 		[self->next release];
+	
+	if(self->data) 
+		[self->data release];
 
 	[super free];
 }
@@ -165,8 +175,6 @@
 	[self->head init];
 	
 	self->tail = self->head;
-
-	self->curriter = NULL;
 
 	return self;
 }

@@ -26,13 +26,13 @@
 int main(int argc, char **argv)
 {
 	IMPObject *obj;
-	IMPList *list = [IMPList alloc];
+	IMPList *list;
 	IMPListIterator *iter;
 
 	int i,j;
 
 	srand(time(NULL));
-#if 0	
+	
 	puts("Starting IMPObject tests...");
 
 	puts("Creating and freeing 10000000 objects...");
@@ -42,7 +42,7 @@ int main(int argc, char **argv)
 		
 		[obj release];
 
-		if(i % 10000 == 0) {
+			if(i % 10000 == 0) {
 			printf(".");
 			fflush(stdout);
 		}	
@@ -51,34 +51,43 @@ int main(int argc, char **argv)
 	puts("");
 	puts("IMPObject tests completed successfully.");
 
-#endif	puts("");
+	puts("");
 	puts("Starting IMPList tests...");
 
-	[list init];
+	puts("Creating a 100000 node list and freeing it 100 times.");
+	for(j=0;j<100;j++) {
+		list = [IMPList alloc];
+		[list init];
 
-	for(i=0;i<1000000;i++) {
-		obj = [IMPObject alloc];
-		[obj init];
+		for(i=0;i<10000;i++) {
+			obj = [IMPObject alloc];
+			[obj init];
 
-		[list append:obj];
-		
-		if(i % 10000 == 0) {
+			[list append:obj];
+			
+			if(i % 1000 == 0) {
+				printf(".");
+				fflush(stdout);
+			}	
+		}
+
+		iter = [list iterator];
+	
+		while([iter has_next]) {
+			[iter next];
+		}
+			
+		[list release];
+		[iter release];
+	
+		if(j % 10 == 0) {
 			printf(".");
 			fflush(stdout);
 		}	
+
 	}
-
-	iter = [list iterator];
-
-	while([iter has_next]) {
-//		printf("%d\n",[[iter get_data] get_id]);
-		[iter next];
-	}
-
-	[list release];
-	[iter release];
-
 	puts("");
+	puts("IMPList tests completed successfully.");
 
 	return 0;
 }

@@ -84,6 +84,11 @@
  */
 - (IMPObject *)get_data;
 
+/**
+ * Deletes the current node from the list.
+ */
+- (void)del;
+
 @end
 
 /** A singly-linked list implementation, non-circular.

@@ -27,7 +27,7 @@ static unsigned long int id_count = 0;
 
 @implementation IMPObject : Object
 
-- init
+- (id)init
 {
 	[super init];
 	
