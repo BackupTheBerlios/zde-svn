@@ -75,26 +75,26 @@ AC_CHECK_FUNCS([realloc])
 
 AC_PATH_PROG(PKGCONFIG,pkg-config,no)
 if test x$PKGCONFIG != xno; then
-	AC_MSG_CHECKING(for obj-xcb >= 0.0.1...)
+	AC_MSG_CHECKING(for obj-xcb >= 0.0.2...)
 
-	objxcb_major_version=`$PKGCONFIG imp --modversion | \
+	objxcb_major_version=`$PKGCONFIG obj-xcb --modversion | \
 	   sed 's/\([[0-9]]*\).\([[0-9]]*\).\([[0-9]]*\)/\1/'`
-	objxcb_minor_version=`$PKGCONFIG imp --modversion | \
+	objxcb_minor_version=`$PKGCONFIG obj-xcb --modversion | \
 	   sed 's/\([[0-9]]*\).\([[0-9]]*\).\([[0-9]]*\)/\2/'`
-	objxcb_micro_version=`$PKGCONFIG imp --modversion | \
+	objxcb_micro_version=`$PKGCONFIG obj-xcb --modversion | \
 	   sed 's/\([[0-9]]*\).\([[0-9]]*\).\([[0-9]]*\)/\3/'` #`
 
 	if test $objxcb_major_version -ge 0 -a $objxcb_minor_version \
-		       -ge 0 -a $objxcb_micro_version -ge 1 ; then
+		       -ge 0 -a $objxcb_micro_version -ge 2 ; then
 		AC_MSG_RESULT(ok)
 		AC_MSG_CHECKING(for obj-xcb compile information)
 		OBJXCB_CFLAGS=`$PKGCONFIG obj-xcb --cflags`
 		OBJXCB_LIBS=`$PKGCONFIG obj-xcb --libs`
 		AC_MSG_RESULT(ok)
-	else AC_MSG_ERROR(Incorrect obj-xcb version. Please upgrade to 0.0.1 or greater)
+	else AC_MSG_ERROR(Incorrect obj-xcb version. Please upgrade to 0.0.2 or greater)
 	fi
 else
-	AC_MSG_ERROR(echo *** obj-xcb >= 0.0.1  not found ***)
+	AC_MSG_ERROR(echo *** obj-xcb >= 0.0.2  not found ***)
 fi
 
 AC_SUBST(OBJXCB_CFLAGS)
@@ -102,7 +102,7 @@ AC_SUBST(OBJXCB_LIBS)
 
 AC_PATH_PROG(PKGCONFIG,pkg-config,no)
 if test x$PKGCONFIG != xno; then
-	AC_MSG_CHECKING(for imp >= 0.0.7...)
+	AC_MSG_CHECKING(for imp >= 0.1.0...)
 
 	imp_major_version=`$PKGCONFIG imp --modversion | \
 	   sed 's/\([[0-9]]*\).\([[0-9]]*\).\([[0-9]]*\)/\1/'`
@@ -112,16 +112,16 @@ if test x$PKGCONFIG != xno; then
 	   sed 's/\([[0-9]]*\).\([[0-9]]*\).\([[0-9]]*\)/\3/'` #`
 
 	if test $imp_major_version -ge 0 -a $imp_minor_version \
-		       -ge 0 -a $imp_micro_version -ge 7 ; then
+		       -ge 1 -a $imp_micro_version -ge 0 ; then
 		AC_MSG_RESULT(ok)
 		AC_MSG_CHECKING(for imp compile information)
 		IMP_CFLAGS=`$PKGCONFIG imp --cflags`
 		IMP_LIBS=`$PKGCONFIG imp --libs`
 		AC_MSG_RESULT(ok)
-	else AC_MSG_ERROR(Incorrect imp version. Please upgrade to 0.0.7 or greater)
+	else AC_MSG_ERROR(Incorrect imp version. Please upgrade to 0.1.0 or greater)
 	fi
 else
-	AC_MSG_ERROR(echo *** imp >= 0.0.7  not found ***)
+	AC_MSG_ERROR(echo *** imp >= 0.1.0  not found ***)
 fi
 
 AC_SUBST(IMP_CFLAGS)

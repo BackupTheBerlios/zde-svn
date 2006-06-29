@@ -41,6 +41,9 @@ void zwl_init(void)
 	zc = [ObjXCBConnection alloc];
 	[zc init];
 
+	window_list = [IMPList alloc];
+	[window_list init];
+
 	zwl_atom = i_calloc(100,sizeof(ObjXCBInternAtomReply *));
 	atom_reps = i_calloc(100,sizeof(ObjXCBInternAtomReply *));
 
@@ -153,65 +156,8 @@ void zwl_init(void)
 	zwl_atom[_NET_WM_ACTION_FULLSCREEN] = [atom_reps[_NET_WM_ACTION_FULLSCREEN] get_atom];
 	zwl_atom[_NET_WM_ACTION_CHANGE_DESKTOP] = [atom_reps[_NET_WM_ACTION_CHANGE_DESKTOP] get_atom];
 	zwl_atom[_NET_WM_ACTION_CLOSE] = [atom_reps[_NET_WM_ACTION_CLOSE] get_atom];	
-	
-#if 0	
-	z_atom = i_calloc(100,sizeof(Atom));
-	
-	z_atom[UTF8_STRING] = XInternAtom(zdpy,"UTF8_STRING",False);
-	z_atom[WM_NAME] = XInternAtom(zdpy,"WM_NAME",False);
-	z_atom[WM_PROTOCOLS] = XInternAtom(zdpy,"WM_PROTOCOLS",False);
-	z_atom[WM_DELETE_WINDOW] = XInternAtom(zdpy,"WM_DELETE_WINDOW",False);
-	z_atom[WM_TAKE_FOCUS] = XInternAtom(zdpy,"WM_TAKE_FOCUS",False);
-	
-	z_atom[_NET_WM_WINDOW_TYPE] = XInternAtom(zdpy,"_NET_WM_WINDOW_TYPE",False);
-	z_atom[_NET_WM_WINDOW_TYPE_NORMAL] = XInternAtom(zdpy,"_NET_WM_WINDOW_TYPE_NORMAL",False);
-	z_atom[_NET_WM_WINDOW_TYPE_MENU] = XInternAtom(zdpy,"_NET_WM_WINDOW_TYPE_MENU",False);
-	z_atom[_NET_WM_WINDOW_TYPE_DIALOG] = XInternAtom(zdpy,"_NET_WM_WINDOW_TYPE_DIALOG",False);
-	z_atom[_NET_SUPPORTED] = XInternAtom(zdpy,"_NET_SUPPORTED",False);
-        z_atom[_NET_CLIENT_LIST] = XInternAtom(zdpy,"_NET_CLIENT_LIST",False);
-	z_atom[_NET_CLIENT_LIST_STACKING] = XInternAtom(zdpy,"_NET_CLIENT_LIST_STACKING",False);
-        z_atom[_NET_NUMBER_OF_DESKTOPS] = XInternAtom(zdpy,"_NET_NUMBER_OF_DESKTOPS",False);
-        z_atom[_NET_DESKTOP_GEOMETRY] = XInternAtom(zdpy,"_NET_DESKTOP_GEOMETRY",False);
-        z_atom[_NET_DESKTOP_VIEWPORT] = XInternAtom(zdpy,"_NET_DESKTOP_VIEWPORT",False);
-        z_atom[_NET_CURRENT_DESKTOP] = XInternAtom(zdpy,"_NET_CURRENT_DESKTOP",False);
-        z_atom[_NET_DESKTOP_NAMES] = XInternAtom(zdpy,"_NET_DESKTOP_NAMES",False);
-        z_atom[_NET_ACTIVE_WINDOW] = XInternAtom(zdpy,"_NET_ACTIVE_WINDOW",False);
-        z_atom[_NET_WORKAREA] = XInternAtom(zdpy,"_NET_WORKAREA",False);
-        z_atom[_NET_SUPPORTING_WM_CHECK] = XInternAtom(zdpy,"_NET_SUPPORTING_WM_CHECK",False);
-        z_atom[_NET_VIRTUAL_ROOTS] = XInternAtom(zdpy,"_NET_VIRTUAL_ROOTS",False);
-        z_atom[_NET_DESKTOP_LAYOUT] = XInternAtom(zdpy,"_NET_DESKTOP_LAYOUT",False);
-        z_atom[_NET_SHOWING_DESKTOP] = XInternAtom(zdpy,"_NET_SHOWING_DESKTOP",False);
-	z_atom[_NET_CLOSE_WINDOW] = XInternAtom(zdpy,"_NET_CLOSE_WINDOW",False);
-	z_atom[_NET_MOVERESIZE_WINDOW] = XInternAtom(zdpy,"_NET_MOVERESIZE_WINDOW",False);
-	z_atom[_NET_WM_MOVERESIZE] = XInternAtom(zdpy,"_NET_WM_MOVERESIZE",False);
-        z_atom[_NET_RESTACK_WINDOW] = XInternAtom(zdpy,"_NET_RESTACK_WINDOW",False);
-        z_atom[_NET_REQUEST_FRAME_EXTENTS] = XInternAtom(zdpy,"_NET_REQUEST_FRAME_EXTENTS",False);
-	z_atom[_NET_WM_NAME] = XInternAtom(zdpy,"_NET_WM_NAME",False);
-        z_atom[_NET_WM_VISIBLE_NAME] = XInternAtom(zdpy,"_NET_WM_VISIBLE_NAME",False);
-        z_atom[_NET_WM_ICON_NAME] = XInternAtom(zdpy,"_NET_WM_ICON_NAME",False);
-        z_atom[_NET_WM_VISIBLE_ICON_NAME] = XInternAtom(zdpy,"_NET_WM_VISIBLE_ICON_NAME",False);
-        z_atom[_NET_WM_DESKTOP] = XInternAtom(zdpy,"_NET_WM_DESKTOP",False);
-        z_atom[_NET_WM_STATE] = XInternAtom(zdpy,"_NET_WM_STATE",False);
-        z_atom[_NET_WM_ALLOWED_ACTIONS] = XInternAtom(zdpy,"_NET_WM_ALLOWED_ACTIONS",False);
-        z_atom[_NET_WM_STRUT] = XInternAtom(zdpy,"_NET_WM_STRUT",False);
-        z_atom[_NET_WM_STRUT_PARTIAL] = XInternAtom(zdpy,"_NET_WM_STRUT_PARTIAL",False);
-        z_atom[_NET_WM_ICON_GEOMETRY] = XInternAtom(zdpy,"_NET_WM_ICON_GEOMETRY",False);
-        z_atom[_NET_WM_ICON] = XInternAtom(zdpy,"_NET_WM_ICON",False);
-        z_atom[_NET_WM_PID] = XInternAtom(zdpy,"_NET_WM_PID",False);
-        z_atom[_NET_WM_HANDLED_ICONS] = XInternAtom(zdpy,"_NET_WM_HANDLED_ICONS",False);
-        z_atom[_NET_WM_USER_TIME] = XInternAtom(zdpy,"_NET_WM_USER_TYPE",False);
-        z_atom[_NET_FRAME_EXTENTS] = XInternAtom(zdpy,"_NET_FRAME_EXTENTS",False);
-	z_atom[_NET_WM_ACTION_MOVE] = XInternAtom(zdpy,"_NET_WM_ACTION_MOVE",False);
-	z_atom[_NET_WM_ACTION_RESIZE] = XInternAtom(zdpy,"_NET_WM_ACTION_RESIZE",False);
-	z_atom[_NET_WM_ACTION_MINIMIZE] = XInternAtom(zdpy,"_NET_WM_ACTION_MINIMIZE",False);
-	z_atom[_NET_WM_ACTION_SHADE] = XInternAtom(zdpy,"_NET_WM_ACTION_SHADE",False);
-	z_atom[_NET_WM_ACTION_STICK] = XInternAtom(zdpy,"_NET_WM_ACTION_STICK",False);
-	z_atom[_NET_WM_ACTION_MAXIMIZE_HORZ] = XInternAtom(zdpy,"_NET_WM_ACTION_MAXIMIZE_HORZ",False);
-	z_atom[_NET_WM_ACTION_MAXIMIZE_VERT] = XInternAtom(zdpy,"_NET_WM_ACTION_MAXIMIZE_VERT",False);
-	z_atom[_NET_WM_ACTION_FULLSCREEN] = XInternAtom(zdpy,"_NET_WM_ACTION_FULLSCREEN",False);
-	z_atom[_NET_WM_ACTION_CHANGE_DESKTOP] = XInternAtom(zdpy,"_NET_WM_ACTION_CHANGE_DESKTOP",False);
-	z_atom[_NET_WM_ACTION_CLOSE] = XInternAtom(zdpy,"_NET_WM_ACTION_CLOSE",False);
-#endif
+
+	free(atom_reps);
 }
 
 ObjXCBConnection *zwl_get_connection(void)
@@ -230,48 +176,22 @@ void zwl_receive_xevent(XEvent *ev)
 
 void zwl_main_loop_add_widget(ZWidget *w)
 {
-	if(window_list) {
-		if(w) {
-			[window_list append_data:w];
-		}
-	}
-	else if(w){
-		window_list = [IMPList alloc];
-		[window_list init:1];
-		window_list->data = w;
-	}
+	if(window_list && w)
+		[window_list append:w];
 }
 
 void zwl_main_loop_remove_widget(ZWidget *w)
 {
-	ZWidget *widget = w;
-	ZWidget *w2;
-	IMPList *list = window_list;
-	
-	if(!widget)
-		return;
+	IMPListIterator *iter = [window_list iterator];
 
-	if(!list)
-		return;
-	
-	w2 = (ZWidget *)list->data;
-	if(w2 == widget) {
-		list = [list delete_node];
-		window_list = list;
-		return;
-	}
-	
-	while(list) {
-		w2 = (ZWidget *)list->next->data;		
+	while([iter has_next]) {
 		
-		if(w2 == widget) {
-			list = [list delete_next_node];
-			return;
+		if([iter get_data] == w) {
+			[iter del];
 		}
-		
-		list = list->next;
+
+		[iter next];
 	}
-	
 }
 
 void zwl_main_loop_start(void)
@@ -395,20 +315,9 @@ void zwl_main_loop_quit(void)
 	window_list = NULL;
 }
 
+#if 0
 static ZWidget *find_widget(Window *w)
 {
-	IMPList *list = window_list;
-	ZWidget *widget;
-	
-	while(list) {
-		widget = (ZWidget *)list->data;
-	
-		if(widget->window == w) { /* We've found our widget */
-			return widget;
-		}
-		
-		list = list->next;
-	}
-
-	return NULL;
 }
+
+#endif
