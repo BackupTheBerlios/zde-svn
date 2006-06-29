@@ -37,7 +37,9 @@ static void on_destroy(IMPObject *widget, void *data);
 	self->name = NULL;
 	self->window = NULL;
 	self->parent = NULL;
-	self->children = NULL;
+	self->children = [IMPList alloc];
+
+	[self->children init];
 
 	for(i=0;i<100;i++) {
 		self->internal_callbacks[i] = NULL;
@@ -60,9 +62,9 @@ static void on_destroy(IMPObject *widget, void *data);
 - (void)show
 {
 	if(self->window)
-		XMapWindow(zdpy,(Window)self->window);
+		[self->window MapWindow];
 
-	XSync(zdpy,False);
+	[zc flush];
 
 	[self receive:SHOW:NULL];
 }
@@ -70,7 +72,7 @@ static void on_destroy(IMPObject *widget, void *data);
 - (void)destroy
 {
 	if(self->window) {
-		XDestroyWindow(zdpy,(Window)self->window);
+		[self->window DestroyWindow];
 		self->window = NULL;
 	}
 
@@ -78,15 +80,13 @@ static void on_destroy(IMPObject *widget, void *data);
 
 	zwl_main_loop_remove_widget(self);
 		
-	XSync(zdpy,False);
+	[zc flush];
 }
 
 - (void)set_name:(char *)name
 {
-	if(name) {
-		if(self->name)
-			i_free(self->name);
-
+	if(name && self->name) {
+		i_free(self->name);
 		self->name = i_strdup(name);
 	}
 }
@@ -99,15 +99,7 @@ static void on_destroy(IMPObject *widget, void *data);
 - (void)add_child:(ZWidget *)child
 {
 	if(child) {
-		if(!self->children) {
-			self->children = [IMPList alloc];
-			[self->children init:1];
-
-			self->children->data = child;
-		}
-		else {
-			[self->children append_data:child];
-		}	
+		[self->children append:child];	
 		
 		[child set_parent:self];
 		[child receive:ADDED:child];
@@ -124,18 +116,32 @@ static void on_destroy(IMPObject *widget, void *data);
 
 - (void)move:(int)x:(int)y
 {
+	CARD16 values[4];
+
 	self->x = x;
 	self->y = y;
+	
+	values[0] = self->x;
+	values[1] = self->y;
+	values[2] = self->width;
+	values[3] = self->height;
 
-	XMoveResizeWindow(zdpy,(Window)self->window,self->x,self->y,self->width,self->height);
+	[self->window ConfigureWindow:XCBConfigWindowX | XCBConfigWindowY | XCBConfigWindowHeight | XCBConfigWindowWidth:values];
 }
 
 - (void)resize:(int)width:(int)height
 {
+	CARD16 values[4];
+
 	self->width = width;
 	self->height = height;
 
-	XMoveResizeWindow(zdpy,(Window)self->window,self->x,self->y,self->width,self->height);
+	values[0] = self->x;
+	values[1] = self->y;
+	values[2] = self->width;
+	values[3] = self->height;
+
+	[self->window ConfigureWindow:XCBConfigWindowX | XCBConfigWindowY | XCBConfigWindowHeight | XCBConfigWindowWidth:values];
 }	
 
 - (void)receive:(int)signal:(void *)data
