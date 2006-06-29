@@ -31,6 +31,7 @@
 	[super init];
 
 	if(head) {
+		self->prev = NULL;
 		self->curr = head;
 		[self->curr grab];
 		valid = 1;
@@ -46,8 +47,58 @@
 
 - (void)free
 {
-	if(self->curr)
-		[self->curr release];
+	[super free];
+}
+
+- (IMPObject *)get_data
+{
+	if(!valid)
+		return NULL;
+
+	return [self->curr get_data];
+}
+
+- (int)next
+{
+	if(!valid)
+		return 0;
+
+	if([self->curr get_next]) {
+		self->prev = self->curr;
+		self->curr = [self->curr get_next];
+		return -1;
+	}
+	else
+		return 0;
+}
+
+- (int)has_next
+{
+	if(!valid)
+		return -1;
+
+	if([self->curr get_next])
+		return -1;
+	else
+		return 0;
+}
+
+- (void)ins_next:(IMPObject *)data
+{
+	if(!valid)
+		return;
+
+	IMPListNode *n = [IMPListNode alloc];
+	[n init:data];
+	
+	[n set_next:[self->curr get_next]];
+
+	[self->curr set_next:n];
+}
+
+- (void)invalidate
+{
+	self->valid = 0;
 }
 
 @end
@@ -63,10 +114,21 @@
 	return self;
 }
 
+- (id)init:(IMPObject *)data
+{
+	[self init];
+	[self set_data:data];
+
+	return self;
+}
+
 - (void)free
 {
-	[self->data release];
-	[self->next release];
+	if(self->data)
+		[self->data release];
+
+	if(self->next)
+		[self->next release];
 
 	[super free];
 }
@@ -74,9 +136,6 @@
 - (void)set_data:(IMPObject *)data
 {
 	self->data = data;
-
-	if(self->data)
-		[self->data grab];
 }
 
 - (IMPObject *)get_data
@@ -87,9 +146,6 @@
 - (void)set_next:(IMPListNode *)next
 {
 	self->next = next;
-
-	if(self->next)
-		[self->next grab];
 }
 
 - (IMPListNode *)get_next
@@ -101,6 +157,56 @@
 
 @implementation IMPList : IMPObject
 
+- (id)init
+{
+	[super init];
+
+	self->head = [IMPListNode alloc];
+	[self->head init];
+	
+	self->tail = self->head;
+
+	self->curriter = NULL;
+
+	return self;
+}
+
+- (void)free
+{
+	if(self->curriter)
+		[self->curriter invalidate];
+
+	if(self->head)
+		[self->head release];
+
+	[super free];
+}
+
+- (void)append:(IMPObject *)data
+{
+	if(self->curriter)
+		[self->curriter invalidate];
+
+	IMPListNode *n = [IMPListNode alloc];
+	[n init:data];
+
+	[self->tail set_next:n];
+	self->tail = n;
+}
+
+- (IMPListIterator *)iterator
+{
+	IMPListIterator *iter = [IMPListIterator alloc];
+	[iter init:self->head];
+
+	if(self->curriter) {
+		[self->curriter invalidate];
+	}
+
+	self->curriter = iter;
+
+	return iter;
+}
 
 @end
 

@@ -23,151 +23,63 @@
 
 #include "../src/imp.h"
 
-int main(void)
+int main(int argc, char **argv)
 {
-#if 0
 	IMPObject *obj;
-	IMPList *temp = NULL;
-	IMPList *cur = NULL;
-	IMPStack *tmp = NULL;
-	IMPStack *curr = NULL;
-	IMPStack *t = NULL;
-	IMPSimpleStack *temp1 = NULL;
-	char *buff = NULL;
+	IMPList *list = [IMPList alloc];
+	IMPListIterator *iter;
+
 	int i,j;
 
 	srand(time(NULL));
-	
+#if 0	
 	puts("Starting IMPObject tests...");
 
 	puts("Creating and freeing 10000000 objects...");
-	for(i=0;i<10000000;i++) {
+	for(i=0;i<1000000;i++) {
 		obj = [IMPObject alloc];
 		[obj init];
 		
 		[obj release];
 
-		if(i % 100000 == 0) {
+		if(i % 10000 == 0) {
 			printf(".");
 			fflush(stdout);
 		}	
 	}
 
-	puts("");	
-	puts("Starting IMPList tests...");	
+	puts("");
+	puts("IMPObject tests completed successfully.");
 
-	puts("Creating, populating, and freeing a 100000 node list 100 times...");	
-	for(j=0;j<100;j++) {
-		temp = [IMPList alloc];
-		[temp init:0];
+#endif	puts("");
+	puts("Starting IMPList tests...");
 
-		temp->data = strdup("First node");
+	[list init];
 
-		cur = temp;
-		for(i=0;i<100000;i++) {	
-			buff = i_calloc(1,20);
-			snprintf(buff,20,"Node #%d\n",i);
-			
-			/* keep track of the tail so we don't have to traverse the list every insert(takes a lot of CPU time) */	
-			cur = [cur append_data:buff];
+	for(i=0;i<1000000;i++) {
+		obj = [IMPObject alloc];
+		[obj init];
+
+		[list append:obj];
+		
+		if(i % 10000 == 0) {
+			printf(".");
+			fflush(stdout);
 		}	
-
-		[temp delete_list];
-		
-		printf(".");
-		fflush(stdout);
 	}
 
-	puts("");
-	
-	puts("Inserting data into random positions of a 100000 node list 100 times...");
-	for(j=0;j<100;j++) {
-		temp = [IMPList alloc];
-		[temp init:0];
-		
-		temp->data = strdup("HEAD");
-		
-		cur = temp;
-		for(i=0;i<100000;i++) {
-			buff = i_calloc(1,20);
-			snprintf(buff,20,"Node #%d\n",i);
+	iter = [list iterator];
 
-			cur = [cur append_data:buff];
-		}
-			
-		for(i=0;i<100;i++)
-			[temp insert_data_nth:1 + rand() % 100000:strdup("INSERTED NODE")];
-
-		[temp delete_list];
-		
-		printf(".");
-		fflush(stdout);
-	}
-	
-	puts("");
-
-	puts("Starting IMPStack tests...");
-
-	puts("Creating, pushing, popping, and freeing a 100000 node stack 100 times...");
-
-	for(j=0;j<100;j++) {
-		tmp = [IMPStack alloc];
-		[tmp init:0];
-		
-		tmp->data = strdup("First node");
-
-		curr = tmp;
-		for(i=0;i<100000;i++) {
-			buff = i_calloc(1,20);
-			snprintf(buff,20,"Node #%d\n",i);
-
-			/* keep track of the head */
-			curr = [curr push:0:buff];
-		}
-	
-		/* Pop and release all elements */	
-		for(i=0;i<100000;i++) {
-			t = curr->next;
-
-			//[[curr pop] release];
-			free([curr pop]);
-			
-			curr = t;
-		}	
-
-		[tmp release];
-
-		printf(".");
-		fflush(stdout);
+	while([iter has_next]) {
+//		printf("%d\n",[[iter get_data] get_id]);
+		[iter next];
 	}
 
-	puts("");
-	
-	puts("Starting IMPSimpleStack tests...");
-
-	puts("Creating, pushing, popping, and freeing a 100000 node stack 100 times...");
-
-	for(j=0;j<100;j++) {
-		temp1 = [IMPSimpleStack alloc];
-		[temp1 init:100000];
-
-		for(i=0;i<100000;i++) {
-			obj = [[IMPObject alloc] init];
-			temp1 = [temp1 push:obj];
-		}
-
-		for(i=0;i<100000;i++) {
-			[[temp1 pop] release];	
-		}
-
-		[temp1 release];
-		
-		printf(".");
-		fflush(stdout);
-	}
+	[list release];
+	[iter release];
 
 	puts("");
-#endif
+
 	return 0;
 }
 

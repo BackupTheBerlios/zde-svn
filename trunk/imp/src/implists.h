@@ -71,10 +71,11 @@
 @interface IMPListIterator : IMPObject <IMPIterator>
 {
 	IMPListNode *curr;
+	IMPListNode *prev;
 	int valid; /**< If set to 1, iterator is valid.  Otherwise it is invalid. */
 }
 
-- (id)init:(IMPListNode *)start;
+- (id)init:(IMPListNode *)head;
 
 - (void)free;
 
@@ -91,6 +92,8 @@
 {
 	@protected
 	IMPListNode *head;
+	IMPListNode *tail;
+	IMPListIterator *curriter;
 }
 
 - (id)init;
@@ -104,6 +107,7 @@
 
 /**
  * Creates an Iterator for the list.
+ * Note that there can only be one active iterator at a time (at least until I need to and then make a set so it can be done elegantly).
  */
 - (IMPListIterator *)iterator;
 

@@ -35,19 +35,24 @@
 - (IMPObject *)get_current;
 
 /**
- * Moves the iterator to the next object in the data structure, returns 0 if there are no more elements.
+ * Moves the iterator to the next object in the data structure, returns zero if there are no more elements.
  */
 - (int)next;
 
 /**
- * Returns 0 if there are still elements to be traversed, non-zero if there are no more.
+ * Returns non-zero if there are still elements to be traversed, zero if there are no more.
  */
-- (int)empty;
+- (int)has_next;
 
 /**
  * Inserts data into the next position in the structure.
  */
 - (void)ins_next:(IMPObject *)data;
+
+/**
+ * Invalidates the iterator.
+ */
+- (void)invalidate;
 
 @end
 
