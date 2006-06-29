@@ -26,22 +26,16 @@
 
 @implementation IMPListIterator : IMPObject
 
-- (id)init:(IMPListNode *)head
+- (id)init:(IMPList *)list
 {
 	[super init];
 
-	if(head) {
-		self->prev = NULL;
-		self->curr = head;
-		valid = 1;
+	self->list = list;
+	self->prev = NULL;
+	self->curr = [self->list get_head];
+	valid = 1;
 
-		return self;
-	}
-	else {
-		/* Throw exception ? */
-		valid = 0;	
-		return NULL;
-	}	
+	return self;
 }
 
 - (void)free
@@ -102,6 +96,10 @@
 
 - (void)del
 {
+
+	if([self->list get_head] == self->curr)
+		[self->list set_head:[self->curr get_next]];	
+
 	[self->prev set_next:[self->curr get_next]];
 	
 	[self->curr set_next:NULL];
@@ -190,6 +188,17 @@
 	[super free];
 }
 
+- (IMPListNode *)get_head
+{
+	return self->head;
+}
+
+- (void)set_head:(IMPListNode *)node
+{
+	if(node)
+		self->head = node;
+}
+
 - (void)append:(IMPObject *)data
 {
 	if(self->curriter)
@@ -205,7 +214,7 @@
 - (IMPListIterator *)iterator
 {
 	IMPListIterator *iter = [IMPListIterator alloc];
-	[iter init:self->head];
+	[iter init:self];
 
 	if(self->curriter) {
 		[self->curriter invalidate];

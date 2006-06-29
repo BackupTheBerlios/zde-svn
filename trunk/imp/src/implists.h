@@ -24,6 +24,8 @@
 #ifndef IMPLIST_H
 #define IMPLIST_H
 
+@class IMPList;
+
 /**
  * Holds a piece of data, and another node that it is connected to.
  */
@@ -70,12 +72,13 @@
  */
 @interface IMPListIterator : IMPObject <IMPIterator>
 {
+	IMPList *list;
 	IMPListNode *curr;
 	IMPListNode *prev;
 	int valid; /**< If set to 1, iterator is valid.  Otherwise it is invalid. */
 }
 
-- (id)init:(IMPListNode *)head;
+- (id)init:(IMPList *)list;
 
 - (void)free;
 
@@ -104,6 +107,16 @@
 - (id)init;
 
 - (void)free;
+
+/**
+ * Returns the head node.
+ */
+- (IMPListNode *)get_head;
+
+/**
+ * Sets the head node.
+ */
+- (void)set_head:(IMPListNode *)node;
 
 /**
  * Appends data to the end of the list.
