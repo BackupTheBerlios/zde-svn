@@ -24,54 +24,88 @@
 #ifndef IMPLIST_H
 #define IMPLIST_H
 
+/**
+ * Holds a piece of data, and another node that it is connected to.
+ */
+@interface IMPListNode : IMPObject
+{
+	@protected
+	IMPObject *data;
+	IMPListNode *next;
+}
+
+- (id)init;
+
+- (void)free;
+
+/**
+ * Initialize the node with data.
+ */
+- (id)init:(IMPObject *)data;
+
+/**
+ * Set the node's data.
+ */
+- (void)set_data:(IMPObject *)data;
+
+/**
+ * Get the data stored in the node, non-destructive.
+ */
+- (IMPObject *)get_data;
+
+/** 
+ * Set the next node.
+ */
+- (void)set_next:(IMPListNode *)next;
+
+/**
+ * Get the next node.
+ */
+- (IMPListNode *)get_next;
+
+@end
+
+/**
+ * An Iterator for an IMPList.
+ */
+@interface IMPListIterator : IMPObject <IMPIterator>
+{
+	IMPListNode *curr;
+	int valid; /**< If set to 1, iterator is valid.  Otherwise it is invalid. */
+}
+
+- (id)init:(IMPListNode *)start;
+
+- (void)free;
+
+/**
+ * Returns the data at the current position.
+ */
+- (IMPObject *)get_data;
+
+@end
+
 /** A singly-linked list implementation, non-circular.
  */
 @interface IMPList : IMPObject
 {
-	@public
-	void *data;  /**< Pointer to data that you may want to associate with this node.  Make sure that you set type correctly. */
-	IMPList *next;	/**< Pointer to next list node, NULL if this is the last node */
-	int type;  /**< Can be set at any time.  0 for malloc data, 1 for IMPObjects */
+	@protected
+	IMPListNode *head;
 }
 
-/** Init the list. Set type to 0 if the data you will be storing will be allocated with a 
-  C malloc/calloc/realloc function (i_alloc, i_calloc, and i_realloc count).
-  Set type to 1 if the data you will be storing will be IMPObjects. 
+- (id)init;
+
+- (void)free;
+
+/**
+ * Appends data to the end of the list.
  */
-- init:(int)type;
-- free;  /**< Freeing one frees all nodes after it.  This way, you can free a whole list by calling free on the head. */
+- (void)append:(IMPObject *)data;
 
-/** Add a new node at the end of the list and point the new node's "data" field to the parameter supplied. 
-  Returns the new end of the list. 
+/**
+ * Creates an Iterator for the list.
  */
-- (IMPList *)append_data:(void *)user_data;  
-
-/** Add a new node at the beginning of the list and point the new node's "data" field to the parameter 
-  supplied.  Note that if there is another node before this one, its pointer will not be updated because we 
-  have no knowledge of that.  If you do anyway, you will have a hole in the list, so make sure to only use this on the 
-  head node of the list, or that you have some way up updating the pointer of the other node. Returns the new 
-  beginning of the list 
- */
-- (IMPList *)prepend_data:(void *)user_data;  
-
-/** Add a new node at the positing that is "pos" nodes from this one.  If there are not enough nodes to traverse, it returns NULL.
-  The nodes preceding and after are updated, as we know where they are when moving in order. 
- */ 
-- (IMPList *)insert_data_nth:(int)pos:(void *)user_data;  
-
-/** Deletes the next node in the list. Returns the new next node. */
-- (IMPList *)delete_next_node;
-
-/** Deletes the current node.  Make sure you only use this on the head node, or you will be making a hole in the list. 
-  Returns the new head of the list. 
- */
-- (IMPList *)delete_node;
-
-/** Deletes the current node and all nodes after it. The list should not be accessed after this. */
-- (void)delete_list;
-
-/** Gets the current size of the list, i.e. how many nodes it contains. */
-- (int)get_size;
+- (IMPListIterator *)iterator;
 
 @end
 

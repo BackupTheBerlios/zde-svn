@@ -27,7 +27,7 @@
 /**
  * Defines standard methods that all data structure's iterators should implement, if applicable.
  */
-@protocol Iterator
+@protocol IMPIterator
 
 /**
  * Returns the current data structure object the iterator is positioned at.

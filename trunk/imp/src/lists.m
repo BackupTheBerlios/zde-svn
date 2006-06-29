@@ -24,157 +24,83 @@
 
 #include "imp.h"
 
-@implementation IMPList : IMPObject
+@implementation IMPListIterator : IMPObject
 
-- init:(int)type
+- (id)init:(IMPListNode *)head
 {
 	[super init];
 
-	self->data = NULL;
-	self->next = NULL;
-	self->type = type;
+	if(head) {
+		self->curr = head;
+		[self->curr grab];
+		valid = 1;
+
+		return self;
+	}
+	else {
+		/* Throw exception ? */
+		valid = 0;	
+		return NULL;
+	}	
 }
 
-- free
-{	
-	IMPObject *data = NULL;;
-	if(self->type == 0 && self->data)
-		i_free(self->data);
-	else if(self->type == 1 && self->data) {
-		data = (IMPObject *)self->data;	
-		[data release];
-	}
+- (void)free
+{
+	if(self->curr)
+		[self->curr release];
+}
 
-	if(self->next)	
-		[self->next free];
+@end
+
+@implementation IMPListNode : IMPObject
+
+- (id)init
+{
+	[super init];
+	self->data = NULL;
+	self->next = NULL;
+
+	return self;
+}
+
+- (void)free
+{
+	[self->data release];
+	[self->next release];
 
 	[super free];
 }
 
-- (IMPList *)append_data:(void *)user_data
+- (void)set_data:(IMPObject *)data
 {
-	IMPList *temp = self;
-	IMPList *new_node;
-	IMPObject *data = (IMPObject *)user_data;
-	
-	/* find end of list */
-	while(temp->next != NULL) {
-		temp = temp->next;
-	}
+	self->data = data;
 
-	new_node = [IMPList alloc];
-	[new_node init:self->type];
-
-	new_node->data = user_data;
-	temp->next = new_node;
-	
-	if(self->type == 1)
-		[data grab];
-	
-	return temp->next;
+	if(self->data)
+		[self->data grab];
 }
 
-- (IMPList *)prepend_data:(void *)user_data
+- (IMPObject *)get_data
 {
-	IMPList *new_node;
-
-	new_node = [IMPList alloc];
-	[new_node init:self->type];
-
-	new_node->data = user_data;
-	new_node->next = self;
-	new_node->type = self->type;
-
-	if(self->type == 1)
-		[new_node->data grab];
-	
-	return new_node;	
+	return self->data;
 }
 
-- (IMPList *)insert_data_nth:(int)pos:(void *)user_data
+- (void)set_next:(IMPListNode *)next
 {
-	int i;
-	IMPList *curr = self;
-	IMPList *tmp,*tmp1;
-	
-	/* This gets us to the place BEFORE where we want to insert. */
-	for(i=0;i<pos - 2;i++) {
-		if(curr->next == NULL)
-			return NULL;
-		
-		curr = curr->next;
-	}
-	
-	tmp = [IMPList alloc];
-	[tmp init:self->type];
-	tmp->data = user_data;
+	self->next = next;
 
-	tmp1 = curr->next;
-	curr->next = tmp;
-	tmp->next = tmp1;
-	
-	return tmp;
-
-	//fprintf(stderr,"insert_data_nth not yet implemented.  Please implement it!\n");
+	if(self->next)
+		[self->next grab];
 }
 
-- (IMPList *)delete_next_node
+- (IMPListNode *)get_next
 {
-	IMPList *tmp = NULL;
-
-	if(self->next && self->next->next) {
-		tmp = self->next->next;
-
-		self->next->next = NULL;
-		[self->next release];
-
-		self->next = tmp;
-	
-		return self->next;
-	}
-	else if(self->next){
-		tmp = NULL;
-
-		self->next->next = NULL;
-		[self->next release];
-
-		self->next = tmp;
-		return self->next;
-	}
+	return self->next;	
 }
 
-- (IMPList *)delete_node
-{
-	IMPList *tmp = self->next;
+@end
 
-	//if(!tmp)
-	//	return self;
+@implementation IMPList : IMPObject
 
-	self->next = NULL;
-	[self release];
-	
-	return tmp;
-}
-
-- (void)delete_list
-{
-	if(!self->next)
-		return;
-
-	[self release];
-}
-
-- (int)get_size
-{
-	IMPList *tmp = self;
-	int i;
-	
-	for(i=0;tmp;i++){
-		tmp = tmp->next;
-	}
-	
-	return i;
-}
 
 @end
 
