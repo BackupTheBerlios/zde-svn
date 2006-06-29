@@ -193,7 +193,8 @@ IMPHEADERS = \
 	      impobject.h \
 	      implists.h \
 	      impstack.h \
-	      impmemory.h
+	      impmemory.h \
+	      impiterator.h
 
 installed_headersdir = $(prefix)/include/imp
 installed_headers_DATA = $(IMPHEADERS)
