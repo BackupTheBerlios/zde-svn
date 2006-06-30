@@ -64,7 +64,7 @@ vpath %.xml $(XCBPROTO_XCBINCLUDEDIR) $(XCBPROTO_XCBINCLUDEDIR)/extensions
 
 obj%.h: %.xml ../scripts/codegen.pl 
 #	../scripts/codegen.pl $@ $<
-	../scripts/codegen.pl $@ $<
+	../scripts/codegen.pl $@ $< $(XCBPROTO_XCBINCLUDEDIR)/extensions
 
 #core files
 xcb_conn.m: objxproto.h

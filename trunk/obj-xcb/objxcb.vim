@@ -65,7 +65,7 @@ endif
 set shortmess=aoO
 badd +85 configure.in
 badd +1 Makefile.am
-badd +7 src/Makefile.am
+badd +42 src/Makefile.am
 badd +4 README
 badd +46 src/xcb_conn.m
 badd +20 src/xcb_conn.h
@@ -74,9 +74,10 @@ badd +4 tests/Makefile.am
 badd +20 tests/main.m
 badd +16 design/notes
 badd +35 design/example.txt
-badd +47 scripts/codegen.pl
+badd +33 scripts/codegen.pl
 badd +22 scripts/xidgen.pl
 badd +13 TODO
+badd +1 scripts/extgen.pl
 args configure.in Makefile.am src/Makefile.am
 edit README
 set splitbelow splitright
@@ -187,7 +188,7 @@ if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
 4
-normal! 0
+normal! 045l
 tabnext 1
 if exists('s:wipebuf')
   silent exe 'bwipe ' . s:wipebuf

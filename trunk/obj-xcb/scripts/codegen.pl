@@ -28,6 +28,9 @@ if($outfile eq "objxproto.h") {
 
 	$twig->parsefile("$infile");
 	$twig->purge;
+
+	#extensions
+	print `../scripts/extgen.pl $ARGV[2]`; 
 }
 
 
