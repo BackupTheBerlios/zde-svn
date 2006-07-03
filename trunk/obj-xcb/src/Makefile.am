@@ -131,6 +131,6 @@ objxcb_getpointercontrolreply.m: objxproto.h
 
 
 clean-local:
-	rm -f objxproto.h xcb_window.h xcb_window.m xcb_atom.m xcb_colormap.m xcb_cursor.m xcb_font.m xcb_gcontext.m xcb_pixmap.m \
+	rm -rf objxproto.h xcb_window.h xcb_window.m xcb_atom.m xcb_colormap.m xcb_cursor.m xcb_font.m xcb_gcontext.m xcb_pixmap.m \
 		xcb_atom.h xcb_colormap.h xcb_cursor.h xcb_font.h xcb_gcontext.h xcb_pixmap.h xcb_drawable.h xcb_drawable.m xcb_fontable.h xcb_fontable.m \
-		objxcb* *.loT
+		xcb_conn_orphan.h xcb_conn_orphan.m objxcb* *.loT extensions
