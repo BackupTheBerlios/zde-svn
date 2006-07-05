@@ -2,7 +2,7 @@
 use strict;
 
 #Generates output source code from xproto.xml
-#Arguments: xid,xml to use as input,and whether to do orphans or not.
+#Arguments: xid,xml to use as input, whether to do orphans or not,and any "prefix" after ObjXCB, for extensions.
 
 use XML::Twig;
 
@@ -50,6 +50,15 @@ my $inherits = "Object";
 
 if($ARGV[2] == 1) {
 	$orphan = defined;
+}
+
+my $prefix;
+
+if(!defined $ARGV[3]) {
+	$prefix = "";
+}
+else {
+	$prefix = $ARGV[3];
 }
 
 if($ARGV[0] eq "WINDOW" or $ARGV[0] eq "PIXMAP") {
@@ -239,7 +248,7 @@ sub start_class_source($$)
 	print $sourcefh '#include <' . "$_[1]" . '>' . "\n\n";
 
 	#generic init and free code
-	print $sourcefh "\@implementation ObjXCB$capxid : $inherits \n\n";
+	print $sourcefh "\@implementation ObjXCB$prefix$capxid : $inherits \n\n";
 	
 	if($ARGV[0] eq "WINDOW" or $ARGV[0] eq "PIXMAP") {
 		my $var;
@@ -311,7 +320,7 @@ sub output_method_header($$)
 
 		open(my $repfh,">","objxcb_$repnamefull.h") or die("Couldn't open file.");
 		print $repfh $copyright;
-		print $repfh "\@interface ObjXCB$request->{'att'}->{'name'}Reply : Object\n{\n";
+		print $repfh "\@interface ObjXCB$prefix$request->{'att'}->{'name'}Reply : Object\n{\n";
 		print $repfh "\tXCB$request->{'att'}->{'name'}" . "Cookie repcookie;\n";
 		print $repfh "\tXCB$request->{'att'}->{'name'}" . "Rep *reply;\n";
 		print $repfh "\tObjXCBConnection *c;\n";
@@ -355,7 +364,7 @@ sub output_method_header($$)
 		close($xprotofh);
 
 		#output the correct method declaration now
-		print $headerfh '- (' . "ObjXCB$request->{'att'}->{'name'}Reply *" . "\)$request->{'att'}->{'name'}";
+		print $headerfh '- (' . "ObjXCB$prefix$request->{'att'}->{'name'}Reply *" . "\)$request->{'att'}->{'name'}";
 	}
 
 	output_decl($headerfh,$request,"el");
@@ -377,7 +386,7 @@ sub output_method_source($$)
 		print $sourcefh '- (void)' . "$request->{'att'}->{'name'}";
 	}
 	else {	
-		print $sourcefh "- \(ObjXCB$request->{'att'}->{'name'}Reply *\) $request->{'att'}->{'name'}";
+		print $sourcefh "- \(ObjXCB$prefix$request->{'att'}->{'name'}Reply *\) $request->{'att'}->{'name'}";
 	}
 
 	#output parameters
@@ -397,10 +406,10 @@ sub output_method_source($$)
 
 		open(my $repsourcefh,">","objxcb_$repnamefull.m") or die("Couldn't open file.");
 		print $repsourcefh '#include "obj-xcb.h"' . "\n\n";
-		print $repsourcefh '@implementation ObjXCB' . "$request->{'att'}->{'name'}Reply : Object\n\n";
+		print $repsourcefh '@implementation ObjXCB' . "$prefix$request->{'att'}->{'name'}Reply : Object\n\n";
 	
 		#constructor and deconstructor
-		print $repsourcefh "- \(id\)init:\(ObjXCBConnection *)c:\(XCB$request->{'att'}->{'name'}Cookie\)repcookie\n{\n";
+		print $repsourcefh "- \(id\)init:\(ObjXCBConnection *)c:\(XCB$prefix$request->{'att'}->{'name'}Cookie\)repcookie\n{\n";
 		print $repsourcefh "\tself->repcookie = repcookie;\n\tself->reply=NULL;\n\tself->got_rep = 0;\n\tself->c = c;\n}\n\n";
 		print $repsourcefh "- \(void\)free\n{\n\tif(self->reply) {\n\t\tfree\(self->reply\);\n\t}\n\t[super free];\n}\n\n";
 
@@ -417,7 +426,7 @@ sub output_method_source($$)
 			}
 			#TODO: ERROR HANDLING
 			print $repsourcefh "- \($rtype\)get_$repfield->{'att'}->{'name'}\n{\n";
-			print $repsourcefh "\t" . 'if(!self->got_rep) {' . "\n\t\t" . 'self->reply = XCB' . "$request->{'att'}->{'name'}Reply\(" . 
+			print $repsourcefh "\t" . 'if(!self->got_rep) {' . "\n\t\t" . 'self->reply = XCB' . "$prefix$request->{'att'}->{'name'}Reply\(" . 
 				'[self->c get_connection],self->repcookie,0);' . "\n\t\tself->got_rep = 1;" ."\n\t}\n";
 
 			#figure out if its an xid, this determines how we need to return
@@ -466,7 +475,7 @@ sub output_method_source($$)
 		print $repsourcefh "\n" . '@end';
 
 		#now put code in the method to access the reply
-		print $sourcefh "\tObjXCB$request->{'att'}->{'name'}Reply *rep = [ObjXCB$request->{'att'}->{'name'}Reply alloc];\n";
+		print $sourcefh "\tObjXCB$request->{'att'}->{'name'}Reply *rep = [ObjXCB$prefix$request->{'att'}->{'name'}Reply alloc];\n";
 		print $sourcefh "\t[rep init:self->c:XCB$request->{'att'}->{'name'}\([self->c get_connection]";
 		
 		foreach my $field (@fields) {
@@ -520,7 +529,7 @@ sub output_method_source($$)
 	}
 	else {
 		$isxid = undef;
-		print $sourcefh "\t" . "XCB$request->{'att'}->{'name'}" . '([self->c get_connection]';
+		print $sourcefh "\t" . "XCB$prefix$request->{'att'}->{'name'}" . '([self->c get_connection]';
 
 		foreach my $field (@fields) {
 			#if its the first xid, we have it stored within the object

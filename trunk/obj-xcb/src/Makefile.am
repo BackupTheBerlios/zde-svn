@@ -86,6 +86,8 @@ xcb_drawable.m: objxproto.h
 xcb_drawable.h: objxproto.h
 xcb_fontable.h: objxproto.h
 xcb_fontable.m: objxproto.h
+xcb_conn_orphan.m: objxproto.h
+xcb_conn_orphan.h: objxproto.h
 
 
 #replies
