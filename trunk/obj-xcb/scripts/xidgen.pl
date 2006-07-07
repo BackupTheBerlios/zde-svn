@@ -38,14 +38,6 @@ my @orphans;
 my $orphan;
 my $orphanct = 0;
 
-#create the output filenames
-my $xid = $ARGV[0];
-$xid =~ tr/A-Z/a-z/;
-my $outfile = "xcb_" . $xid;
-
-my $outheaderfile = $outfile . ".h";
-my $outsourcefile = $outfile . ".m";
-
 my $inherits = "Object";
 
 if($ARGV[2] == 1) {
@@ -53,16 +45,33 @@ if($ARGV[2] == 1) {
 }
 
 my $prefix;
+my $lowerprefix;
+my $extension;
 
 if(!defined $ARGV[3]) {
 	$prefix = "";
+	$lowerprefix = "";
+	$extension = "";
 }
 else {
 	$prefix = $ARGV[3];
+
+	$lowerprefix = $prefix;
+	$lowerprefix =~ tr/A-Z/a-z/;
+
+	$extension = "extensions/"
 }
 
+#create the output filenames
+my $xid = $ARGV[0];
+$xid =~ tr/A-Z/a-z/;
+my $outfile = "xcb_$lowerprefix" . $xid;
+
+my $outheaderfile = $outfile . ".h";
+my $outsourcefile = $outfile . ".m";
+
 if($ARGV[0] eq "WINDOW" or $ARGV[0] eq "PIXMAP") {
-	$inherits = "ObjXCBDrawable";
+	$inherits = "ObjXCB" . $prefix . "Drawable";
 }
 
 start_class_header($outheaderfile);
@@ -206,18 +215,20 @@ sub start_class_header($)
 
 	$xid =~ s/(\w+)/\u\L$1/g;
 	my $capxid = $xid;
-	
-	open($headerfh,">",$_[0]) or die("Couldn't open header file $_[0].");
-	print "Generating file $_[0]\n";
+
+	my $hfname = $extension . $_[0];
+
+	open($headerfh,">","$hfname") or die("Couldn't open header file $hfname.");
+	print "Generating file $hfname\n";
 	#copyright
 	print $headerfh "$copyright";
 
 	#interface declaration 
-	print $headerfh "\@interface ObjXCB$capxid : $inherits \n{\n";
+	print $headerfh "\@interface ObjXCB$prefix$capxid : $inherits \n{\n";
 
 	#variables
 	if($ARGV[0] ne "WINDOW" or $ARGV[0] ne "PIXMAP") {
-		print $headerfh "\tXCB$ARGV[0]" . ' xid;' . "\n";
+		print $headerfh "\tXCB$prefix$ARGV[0]" . ' xid;' . "\n";
 		print $headerfh "\t" . 'ObjXCBConnection *c;' . "\n";
 	}
 	print $headerfh "\n}\n";
@@ -227,9 +238,9 @@ sub start_class_header($)
 		print $headerfh '/** Creates a new XID and initializes the object. */' . "\n";
 		print $headerfh '- (id)init:(ObjXCBConnection *)c;' . "\n";
 		print $headerfh '/** Takes in an XID and initializes the object. */' . "\n";
-		print $headerfh '- (id)init:(ObjXCBConnection *) c:(' . "XCB$ARGV[0]" . ')xid;' . "\n";
+		print $headerfh '- (id)init:(ObjXCBConnection *) c:(' . "XCB$prefix$ARGV[0]" . ')xid;' . "\n";
 		print $headerfh '/** Returns the XID the object represents. */' . "\n";
-		print $headerfh '- (' . "XCB$ARGV[0]\)get_xid;\n";
+		print $headerfh '- (' . "XCB$prefix$ARGV[0]\)get_xid;\n";
 		print $headerfh '- free;' . "\n";
 #	}
 }
@@ -242,8 +253,10 @@ sub start_class_source($$)
 	$xid =~ s/(\w+)/\u\L$1/g;
 	my $capxid = $xid;
 
-	open($sourcefh,">",$_[0]) or die("Couldn't open source file $_[0].");
-	print "Generating file $_[0]\n";
+	my $hfname = $extension . $_[0];
+
+	open($sourcefh,">","$hfname") or die("Couldn't open source file $hfname.");
+	print "Generating file $hfname\n";
 
 	#include
 	print $sourcefh '#include <obj-xcb.h>' . "\n";
@@ -262,11 +275,11 @@ sub start_class_source($$)
 		}
 		print $sourcefh '- (id)init:(ObjXCBConnection *)c' . "\n" . '{' . "\n" .
 			"\t" . 'self->c = c;'. "\n" .
-			"\t" . 'self->xid.' . "$var" . ' = XCB'.$ARGV[0] . 'New([self->c get_connection]);' . "\n" . '}' . "\n\n";
-		print $sourcefh '- (id)init:(ObjXCBConnection *)c:(' . "XCB$ARGV[0]" . ')xid;' . "\n" . '{' . "\n" .
+			"\t" . 'self->xid.' . "$var" . ' = XCB' . "$prefix$ARGV[0]" . 'New([self->c get_connection]);' . "\n" . '}' . "\n\n";
+		print $sourcefh '- (id)init:(ObjXCBConnection *)c:(' . "XCB$prefix$ARGV[0]" . ')xid;' . "\n" . '{' . "\n" .
 			"\t" . 'self->c = c;'. "\n" .
 			"\t" . 'self->xid.' . "$var" . ' = xid;' . "\n" . '}' . "\n\n";
-		print $sourcefh '- (' . "XCB$ARGV[0]\)get_xid\n" . '{' . "\n" .
+		print $sourcefh '- (' . "XCB$prefix$ARGV[0]\)get_xid\n" . '{' . "\n" .
 			"\t" . 'return self->xid.' . "$var" . ';' . "\n" . '}' . "\n\n";
 		print $sourcefh '- free' . "\n" . '{' . "\n" .
 			"\t" . 'self->c = NULL;' . "\n" . '[super free];' . "\n" . '}' . "\n\n";
@@ -276,11 +289,11 @@ sub start_class_source($$)
 	if($ARGV[0] ne "DRAWABLE" and $ARGV[0] ne "FONTABLE") {
 		print $sourcefh '- (id)init:(ObjXCBConnection *)c' . "\n" . '{' . "\n" .
 			"\t" . 'self->c = c;'. "\n" .
-			"\t" . 'self->xid = XCB'.$ARGV[0] . 'New([self->c get_connection]);' . "\n" . '}' . "\n\n";
-		print $sourcefh '- (id)init:(ObjXCBConnection *)c:(' . "XCB$ARGV[0]" . ')xid;' . "\n" . '{' . "\n" .
+			"\t" . 'self->xid = XCB' . "$prefix$ARGV[0]" . 'New([self->c get_connection]);' . "\n" . '}' . "\n\n";
+		print $sourcefh '- (id)init:(ObjXCBConnection *)c:(' . "XCB$prefix$ARGV[0]" . ')xid;' . "\n" . '{' . "\n" .
 			"\t" . 'self->c = c;'. "\n" .
 			"\t" . 'self->xid = xid;' . "\n" . '}' . "\n\n";
-		print $sourcefh '- (' . "XCB$ARGV[0]\)get_xid\n" . '{' . "\n" .
+		print $sourcefh '- (' . "XCB$prefix$ARGV[0]\)get_xid\n" . '{' . "\n" .
 			"\t" . 'return self->xid;' . "\n" . '}' . "\n\n";
 		print $sourcefh '- free' . "\n" . '{' . "\n" .
 			"\t" . 'self->c = NULL;' . "\n" . '[super free];' . "\n" . '}' . "\n\n";
@@ -320,18 +333,20 @@ sub output_method_header($$)
 		$repname =~ tr/A-Z/a-z/;
 		my $repnamefull = $repname . "reply";
 
-		open(my $repfh,">","objxcb_$repnamefull.h") or die("Couldn't open file.");
-		print "Generating file objxcb_$repnamefull.h\n";
+		my $repnamefull2 = "objxcb_$lowerprefix" . "$repnamefull.h";
+
+		open(my $repfh,">","$repnamefull2") or die("Couldn't open file.");
+		print "Generating file $repnamefull2\n";
 
 		print $repfh $copyright;
 		print $repfh "\@interface ObjXCB$prefix$request->{'att'}->{'name'}Reply : Object\n{\n";
-		print $repfh "\tXCB$request->{'att'}->{'name'}" . "Cookie repcookie;\n";
-		print $repfh "\tXCB$request->{'att'}->{'name'}" . "Rep *reply;\n";
+		print $repfh "\tXCB$prefix$request->{'att'}->{'name'}" . "Cookie repcookie;\n";
+		print $repfh "\tXCB$prefix$request->{'att'}->{'name'}" . "Rep *reply;\n";
 		print $repfh "\tObjXCBConnection *c;\n";
 		print $repfh "\tunsigned int got_rep;\n}\n\n";
 		
 		#constructor and deconstructor
-		print $repfh "- \(id\)init:\(ObjXCBConnection *\)c:\(XCB$request->{'att'}->{'name'}Cookie\)repcookie;\n";
+		print $repfh "- \(id\)init:\(ObjXCBConnection *\)c:\(XCB$prefix$request->{'att'}->{'name'}Cookie\)repcookie;\n";
 		print $repfh "- \(void\)free;\n";
 
 		foreach my $repfield (@repfields) {
@@ -363,9 +378,11 @@ sub output_method_header($$)
 		print $repfh "\@end\n";
 
 		#include us in objxproto.h
-		open(my $xprotofh,">>","objxproto.h") or die("Couldn't open objxproto.h");
-		print $xprotofh '#import "' . "objxcb_$repnamefull.h" . "\"\n";
-		close($xprotofh);
+		if($prefix eq "") {
+			open(my $xprotofh,">>","objxproto.h") or die("Couldn't open objxproto.h");
+			print $xprotofh '#import "' . "objxcb_$repnamefull.h" . "\"\n";
+			close($xprotofh);
+		}
 
 		#output the correct method declaration now
 		print $headerfh '- (' . "ObjXCB$prefix$request->{'att'}->{'name'}Reply *" . "\)$request->{'att'}->{'name'}";
@@ -408,8 +425,11 @@ sub output_method_source($$)
 		my $repnamefull = $repname . "reply";
 		my $isxid;
 
-		open(my $repsourcefh,">","objxcb_$repnamefull.m") or die("Couldn't open file.");
-		print "Generating file objxcb_$repnamefull.m\n";
+		my $repnamefull2 = "objxcb_$lowerprefix" . "$repnamefull.m";
+
+		open(my $repsourcefh,">","$repnamefull2") or die("Couldn't open file.");
+		print "Generating file $repnamefull2\n";
+
 		print $repsourcefh '#include "obj-xcb.h"' . "\n\n";
 		print $repsourcefh '@implementation ObjXCB' . "$prefix$request->{'att'}->{'name'}Reply : Object\n\n";
 	
@@ -480,8 +500,8 @@ sub output_method_source($$)
 		print $repsourcefh "\n" . '@end';
 
 		#now put code in the method to access the reply
-		print $sourcefh "\tObjXCB$request->{'att'}->{'name'}Reply *rep = [ObjXCB$prefix$request->{'att'}->{'name'}Reply alloc];\n";
-		print $sourcefh "\t[rep init:self->c:XCB$request->{'att'}->{'name'}\([self->c get_connection]";
+		print $sourcefh "\tObjXCB$prefix$request->{'att'}->{'name'}Reply *rep = [ObjXCB$prefix$request->{'att'}->{'name'}Reply alloc];\n";
+		print $sourcefh "\t[rep init:self->c:XCB$prefix$request->{'att'}->{'name'}\([self->c get_connection]";
 		
 		foreach my $field (@fields) {
 			#if its the first xid, we have it stored within the object
