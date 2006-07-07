@@ -25,6 +25,16 @@
 #define ZWLWINDOW_H
 
 /**
+ * Plain XCB backend, safest.
+ */
+#define ZWL_BACKEND_XCB 0
+
+/**
+ * XCB XRender backend, may be slow or render incorrectly.
+ */
+#define ZWL_BACKEND_XCB_XRENDER 1
+
+/**
 	A widget that represents an X11 toplevel window.
  */
 @interface ZWindow : ZWidget
@@ -42,7 +52,7 @@
 	cairo_surface_t *win_surf;
 }
 
-- (id)init;
+- (id)init:(unsigned int)backend;
 
 - (void)free;
 
