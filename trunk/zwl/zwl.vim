@@ -1,16 +1,18 @@
+let SessionLoad = 1
 if &cp | set nocp | endif
 let s:cpo_save=&cpo
 set cpo&vim
-map! <xHome> <Home>
-map! <xEnd> <End>
-map! <S-xF4> <S-F4>
-map! <S-xF3> <S-F3>
-map! <S-xF2> <S-F2>
-map! <S-xF1> <S-F1>
-map! <xF4> <F4>
-map! <xF3> <F3>
-map! <xF2> <F2>
-map! <xF1> <F1>
+map! <F1> <F1>
+map! <F2> <F2>
+map! <F3> <F3>
+map! <F4> <F4>
+map! <S-F1> <S-F1>
+map! <S-F2> <S-F2>
+map! <S-F3> <S-F3>
+map! <S-F4> <S-F4>
+map! <End> <End>
+map! <Home> <Home>
+map! <S-Insert> <MiddleMouse>
 nmap d :cs find d =expand("<cword>")	
 nmap i :cs find i ^=expand("<cfile>")$
 nmap f :cs find f =expand("<cfile>")	
@@ -19,6 +21,20 @@ nmap t :cs find t =expand("<cword>")
 nmap c :cs find c =expand("<cword>")	
 nmap g :cs find g =expand("<cword>")	
 nmap s :cs find s =expand("<cword>")	
+vmap [% [%m'gv``
+vmap ]% ]%m'gv``
+vmap a% [%v]%
+nmap gx <Plug>NetrwBrowseX
+map <F1> <F1>
+map <F2> <F2>
+map <F3> <F3>
+map <F4> <F4>
+map <S-F1> <S-F1>
+map <S-F2> <S-F2>
+map <S-F3> <S-F3>
+map <S-F4> <S-F4>
+map <End> <End>
+map <Home> <Home>
 nmap <Nul><Nul>d :vert scs find d =expand("<cword>")
 nmap <Nul><Nul>i :vert scs find i ^=expand("<cfile>")$	
 nmap <Nul><Nul>f :vert scs find f =expand("<cfile>")	
@@ -35,16 +51,8 @@ nmap <Nul>t :scs find t =expand("<cword>")
 nmap <Nul>c :scs find c =expand("<cword>")	
 nmap <Nul>g :scs find g =expand("<cword>")	
 nmap <Nul>s :scs find s =expand("<cword>")	
-map <xHome> <Home>
-map <xEnd> <End>
-map <S-xF4> <S-F4>
-map <S-xF3> <S-F3>
-map <S-xF2> <S-F2>
-map <S-xF1> <S-F1>
-map <xF4> <F4>
-map <xF3> <F3>
-map <xF2> <F2>
-map <xF1> <F1>
+nnoremap <silent> <Plug>NetrwBrowseX :call netrw#NetBrowseX(expand("<cWORD>"),0)
+map <S-Insert> <MiddleMouse>
 let &cpo=s:cpo_save
 unlet s:cpo_save
 set autoindent
@@ -53,36 +61,49 @@ set backspace=indent,eol,start
 set cindent
 set cscopetag
 set cscopeverbose
+set guifont=Bitstream\ Vera\ Sans\ Mono\ 8
 set helplang=en
 set iminsert=0
 set mouse=a
+set omnifunc=ccomplete#Complete
+set printoptions=paper:a4
+set ruler
+set runtimepath=~/.vim,/var/lib/vim/addons,/usr/share/vim/addons,/usr/share/vim/vimfiles,/usr/share/vim/vim70,/usr/share/vim/vimfiles/after,/usr/share/vim/addons/after,/var/lib/vim/addons/after,~/.vim/after
+set suffixes=.bak,~,.swp,.o,.info,.aux,.log,.dvi,.bbl,.blg,.brf,.cb,.ind,.idx,.ilg,.inx,.out,.toc,.asv
+set tags=./tags,./TAGS,tags,TAGS,~/.vim/systags
 set termencoding=utf-8
 set visualbell
+set window=71
 let s:so_save = &so | let s:siso_save = &siso | set so=0 siso=0
 let v:this_session=expand("<sfile>:p")
 silent only
 cd ~/zde/berlios/trunk/zwl
+if expand('%') == '' && !&modified && line('$') <= 1 && getline(1) == ''
+  let s:wipebuf = bufnr('%')
+endif
 set shortmess=aoO
-badd +96 configure.in
+badd +221 configure.in
 badd +1 Makefile.am
-badd +162 src/init.m
-badd +77 src/widget.m
-badd +74 src/window.m
-badd +35 src/zwl.h
+badd +216 src/init.m
+badd +140 src/widget.m
+badd +69 src/window.m
+badd +37 src/zwl.h
 badd +1 src/zwlinit.h
-badd +44 src/zwlwidget.h
-badd +45 src/zwlwindow.h
-badd +18 src/Makefile.am
-badd +52 tests/zwl_test.m
+badd +106 src/zwlwidget.h
+badd +28 src/zwlwindow.h
+badd +10 src/Makefile.am
+badd +37 tests/zwl_test.m
 badd +1 README
 badd +27 src/zwlbutton.h
-badd +47 src/button.m
-badd +5 tests/Makefile.am
+badd +164 src/button.m
+badd +7 tests/Makefile.am
 badd +1 src/zwllabel.h
 badd +54 src/label.m
 badd +1 src/zwlmenu.h
 badd +1 src/menu.m
 badd +4 TODO
+badd +23 src/zwl_internal.h
+badd +25 src/zwl_internal.m
 silent! argdel *
 edit README
 set splitbelow splitright
@@ -91,8 +112,10 @@ set nosplitright
 wincmd t
 set winheight=1 winwidth=1
 argglobal
+setlocal noarabic
 setlocal noautoindent
 setlocal autoread
+setlocal balloonexpr=
 setlocal nobinary
 setlocal bufhidden=
 setlocal buflisted
@@ -104,7 +127,10 @@ setlocal cinwords=if,else,while,do,for,switch
 setlocal comments=s1:/*,mb:*,ex:*/,://,b:#,:%,:XCOMM,n:>,fb:-
 setlocal commentstring=/*%s*/
 setlocal complete=.,w,b,u,t,i
+setlocal completefunc=
 setlocal nocopyindent
+setlocal nocursorcolumn
+setlocal nocursorline
 setlocal define=
 setlocal dictionary=
 setlocal nodiff
@@ -124,7 +150,9 @@ setlocal foldmethod=manual
 setlocal foldminlines=1
 setlocal foldnestmax=20
 setlocal foldtext=foldtext()
+setlocal formatexpr=
 setlocal formatoptions=tcq
+setlocal formatlistpat=^\\s*\\d\\+[\\]:.)}\\t\ ]\\s*
 setlocal grepprg=
 setlocal iminsert=0
 setlocal imsearch=2
@@ -134,6 +162,7 @@ setlocal indentexpr=
 setlocal indentkeys=0{,0},:,0#,!^F,o,O,e
 setlocal noinfercase
 setlocal iskeyword=@,48-57,_,192-255
+setlocal keymap=
 setlocal keywordprg=
 setlocal nolinebreak
 setlocal nolisp
@@ -145,17 +174,28 @@ setlocal modifiable
 setlocal nrformats=octal,hex
 set number
 setlocal nonumber
+setlocal numberwidth=4
+setlocal omnifunc=ccomplete#Complete
 setlocal path=
 setlocal nopreserveindent
 setlocal nopreviewwindow
+setlocal quoteescape=\\
 setlocal noreadonly
+setlocal norightleft
+setlocal rightleftcmd=search
 setlocal noscrollbind
 setlocal shiftwidth=8
 setlocal noshortname
 setlocal nosmartindent
 setlocal softtabstop=0
+setlocal nospell
+setlocal spellcapcheck=[.?!]\\_[\\])'\"\	\ ]\\+
+setlocal spellfile=
+setlocal spelllang=en
+setlocal statusline=
 setlocal suffixesadd=
 setlocal swapfile
+setlocal synmaxcol=3000
 if &syntax != ''
 setlocal syntax=
 endif
@@ -164,18 +204,27 @@ setlocal tags=
 setlocal textwidth=0
 setlocal thesaurus=
 setlocal nowinfixheight
+setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
 silent! normal! zE
-let s:l = 1 - ((0 * winheight(0) + 26) / 52)
+let s:l = 1 - ((0 * winheight(0) + 35) / 71)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
 1
 normal! 0
+tabnext 1
+if exists('s:wipebuf')
+  silent exe 'bwipe ' . s:wipebuf
+endif
+unlet! s:wipebuf
 set winheight=1 winwidth=20 shortmess=filnxtToO
 let s:sx = expand("<sfile>:p:r")."x.vim"
 if file_readable(s:sx)
   exe "source " . s:sx
 endif
 let &so = s:so_save | let &siso = s:siso_save
+doautoall SessionLoadPost
+unlet SessionLoad
+" vim: set ft=vim :

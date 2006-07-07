@@ -200,7 +200,8 @@ void zwl_main_loop_remove_widget(ZWidget *w)
 
 void zwl_main_loop_start(void)
 {
-	XEvent ev;
+	XCBGenericEvent *ev;
+	XCBKeyPressEvent *key;
 #if 0	
 	while(!quit) {
 		XNextEvent(zdpy,&ev);
@@ -208,7 +209,19 @@ void zwl_main_loop_start(void)
 	}
 #endif
 	while(!quit) {
+		ev = [zc poll_next_event:NULL];
+		if(ev) {
+			switch(ev->response_type) {
+				case XCBKeyPress:
+					key = (XCBKeyPressEvent *)ev;
+					
+					break;
+				default:
+					break;
 
+			}
+
+		}
 	}
 }
 

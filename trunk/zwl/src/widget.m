@@ -38,6 +38,7 @@ static void on_destroy(IMPObject *widget, void *data);
 	self->window = NULL;
 	self->parent = NULL;
 	self->children = [IMPList alloc];
+	self->win_surf = NULL;
 
 	[self->children init];
 
@@ -112,6 +113,11 @@ static void on_destroy(IMPObject *widget, void *data);
 		self->parent = parent;
 		[self->parent grab];
 	}
+}
+
+- (const cairo_surface_t *)get_surf
+{
+	return self->win_surf;
 }
 
 - (void)move:(int)x:(int)y

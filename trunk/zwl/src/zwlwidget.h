@@ -77,6 +77,12 @@ typedef void (ZCallback)(ZWidget *widget, void *data);
 	char *name;  /**< For identification use only.  Has nothing to do with the WM_NAME atom or similiar. */
 	ZCallback *internal_callbacks[100]; /**< For internal use only.  Called before the user callback is called. */
 	ZCallback *callbacks[100]; /**< Stores an array of ZCallbacks for when we recieve a signal. */
+
+	/** 
+	 * The cairo surface that represents this widget. 
+	 */
+	cairo_surface_t *win_surf;
+	unsigned int backend;
 }
 
 - (id)init;
@@ -96,6 +102,9 @@ typedef void (ZCallback)(ZWidget *widget, void *data);
 
 /** Set the parent widget */
 - (void)set_parent:(ZWidget *)parent;
+
+/** Get the cairo surface for the widget. */
+- (const cairo_surface_t *)get_surf;
 
 /** Take a widget, add it to the children array, and emit the ADDED signal on the child. */
 - (void)add_child:(ZWidget *)child;

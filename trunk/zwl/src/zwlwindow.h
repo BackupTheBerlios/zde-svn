@@ -30,9 +30,9 @@
 #define ZWL_BACKEND_XCB 0
 
 /**
- * XCB XRender backend, may be slow or render incorrectly.
+ * OpenGL glitz backend, may be slow, render incorrectly, or crash randomly.
  */
-#define ZWL_BACKEND_XCB_XRENDER 1
+#define ZWL_BACKEND_GL_GLITZ 1
 
 /**
 	A widget that represents an X11 toplevel window.
@@ -45,11 +45,6 @@
 	 * The title of this window.
 	 */
 	char *title;
-
-	/** 
-	 * The cairo surface that represents this window. 
-	 */
-	cairo_surface_t *win_surf;
 }
 
 - (id)init:(unsigned int)backend:(int)width:(int)height;

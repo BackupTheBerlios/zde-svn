@@ -58,7 +58,7 @@ am__installdirs = "$(DESTDIR)$(libdir)" \
 libLTLIBRARIES_INSTALL = $(INSTALL)
 LTLIBRARIES = $(lib_LTLIBRARIES)
 libzwl_la_LIBADD =
-am_libzwl_la_OBJECTS = init.lo widget.lo window.lo
+am_libzwl_la_OBJECTS = zwl_internal.lo init.lo widget.lo window.lo
 libzwl_la_OBJECTS = $(am_libzwl_la_OBJECTS)
 DEFAULT_INCLUDES = -I. -I$(srcdir) -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
@@ -89,6 +89,8 @@ AUTOMAKE = @AUTOMAKE@
 AWK = @AWK@
 CAIRO_CFLAGS = @CAIRO_CFLAGS@
 CAIRO_LIBS = @CAIRO_LIBS@
+CAIRO_XCB_CFLAGS = @CAIRO_XCB_CFLAGS@
+CAIRO_XCB_LIBS = @CAIRO_XCB_LIBS@
 CC = @CC@
 CCDEPMODE = @CCDEPMODE@
 CFLAGS = @CFLAGS@
@@ -195,14 +197,14 @@ sharedstatedir = @sharedstatedir@
 sysconfdir = @sysconfdir@
 target_alias = @target_alias@
 lib_LTLIBRARIES = libzwl.la
-libzwl_la_SOURCES = init.m widget.m window.m
+libzwl_la_SOURCES = zwl_internal.m init.m widget.m window.m
 #widget.m init.m window.m button.m label.m menu.m
 INCLUDES = \
 -I$(top_builddir) \
 -I$(top_srcdir) \
-$(OBJXCB_CFLAGS) $(IMP_CFLAGS) $(XFT_CFLAGS) $(CAIRO_CFLAGS)
+$(OBJXCB_CFLAGS) $(IMP_CFLAGS) $(XFT_CFLAGS) $(CAIRO_CFLAGS) $(CAIRO_XCB_CFLAGS)
 
-EXTRA_DIST = zwl.h zwlinit.h zwlwindow.h zwlbutton.h zwllabel.h zwlmenu.h zwlwidget.h
+EXTRA_DIST = zwl.h zwl_internal.h zwlinit.h zwlwindow.h zwlbutton.h zwllabel.h zwlmenu.h zwlwidget.h
 ZWLHEADERS = \
 	     zwl.h \
 	     zwlinit.h \
@@ -214,7 +216,7 @@ ZWLHEADERS = \
 
 installed_headersdir = $(prefix)/include/zwl
 installed_headers_DATA = $(ZWLHEADERS)
-libzwl_la_LDDADD = -lobjc -lpthread $(OBJXCB_LIBS) $(IMP_LIBS) $(XFT_LIBS) $(CAIRO_LIBS)
+libzwl_la_LDDADD = -lobjc -lpthread $(OBJXCB_LIBS) $(IMP_LIBS) $(XFT_LIBS) $(CAIRO_LIBS) $(CAIRO_XCB_LIBS)
 libzwl_la_LDFLAGS = -version-info 0:0:0
 all: all-am
 
@@ -288,6 +290,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/init.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/widget.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/window.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/zwl_internal.Plo@am__quote@
 
 .m.o:
 @am__fastdepOBJC_TRUE@	if $(OBJCCOMPILE) -MT $@ -MD -MP -MF "$(DEPDIR)/$*.Tpo" -c -o $@ $<; \
