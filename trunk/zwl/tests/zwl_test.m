@@ -1,12 +1,10 @@
 #include "../src/zwl.h"
 
 
-static void on_show(IMPObject *widget, void *data);
 static void on_keypress(IMPObject *widget, void *data);
 static void on_buttondown(IMPObject *widget, void *data);
 static void on_buttonup(IMPObject *widget, void *data);
 static void on_destroy(IMPObject *widget, void *data);
-static void on_default(IMPObject *widget, void *data);
 static void on_close(IMPObject *widget, void *data);
 static void on_expose(IMPObject *widget, void *data);
 
@@ -30,6 +28,13 @@ int main(void)
 	zwl_init();
 
 	[win init:ZWL_BACKEND_XCB:150:200];
+	
+//	[win attatch_cb:KEY_PRESS:(ZCallback *)on_keypress];
+	[win attatch_cb:BUTTON_DOWN:(ZCallback *)on_buttondown];
+	[win attatch_cb:BUTTON_UP:(ZCallback *)on_buttonup];
+	[win attatch_cb:DESTROY:(ZCallback *)on_destroy];
+	[win attatch_cb:CLOSE:(ZCallback *)on_close];
+//	[win attatch_cb:EXPOSE:(ZCallback *)on_expose];
 
 	[win show];
 
@@ -73,13 +78,7 @@ int main(void)
 */
 	return 0;
 }
-
-#if 0
-static void on_show(IMPObject *widget, void *data)
-{
-	ZWindow *w = (ZWindow *)widget;	
-}
-
+/*
 static void on_keypress(IMPObject *widget, void *data)
 {
 	ZWindow *w = (ZWindow *)widget;
@@ -95,19 +94,19 @@ static void on_keypress(IMPObject *widget, void *data)
 		[label set_label:"Hey man! Stop it!!"];
 	}
 }
-
+*/
 static void on_buttondown(IMPObject *widget, void *data)
 {
-	XButtonEvent *ev = (XButtonEvent *)data;
+	XCBButtonPressEvent *ev = (XCBButtonPressEvent *)data;
 
-	printf("Mouse button %d was pressed down at %d,%d.\n",ev->button,ev->x,ev->y);
+	printf("Mouse button %d was pressed down at %d,%d.\n",ev->detail.id,ev->event_x,ev->event_y);
 }
 
 static void on_buttonup(IMPObject *widget, void *data)
 {	
-	XButtonEvent *ev = (XButtonEvent *)data;
+	XCBButtonPressEvent *ev = (XCBButtonPressEvent *)data;
 
-	printf("Mouse button %d was released at %d,%d.\n",ev->button,ev->x,ev->y);
+	printf("Mouse button %d was released at %d,%d.\n",ev->detail.id,ev->event_x,ev->event_y);
 }
 
 static void on_destroy(IMPObject *widget, void *data)
@@ -116,17 +115,12 @@ static void on_destroy(IMPObject *widget, void *data)
 	zwl_main_loop_quit();
 }
 
-static void on_default(IMPObject *widget, void *data)
-{
-//	printf("hmm...\n");
-}
-
 static void on_close(IMPObject *widget, void *data)
 {
 	printf("Window manager says we must go. Fine then.\n");
 	[(ZWidget *)widget destroy];
 }
-
+#if 0
 static void on_expose(IMPObject *widget, void *data)
 {
 	/* keep the button and image centered in the window */

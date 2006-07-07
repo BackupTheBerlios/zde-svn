@@ -75,6 +75,8 @@ static void on_configure(IMPObject *widget, void *data);
 		self->win_surf = NULL;
 	}
 
+	zwl_main_loop_add_widget(self);
+
 	return self;
 }
 
