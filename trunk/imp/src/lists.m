@@ -205,7 +205,6 @@
 		[self->curriter invalidate];
 
 	if(![self->head get_data]) {
-		printf("hey\n");
 		[self->head set_data:data];
 		return;
 	}

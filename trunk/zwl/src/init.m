@@ -229,7 +229,7 @@ void zwl_main_loop_start(void)
 				case XCBButtonPress:
 					button = (XCBButtonPressEvent *)ev;
 					w = _find_widget(&button->event);
-					printf("%d\n",w);	
+					
 					[w receive:BUTTON_DOWN:button];
 					break;
 				case XCBButtonRelease:
@@ -327,14 +327,11 @@ static ZWidget *_find_widget(XCBWINDOW *w)
 	do {		
 		widget = (ZWidget *)[iter get_data];
 		
-		if(widget) {
-			printf("nice\n");
-			win = [widget->window get_xid];
-		}
+		if(widget)
+			win = [widget->window get_xid];	
 
-		if(win.xid == w->xid) {
+		if(win.xid == w->xid)
 			return widget;
-		}
 		
 		[iter next];
 	} while([iter has_next]);
