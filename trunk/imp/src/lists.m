@@ -71,7 +71,7 @@
 		return -1;
 
 	if([self->curr get_next])
-		return -1;
+		return 1;
 	else
 		return 0;
 }
@@ -203,6 +203,12 @@
 {
 	if(self->curriter)
 		[self->curriter invalidate];
+
+	if(![self->head get_data]) {
+		printf("hey\n");
+		[self->head set_data:data];
+		return;
+	}
 
 	IMPListNode *n = [IMPListNode alloc];
 	[n init:data];
