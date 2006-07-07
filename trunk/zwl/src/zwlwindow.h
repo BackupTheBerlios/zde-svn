@@ -25,47 +25,47 @@
 #define ZWLWINDOW_H
 
 /**
-	A widget that represents a main window.  This is for windows that are not going to be children.
-	If you want a child window, for widgets or similiar, extend from this class.
+	A widget that represents an X11 toplevel window.
  */
 @interface ZWindow : ZWidget
 {
 	@protected
-	char *title; /**< The title of this window.  This is not useful if you are deriving from this class
-		       for creating subclasses, so in that case, it can be safely ignored. */
-	@public
-	XftDraw *xftdraw; /**< For displaying text, used internally. */
+
+	/** 
+	 * The title of this window.
+	 */
+	char *title;
+
+	/** 
+	 * The cairo surface that represents this window. 
+	 */
+	cairo_surface_t *win_surf;
 }
 
-/** 
-  When parent is passed as null, then it is assumed to be the root window of the current display. 
- */
-- init:(ZWidget *)parent:(int)x:(int)y:(int)width:(int)height;
+- (id)init;
 
-/** Defer creation of the X11 window until later. This is mostly useful for creating subclasses
-  that are going to be added as children of another ZWidget.  In that case, make sure you respond to
-  the ADDED event internally to create your window the way you want it.
-  */
-- init:(int)x:(int)y:(int)width:(int)height;
-
-- free;
+- (void)free;
 
 /**
-  Set the title of the window. This is probably not useful if you 
-  are calling this from a subclass that creates its window in the 
-  ADDED event. xset is 1 if you want to set the title with XChangeProperty, 0 otherwise.
-  Returns -1 on failure, 0 otherwise.
-  */
-- (int)set_title:(char *)title:(int)xset;
+ * Set the title variable of the window, and also update any X11 atoms/properties that may use this variable.
+ */
+- (void)set_title:(char *)title;
 
-- (char *)get_title;
+/**
+ * Force an update of any X11 atoms/properties that may use the title variable.
+ */
+- (void)update_title;
 
-/** Raise the window. */
+/**
+ * Returns the title of the window as stored in the variable title, not through any X11 atoms/properties that may mirror the title variable.
+ * FIXME XXX Maybe it should get what is stored in the x11 atoms first and then return?  More research to find what is more useful.
+ */
+- (const char *)get_title;
+
+/** 
+ * Raises the window. 
+ */
 - (void)raise;
-
-/** Returns a pointer to the XftDraw that the window uses for drawing text.
-  */
-- (XftDraw *)get_xftdraw;
 
 @end
 

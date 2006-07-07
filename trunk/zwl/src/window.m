@@ -28,125 +28,19 @@ static void on_configure(IMPObject *widget, void *data);
 
 @implementation ZWindow : ZWidget
 
-- init:(ZWidget *)parent:(int)x:(int)y:(int)width:(int)height
+- (id)init
 {
-	XSetWindowAttributes attr;
-	self->xftdraw = NULL;
-	
+	ObjXCBWindow *w = [ObjXCBWindow alloc];
+
+	[w init:zc];	
+
 	[super init];
-	
-	attr.event_mask = ButtonPressMask |
-    			  ButtonReleaseMask |
-     			  EnterWindowMask |
-     			  LeaveWindowMask |
-     		 	  PointerMotionMask |
-     			  ExposureMask |
-     		  	  StructureNotifyMask |
-			  SubstructureNotifyMask |
-		//	  PropertyChangeMask |
-     			  KeyPressMask |
-     			  KeyReleaseMask;
-	
-	
-	self->title = NULL;
-	
-	if(!parent) {
-		self->window = (Window *)XCreateSimpleWindow(zdpy,XRootWindow(zdpy,0),x,y,width,height,1,1,1);
-		self->parent = NULL;
-		//self->parent = XRootWindow(zdpy,0);
-	}
-	else {
-		self->window = (Window *)XCreateSimpleWindow(zdpy,(Window)parent->window,x,y,width,height,1,1,1);
-		[self set_parent:parent];
-	}
-
-	self->x = x;
-	self->y = y;
-	self->width = width;
-	self->height = height;
-	
-	XChangeWindowAttributes(zdpy,(Window)self->window,CWEventMask,&attr);
-
-	if(self->window)
-		zwl_main_loop_add_widget(self);
-	
-	self->xftdraw = XftDrawCreate(zdpy,(Window)self->window,DefaultVisual(zdpy,DefaultScreen(zdpy)),DefaultColormap(zdpy,DefaultScreen(zdpy)));
-
-	/* We want to be notified when we are going to be closed */
-	XChangeProperty(zdpy,(Window)self->window,z_atom[WM_PROTOCOLS],XA_ATOM,32,PropModeReplace,
-			(unsigned char *)&z_atom[WM_DELETE_WINDOW],1);
-
-	XChangeProperty(zdpy,(Window)self->window,z_atom[_NET_WM_WINDOW_TYPE],XA_ATOM,32,PropModeReplace,
-			(unsigned char *)&z_atom[_NET_WM_WINDOW_TYPE_NORMAL],1);
-	
-	[self attatch_internal_cb:CONFIGURE:(ZCallback *)on_configure];
-}
-
-- init:(int)x:(int)y:(int)width:(int)height
-{
-	[super init];
-	
-	self->title = NULL;
-	self->xftdraw = NULL;
-	
-	self->x = x;
-	self->y = y;
-	self->width = width;
-	self->height = height;
-}
-
-- free
-{
-	if(self->title)
-		i_free(self->title);
-
-	if(self->xftdraw) {
-//		XftDrawDestroy(self->xftdraw);
-		self->xftdraw = NULL;
-	}
-	
-	
-	[super free];
-}
-
-- (int)set_title:(char *)title:(int)xset
-{
-	if(title && self->window) {
-		if(self->title)
-			i_free(self->title);
-
-		self->title = i_strdup(title);
-		
-		if(xset == 1) {
-			XChangeProperty(zdpy,(Window)self->window,z_atom[WM_NAME],z_atom[UTF8_STRING],8,PropModeReplace,
-					(unsigned char *)self->title,strlen(self->title));
-		}
-
-		return 0;
-	}
-
-	return -1;
-}
-
-- (char *)get_title
-{
-	return self->title;
-}
-
-- (void)raise
-{
-	if(self->window) {
-		XRaiseWindow(zdpy,(Window)self->window);
-	}
-}
-
-- (XftDraw *)get_xftdraw
-{
-	return self->xftdraw;
+	return self;
 }
 
 @end
 
+/*
 static void on_configure(IMPObject *widget, void *data)
 {
 	ZWidget *w = (ZWidget *)widget;
@@ -157,4 +51,4 @@ static void on_configure(IMPObject *widget, void *data)
 	w->width = configure->width;
 	w->height = configure->height;
 }
-
+*/

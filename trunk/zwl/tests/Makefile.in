@@ -55,7 +55,7 @@ zwltest_OBJECTS = $(am_zwltest_OBJECTS)
 am__DEPENDENCIES_1 =
 zwltest_DEPENDENCIES = ../src/libzwl.la $(am__DEPENDENCIES_1) \
 	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
-	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1)
+	$(am__DEPENDENCIES_1)
 DEFAULT_INCLUDES = -I. -I$(srcdir) -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
@@ -139,8 +139,6 @@ STRIP = @STRIP@
 VERSION = @VERSION@
 XFT_CFLAGS = @XFT_CFLAGS@
 XFT_LIBS = @XFT_LIBS@
-X_CFLAGS = @X_CFLAGS@
-X_LIBS = @X_LIBS@
 ac_ct_CC = @ac_ct_CC@
 ac_ct_CXX = @ac_ct_CXX@
 ac_ct_F77 = @ac_ct_F77@
@@ -194,7 +192,7 @@ zwltest_SOURCES = zwl_test.m
 INCLUDES = \
 	   $(OBJXCB_CFLAGS) $(IMP_CFLAGS) $(XFT_CFLAGS) $(CAIRO_CFLAGS)
 
-zwltest_LDADD = ../src/libzwl.la -lobjc -lpthread $(OBJXCB_LIBS) $(IMP_LIBS) $(X_LIBS) $(XFT_LIBS) $(CAIRO_LIBS)
+zwltest_LDADD = ../src/libzwl.la -lobjc -lpthread $(OBJXCB_LIBS) $(IMP_LIBS) $(XFT_LIBS) $(CAIRO_LIBS)
 all: all-am
 
 .SUFFIXES:

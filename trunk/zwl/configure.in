@@ -128,16 +128,16 @@ AC_SUBST(IMP_CFLAGS)
 AC_SUBST(IMP_LIBS)
 
 dnl Check for X
-AC_CHECK_HEADER(X11/X.h,
-    [
-	X_DIR=${X_DIR:-/usr/X11R6}
-        X_CFLAGS=${X_CFLAGS:--I${X_INCLUDES:-$X_DIR/include}}
-        X_LIBS="${X_LIBS:--L${X_LIBRARIES:-$X_DIR/lib}} -lX11 -lXext"
-    ]
-    )
+#AC_CHECK_HEADER(X11/X.h,
+#   [
+#	X_DIR=${X_DIR:-/usr}
+#       X_CFLAGS=${X_CFLAGS:--I${X_INCLUDES:-$X_DIR/include}}
+#       X_LIBS="${X_LIBS:--L${X_LIBRARIES:-$X_DIR/lib}} -lX11 -lXext"
+#   ]
+#   )
 
-AC_SUBST(X_CFLAGS)
-AC_SUBST(X_LIBS)
+#AC_SUBST(X_CFLAGS)
+#AC_SUBST(X_LIBS)
 
 dnl Check for Xft
 if test x$PKGCONFIG != xno; then
@@ -168,7 +168,7 @@ AC_SUBST(XFT_LIBS)
 
 dnl Check for cairo
 if test x$PKGCONFIG != xno; then
-	AC_MSG_CHECKING(for cairo >= 1.0.2...)
+	AC_MSG_CHECKING(for cairo >= 1.2.0...)
 
 	 cairo_major_version=`$PKGCONFIG cairo --modversion | \
 	   sed 's/\([[0-9]]*\).\([[0-9]]*\).\([[0-9]]*\)/\1/'`
@@ -178,16 +178,16 @@ if test x$PKGCONFIG != xno; then
 	   sed 's/\([[0-9]]*\).\([[0-9]]*\).\([[0-9]]*\)/\3/'`
 
 	 if test $cairo_major_version -ge 1 -a $cairo_minor_version \
-		       -ge 0 -a $cairo_micro_version -ge 2 ; then
+		       -ge 2 -a $cairo_micro_version -ge 0 ; then
 		AC_MSG_RESULT(ok)
 		AC_MSG_CHECKING(for cairo compile information)
 		CAIRO_CFLAGS=`$PKGCONFIG cairo --cflags`
 		CAIRO_LIBS=`$PKGCONFIG cairo --libs`
 		AC_MSG_RESULT(ok)
-	else AC_MSG_ERROR(Incorrect cairo version. Please upgrade to 1.0.2 or greater)
+	else AC_MSG_ERROR(Incorrect cairo version. Please upgrade to 1.2.0 or greater)
 	fi
 else
-	AC_MSG_ERROR(echo *** cairo >= 1.0.2  not found ***)
+	AC_MSG_ERROR(echo *** cairo >= 1.2.0  not found ***)
 fi
 
 AC_SUBST(CAIRO_CFLAGS)

@@ -4,4 +4,4 @@ zwltest_SOURCES = zwl_test.m
 INCLUDES = \
 	   $(OBJXCB_CFLAGS) $(IMP_CFLAGS) $(XFT_CFLAGS) $(CAIRO_CFLAGS)
 
-zwltest_LDADD = ../src/libzwl.la -lobjc -lpthread $(OBJXCB_LIBS) $(IMP_LIBS) $(X_LIBS) $(XFT_LIBS) $(CAIRO_LIBS)
+zwltest_LDADD = ../src/libzwl.la -lobjc -lpthread $(OBJXCB_LIBS) $(IMP_LIBS) $(XFT_LIBS) $(CAIRO_LIBS)
