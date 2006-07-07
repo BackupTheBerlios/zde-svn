@@ -52,7 +52,7 @@
 	cairo_surface_t *win_surf;
 }
 
-- (id)init:(unsigned int)backend;
+- (id)init:(unsigned int)backend:(int)width:(int)height;
 
 - (void)free;
 
@@ -76,6 +76,9 @@
  * Raises the window. 
  */
 - (void)raise;
+
+/** Resize the widget */
+- (void)resize:(int)width:(int)height;
 
 @end
 

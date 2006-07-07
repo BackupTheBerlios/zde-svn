@@ -97,8 +97,8 @@ typedef enum {
 /** zwl's connection to the X server. */
 ObjXCBConnection *zc;
 
-/** Number of the screen on which zwl opened a display. */
-//extern int zscreen;
+/** Root window */
+ZWidget *zwl_root;
 
 /** You must call this function before you use any zwl widgets. 
   It opens the display and initializes the zwl_atom array.

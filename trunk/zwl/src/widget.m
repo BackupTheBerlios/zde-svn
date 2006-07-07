@@ -116,32 +116,28 @@ static void on_destroy(IMPObject *widget, void *data);
 
 - (void)move:(int)x:(int)y
 {
-	CARD16 values[4];
+	CARD16 values[4] = {0};
 
 	self->x = x;
 	self->y = y;
 	
 	values[0] = self->x;
 	values[1] = self->y;
-	values[2] = self->width;
-	values[3] = self->height;
 
-	[self->window ConfigureWindow:XCBConfigWindowX | XCBConfigWindowY | XCBConfigWindowHeight | XCBConfigWindowWidth:values];
+	[self->window ConfigureWindow:XCBConfigWindowX | XCBConfigWindowY:values];
 }
 
 - (void)resize:(int)width:(int)height
 {
-	CARD16 values[4];
+	CARD16 values[4] = {0};
 
 	self->width = width;
 	self->height = height;
 
-	values[0] = self->x;
-	values[1] = self->y;
-	values[2] = self->width;
-	values[3] = self->height;
+	values[0] = self->width;
+	values[1] = self->height;
 
-	[self->window ConfigureWindow:XCBConfigWindowX | XCBConfigWindowY | XCBConfigWindowHeight | XCBConfigWindowWidth:values];
+	[self->window ConfigureWindow:XCBConfigWindowWidth | XCBConfigWindowHeight:values];
 }	
 
 - (void)receive:(int)signal:(void *)data

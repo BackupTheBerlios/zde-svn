@@ -33,7 +33,7 @@ static void on_configure(IMPObject *widget, void *data);
 
 @implementation ZWindow : ZWidget
 
-- (id)init:(unsigned int)backend
+- (id)init:(unsigned int)backend:(int)width:(int)height
 {
 	ObjXCBWindow *w = [ObjXCBWindow alloc];
 	ObjXCBWindow *root = [ObjXCBWindow alloc];
@@ -41,6 +41,8 @@ static void on_configure(IMPObject *widget, void *data);
 	XCBDRAWABLE draw;
 
 	CARD32 wvalue[2];
+
+	[super init];
 
 	/* Create a window */
 
@@ -51,10 +53,12 @@ static void on_configure(IMPObject *widget, void *data);
 
 	wvalue[0] = [zc get_black_pixel];
 	wvalue[1] = XCBEventMaskExposure;
-	[w CreateWindow:XCBCopyFromParent:root:0:0:0:0:1:XCBWindowClassInputOutput:s->root_visual:XCBCWEventMask | XCBGCForeground:wvalue];
+	[w CreateWindow:XCBCopyFromParent:root:1:1:width:height:1:XCBWindowClassInputOutput:s->root_visual:XCBCWEventMask | XCBGCForeground:wvalue];
 
 	self->window = w;
-//	self->parent = zwl_root;
+	self->parent = zwl_root;
+	self->width = width;
+	self->height = height;
 
 	/* Now setup the cairo surface */
 
@@ -71,9 +75,14 @@ static void on_configure(IMPObject *widget, void *data);
 		self->win_surf = NULL;
 	}
 
-	[super init];
-
 	return self;
+}
+
+- (void)resize:(int)width:(int)height
+{
+	[super resize:width:height];
+	
+	cairo_xcb_surface_set_size(self->win_surf,self->width,self->height);
 }
 
 @end

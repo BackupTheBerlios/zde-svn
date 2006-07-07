@@ -41,6 +41,10 @@ void zwl_init(void)
 	zc = [ObjXCBConnection alloc];
 	[zc init];
 
+	zwl_root = [ZWidget alloc];
+	[zwl_root init];
+	zwl_root->window = [zc get_root_window];
+
 	window_list = [IMPList alloc];
 	[window_list init];
 
@@ -203,6 +207,9 @@ void zwl_main_loop_start(void)
 		process_xevent(&ev);	
 	}
 #endif
+	while(!quit) {
+
+	}
 }
 
 #if 0
@@ -310,7 +317,8 @@ static void process_xevent(XEvent *ev)
 void zwl_main_loop_quit(void)
 {
 	quit = 1;
-	[window_list delete_list];
+//	[window_list delete_list];
+	[window_list release];
 
 	window_list = NULL;
 }

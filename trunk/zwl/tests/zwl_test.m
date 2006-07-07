@@ -24,9 +24,17 @@ static ZLabel *label = NULL;
 
 int main(void)
 {
+	ZWindow *win = [ZWindow alloc];
 	int i;
 	
 	zwl_init();
+
+	[win init:ZWL_BACKEND_XCB:150:200];
+
+	[win show];
+
+	zwl_main_loop_start();
+
 /*	
 	win = [ZWindow alloc];
 	[win init:NULL:0:0:150:100];
@@ -62,9 +70,7 @@ int main(void)
 	[image show];
 	
 	[win show];
-
-	zwl_main_loop_start();
-*/	
+*/
 	return 0;
 }
 
