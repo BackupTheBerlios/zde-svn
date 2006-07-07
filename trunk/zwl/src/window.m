@@ -48,7 +48,10 @@ static void on_configure(IMPObject *widget, void *data);
 	root = [zc get_root_window];
 
 	wvalue[0] = [zc get_black_pixel];
-	wvalue[1] = XCBEventMaskExposure;
+	wvalue[1] = XCBEventMaskExposure |XCBEventMaskButtonPress
+             | XCBEventMaskButtonRelease | XCBEventMaskPointerMotion
+             | XCBEventMaskEnterWindow   | XCBEventMaskLeaveWindow
+             | XCBEventMaskKeyPress      | XCBEventMaskKeyRelease;
 	[w CreateWindow:XCBCopyFromParent:root:1:1:width:height:1:XCBWindowClassInputOutput:s->root_visual:XCBCWEventMask | XCBGCForeground:wvalue];
 
 	self->window = w;
@@ -73,15 +76,6 @@ static void on_configure(IMPObject *widget, void *data);
 	}
 
 	return self;
-}
-
-- (void)resize:(int)width:(int)height
-{
-	[super resize:width:height];
-
-	if(self->backend == ZWL_BACKEND_XCB) {
-		cairo_xcb_surface_set_size(self->win_surf,self->width,self->height);
-	}
 }
 
 @end

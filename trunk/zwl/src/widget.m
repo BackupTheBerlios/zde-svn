@@ -39,6 +39,7 @@ static void on_destroy(IMPObject *widget, void *data);
 	self->parent = NULL;
 	self->children = [IMPList alloc];
 	self->win_surf = NULL;
+	self->backend = -1;
 
 	[self->children init];
 
@@ -144,6 +145,11 @@ static void on_destroy(IMPObject *widget, void *data);
 	values[1] = self->height;
 
 	[self->window ConfigureWindow:XCBConfigWindowWidth | XCBConfigWindowHeight:values];
+
+	if(self->backend == ZWL_BACKEND_XCB) {
+		cairo_xcb_surface_set_size(self->win_surf,self->width,self->height);
+	}
+
 }	
 
 - (void)receive:(int)signal:(void *)data

@@ -67,11 +67,6 @@
  */
 - (const char *)get_title;
 
-/** 
- * Raises the window. 
- */
-- (void)raise;
-
 /** Resize the widget */
 - (void)resize:(int)width:(int)height;
 

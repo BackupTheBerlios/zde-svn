@@ -32,7 +32,7 @@ ObjXCBAtom **zwl_atom;
 static unsigned short int quit = 0;
 
 /* Helper functions */
-static ZWidget *find_widget(Window *w);
+static ZWidget *_find_widget(XCBWINDOW *w);
 //static void process_xevent(XEvent *ev);
 
 void zwl_init(void)
@@ -202,26 +202,110 @@ void zwl_main_loop_start(void)
 {
 	XCBGenericEvent *ev;
 	XCBKeyPressEvent *key;
-#if 0	
-	while(!quit) {
-		XNextEvent(zdpy,&ev);
-		process_xevent(&ev);	
-	}
-#endif
+	XCBButtonPressEvent *button;
+	XCBButtonReleaseEvent *buttonrel;
+	XCBExposeEvent *expose;
+	XCBClientMessageEvent *cmessage;
+	XCBConfigureNotifyEvent *configure;
+	XCBMapRequestEvent *mapreq;
+	XCBUnmapNotifyEvent *unmap;
+	XCBConfigureRequestEvent *conreq;
+	XCBEnterNotifyEvent *cross;
+	XCBLeaveNotifyEvent *crossleave;
+	XCBPropertyNotifyEvent *prop;
+
+	ZWidget *w = NULL;
+	
 	while(!quit) {
 		ev = [zc poll_next_event:NULL];
 		if(ev) {
 			switch(ev->response_type) {
 				case XCBKeyPress:
 					key = (XCBKeyPressEvent *)ev;
+					w = _find_widget(&key->event);	
 					
+					[w receive:KEY_PRESS:key];
 					break;
+				case XCBButtonPress:
+					button = (XCBButtonPressEvent *)ev;
+					w = _find_widget(&button->event);
+					
+					[w receive:BUTTON_DOWN:button];
+					break;
+				case XCBButtonRelease:
+					buttonrel = (XCBButtonReleaseEvent *)ev;
+					w = _find_widget(&buttonrel->event);
+
+					[w receive:BUTTON_UP:buttonrel];
+					break;
+				case XCBExpose:
+					expose = (XCBExposeEvent *)ev;
+					w = _find_widget(&expose->window);
+
+					[w receive:EXPOSE:expose];
+					break;
+				case XCBClientMessage:
+					cmessage = (XCBClientMessageEvent *)ev;
+					w = _find_widget(&cmessage->window);
+					/*
+					if(cmessage.data.l[0] == zwl_atom[WM_DELETE_WINDOW]) {
+						[w receive:CLOSE:cmessage];	
+					}
+					else {
+						[w receive:CLIENT_MESSAGE:cmessage];
+					}
+					*/
+					break;
+				case XCBConfigureNotify:
+					configure = (XCBConfigureNotifyEvent *)ev;
+					w = _find_widget(&configure->event);
+
+					[w receive:CONFIGURE:configure];
+					break;
+				case XCBMapRequest:
+					mapreq = (XCBMapRequestEvent *)ev;
+					w = _find_widget(&mapreq->parent);
+
+					[w receive:MAP_REQUEST:mapreq];
+					break;
+				case XCBUnmapNotify:
+					unmap = (XCBUnmapNotifyEvent *)ev;
+					w = _find_widget(&unmap->event);
+
+					[w receive:UNMAP:unmap];				
+					break;
+				case XCBConfigureRequest:
+					conreq = (XCBConfigureRequestEvent *)ev;
+					w = _find_widget(&conreq->window);
+					
+					[w receive:CONFIGURE_REQUEST:conreq];
+					break;
+				case XCBEnterNotify:
+					cross = (XCBEnterNotifyEvent *)ev;
+					w = _find_widget(&cross->event);
+
+					[w receive:POINTER_ENTER:cross];
+					break;
+				case XCBLeaveNotify:
+					crossleave = (XCBLeaveNotifyEvent *)ev;
+					w = _find_widget(&crossleave->event);
+
+					[w receive:POINTER_LEAVE:crossleave];
+					break;
+				case XCBPropertyNotify:
+					prop = (XCBPropertyNotifyEvent *)ev;
+					w = _find_widget(&prop->window);
+					
+					[w receive:PROPERTY:prop];
+					break;
+
 				default:
 					break;
 
 			}
-
 		}
+
+		[zc flush];
 	}
 }
 
@@ -245,31 +329,31 @@ static void process_xevent(XEvent *ev)
 	switch(ev->type) {
 			case KeyPress:
 				key = ev->xkey;
-				w = find_widget((Window *)key.window);		
+				w = _find_widget((Window *)key.window);		
 				
 				[w receive:KEY_PRESS:&ev->xkey];
 				break;
 			case ButtonPress:
 				button = ev->xbutton;
-				w = find_widget((Window *)button.window);
+				w = _find_widget((Window *)button.window);
 				
 				[w receive:BUTTON_DOWN:&ev->xbutton];
 				break;
 			case ButtonRelease:
 				button = ev->xbutton;
-				w = find_widget((Window *)button.window);
+				w = _find_widget((Window *)button.window);
 
 				[w receive:BUTTON_UP:&ev->xbutton];
 				break;
 			case Expose:
 				expose = ev->xexpose;
-				w = find_widget((Window *)expose.window);
+				w = _find_widget((Window *)expose.window);
 
 				[w receive:EXPOSE:&ev->xexpose];
 				break;
 			case ClientMessage:
 				cmessage = ev->xclient;
-				w = find_widget((Window *)cmessage.window);
+				w = _find_widget((Window *)cmessage.window);
 				
 				if(cmessage.data.l[0] == z_atom[WM_DELETE_WINDOW]) {
 					[w receive:CLOSE:&ev->xclient];	
@@ -280,48 +364,48 @@ static void process_xevent(XEvent *ev)
 				break;
 			case ConfigureNotify:
 				configure = ev->xconfigure;
-				w = find_widget((Window *)configure.window);
+				w = _find_widget((Window *)configure.window);
 
 				[w receive:CONFIGURE:&ev->xconfigure];
 				break;
 			case MapRequest:
 				mapreq = ev->xmaprequest;
-				w = find_widget((Window *)mapreq.parent);
+				w = _find_widget((Window *)mapreq.parent);
 
 				[w receive:MAP_REQUEST:&ev->xmaprequest];
 				break;
 			case UnmapNotify:
 				unmap = ev->xunmap;
-				w = find_widget((Window *)unmap.window);
+				w = _find_widget((Window *)unmap.window);
 
 				[w receive:UNMAP:&ev->xunmap];				
 				break;
 			case ConfigureRequest:
 				conreq = ev->xconfigurerequest;
-				w = find_widget((Window *)conreq.window);
+				w = _find_widget((Window *)conreq.window);
 				
 				[w receive:CONFIGURE_REQUEST:&ev->xconfigurerequest];
 				break;
 			case EnterNotify:
 				cross = ev->xcrossing;
-				w = find_widget((Window *)cross.window);
+				w = _find_widget((Window *)cross.window);
 
 				[w receive:POINTER_ENTER:&ev->xcrossing];
 				break;
 			case LeaveNotify:
 				cross = ev->xcrossing;
-				w = find_widget((Window *)cross.window);
+				w = _find_widget((Window *)cross.window);
 
 				[w receive:POINTER_LEAVE:&ev->xcrossing];
 				break;
 			case PropertyNotify:
 				prop = ev->xproperty;
-				w = find_widget((Window *)prop.window);
+				w = _find_widget((Window *)prop.window);
 				
 				[w receive:PROPERTY:&ev->xproperty];
 				break;
 			default:
-				w = find_widget((Window *)ev->xany.window);
+				w = _find_widget((Window *)ev->xany.window);
 				[w receive:DEFAULT:ev];
 		}
 }
@@ -336,9 +420,22 @@ void zwl_main_loop_quit(void)
 	window_list = NULL;
 }
 
-#if 0
-static ZWidget *find_widget(Window *w)
+static ZWidget *_find_widget(XCBWINDOW *w)
 {
+	IMPListIterator *iter = [window_list iterator];
+	ZWidget *widget;
+	XCBWINDOW win;
+
+	while([iter has_next]) {
+		
+		widget = (ZWidget *)[iter get_data];
+		win = [widget->window get_xid];
+
+		if(&win == w) {
+			return widget;
+		}
+
+		[iter next];
+	}
 }
 
-#endif
