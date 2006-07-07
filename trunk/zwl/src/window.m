@@ -25,7 +25,7 @@
 #include "zwl_internal.h"
 
 /* Internal callback prototypes */
-static void on_configure(IMPObject *widget, void *data);
+static void on_configure(ZWidget *widget, void *data);
 
 @implementation ZWindow : ZWidget
 
@@ -48,10 +48,13 @@ static void on_configure(IMPObject *widget, void *data);
 	root = [zc get_root_window];
 
 	wvalue[0] = [zc get_black_pixel];
-	wvalue[1] = XCBEventMaskExposure |XCBEventMaskButtonPress
-             | XCBEventMaskButtonRelease | XCBEventMaskPointerMotion
-             | XCBEventMaskEnterWindow   | XCBEventMaskLeaveWindow
-             | XCBEventMaskKeyPress      | XCBEventMaskKeyRelease;
+	wvalue[1] = XCBEventMaskExposure           | XCBEventMaskButtonPress
+             	  | XCBEventMaskButtonRelease      | XCBEventMaskPointerMotion
+                  | XCBEventMaskEnterWindow        | XCBEventMaskLeaveWindow
+                  | XCBEventMaskKeyPress           | XCBEventMaskKeyRelease
+	          | XCBEventMaskSubstructureNotify | XCBEventMaskSubstructureRedirect
+	          | XCBEventMaskEnterWindow	   | XCBEventMaskLeaveWindow
+	          | XCBEventMaskStructureNotify;
 	[w CreateWindow:XCBCopyFromParent:root:1:1:width:height:1:XCBWindowClassInputOutput:s->root_visual:XCBCWEventMask | XCBGCForeground:wvalue];
 
 	self->window = w;
@@ -75,6 +78,8 @@ static void on_configure(IMPObject *widget, void *data);
 		self->win_surf = NULL;
 	}
 
+	[self attatch_internal_cb:CONFIGURE:(ZCallback *)on_configure];
+
 	zwl_main_loop_add_widget(self);
 
 	return self;
@@ -82,15 +87,19 @@ static void on_configure(IMPObject *widget, void *data);
 
 @end
 
-/*
-static void on_configure(IMPObject *widget, void *data)
+static void on_configure(ZWidget *widget, void *data)
 {
-	ZWidget *w = (ZWidget *)widget;
-	XConfigureEvent *configure = (XConfigureEvent *)data;
+	ZWidget *w = widget;
+	XCBConfigureNotifyEvent *configure = (XCBConfigureNotifyEvent *)data;
 
 	w->x = configure->x;
 	w->y = configure->y;
 	w->width = configure->width;
 	w->height = configure->height;
+
+	if([w get_backend] == ZWL_BACKEND_XCB) {
+		cairo_xcb_surface_set_size([w get_surf],w->width,w->height);
+	}
+
 }
-*/
+

@@ -106,6 +106,9 @@ typedef void (ZCallback)(ZWidget *widget, void *data);
 /** Get the cairo surface for the widget. */
 - (const cairo_surface_t *)get_surf;
 
+/** Get the backend used by Cairo for the widget. */
+- (unsigned int)get_backend;
+
 /** Take a widget, add it to the children array, and emit the ADDED signal on the child. */
 - (void)add_child:(ZWidget *)child;
 

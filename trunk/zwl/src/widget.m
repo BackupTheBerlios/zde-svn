@@ -121,6 +121,11 @@ static void on_destroy(IMPObject *widget, void *data);
 	return self->win_surf;
 }
 
+- (unsigned int)get_backend
+{
+	return self->backend;
+}
+
 - (void)move:(int)x:(int)y
 {
 	CARD16 values[4] = {0};

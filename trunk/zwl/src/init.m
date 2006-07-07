@@ -217,7 +217,7 @@ void zwl_main_loop_start(void)
 	ZWidget *w = NULL;
 	
 	while(!quit) {
-		ev = [zc poll_next_event:NULL];
+		ev = [zc next_event];
 		if(ev) {
 			switch(ev->response_type) {
 				case XCBKeyPress:
@@ -298,14 +298,18 @@ void zwl_main_loop_start(void)
 					
 					[w receive:PROPERTY:prop];
 					break;
-
 				default:
+					key = (XCBKeyPressEvent *)ev;
+					w = _find_widget(&key->event);
+
+					[w receive:DEFAULT:key];
 					break;
 
 			}
 		}
-
+		
 		[zc flush];
+		free(ev);
 	}
 }
 

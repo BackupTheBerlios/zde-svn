@@ -1,12 +1,14 @@
 #include "../src/zwl.h"
-
+#include <sys/time.h>
+#include <sys/shm.h>
 
 static void on_keypress(IMPObject *widget, void *data);
-static void on_buttondown(IMPObject *widget, void *data);
+static void on_buttondown(ZWidget *widget, void *data);
 static void on_buttonup(IMPObject *widget, void *data);
 static void on_destroy(IMPObject *widget, void *data);
 static void on_close(IMPObject *widget, void *data);
 static void on_expose(IMPObject *widget, void *data);
+static void on_default(ZWidget *widget, void *data);
 
 static void on_button_show(IMPObject *widget, void *data);
 static void on_button_buttondown(IMPObject *widget, void *data);
@@ -20,13 +22,17 @@ static ZLabel *label = NULL;
 #define BUTTON_WIDTH 50
 #define BUTTON_HEIGHT 25
 
+cairo_t *cr;
+
 int main(void)
 {
 	ZWindow *win = [ZWindow alloc];
-	int i;
-	
+
 	zwl_init();
 
+	srand(time(NULL));
+	srand48(time(NULL));	
+	
 	[win init:ZWL_BACKEND_XCB:150:200];
 	
 //	[win attatch_cb:KEY_PRESS:(ZCallback *)on_keypress];
@@ -34,9 +40,25 @@ int main(void)
 	[win attatch_cb:BUTTON_UP:(ZCallback *)on_buttonup];
 	[win attatch_cb:DESTROY:(ZCallback *)on_destroy];
 	[win attatch_cb:CLOSE:(ZCallback *)on_close];
-//	[win attatch_cb:EXPOSE:(ZCallback *)on_expose];
+	[win attatch_cb:EXPOSE:(ZCallback *)on_expose];
+	[win attatch_cb:DEFAULT:(ZCallback *)on_default];
 
-	[win show];
+	cr = cairo_create([win get_surf]);
+
+	if(!fork()) {
+		while(1) {
+			cairo_set_fill_rule(cr,CAIRO_FILL_RULE_WINDING);
+			cairo_set_source_rgb(cr,drand48(),drand48(), drand48());
+
+			cairo_rectangle(cr,rand() % win->width,rand() % win->height,rand() % win->width,rand() % win->height);
+
+			cairo_fill(cr);
+			cairo_stroke(cr);	
+		}
+	}
+	else {
+		[win show];
+	}
 
 	zwl_main_loop_start();
 
@@ -95,11 +117,24 @@ static void on_keypress(IMPObject *widget, void *data)
 	}
 }
 */
-static void on_buttondown(IMPObject *widget, void *data)
+static void on_default(ZWidget *widget, void *data)
+{
+
+}
+
+static void on_buttondown(ZWidget *widget, void *data)
 {
 	XCBButtonPressEvent *ev = (XCBButtonPressEvent *)data;
 
 	printf("Mouse button %d was pressed down at %d,%d.\n",ev->detail.id,ev->event_x,ev->event_y);
+
+	cairo_set_fill_rule(cr,CAIRO_FILL_RULE_WINDING);
+	cairo_set_source_rgb(cr,drand48(),drand48(), drand48());
+
+	cairo_rectangle(cr,rand() % widget->width,rand() % widget->height,rand() % widget->width,rand() % widget->height);
+
+	cairo_fill(cr);
+	cairo_stroke(cr);	
 }
 
 static void on_buttonup(IMPObject *widget, void *data)
@@ -120,14 +155,13 @@ static void on_close(IMPObject *widget, void *data)
 	printf("Window manager says we must go. Fine then.\n");
 	[(ZWidget *)widget destroy];
 }
-#if 0
+
 static void on_expose(IMPObject *widget, void *data)
 {
-	/* keep the button and image centered in the window */
-	[button move:win->width/2 - (BUTTON_WIDTH/2):win->height/2 - (BUTTON_HEIGHT/2)];
-	[image move:win->width/2 - (BUTTON_WIDTH/2):win->height/2 + (BUTTON_HEIGHT/2) + 5];
+	ZWidget *w = (ZWidget *)widget;
+	XCBExposeEvent *ev = (XCBExposeEvent *)data;	
 }
-
+/*
 static void on_button_show(IMPObject *widget, void *data)
 {
 
@@ -137,5 +171,5 @@ static void on_button_buttondown(IMPObject *widget, void *data)
 {
 	printf("AH! You pressed me!\n");
 }
-#endif
+*/
 
