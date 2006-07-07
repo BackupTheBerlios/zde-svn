@@ -208,6 +208,7 @@ sub start_class_header($)
 	my $capxid = $xid;
 	
 	open($headerfh,">",$_[0]) or die("Couldn't open header file $_[0].");
+	print "Generating file $_[0]\n";
 	#copyright
 	print $headerfh "$copyright";
 
@@ -242,6 +243,7 @@ sub start_class_source($$)
 	my $capxid = $xid;
 
 	open($sourcefh,">",$_[0]) or die("Couldn't open source file $_[0].");
+	print "Generating file $_[0]\n";
 
 	#include
 	print $sourcefh '#include <obj-xcb.h>' . "\n";
@@ -319,6 +321,8 @@ sub output_method_header($$)
 		my $repnamefull = $repname . "reply";
 
 		open(my $repfh,">","objxcb_$repnamefull.h") or die("Couldn't open file.");
+		print "Generating file objxcb_$repnamefull.h\n";
+
 		print $repfh $copyright;
 		print $repfh "\@interface ObjXCB$prefix$request->{'att'}->{'name'}Reply : Object\n{\n";
 		print $repfh "\tXCB$request->{'att'}->{'name'}" . "Cookie repcookie;\n";
@@ -405,6 +409,7 @@ sub output_method_source($$)
 		my $isxid;
 
 		open(my $repsourcefh,">","objxcb_$repnamefull.m") or die("Couldn't open file.");
+		print "Generating file objxcb_$repnamefull.m\n";
 		print $repsourcefh '#include "obj-xcb.h"' . "\n\n";
 		print $repsourcefh '@implementation ObjXCB' . "$prefix$request->{'att'}->{'name'}Reply : Object\n\n";
 	
@@ -670,6 +675,7 @@ sub output_orphans()
 	my $firstxid;
 
 	open(my $orphanfh,">","xcb_conn_orphan.h");
+	print "Generating file xcb_conn_orphan.h\n";
 
 	#header
 	print $orphanfh '@interface ObjXCBConnection (Orphan)' . "\n\n";
@@ -749,6 +755,7 @@ sub output_orphans()
 	close($orphanfh);
 
 	open($orphanfh,">","xcb_conn_orphan.m");
+	print "Generating file xcb_conn_orphan.m\n";
 
 	#source
 	print $orphanfh '#include "obj-xcb.h"' . "\n\n";
