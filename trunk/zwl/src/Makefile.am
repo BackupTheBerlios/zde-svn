@@ -1,5 +1,5 @@
 lib_LTLIBRARIES = libzwl.la
-libzwl_la_SOURCES = zwl_internal.m init.m widget.m window.m
+libzwl_la_SOURCES = zwl_internal.m init.m widget.m window.m label.m
 #widget.m init.m window.m button.m label.m menu.m
 
 INCLUDES = \

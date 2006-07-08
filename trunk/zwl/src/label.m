@@ -27,81 +27,67 @@
 static void on_add(IMPObject *widget, void *data);
 static void on_expose(IMPObject *widget, void *data);
 
-@implementation ZLabel : ZWindow
+@implementation ZLabel : ZWidget
 
-- init:(int)x:(int)y:(int)width:(int)height
+
+- init:(char *)label:(int)x:(int)y
 {
+	[super init];
+
 	self->window = NULL;
-	self->label = NULL;
+	self->text = NULL;
 
-	[super init:x:y:width:height];
-
-	self->resize = 0;
-	
-	self->font = XftFontOpenName(zdpy,DefaultScreen(zdpy),"sans-8");
-
-	[self attatch_internal_cb:ADDED:(ZCallback *)on_add];
-	[self attatch_internal_cb:EXPOSE:(ZCallback *)on_expose];
-}
-
-- init:(int)x:(int)y
-{
-	self->window = NULL;
-	self->label = NULL;
-
-	[super init:x:y:1:1];
-
-	self->resize = 1;
-	
-	self->font = XftFontOpenName(zdpy,DefaultScreen(zdpy),"sans-8");
-
-	[self attatch_internal_cb:ADDED:(ZCallback *)on_add];
-	[self attatch_internal_cb:EXPOSE:(ZCallback *)on_expose];
+//	[self attatch_internal_cb:ADDED:(ZCallback *)on_add];
+//	[self attatch_internal_cb:EXPOSE:(ZCallback *)on_expose];
 }
 
 - free
 {
-	if(self->label)
-		i_free(self->label);
-
-	if(self->font)
-		
+	if(self->text)
+		i_free(self->text);	
 	
 	[super free];
 }
 
-- (void)set_label:(char *)label
+- (void)set_text:(char *)text
 {
-	if(label) {
-		if(self->label)
-			i_free(self->label);
+	if(text) {
+		if(self->text)
+			i_free(self->text);
 
-		self->label = i_strdup(label);	
+		self->text = i_strdup(text);	
 		[self receive:EXPOSE:self];
 	}
 }
 
-- (const char *)get_label
+- (const char *)get_text
 {
-	return self->label;
+	return self->text;
 }
 
-- (XGlyphInfo *)get_text_extents
+- (cairo_text_extents_t *)get_text_extents
 {
-	XGlyphInfo *extents = i_calloc(1,sizeof(XGlyphInfo));
-			
-	XftTextExtents8(zdpy,self->font,(unsigned char *)self->label,strlen(self->label),extents);
+	cairo_text_extents_t *extents = i_calloc(1,sizeof(cairo_text_extents));
+	cairo_t *cr;
+
+	if(!self->window)
+		return NULL;
+
+	cr = cairo_create(self->win_surf);
+
+	/* XXX I don't know if this is necessary */
+	cairo_move_to(cr,self->x,self->y);
+
+	cairo_text_extents(cr,self->text,extents);
+
+	cairo_destroy(cr);
 
 	return extents;
 }
 
-- (const XftFont *)get_font
-{
-	return self->font;
-}
-
 @end
 
+#if 0
 static void on_add(IMPObject *widget, void *data)
 {
 	ZLabel *myself = (ZLabel *)data;
@@ -161,3 +147,5 @@ static void on_expose(IMPObject *widget, void *data)
 				(unsigned char *)label,strlen(label));	
 	}
 }
+
+#endif

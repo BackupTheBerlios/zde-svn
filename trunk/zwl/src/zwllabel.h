@@ -24,42 +24,43 @@
 #ifndef ZWLLABEL_H
 #define ZWLLABEL_H
 
-/** A widget that displays text and must be a child of a ZWindow.  It can be set to 
-   automatically set its own width and height if you are changing the label a lot.
+/** A widget that displays text and must be set as a child of a ZWindow.
    This widget DOES NOT perform word-wrapping or any other form of text-layout.
-   It simply displays text.
+   It simply displays text.  Note that it currently uses the "toy" cairo text API, so
+   there is currently no capacity for internationalization, but the basic interface
+   should stay constant if there is ever a converstion to the glyph-based API.
  */
-@interface ZLabel : ZWindow
+@interface ZLabel : ZWidget
 {
 	@protected
-	char *label;
-	XftFont *font;
-
-	@public
-	int resize;
+	char *text; /** What text this label will display. */
 }
 
-/** Use this form if you know exactly what you want width and height to be.  Any
-   text that cannot fix in this space will be truncated.
+/**
+ * @param text
+ * What you want the label to show
+ *
+ * @param x
+ * X coordinate in the parent window for it to be displayed in.
+ *
+ * @param y
+ * Y coordinate in the parent window for it to be displayed in.
  */
-- init:(int)x:(int)y:(int)width:(int)height;
-
-/** Use this form if you want width and height to be determined automatically.
- */
-- init:(int)x:(int)y;
+- init:(char *)text:(int)x:(int)y;
 
 - free;
 
-/** Will override any previously set label and display it.
+/** 
+ * Will override any previously set text and display it.
  */
-- (void)set_label:(char *)label;
-- (const char *)get_label;
+- (void)set_text:(char *)text;
 
-/** Returns the text extents for the label as defined by the XftTextExtents8 function. */
-- (XGlyphInfo *)get_text_extents; 
+- (const char *)get_text;
 
-/** Returns the XftFont that this label is using. */
-- (const XftFont *)get_font;
+/** 
+ * Returns the text extents for the label as defined by the cairo_text_extents() function. 
+ */
+- (cairo_text_extents_t *)get_text_extents; 
 
 @end;
 
