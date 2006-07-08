@@ -22,4 +22,4 @@ installed_headersdir = $(prefix)/include/zwl
 installed_headers_DATA = $(ZWLHEADERS)
 	     
 libzwl_la_LDDADD = -lobjc -lpthread $(OBJXCB_LIBS) $(IMP_LIBS) $(XFT_LIBS) $(CAIRO_LIBS) $(CAIRO_XCB_LIBS)
-libzwl_la_LDFLAGS = -version-info 0:0:0
+libzwl_la_LDFLAGS = -version-info 1:0:0

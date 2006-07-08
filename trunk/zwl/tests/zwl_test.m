@@ -22,9 +22,11 @@ static ZLabel *label = NULL;
 #define BUTTON_WIDTH 50
 #define BUTTON_HEIGHT 25
 
+#define PI 3.1415926535
+
 cairo_t *cr;
 
-int main(void)
+int main(int argc, char **argv)
 {
 	ZWindow *win = [ZWindow alloc];
 
@@ -33,7 +35,7 @@ int main(void)
 	srand(time(NULL));
 	srand48(time(NULL));	
 	
-	[win init:ZWL_BACKEND_XCB:150:200];
+	[win init:ZWL_BACKEND_XCB:640:480];
 	
 //	[win attatch_cb:KEY_PRESS:(ZCallback *)on_keypress];
 	[win attatch_cb:BUTTON_DOWN:(ZCallback *)on_buttondown];
@@ -44,22 +46,21 @@ int main(void)
 	[win attatch_cb:DEFAULT:(ZCallback *)on_default];
 
 	cr = cairo_create([win get_surf]);
+	
+	if(argv[1]) {
+		if(!fork()) {
+			while(1) {
+				cairo_set_source_rgba(cr,drand48(),drand48(), drand48(),.50);
 
-	if(!fork()) {
-		while(1) {
-			cairo_set_fill_rule(cr,CAIRO_FILL_RULE_WINDING);
-			cairo_set_source_rgb(cr,drand48(),drand48(), drand48());
-
-			cairo_rectangle(cr,rand() % win->width,rand() % win->height,rand() % win->width,rand() % win->height);
-
-			cairo_fill(cr);
-			cairo_stroke(cr);	
+				cairo_rectangle(cr,rand() % win->width,rand() % win->height,rand() % win->width,rand() % win->height);
+				
+				cairo_fill_preserve(cr);
+				cairo_stroke(cr);
+			}
 		}
-	}
-	else {
-		[win show];
-	}
-
+	}	
+	
+	[win show];
 	zwl_main_loop_start();
 
 /*	
@@ -128,12 +129,11 @@ static void on_buttondown(ZWidget *widget, void *data)
 
 	printf("Mouse button %d was pressed down at %d,%d.\n",ev->detail.id,ev->event_x,ev->event_y);
 
-	cairo_set_fill_rule(cr,CAIRO_FILL_RULE_WINDING);
-	cairo_set_source_rgb(cr,drand48(),drand48(), drand48());
+	cairo_set_source_rgba(cr,drand48(),drand48(), drand48(),.5);
 
 	cairo_rectangle(cr,rand() % widget->width,rand() % widget->height,rand() % widget->width,rand() % widget->height);
 
-	cairo_fill(cr);
+	cairo_fill_preserve(cr);
 	cairo_stroke(cr);	
 }
 

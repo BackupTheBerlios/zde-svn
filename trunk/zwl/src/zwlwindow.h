@@ -31,6 +31,7 @@
 
 /**
  * OpenGL glitz backend, may be slow, render incorrectly, or crash randomly.
+ * XXX Cannot be done until glitz supports XCB.
  */
 #define ZWL_BACKEND_GL_GLITZ 1
 
