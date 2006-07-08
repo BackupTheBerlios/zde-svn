@@ -23,8 +23,24 @@
 
 #include "zwl.h"
 
-/* 
+/** 
  * FIXME This should go in ObjXCBConnection ?
  */
 XCBVISUALTYPE *_get_root_visual_type(XCBSCREEN *s);
 
+/**
+ * Internal extension to ZWidget
+ */
+@interface ZWidget (_internal_)
+
+/**
+ * Set the widget's backend.
+ */
+- (void)set_backend:(unsigned int)back;
+
+/**
+ * Set the widget's cairo surface.
+ */
+- (void)set_window_surf:(cairo_surface_t *)surf;
+
+@end

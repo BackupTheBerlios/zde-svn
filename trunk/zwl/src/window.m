@@ -32,7 +32,7 @@ static void on_configure(ZWidget *widget, void *data);
 - (id)init:(unsigned int)backend:(int)width:(int)height
 {
 	ObjXCBWindow *w = [ObjXCBWindow alloc];
-	ObjXCBWindow *root = [ObjXCBWindow alloc];
+	ObjXCBWindow *root;
 	XCBSCREEN *s;
 	XCBDRAWABLE draw;
 
@@ -63,7 +63,6 @@ static void on_configure(ZWidget *widget, void *data);
 	self->height = height;
 
 	/* Now setup the cairo surface */
-
 	if(backend == ZWL_BACKEND_XCB) {
 		draw.window = [self->window get_xid];
 		self->win_surf = cairo_xcb_surface_create(
@@ -75,7 +74,6 @@ static void on_configure(ZWidget *widget, void *data);
 	}
 	else if(backend == ZWL_BACKEND_GL_GLITZ) {
 		fprintf(stderr,"OpenGL glitz backend not yet coded, please submit patch.\n");
-		self->win_surf = NULL;
 	}
 
 	[self attatch_internal_cb:CONFIGURE:(ZCallback *)on_configure];

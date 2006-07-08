@@ -22,10 +22,11 @@
  */
 
 #include "zwl.h"
+#include "zwl_internal.h"
 
 /* Internal callback prototypes */
-static void on_add(IMPObject *widget, void *data);
-static void on_expose(IMPObject *widget, void *data);
+static void on_add(ZWidget *widget, void *data);
+static void on_expose(ZWidget *widget, void *data);
 
 @implementation ZLabel : ZWidget
 
@@ -37,8 +38,8 @@ static void on_expose(IMPObject *widget, void *data);
 	self->window = NULL;
 	self->text = NULL;
 
-//	[self attatch_internal_cb:ADDED:(ZCallback *)on_add];
-//	[self attatch_internal_cb:EXPOSE:(ZCallback *)on_expose];
+	[self attatch_internal_cb:ADDED:(ZCallback *)on_add];
+	[self attatch_internal_cb:EXPOSE:(ZCallback *)on_expose];
 }
 
 - free
@@ -87,38 +88,61 @@ static void on_expose(IMPObject *widget, void *data);
 
 @end
 
-#if 0
-static void on_add(IMPObject *widget, void *data)
+
+static void on_add(ZWidget *widget, void *data)
 {
 	ZLabel *myself = (ZLabel *)data;
 	ZWidget *parent = myself->parent;
-	XSetWindowAttributes attr;
+	cairo_text_extents_t *extents;
 
-	attr.event_mask = ButtonPressMask |
-    			  ButtonReleaseMask |
-     			  EnterWindowMask |
-     			  LeaveWindowMask |
-     		 	  PointerMotionMask |
-     			  ExposureMask |
-     		  	  StructureNotifyMask |
-		//	  SubstructureNotifyMask |
-     			  KeyPressMask |
-     			  KeyReleaseMask;
+	ObjXCBWindow *w = [ObjXCBWindow alloc];
+	XCBSCREEN *s;
+	XCBDRAWABLE draw;
 	
-	
-	myself->window = (Window *)XCreateSimpleWindow(zdpy,(Window)parent->window,
-			myself->x,myself->y,myself->width,myself->height,
-		0,WhitePixel(zdpy,DefaultScreen(zdpy)),1);
+	CARD32 wvalue[2];
 
-	XChangeWindowAttributes(zdpy,(Window)myself->window,CWEventMask,&attr);
+	[w init:zc];
 
-	myself->xftdraw = XftDrawCreate(zdpy,(Window)myself->window,DefaultVisual(zdpy,zscreen),
-			DefaultColormap(zdpy,zscreen));
+	s = [zc get_screen];
+		
+	extents = [myself get_text_extents];
+
+	myself->width = extents->width;
+	myself->height = extents->height;
 	
+	wvalue[0] = [zc get_black_pixel];
+	wvalue[1] = XCBEventMaskExposure           | XCBEventMaskButtonPress
+             	  | XCBEventMaskButtonRelease      | XCBEventMaskPointerMotion
+                  | XCBEventMaskEnterWindow        | XCBEventMaskLeaveWindow
+                  | XCBEventMaskKeyPress           | XCBEventMaskKeyRelease
+	          | XCBEventMaskSubstructureNotify | XCBEventMaskSubstructureRedirect
+	          | XCBEventMaskEnterWindow	   | XCBEventMaskLeaveWindow
+	          | XCBEventMaskStructureNotify;
+	
+	[w CreateWindow:XCBCopyFromParent:parent->window:1:1:myself->width:myself->height:1:XCBWindowClassInputOutput:
+						s->root_visual:XCBCWEventMask | XCBGCForeground:wvalue];
+
+	myself->window = w;
+
+	/* Now setup the cairo surface */
+	if([parent get_backend] == ZWL_BACKEND_XCB) {
+		draw.window = [myself->window get_xid];
+		[myself set_window_surf:cairo_xcb_surface_create(
+							[zc get_connection],
+							draw,
+							_get_root_visual_type(s),
+							1,1)];
+		[myself set_backend:[parent get_backend]];
+	}
+	else if([parent get_backend] == ZWL_BACKEND_GL_GLITZ) {
+		fprintf(stderr,"OpenGL glitz backend not yet coded, please submit patch.\n");
+	}
+
 	zwl_main_loop_add_widget(myself);
 }
 
-static void on_expose(IMPObject *widget, void *data)
+#if 0
+static void on_expose(ZWidget *widget, void *data)
 {
 	ZLabel *myself = (ZLabel *)widget;
 	XftColor xftcolor;
@@ -147,5 +171,4 @@ static void on_expose(IMPObject *widget, void *data)
 				(unsigned char *)label,strlen(label));	
 	}
 }
-
 #endif

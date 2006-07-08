@@ -23,3 +23,18 @@ XCBVISUALTYPE *_get_root_visual_type(XCBSCREEN *s)
 	return visual_type;
 }
 
+@implementation ZWidget (_internal_)
+
+- (void)set_backend:(unsigned int)back
+{
+	self->backend = back;
+}
+
+- (void)set_window_surf:(cairo_surface_t *)surf
+{
+	if(surf)
+		self->win_surf = surf;
+}
+
+@end
+
