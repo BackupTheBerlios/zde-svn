@@ -68,9 +68,6 @@
  */
 - (const char *)get_title;
 
-/** Resize the widget */
-- (void)resize:(int)width:(int)height;
-
 @end
 
 #endif
