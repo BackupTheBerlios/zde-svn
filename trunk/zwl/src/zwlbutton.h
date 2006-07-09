@@ -25,60 +25,26 @@
 #define ZWLBUTTON_H
 
 /**
-  A window that must be a child of a ZWindow, which is accomplished by calling [parent add_child:button]
-  BEFORE showing the button.  It uses a ZLabel to draw the text in *label, and handles Expose events for
-  drawing that text. It can also display a png image using Cairo instead of text when you use the second form of -init.
-  */
-@interface ZButton : ZWindow
+ * A generic button.
+ */
+@interface ZButton : ZWidget
 {
-	@private
-	cairo_surface_t *window_surface;
-	cairo_surface_t *image_surface;
-	cairo_t *cr;
-	
 	@protected
-	char *label;
-	char *image_path; /**< Path to png image to use on button. */
-	unsigned int border_width; /**< Set to the pixel width you want displayed around the button, default is 1.
-			    		This must be set before you make it a child of any other widgets. */
-	
-	@public
-	ZLabel *zlabel; /**< For internal use only.  Do not manually change it, instead call
-			  set_label with the text you want to display. */
+	unsigned int border_width; 	
+	ZLabel *label;
 }
 
-- init:(int)x:(int)y:(int)width:(int)height;
-
-/**
-  image_path is the path to a png image to be used on the button. 
-  */
-- init:(char *)image_path:(int)x:(int)y:(int)width:(int)height;
+- init:(char *)label:(int)x:(int)y:(int)width:(int)height;
 
 - free;
 
 - (void)set_label:(char *)label;
-- (char *)get_label;
 
-- (char *)get_image_path;
+- (const char *)get_label;
 
 - (void)set_border_width:(unsigned int)width;
 
-- (int)get_border_width;
-
-/** Returns the cairo_t that is used for this button. */
-- (cairo_t *)get_cairo_t;
-
-/** Returns the cairo_surface_t for the button's window. */
-- (cairo_surface_t *)get_window_surface;
-
-/** Returns the cairo_surface_t for the button's image. */
-- (cairo_surface_t *)get_image_surface;
-
-/** Set the cairo_t for the button. Do not call from an application program. */
-- (void)set_cairo_t:(cairo_t *)cr;
-
-/** Set the window surface for the button. Do not call from an application program. */
-- (void)set_window_surface:(cairo_surface_t *)window_surface;
+- (unsigned int)get_border_width;
 
 @end;
 

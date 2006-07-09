@@ -30,135 +30,42 @@ static void on_configure(IMPObject *widget, void *data);
 static void on_label_down(IMPObject *widget, void *data);
 static void on_label_up(IMPObject *widget, void *data);
 
-@implementation ZButton : ZWindow
+@implementation ZButton : ZWidget
 
-- init:(int)x:(int)y:(int)width:(int)height
+- init:(char *)label:(int)x:(int)y:(int)width:(int)height
 {
-	self->window = NULL;
-	self->zlabel = [ZLabel alloc];
-	self->label = NULL;
-	self->image_path = NULL;
-	self->cr = NULL;
-	self->window_surface = NULL;
-	self->image_surface = NULL;
-	self->border_width = 1;
-	
-	[super init:x:y:width:height];
-	
-	[self attatch_internal_cb:ADDED:(ZCallback *)on_add];
-	[self attatch_internal_cb:EXPOSE:(ZCallback *)on_expose];
+	[super init];
 
-}
+	self->label = [ZLabel alloc];
 
-- init:(char *)image_path:(int)x:(int)y:(int)width:(int)height
-{		
-	self->window = NULL;
-	self->zlabel = NULL;
-	self->image_path = NULL;
-	self->window_surface = NULL;
-	self->image_surface = NULL;
-	self->label = NULL;
-	self->cr = NULL;
-	self->border_width = 1;
-	
-	if(image_path)
-		self->image_path = i_strdup(image_path);
-	else
-		self->image_path = NULL;
+	[self->label init:label:1:1];
 
-	[super init:x:y:width:height];
+	self->x = x;
+	self->y = y;
+	self->width = width;
+	self->height = height;
 
-	self->image_surface = cairo_image_surface_create_from_png(self->image_path);
-	
-	[self attatch_internal_cb:ADDED:(ZCallback *)on_add];
-	[self attatch_internal_cb:EXPOSE:(ZCallback *)on_expose];
-	[self attatch_internal_cb:CONFIGURE:(ZCallback *)on_configure];
-		
+//	[self attatch_internal_cb:ADDED:(ZCallback *)on_add];
+//	[self attatch_internal_cb:EXPOSE:(ZCallback *)on_expose];
 }
 
 - free
 {
-	if(self->label)
-		i_free(self->label);
-	
-	if(self->cr) {
-		cairo_destroy(self->cr);
-		self->cr = NULL;
-	}
-	if(self->window_surface) {
-//		cairo_surface_destroy(self->window_surface);
-		self->window_surface = NULL;
-	}
-	if(self->image_surface) {
-		cairo_surface_destroy(self->image_surface);	
-		self->image_surface = NULL;
-	}
-	if(self->image_path) {
-		i_free(self->image_path);
-		self->image_path = NULL;
-	}
+	[label release];
+
+	cairo_surface_destroy(self->win_surf);
 	
 	[super free];
 }
 
 - (void)set_label:(char *)label
 {
-	XGlyphInfo *extents;
-
-	if(label) {
-		if(self->label)
-			i_free(self->label);
-
-		self->label = i_strdup(label);	
-		if(self->window && self->zlabel) {
-			[self->zlabel set_label:self->label];
-			
-			extents = [self->zlabel get_text_extents];
-			
-			[self->zlabel move:(self->width / 2) - (extents->width / 2):(self->height / 2) - (extents->height / 2)];
-			[self receive:EXPOSE:self];
-
-			i_free(extents);
-		}
-	}
+	[self->label set_text:label];
 }
 
-- (char *)get_label
+- (const char *)get_label
 {
-	return self->label;
-}
-
-- (char *)get_image_path
-{
-	return self->image_path;
-}
-
-- (cairo_t *)get_cairo_t
-{	
-	return self->cr;
-}	
-
-- (cairo_surface_t *)get_window_surface
-{
-	return self->window_surface;
-}
-
-- (cairo_surface_t *)get_image_surface
-{
-	return self->image_surface;
-}
-
-- (void)set_cairo_t:(cairo_t *)cr
-{
-	if(cr) {
-		self->cr = cr;
-	}
-}
-- (void)set_window_surface:(cairo_surface_t *)window_surface
-{
-	if(window_surface) {
-		self->window_surface = window_surface;
-	}
+	return [self->label get_text];
 }
 
 - (void)set_border_width:(unsigned int)width
@@ -171,8 +78,9 @@ static void on_label_up(IMPObject *widget, void *data);
 	return self->border_width;
 }
 
-@end
 
+@end
+#if 0
 static void on_add(IMPObject *widget, void *data)
 {
 	ZButton *myself = (ZButton *)data;
@@ -251,7 +159,7 @@ static void on_configure(IMPObject *widget, void *data)
 
 	cairo_xlib_surface_set_size([w get_window_surface],w->width,w->height);
 }
-
+#endif
 /* These two functions forward BUTTON_UP and BUTTON_DOWN events
    to the button instead of the label. */
 static void on_label_down(IMPObject *widget, void *data)

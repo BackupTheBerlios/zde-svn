@@ -170,12 +170,14 @@ static void on_expose(ZWidget *widget, void *data)
 
 	[myself resize:myself->width:myself->height];
 
+	/* Transparent background */
 	[myself clear:1:1:1:0];
 
 	cr = cairo_create([myself get_surf]);
 
 	cairo_move_to(cr,0,myself->height - 4);
 
+	/* White text */
 	cairo_set_source_rgb(cr,1,1,1);
 
 	cairo_select_font_face(cr,[myself get_font_family],CAIRO_FONT_SLANT_NORMAL,CAIRO_FONT_WEIGHT_NORMAL);
@@ -185,34 +187,3 @@ static void on_expose(ZWidget *widget, void *data)
 	cairo_destroy(cr);	
 }
 
-#if 0
-static void on_expose(ZWidget *widget, void *data)
-{
-	ZLabel *myself = (ZLabel *)widget;
-	XftColor xftcolor;
-	XGlyphInfo *extents;
-	char *label = [myself get_label];
-
-	XClearWindow(zdpy,(Window)myself->window);
-		
-	xftcolor.color.red = ~0;
-	xftcolor.color.green = ~0;
-	xftcolor.color.blue = ~0;
-	
-	if(myself->resize && label) {
-		extents = [myself get_text_extents];
-		
-		myself->width = extents->width + 1;
-		myself->height = extents->height + 2; /* XXX the +2 helps to compensate for y's and g's. ??!?! */
-	
-		[myself resize:myself->width:myself->height];
-	}
-		
-	if(label) {	
-		XftDrawString8(myself->xftdraw,&xftcolor,[myself get_font],
-				0,
-				extents->height,
-				(unsigned char *)label,strlen(label));	
-	}
-}
-#endif
