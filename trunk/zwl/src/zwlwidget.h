@@ -118,6 +118,12 @@ typedef void (ZCallback)(ZWidget *widget, void *data);
 /** Resize the widget */
 - (void)resize:(int)width:(int)height;
 
+/**
+ * Clears the widget by drawing over it with the specified color and alpha value.
+ * Color values must be between 0 and 1.
+ */
+- (void)clear:(double)r:(double)g:(double)b:(double)a;
+
 /** Send signal to this widget */
 - (void)receive:(int)signal:(void *)data;
 

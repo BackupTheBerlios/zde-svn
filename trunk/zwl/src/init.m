@@ -336,9 +336,12 @@ static ZWidget *_find_widget(XCBWINDOW *w)
 
 		if(win.xid == w->xid)
 			return widget;
-		
-		[iter next];
-	} while([iter has_next]);
+
+		if([iter has_next])
+			[iter next];
+		else
+			break;
+	} while(1);
 
 	return NULL;
 }

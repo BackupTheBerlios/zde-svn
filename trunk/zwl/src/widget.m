@@ -128,7 +128,7 @@ static void on_destroy(IMPObject *widget, void *data);
 
 - (void)move:(int)x:(int)y
 {
-	CARD16 values[4] = {0};
+	CARD32 values[2] = {0};
 
 	self->x = x;
 	self->y = y;
@@ -141,7 +141,7 @@ static void on_destroy(IMPObject *widget, void *data);
 
 - (void)resize:(int)width:(int)height
 {
-	CARD16 values[4] = {0};
+	CARD32 values[2] = {0};
 
 	self->width = width;
 	self->height = height;
@@ -155,7 +155,23 @@ static void on_destroy(IMPObject *widget, void *data);
 		cairo_xcb_surface_set_size(self->win_surf,self->width,self->height);
 	}
 
-}	
+}
+
+- (void)clear:(double)r:(double)g:(double)b:(double)a
+{
+	cairo_t *cr;
+
+	if(!self->win_surf || !self->window)
+		return;
+
+	cr = cairo_create(self->win_surf);
+
+	cairo_set_source_rgba(cr,r,g,b,a);
+	cairo_rectangle(cr,0,0,self->width,self->height);
+
+	cairo_fill(cr);
+	cairo_destroy(cr);
+}
 
 - (void)receive:(int)signal:(void *)data
 {

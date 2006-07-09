@@ -36,7 +36,13 @@ static void on_expose(ZWidget *widget, void *data);
 	[super init];
 
 	self->window = NULL;
-	self->text = NULL;
+	[self set_text:label];
+
+	self->x = x;
+	self->y = y;
+
+	self->family = i_strdup("Sans");
+	self->size = 11;
 
 	[self attatch_internal_cb:ADDED:(ZCallback *)on_add];
 	[self attatch_internal_cb:EXPOSE:(ZCallback *)on_expose];
@@ -66,6 +72,19 @@ static void on_expose(ZWidget *widget, void *data);
 	return self->text;
 }
 
+- (void)set_font_family:(char *)font
+{
+	if(font) {
+		i_free(self->family);
+		self->family = i_strdup(font);
+	}
+}
+
+- (const char *)get_font_family
+{
+	return self->family;
+}
+
 - (cairo_text_extents_t *)get_text_extents
 {
 	cairo_text_extents_t *extents = i_calloc(1,sizeof(cairo_text_extents));
@@ -76,9 +95,8 @@ static void on_expose(ZWidget *widget, void *data);
 
 	cr = cairo_create(self->win_surf);
 
-	/* XXX I don't know if this is necessary */
-	cairo_move_to(cr,self->x,self->y);
-
+	cairo_select_font_face(cr,[self get_font_family],CAIRO_FONT_SLANT_NORMAL,CAIRO_FONT_WEIGHT_NORMAL);	
+	cairo_set_font_size(cr,self->size);	
 	cairo_text_extents(cr,self->text,extents);
 
 	cairo_destroy(cr);
@@ -87,7 +105,6 @@ static void on_expose(ZWidget *widget, void *data);
 }
 
 @end
-
 
 static void on_add(ZWidget *widget, void *data)
 {
@@ -104,12 +121,7 @@ static void on_add(ZWidget *widget, void *data)
 	[w init:zc];
 
 	s = [zc get_screen];
-		
-	extents = [myself get_text_extents];
-
-	myself->width = extents->width;
-	myself->height = extents->height;
-	
+			
 	wvalue[0] = [zc get_black_pixel];
 	wvalue[1] = XCBEventMaskExposure           | XCBEventMaskButtonPress
              	  | XCBEventMaskButtonRelease      | XCBEventMaskPointerMotion
@@ -119,11 +131,11 @@ static void on_add(ZWidget *widget, void *data)
 	          | XCBEventMaskEnterWindow	   | XCBEventMaskLeaveWindow
 	          | XCBEventMaskStructureNotify;
 	
-	[w CreateWindow:XCBCopyFromParent:parent->window:1:1:myself->width:myself->height:1:XCBWindowClassInputOutput:
+	[w CreateWindow:XCBCopyFromParent:parent->window:myself->x:myself->y:1:1:0:XCBWindowClassInputOutput:
 						s->root_visual:XCBCWEventMask | XCBGCForeground:wvalue];
 
 	myself->window = w;
-
+	
 	/* Now setup the cairo surface */
 	if([parent get_backend] == ZWL_BACKEND_XCB) {
 		draw.window = [myself->window get_xid];
@@ -139,6 +151,38 @@ static void on_add(ZWidget *widget, void *data)
 	}
 
 	zwl_main_loop_add_widget(myself);
+}
+
+static void on_expose(ZWidget *widget, void *data)
+{
+	ZLabel *myself = (ZLabel *)widget;
+	cairo_t *cr;
+	cairo_text_extents_t *extents;
+
+	char *text = [myself get_text];
+
+	if(!text || ![myself get_surf] || !myself->window)
+		return;
+
+	extents = [myself get_text_extents];
+	myself->width = extents->width + 1;
+	myself->height = extents->height + 2;
+
+	[myself resize:myself->width:myself->height];
+
+	[myself clear:1:1:1:0];
+
+	cr = cairo_create([myself get_surf]);
+
+	cairo_move_to(cr,0,myself->height);
+
+	cairo_set_source_rgb(cr,1,1,1);
+
+	cairo_select_font_face(cr,[myself get_font_family],CAIRO_FONT_SLANT_NORMAL,CAIRO_FONT_WEIGHT_NORMAL);
+	cairo_set_font_size(cr,myself->size);
+	cairo_show_text(cr,[myself get_text]);
+
+	cairo_destroy(cr);	
 }
 
 #if 0

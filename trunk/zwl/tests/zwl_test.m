@@ -29,6 +29,7 @@ cairo_t *cr;
 int main(int argc, char **argv)
 {
 	ZWindow *win = [ZWindow alloc];
+	ZLabel *label = [ZLabel alloc];
 
 	zwl_init();
 
@@ -36,7 +37,8 @@ int main(int argc, char **argv)
 	srand48(time(NULL));	
 	
 	[win init:ZWL_BACKEND_XCB:640:480];
-	
+	[label init:"Test Label":10:10];
+
 //	[win attatch_cb:KEY_PRESS:(ZCallback *)on_keypress];
 	[win attatch_cb:BUTTON_DOWN:(ZCallback *)on_buttondown];
 	[win attatch_cb:BUTTON_UP:(ZCallback *)on_buttonup];
@@ -44,6 +46,8 @@ int main(int argc, char **argv)
 	[win attatch_cb:CLOSE:(ZCallback *)on_close];
 	[win attatch_cb:EXPOSE:(ZCallback *)on_expose];
 	[win attatch_cb:DEFAULT:(ZCallback *)on_default];
+
+	[win add_child:(ZWidget *)label];
 
 	cr = cairo_create([win get_surf]);
 	
@@ -59,8 +63,13 @@ int main(int argc, char **argv)
 			}
 		}
 	}	
-	
+
 	[win show];
+
+	[win clear:0:0:0:1];
+
+	[label show];
+
 	zwl_main_loop_start();
 
 /*	
@@ -128,13 +137,6 @@ static void on_buttondown(ZWidget *widget, void *data)
 	XCBButtonPressEvent *ev = (XCBButtonPressEvent *)data;
 
 	printf("Mouse button %d was pressed down at %d,%d.\n",ev->detail.id,ev->event_x,ev->event_y);
-
-	cairo_set_source_rgba(cr,drand48(),drand48(), drand48(),.5);
-
-	cairo_rectangle(cr,rand() % widget->width,rand() % widget->height,rand() % widget->width,rand() % widget->height);
-
-	cairo_fill_preserve(cr);
-	cairo_stroke(cr);	
 }
 
 static void on_buttonup(IMPObject *widget, void *data)

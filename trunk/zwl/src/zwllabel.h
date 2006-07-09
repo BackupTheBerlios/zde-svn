@@ -32,8 +32,12 @@
  */
 @interface ZLabel : ZWidget
 {
+	@public
+	double size; /** Font size */
+
 	@protected
 	char *text; /** What text this label will display. */
+	char *family;
 }
 
 /**
@@ -56,6 +60,13 @@
 - (void)set_text:(char *)text;
 
 - (const char *)get_text;
+
+/**
+ * Set the the font family for the text, i.e. Sans or Monospace.
+ */
+- (void)set_font_family:(char *)font;
+
+- (const char *)get_font_family;
 
 /** 
  * Returns the text extents for the label as defined by the cairo_text_extents() function. 
