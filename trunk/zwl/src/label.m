@@ -165,8 +165,8 @@ static void on_expose(ZWidget *widget, void *data)
 		return;
 
 	extents = [myself get_text_extents];
-	myself->width = extents->width + 1;
-	myself->height = extents->height + 2;
+	myself->width = extents->width;
+	myself->height = extents->height + 4;
 
 	[myself resize:myself->width:myself->height];
 
@@ -174,7 +174,7 @@ static void on_expose(ZWidget *widget, void *data)
 
 	cr = cairo_create([myself get_surf]);
 
-	cairo_move_to(cr,0,myself->height);
+	cairo_move_to(cr,0,myself->height - 4);
 
 	cairo_set_source_rgb(cr,1,1,1);
 

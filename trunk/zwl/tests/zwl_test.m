@@ -37,7 +37,7 @@ int main(int argc, char **argv)
 	srand48(time(NULL));	
 	
 	[win init:ZWL_BACKEND_XCB:640:480];
-	[label init:"Test Label":10:10];
+	[label init:"This is a fancy test label":10:10];
 
 //	[win attatch_cb:KEY_PRESS:(ZCallback *)on_keypress];
 	[win attatch_cb:BUTTON_DOWN:(ZCallback *)on_buttondown];
