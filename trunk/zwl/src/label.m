@@ -171,12 +171,6 @@ static void on_expose(ZWidget *widget, void *data)
 
 	[myself resize:myself->width:myself->height];
 
-	/* Only draw inside the region the expose event tells us to. */
-	cairo_rectangle(cr,ev->x,ev->y,ev->width,ev->height);
-	cairo_clip(cr);
-
-	printf("Label exposed, drawing in areas %d,%d,%d,%d",ev->x,ev->y,ev->width,ev->height);
-
 	/* Transparent background */
 	[myself clear:1:1:1:0];
 

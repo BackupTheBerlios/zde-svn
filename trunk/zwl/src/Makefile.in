@@ -203,7 +203,7 @@ libzwl_la_SOURCES = zwl_internal.m init.m widget.m window.m label.m button.m
 INCLUDES = \
 -I$(top_builddir) \
 -I$(top_srcdir) \
-$(OBJXCB_CFLAGS) $(IMP_CFLAGS) $(XFT_CFLAGS) $(CAIRO_CFLAGS) $(CAIRO_XCB_CFLAGS)
+$(OBJXCB_CFLAGS) $(IMP_CFLAGS) $(XFT_CFLAGS) $(CAIRO_CFLAGS) $(CAIRO_XCB_CFLAGS) -g3
 
 EXTRA_DIST = zwl.h zwl_internal.h zwlinit.h zwlwindow.h zwlbutton.h zwllabel.h zwlmenu.h zwlwidget.h
 ZWLHEADERS = \
