@@ -71,7 +71,7 @@ typedef void (ZCallback)(ZWidget *widget, void *data);
 	int y; /**< 'y' coordinate.  Can have different meanings in different contexts, such as if this widget is a window or a button, etc. */
 	int width;
 	int height;		
-	IMPList *children; /**< Array of widgets that are children of this widget. */
+	IMPList *children; /**< List of widgets that are children of this widget. */
 	
 	@protected
 	char *name;  /**< For identification use only.  Has nothing to do with the WM_NAME atom or similiar. */
@@ -86,6 +86,7 @@ typedef void (ZCallback)(ZWidget *widget, void *data);
 }
 
 - (id)init;
+
 - (void)free;
 
 /** Show the widget. */
@@ -131,12 +132,6 @@ typedef void (ZCallback)(ZWidget *widget, void *data);
  assigned to events are subject to change at any time.
  */
 - (void)attatch_cb:(int)signal:(ZCallback *)callback;
-
-/** Used to attatch internal callbacks. Should not be used by application programs unless you want trouble, or REALLY know what you are doing.
- Using this, it is possible to override how widgets react to basic zwl and X11 events, such as button presses and exposes.  Unless you are 
- writing a widget, this is dangerous for normal use.
- */
-- (void)attatch_internal_cb:(int)signal:(ZCallback *)callback;
 
 @end
 

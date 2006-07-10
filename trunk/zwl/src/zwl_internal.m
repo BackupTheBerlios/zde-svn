@@ -36,5 +36,13 @@ XCBVISUALTYPE *_get_root_visual_type(XCBSCREEN *s)
 		self->win_surf = surf;
 }
 
+- (void)attatch_internal_cb:(int)signal:(ZCallback *)callback
+{
+	if(signal >= 0) {
+		self->internal_callbacks[signal] = callback;
+	}
+}
+
+
 @end
 

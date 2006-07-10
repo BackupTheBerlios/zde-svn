@@ -43,4 +43,10 @@ XCBVISUALTYPE *_get_root_visual_type(XCBSCREEN *s);
  */
 - (void)set_window_surf:(cairo_surface_t *)surf;
 
+/** Used to attatch internal callbacks. Should not be used by application programs unless you want trouble, or REALLY know what you are doing.
+ Using this, it is possible to override how widgets react to basic zwl and X11 events, such as button presses and exposes.  Unless you are 
+ writing a widget, this is dangerous for normal use.
+ */
+- (void)attatch_internal_cb:(int)signal:(ZCallback *)callback;
+
 @end

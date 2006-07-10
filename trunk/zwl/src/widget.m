@@ -198,13 +198,6 @@ static void on_destroy(IMPObject *widget, void *data);
 	}	
 }
 
-- (void)attatch_internal_cb:(int)signal:(ZCallback *)callback
-{
-	if(signal >= 0) {
-		self->internal_callbacks[signal] = callback;
-	}
-}
-
 @end
 
 /* Internal callbacks. */
