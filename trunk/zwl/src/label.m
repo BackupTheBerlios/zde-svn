@@ -153,10 +153,7 @@ static void on_add(ZWidget *widget, void *data)
 	zwl_main_loop_add_widget(myself);
 }
 
-/* TODO To prevent crashing, what needs to happen is that the text needs to be draw to a buffer, then
- * drawn to the screen based on a mask that will only expose the area given by the expose event.
- */
-
+/* FIXME Doesn't work too well, needs to be fixed. See bug 008098 */
 static void on_expose(ZWidget *widget, void *data)
 {
 	ZLabel *myself = (ZLabel *)widget;
@@ -168,6 +165,11 @@ static void on_expose(ZWidget *widget, void *data)
 
 	if(!text || ![myself get_surf] || !myself->window)
 		return;
+
+	/* Then we can't draw... */
+	if((myself->x + myself->width >= myself->parent->width) || (myself->y + myself->height >= myself->parent->height)) {
+		return;
+	}
 
 	extents = [myself get_text_extents];
 	myself->width = extents->width;
