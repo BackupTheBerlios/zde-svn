@@ -153,6 +153,10 @@ static void on_add(ZWidget *widget, void *data)
 	zwl_main_loop_add_widget(myself);
 }
 
+/* TODO To prevent crashing, what needs to happen is that the text needs to be draw to a buffer, then
+ * drawn to the screen based on a mask that will only expose the area given by the expose event.
+ */
+
 static void on_expose(ZWidget *widget, void *data)
 {
 	ZLabel *myself = (ZLabel *)widget;
