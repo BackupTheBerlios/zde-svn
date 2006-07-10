@@ -7,17 +7,14 @@ static void on_buttondown(ZWidget *widget, void *data);
 static void on_buttonup(IMPObject *widget, void *data);
 static void on_destroy(IMPObject *widget, void *data);
 static void on_close(IMPObject *widget, void *data);
-static void on_expose(IMPObject *widget, void *data);
+static void on_expose(ZWidget *widget, void *data);
 static void on_default(ZWidget *widget, void *data);
 
 static void on_button_show(IMPObject *widget, void *data);
 static void on_button_buttondown(IMPObject *widget, void *data);
 	
-static ZButton *button = NULL;
-static ZButton *image = NULL;
-static ZWindow *win = NULL;
-static ZWindow *win2 = NULL;
-static ZLabel *label = NULL;
+static ZWindow *win;
+static ZLabel *label;
 
 #define BUTTON_WIDTH 50
 #define BUTTON_HEIGHT 25
@@ -28,8 +25,8 @@ cairo_t *cr;
 
 int main(int argc, char **argv)
 {
-	ZWindow *win = [ZWindow alloc];
-	ZLabel *label = [ZLabel alloc];
+	win = [ZWindow alloc];
+	label = [ZLabel alloc];
 
 	zwl_init();
 
@@ -157,11 +154,9 @@ static void on_close(IMPObject *widget, void *data)
 	[(ZWidget *)widget destroy];
 }
 
-static void on_expose(IMPObject *widget, void *data)
+static void on_expose(ZWidget *widget, void *data)
 {
-	ZWidget *w = (ZWidget *)widget;
 	XCBExposeEvent *ev = (XCBExposeEvent *)data;
-
 	[win clear:0:0:0:1];	
 }
 /*

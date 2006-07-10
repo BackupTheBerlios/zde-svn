@@ -213,7 +213,8 @@ ZWLHEADERS = \
 	     zwlbutton.h \
 	     zwllabel.h \
 	     zwlmenu.h \
-	     zwlwidget.h
+	     zwlwidget.h \
+	     zwl_internal.h
 
 installed_headersdir = $(prefix)/include/zwl
 installed_headers_DATA = $(ZWLHEADERS)
