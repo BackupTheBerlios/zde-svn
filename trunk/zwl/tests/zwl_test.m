@@ -21,7 +21,7 @@ static ZLabel *label;
 
 #define PI 3.1415926535
 
-cairo_t *cr;
+cairo_t *cr = NULL;
 
 int main(int argc, char **argv)
 {
@@ -157,7 +157,31 @@ static void on_close(IMPObject *widget, void *data)
 static void on_expose(ZWidget *widget, void *data)
 {
 	XCBExposeEvent *ev = (XCBExposeEvent *)data;
-	[win clear:0:0:0:1];	
+	int dest = 0;
+
+	if(!cr) {
+		cr = cairo_create([win get_surf]);
+		dest = 1;
+	}
+	else {
+		cairo_save(cr);
+	}
+
+	/* Only draw inside the region the expose event tells us to. */
+	cairo_rectangle(cr,ev->x,ev->y,ev->width,ev->height);
+	
+	cairo_set_source_rgba(cr,0,0,0,1);
+
+	cairo_fill(cr);
+
+	if(dest) {
+		cairo_destroy(cr);
+		cr = NULL;
+	}
+	else {
+		cairo_restore(cr);
+	}
+
 }
 /*
 static void on_button_show(IMPObject *widget, void *data)

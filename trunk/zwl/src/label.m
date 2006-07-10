@@ -156,6 +156,7 @@ static void on_add(ZWidget *widget, void *data)
 static void on_expose(ZWidget *widget, void *data)
 {
 	ZLabel *myself = (ZLabel *)widget;
+	XCBExposeEvent *ev = (XCBExposeEvent *)data;
 	cairo_t *cr;
 	cairo_text_extents_t *extents;
 
@@ -169,6 +170,12 @@ static void on_expose(ZWidget *widget, void *data)
 	myself->height = extents->height + 4;
 
 	[myself resize:myself->width:myself->height];
+
+	/* Only draw inside the region the expose event tells us to. */
+	cairo_rectangle(cr,ev->x,ev->y,ev->width,ev->height);
+	cairo_clip(cr);
+
+	printf("Label exposed, drawing in areas %d,%d,%d,%d",ev->x,ev->y,ev->width,ev->height);
 
 	/* Transparent background */
 	[myself clear:1:1:1:0];
