@@ -1,12 +1,17 @@
 You will need the latest version of imp and obj-xcb from zde svn, as well as cairo 1.2.0 or greater with the xcb backend enabled in order to compile zwl.  
 
-Be aware that this is alpha-quality code, and completely unpolished. It has rough, pointy edges, and should be approached with caution and an open mind. Patches are welcome, e-mail the zde-devel list, the address of which can be
-found on the berlios project page.  Also check out the zde wiki at zde.berlios.de
+Be aware that this is alpha-quality code, and completely unpolished, and even incomplete in some/most areas.. It has rough, pointy edges, and should be
+approached with caution and an open mind. Patches are welcome, e-mail the zde-devel list, the address of which can be found on the berlios project page.
+Also check out the zde wiki at zde.berlios.de, which has a few guides on how to get started programming with zwl and the other zde libraries.
 
-zwl is the zeta widget library.  It is designed to be simple, yet at the same time look good and have a nice feel.  It is not designed to be a general-purpose application toolkit like GTK+, Qt, or EWL.  It will be used in zimwm for menus, frames, buttons and the like.  It will also have selectable rendering outputs for displaying images, such as Xlib or Imlib2.  It will have some more special-purpose widgets, such as sliders and the like, for extensions to zimwm, but nothing fancy.  It might also have a place in small programs that only need a limited subset of general-purpose widgets and don't mind many constraints.
+zwl is the zeta widget library.  It is designed to be simple, yet at the same time look good and have a nice feel.  It is not designed to be a general-purpose 
+application toolkit like GTK+, Qt, or EWL.  It will be used in zimwm for menus, frames, buttons and the like.  It will also have selectable rendering 
+outputs for displaying images, such as XCB and glitz/OpenGL.  It will have some more general-purpose widgets, such as sliders and the like, for extensions to 
+zimwm, but nothing fancy is planned, at least for the first versions.  It might also have a place in small programs that only need a limited set of 
+widgets and don't mind many constraints.
 
 Currently zwl is undergoing a rewrite to use obj-xcb instead of Xlib.  As such, it will be extended to not just be a widget toolkit, but a general-purpose Objective-C access layer to X, through obj-xcb, XRender, and Cairo, as well as with abstracted widgets.  Therefore it is not appropriatly titled as a "widget library", but I can't/won't change the name now.
 
 src/ Contains the zwl source code.
 tests/ Contains a test program.
-doc/ Contains documentation. Use gendoc to generate it from the source code.  You will need doxygen for this. 
+doc/ Contains documentation. Use the gendoc script in / to generate it from the source code.  You will need doxygen for this. 

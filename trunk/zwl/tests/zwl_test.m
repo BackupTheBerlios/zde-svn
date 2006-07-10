@@ -48,12 +48,11 @@ int main(int argc, char **argv)
 	[win attatch_cb:DEFAULT:(ZCallback *)on_default];
 
 	[win add_child:(ZWidget *)label];
-
-	cr = cairo_create([win get_surf]);
 	
 	if(argv[1]) {
 		if(!fork()) {
 			while(1) {
+				cr = cairo_create([win get_surf]);
 				cairo_set_source_rgba(cr,drand48(),drand48(), drand48(),.50);
 
 				cairo_rectangle(cr,rand() % win->width,rand() % win->height,rand() % win->width,rand() % win->height);
@@ -161,7 +160,9 @@ static void on_close(IMPObject *widget, void *data)
 static void on_expose(IMPObject *widget, void *data)
 {
 	ZWidget *w = (ZWidget *)widget;
-	XCBExposeEvent *ev = (XCBExposeEvent *)data;	
+	XCBExposeEvent *ev = (XCBExposeEvent *)data;
+
+	[win clear:0:0:0:1];	
 }
 /*
 static void on_button_show(IMPObject *widget, void *data)
