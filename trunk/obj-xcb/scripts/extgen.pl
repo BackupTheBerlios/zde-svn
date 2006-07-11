@@ -45,7 +45,7 @@ foreach my $file (@files) {
 sub xcb_handle()
 { my ($twig,$section) = @_;
 
-	print $section->{'att'}->{'header'} . "\n";
+#print $section->{'att'}->{'header'} . "\n";
 
 }
 
