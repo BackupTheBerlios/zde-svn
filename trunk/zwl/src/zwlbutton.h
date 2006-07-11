@@ -30,7 +30,8 @@
 @interface ZButton : ZWidget
 {
 	@protected
-	unsigned int border_width; 	
+	unsigned int border_width; 
+	char *text;
 	ZLabel *label;
 }
 

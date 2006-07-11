@@ -95,7 +95,7 @@ static void on_expose(ZWidget *widget, void *data);
 
 	cr = cairo_create(self->win_surf);
 
-	cairo_select_font_face(cr,[self get_font_family],CAIRO_FONT_SLANT_NORMAL,CAIRO_FONT_WEIGHT_NORMAL);	
+	cairo_select_font_face(cr,self->family,CAIRO_FONT_SLANT_NORMAL,CAIRO_FONT_WEIGHT_NORMAL);	
 	cairo_set_font_size(cr,self->size);	
 	cairo_text_extents(cr,self->text,extents);
 
@@ -144,7 +144,7 @@ static void on_add(ZWidget *widget, void *data)
 							draw,
 							_get_root_visual_type(s),
 							1,1)];
-		[myself set_backend:[parent get_backend]];
+		[myself set_backend:ZWL_BACKEND_XCB];
 	}
 	else if([parent get_backend] == ZWL_BACKEND_GL_GLITZ) {
 		fprintf(stderr,"OpenGL glitz backend not yet coded, please submit patch.\n");
@@ -191,6 +191,8 @@ static void on_expose(ZWidget *widget, void *data)
 	cairo_set_font_size(cr,myself->size);
 	cairo_show_text(cr,[myself get_text]);
 
-	cairo_destroy(cr);	
+	cairo_destroy(cr);
+
+	[zc flush];
 }
 

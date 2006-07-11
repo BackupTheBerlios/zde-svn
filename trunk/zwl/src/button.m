@@ -22,13 +22,14 @@
  */
 
 #include "zwl.h"
+#include "zwl_internal.h"
 
 /* Internal callback prototypes */
-static void on_add(IMPObject *widget, void *data);
-static void on_expose(IMPObject *widget, void *data);
-static void on_configure(IMPObject *widget, void *data);
-static void on_label_down(IMPObject *widget, void *data);
-static void on_label_up(IMPObject *widget, void *data);
+static void on_add(ZWidget *widget, void *data);
+static void on_expose(ZWidget *widget, void *data);
+static void on_configure(ZWidget *widget, void *data);
+static void on_label_down(ZWidget *widget, void *data);
+static void on_label_up(ZWidget *widget, void *data);
 
 @implementation ZButton : ZWidget
 
@@ -38,15 +39,15 @@ static void on_label_up(IMPObject *widget, void *data);
 
 	self->label = [ZLabel alloc];
 
-	[self->label init:label:1:1];
+	[self->label init:label:0:0];
 
 	self->x = x;
 	self->y = y;
 	self->width = width;
 	self->height = height;
 
-//	[self attatch_internal_cb:ADDED:(ZCallback *)on_add];
-//	[self attatch_internal_cb:EXPOSE:(ZCallback *)on_expose];
+	[self attatch_internal_cb:ADDED:(ZCallback *)on_add];
+	[self attatch_internal_cb:EXPOSE:(ZCallback *)on_expose];
 }
 
 - free
@@ -80,6 +81,83 @@ static void on_label_up(IMPObject *widget, void *data);
 
 
 @end
+
+static void on_add(ZWidget *widget, void *data)
+{
+	ZButton *myself = (ZButton *)widget;
+	
+	ObjXCBWindow *w = [ObjXCBWindow alloc];
+	XCBSCREEN *s;
+	XCBDRAWABLE draw;
+
+	CARD32 wvalue[2];
+
+	[w init:zc];
+
+	s = [zc get_screen];
+
+	wvalue[0] = [zc get_black_pixel];
+	wvalue[1] = XCBEventMaskExposure           | XCBEventMaskButtonPress
+             	  | XCBEventMaskButtonRelease      | XCBEventMaskPointerMotion
+                  | XCBEventMaskEnterWindow        | XCBEventMaskLeaveWindow
+                  | XCBEventMaskKeyPress           | XCBEventMaskKeyRelease
+	          | XCBEventMaskSubstructureNotify | XCBEventMaskSubstructureRedirect
+	          | XCBEventMaskEnterWindow	   | XCBEventMaskLeaveWindow
+	          | XCBEventMaskStructureNotify;
+	
+	[w CreateWindow:XCBCopyFromParent:myself->parent->window:myself->x:myself->y:myself->width:myself->height:0:XCBWindowClassInputOutput:
+						s->root_visual:XCBCWEventMask | XCBGCForeground:wvalue];
+
+	myself->window = w;
+
+	/* Now setup the cairo surface */
+	if([myself->parent get_backend] == ZWL_BACKEND_XCB) {
+		draw.window = [myself->window get_xid];
+		[myself set_window_surf:cairo_xcb_surface_create(
+							[zc get_connection],
+							draw,
+							_get_root_visual_type(s),
+							1,1)];
+		[myself set_backend:ZWL_BACKEND_XCB];
+	}
+	else if([myself->parent get_backend] == ZWL_BACKEND_GL_GLITZ) {
+		fprintf(stderr,"OpenGL glitz backend not yet coded, please submit patch.\n");
+	}
+
+	zwl_main_loop_add_widget(myself);
+
+	[myself add_child:(ZWidget *)myself->label];
+
+}
+
+static void on_expose(ZWidget *widget, void *data)
+{
+	ZButton *myself = (ZButton *)widget;
+	XCBExposeEvent *ev = (XCBExposeEvent *)data;
+	cairo_t *cr;
+	cairo_text_extents_t *extents;
+
+	cr = cairo_create([myself get_surf]);
+
+	cairo_set_source_rgb(cr,.5,.5,.5);
+
+	cairo_rectangle(cr,0,0,myself->width,myself->height);
+	cairo_fill_preserve(cr);
+	
+	cairo_set_source_rgb(cr,.4,.4,.4);
+	cairo_set_line_width(cr,5);
+	cairo_stroke(cr);
+	
+	cairo_destroy(cr);
+
+	[myself->label show];
+
+	extents = [myself->label get_text_extents];
+	[myself->label move:((int)extents->x_bearing + myself->width - ((int)extents->width)) / 2:((int)extents->y_bearing + myself->height) / 2];
+
+	[zc flush];
+}
+
 #if 0
 static void on_add(IMPObject *widget, void *data)
 {
@@ -162,13 +240,13 @@ static void on_configure(IMPObject *widget, void *data)
 #endif
 /* These two functions forward BUTTON_UP and BUTTON_DOWN events
    to the button instead of the label. */
-static void on_label_down(IMPObject *widget, void *data)
+static void on_label_down(ZWidget *widget, void *data)
 {
 	ZWidget *w = (ZWidget *)widget;
 	[w->parent receive:BUTTON_DOWN:data];
 }
 
-static void on_label_up(IMPObject *widget, void *data)
+static void on_label_up(ZWidget *widget, void *data)
 {
 	ZWidget *w = (ZWidget *)widget;
 	[w->parent receive:BUTTON_UP:data];

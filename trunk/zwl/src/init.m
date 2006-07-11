@@ -299,16 +299,16 @@ void zwl_main_loop_start(void)
 					[w receive:PROPERTY:prop];
 					break;
 				default:
-					key = (XCBKeyPressEvent *)ev;
-					w = _find_widget(&key->event);
+				//	key = (XCBKeyPressEvent *)ev;
+				//	w = _find_widget(&key->event);
 
-					[w receive:DEFAULT:key];
+				//	[w receive:DEFAULT:key];
 					break;
 
 			}
 		}
 		
-		[zc flush];
+	//	[zc flush];
 		free(ev);
 	}
 }

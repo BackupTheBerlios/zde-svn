@@ -15,6 +15,7 @@ static void on_button_buttondown(IMPObject *widget, void *data);
 	
 static ZWindow *win;
 static ZLabel *label;
+static ZButton *button;
 
 #define BUTTON_WIDTH 50
 #define BUTTON_HEIGHT 25
@@ -27,6 +28,7 @@ int main(int argc, char **argv)
 {
 	win = [ZWindow alloc];
 	label = [ZLabel alloc];
+	button = [ZButton alloc];
 
 	zwl_init();
 
@@ -35,6 +37,7 @@ int main(int argc, char **argv)
 	
 	[win init:ZWL_BACKEND_XCB:640:480];
 	[label init:"This is a fancy test label":10:10];
+	[button init:"Fancy":320:240:100:50];
 
 //	[win attatch_cb:KEY_PRESS:(ZCallback *)on_keypress];
 	[win attatch_cb:BUTTON_DOWN:(ZCallback *)on_buttondown];
@@ -45,6 +48,7 @@ int main(int argc, char **argv)
 	[win attatch_cb:DEFAULT:(ZCallback *)on_default];
 
 	[win add_child:(ZWidget *)label];
+	[win add_child:(ZWidget *)button];
 	
 	if(argv[1]) {
 		if(!fork()) {
@@ -60,11 +64,9 @@ int main(int argc, char **argv)
 		}
 	}	
 
-	[win show];
-
-	[win clear:0:0:0:1];
-
 	[label show];
+	[button show];
+	[win show];
 
 	zwl_main_loop_start();
 
@@ -182,6 +184,7 @@ static void on_expose(ZWidget *widget, void *data)
 		cairo_restore(cr);
 	}
 
+	[zc flush];
 }
 /*
 static void on_button_show(IMPObject *widget, void *data)
