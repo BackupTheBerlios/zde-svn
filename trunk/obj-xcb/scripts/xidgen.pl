@@ -55,6 +55,7 @@ if(!defined $ARGV[3]) {
 }
 else {
 	$prefix = $ARGV[3];
+	$prefix =~ s/(\w+)/\u\L$1/g;
 
 	$lowerprefix = $prefix;
 	$lowerprefix =~ tr/A-Z/a-z/;
@@ -78,10 +79,20 @@ start_class_header($outheaderfile);
 start_class_source($outsourcefile,$outheaderfile);
 
 #create twig
+#if(!($ARGV[1] =~ "xproto")) {
+#	my $twig = XML::Twig->new(twig_handlers=> {
+#			xidtype => \&xid_handle,
+#			union => \&xid_handle,
+#			request => \&request_handle
+#			});
+#	$twig->parsefile($ARGV[1]);
+#	$twig->purge;
+#}
+
 my $twig = XML::Twig->new(twig_handlers=> {
 		xidtype => \&xid_handle,
 		union => \&xid_handle,
-#	struct => \&xid_handle,
+		struct => \&xid_handle,
 		request => \&request_handle
 		});
 
@@ -99,6 +110,14 @@ if(defined $orphan) {
 #loads @xids with the name of every xid
 sub xid_handle()
 { my($twig, $section) = @_;
+	if($section->{'att'}->{'name'} eq "VISUALID" || $section->{'att'}->{'name'} eq "TIMECOORD" || $section->{'att'}->{'name'} eq "STR" ||
+			$section->{'att'}->{'name'} eq "CHARINFO" || $section->{'att'}->{'name'} eq "FONTPROP" || $section->{'att'}->{'name'} eq "TIMESTAMP"
+			|| $section->{'att'}->{'name'} eq "POINT" || $section->{'att'}->{'name'} eq "SEGMENT" || $section->{'att'}->{'name'} eq "RECTANGLE" ||
+			$section->{'att'}->{'name'} eq "ARC" || $section->{'att'}->{'name'} eq "CHAR2B" || $section->{'att'}->{'name'} eq "HOST" ||
+			$section->{'att'}->{'name'} eq "RGB" || $section->{'att'}->{'name'} eq "COLORITEM" || $section->{'att'}->{'name'} eq "KEYCODE" ||
+			$section->{'att'}->{'name'} eq "KEYSYM") {
+		return;
+	}
 	$xids[@xids] = $section->{'att'}->{'name'};
 }
 
@@ -355,7 +374,7 @@ sub output_method_header($$)
 				if($rtype eq $xidtmp) {
 					my $capxid = $xidtmp;
 					$capxid =~ s/(\w+)/\u\L$1/g;
-					$rtype = "ObjXCB$capxid *";
+					$rtype = "ObjXCB$prefix$capxid *";
 				}
 			}
 			print $repfh "- \($rtype\)get_$repfield->{'att'}->{'name'};\n";	
@@ -369,7 +388,7 @@ sub output_method_header($$)
 				if($ltype eq $xidtmp) {
 					my $capxid = $xidtmp;
 					$capxid =~ s/(\w+)/\u\L$1/g;
-					$ltype = "ObjXCB$capxid *";
+					$ltype = "ObjXCB$prefix$capxid *";
 				}
 			}
 			print $repfh "- \($ltype*\)get_$lfield->{'att'}->{'name'};\n";
@@ -445,8 +464,8 @@ sub output_method_source($$)
 				if($rtype eq $xidtmp) {
 					my $capxid = $xidtmp;
 					$capxid =~ s/(\w+)/\u\L$1/g;
-					$rtype = "ObjXCB$capxid *";
-					$rtypenonpoint = "ObjXCB$capxid";
+					$rtype = "ObjXCB$prefix$capxid *";
+					$rtypenonpoint = "ObjXCB$prefix$capxid";
 				}
 			}
 			#TODO: ERROR HANDLING
@@ -489,7 +508,7 @@ sub output_method_source($$)
 				if($ltype eq $xidtmp) {
 					my $capxid = $xidtmp;
 					$capxid =~ s/(\w+)/\u\L$1/g;
-					$ltype = "ObjXCB$capxid *";
+					$ltype = "ObjXCB$prefix$capxid *";
 				}
 			}
 			print $repsourcefh "- \($ltype*\)get_$lfield->{'att'}->{'name'}\n{\n";
@@ -641,7 +660,7 @@ sub output_decl($$$)
 				my $capxid = $xidtmp;
 				$capxid =~ s/(\w+)/\u\L$1/g;
 				#$ftype = ("XCB" . $xidtmp);
-				$ftype = "ObjXCB$capxid *";
+				$ftype = "ObjXCB$prefix$capxid *";
 			}
 		}
 
@@ -662,7 +681,7 @@ sub output_decl($$$)
 			if($ltype eq $xidtmp) {
 				my $capxid = $xidtmp;
 				$capxid =~ s/(\w+)/\u\L$1/g;
-				$ltype = "ObjXCB$capxid *";
+				$ltype = "ObjXCB$prefix$capxid *";
 			}
 		}
 	
@@ -682,7 +701,7 @@ sub output_decl($$$)
 			if($vtype eq $xidtmp) {
 				my $capxid = $xidtmp;
 				$capxid =~ s/(\w+)/\u\L$1/g;
-				$vtype = "ObjXCB$capxid *";
+				$vtype = "ObjXCB$prefix$capxid *";
 			}
 		}
 		
@@ -739,7 +758,7 @@ sub output_orphans()
 					if($rtype eq $xidtmp) {
 						my $capxid = $xidtmp;
 						$capxid =~ s/(\w+)/\u\L$1/g;
-						$rtype = "ObjXCB$capxid *";
+						$rtype = "ObjXCB$prefix$capxid *";
 					}
 				}
 				print $repfh "- \($rtype\)get_$repfield->{'att'}->{'name'};\n";	
@@ -753,7 +772,7 @@ sub output_orphans()
 					if($ltype eq $xidtmp) {
 						my $capxid = $xidtmp;
 						$capxid =~ s/(\w+)/\u\L$1/g;
-						$ltype = "ObjXCB$capxid *";
+						$ltype = "ObjXCB$prefix$capxid *";
 					}
 				}
 				print $repfh "- \($ltype*\)get_$lfield->{'att'}->{'name'};\n";
