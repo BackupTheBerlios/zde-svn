@@ -111,8 +111,6 @@ sub request_handle()
 	my $numfirstxid;
 	my $isxid = undef;
 	my $lastreqname;
-	my $type;
-	my @types;
 
 	my @fields = $section->children('field');
 	my %numeachtype;
@@ -128,25 +126,8 @@ sub request_handle()
 	
 	foreach my $field (@fields) {	
 		foreach my $xidtmp (@xids) {			
-			#resolve namespaces, defined like xproto:window or glx:window
-			if($field->{'att'}->{'type'} =~ /:/) {
-				print "$field->{'att'}->{'type'}:";
-				@types = split(/:/, $field->{'att'}->{'type'});
-				if($types[0] ne "xproto") {
-					$types[0] =~ tr/a-z/A-Z/;
-					$type = $types[0] . $types[1];
-				}
-				else {
-					$type = $types[1];
-				}		
-				print "$type \n";
-			}
-			else {
-				$type = $field->{'att'}->{'type'};
-			}
 			#then this is the first xid
-#	if(($field->{'att'}->{'type'} eq $xidtmp) and (!defined $firstxid)) {
-			if(($type eq $xidtmp) and (!defined $firstxid)) {
+			if(($field->{'att'}->{'type'} eq $xidtmp) and (!defined $firstxid)) {
 				$firstxid = $xidtmp;
 				$isxid = defined;
 
@@ -156,8 +137,7 @@ sub request_handle()
 				}
 			}
 			#even if its not the first xid, it might be an xid
-#		elsif($field->{'att'}->{'type'} eq $xidtmp) {
-			elsif($field eq $xidtmp) {
+			elsif($field->{'att'}->{'type'} eq $xidtmp) {
 				$isxid = defined;
 			}
 		}
@@ -166,15 +146,12 @@ sub request_handle()
 			return;
 		}
 	
-#		if((defined $isxid) and $field->{'att'}->{'type'} eq $firstxid) { 
-		if((defined $isxid) and $type eq $firstxid) {
+		if((defined $isxid) and $field->{'att'}->{'type'} eq $firstxid) { 
 			$numfirstxid++;
 		}
 
-		#XXX FIXME this is deprecated, no longer used..
 		if(!defined $isxid) {
-#		$numeachtype{"$field->{'att'}->{'type'}"}++;
-			$numeachtype{"$type"}++;
+			$numeachtype{"$field->{'att'}->{'type'}"}++;
 		}
 
 		$isxid = undef;
@@ -344,9 +321,6 @@ sub output_method_header($$)
 	my @reply = $request->children('reply');
 	my @list = $request->children('list');
 	my $firstxid;
-	
-	my $type;
-	my @types;
 
 	if(!@reply) {
 		print $headerfh '- (void)' . "$request->{'att'}->{'name'}";
@@ -377,67 +351,28 @@ sub output_method_header($$)
 
 		foreach my $repfield (@repfields) {
 			my $rtype = $repfield->{'att'}->{'type'};
-			
-			#resolve namespaces, defined like xproto:window or glx:window
-			if($rtype =~ /:/) {
-				print "$rtype:";
-				@types = split(/:/, $rtype);
-				if($types[0] ne "xproto") {
-					$types[0] =~ tr/a-z/A-Z/;
-					$type = $types[0] . $types[1];
-				}
-				else {
-					$type = $types[1];
-				}		
-				print "$type \n";
-			}
-			else {
-				$type = $rtype;
-			}
-
 			foreach my $xidtmp (@xids) {
-#		if($rtype eq $xidtmp) {
-				if($type eq $xidtmp) {
+				if($rtype eq $xidtmp) {
 					my $capxid = $xidtmp;
 					$capxid =~ s/(\w+)/\u\L$1/g;
-					$type = "ObjXCB$capxid *";
+					$rtype = "ObjXCB$capxid *";
 				}
 			}
-#	print $repfh "- \($rtype\)get_$repfield->{'att'}->{'name'};\n";	
-			print $repfh "- \($type\)get_$repfield->{'att'}->{'name'};\n";
+			print $repfh "- \($rtype\)get_$repfield->{'att'}->{'name'};\n";	
 		}
 
 		foreach my $lfield (@replist) {
 			my $ltype = $lfield->{'att'}->{'type'};
 			
-			#resolve namespaces, defined like xproto:window or glx:window
-			if($ltype =~ /:/) {
-				print "$ltype:";
-				@types = split(/:/, $ltype);
-				if($types[0] ne "xproto") {
-					$types[0] =~ tr/a-z/A-Z/;
-					$type = $types[0] . $types[1];
-				}
-				else {
-					$type = $types[1];
-				}		
-				print "$type \n";
-			}
-			else {
-				$type = $ltype;
-			}
-
 			#if its an xid, we need to Objectify its name to the form ObjXCBXid
 			foreach my $xidtmp (@xids) {
-#				if($ltype eq $xidtmp) {
-				if($type eq $xidtmp) {
+				if($ltype eq $xidtmp) {
 					my $capxid = $xidtmp;
 					$capxid =~ s/(\w+)/\u\L$1/g;
-#	$ltype = "ObjXCB$capxid *";
-					$type = "ObjXCB$capxid *";
+					$ltype = "ObjXCB$capxid *";
 				}
 			}
-			print $repfh "- \($type*\)get_$lfield->{'att'}->{'name'};\n";
+			print $repfh "- \($ltype*\)get_$lfield->{'att'}->{'name'};\n";
 		}
 
 		print $repfh "\@end\n";
@@ -467,10 +402,6 @@ sub output_method_source($$)
 	my @list = $request->children('list');
 	my $firstxid;
 	my $isxid;
-
-	my $type;
-	my $typenonpoint;
-	my @types;
 
 	if(!@reply) {
 		print $sourcefh '- (void)' . "$request->{'att'}->{'name'}";
@@ -510,42 +441,23 @@ sub output_method_source($$)
 		foreach my $repfield (@repfields) {
 			my $rtype = $repfield->{'att'}->{'type'};
 			my $rtypenonpoint;
-		
-			#resolve namespaces, defined like xproto:window or glx:window
-			if($rtype =~ /:/) {
-				print "$rtype:";
-				@types = split(/:/, $rtype);
-				if($types[0] ne "xproto") {
-					$types[0] =~ tr/a-z/A-Z/;
-					$type = $types[0] . $types[1];
-				}
-				else {
-					$type = $types[1];
-				}		
-				print "$type \n";
-			}
-			else {
-				$type = $rtype;
-			}
-
 			foreach my $xidtmp (@xids) {
-				if($type eq $xidtmp) {
+				if($rtype eq $xidtmp) {
 					my $capxid = $xidtmp;
 					$capxid =~ s/(\w+)/\u\L$1/g;
-					$type = "ObjXCB$capxid *";
-					$typenonpoint = "ObjXCB$capxid";
+					$rtype = "ObjXCB$capxid *";
+					$rtypenonpoint = "ObjXCB$capxid";
 				}
 			}
 			#TODO: ERROR HANDLING
-			print $repsourcefh "- \($type\)get_$repfield->{'att'}->{'name'}\n{\n";
+			print $repsourcefh "- \($rtype\)get_$repfield->{'att'}->{'name'}\n{\n";
 			print $repsourcefh "\t" . 'if(!self->got_rep) {' . "\n\t\t" . 'self->reply = XCB' . "$prefix$request->{'att'}->{'name'}Reply\(" . 
 				'[self->c get_connection],self->repcookie,0);' . "\n\t\tself->got_rep = 1;" ."\n\t}\n";
 
 			#figure out if its an xid, this determines how we need to return
 			$isxid = undef;
 			foreach my $xidtmp (@xids) {
-#if($repfield->{'att'}->{'type'} eq $xidtmp) {
-				if($type eq $xidtmp) {
+				if($repfield->{'att'}->{'type'} eq $xidtmp) {
 					$isxid = defined;
 					last;
 				}
@@ -572,32 +484,15 @@ sub output_method_source($$)
 		foreach my $lfield (@replist) {
 			my $ltype = $lfield->{'att'}->{'type'};
 			
-			#resolve namespaces, defined like xproto:window or glx:window
-			if($ltype =~ /:/) {
-				print "$ltype:";
-				@types = split(/:/, $ltype);
-				if($types[0] ne "xproto") {
-					$types[0] =~ tr/a-z/A-Z/;
-					$type = $types[0] . $types[1];
-				}
-				else {
-					$type = $types[1];
-				}		
-				print "$type \n";
-			}
-			else {
-				$type = $ltype;
-			}
-
 			#if its an xid, we need to Objectify its name to the form ObjXCBXid
 			foreach my $xidtmp (@xids) {
-				if($type eq $xidtmp) {
+				if($ltype eq $xidtmp) {
 					my $capxid = $xidtmp;
 					$capxid =~ s/(\w+)/\u\L$1/g;
-					$type = "ObjXCB$capxid *";
+					$ltype = "ObjXCB$capxid *";
 				}
 			}
-			print $repsourcefh "- \($type*\)get_$lfield->{'att'}->{'name'}\n{\n";
+			print $repsourcefh "- \($ltype*\)get_$lfield->{'att'}->{'name'}\n{\n";
 
 			print $repsourcefh "\n}\n\n";
 		}
@@ -609,25 +504,8 @@ sub output_method_source($$)
 		print $sourcefh "\t[rep init:self->c:XCB$prefix$request->{'att'}->{'name'}\([self->c get_connection]";
 		
 		foreach my $field (@fields) {
-			#resolve namespaces, defined like xproto:window or glx:window
-			if($field->{'att'}->{'type'} =~ /:/) {
-				print "$field->{'att'}->{'type'}:";
-				@types = split(/:/, $field->{'att'}->{'type'});
-				if($types[0] ne "xproto") {
-					$types[0] =~ tr/a-z/A-Z/;
-					$type = $types[0] . $types[1];
-				}
-				else {
-					$type = $types[1];
-				}		
-				print "$type \n";
-			}
-			else {
-				$type = $field->{'att'}->{'type'};
-			}
-
 			#if its the first xid, we have it stored within the object
-			if(($type eq $ARGV[0]) and !defined $firstxid) {
+			if(($field->{'att'}->{'type'} eq $ARGV[0]) and !defined $firstxid) {
 				$firstxid = defined;
 				if($ARGV[0] eq "WINDOW" or $ARGV[0] eq "PIXMAP") {
 					print $sourcefh ',[self get_xid]';
@@ -639,7 +517,7 @@ sub output_method_source($$)
 			else {
 				foreach my $xid (@xids) {
 					#if its an xid, output code to get it from the object.
-					if($xid eq $type) {
+					if($xid eq $field->{'att'}->{'type'}) {
 						print $sourcefh ",[$field->{'att'}->{'name'} get_xid]";
 						$isxid = defined;
 					}
@@ -679,25 +557,8 @@ sub output_method_source($$)
 		print $sourcefh "\t" . "XCB$prefix$request->{'att'}->{'name'}" . '([self->c get_connection]';
 
 		foreach my $field (@fields) {
-			#resolve namespaces, defined like xproto:window or glx:window
-			if($field->{'att'}->{'type'} =~ /:/) {
-				print "$field->{'att'}->{'type'}:";
-				@types = split(/:/, $field->{'att'}->{'type'});
-				if($types[0] ne "xproto") {
-					$types[0] =~ tr/a-z/A-Z/;
-					$type = $types[0] . $types[1];
-				}
-				else {
-					$type = $types[1];
-				}		
-				print "$type \n";
-			}
-			else {
-				$type = $field->{'att'}->{'type'};
-			}
-
 			#if its the first xid, we have it stored within the object
-			if(($type eq $ARGV[0]) and !defined $firstxid) {
+			if(($field->{'att'}->{'type'} eq $ARGV[0]) and !defined $firstxid) {
 				$firstxid = defined;
 				if($ARGV[0] eq "WINDOW" or $ARGV[0] eq "PIXMAP") {
 					print $sourcefh ',[self get_xid]';
@@ -709,7 +570,7 @@ sub output_method_source($$)
 			else {	
 				foreach my $xid (@xids) {
 					#if its an xid, output code to get it from the object.
-					if($xid eq $type) {
+					if($xid eq $field->{'att'}->{'type'}) {
 						print $sourcefh ",[$field->{'att'}->{'name'} get_xid]";
 						$isxid = defined;
 					}
@@ -755,53 +616,36 @@ sub output_decl($$$)
 	my @reply = $request->children('reply');
 	my @list = $request->children('list');
 	my $firstxid;
-
+	
 	my $type;
 	my @types;
 
 	#for all the regular fields
 	foreach my $field (@fields) {
 		my $ftype = $field->{'att'}->{'type'};
-	
-		#resolve namespaces, defined like xproto:window or glx:window
-		if($field->{'att'}->{'type'} =~ /:/) {
-			print "$field->{'att'}->{'type'}:";
-			@types = split(/:/, $field->{'att'}->{'type'});
-			if($types[0] ne "xproto") {
-				$types[0] =~ tr/a-z/A-Z/;
-				$type = $types[0] . $types[1];
-			}
-			else {
-				$type = $types[1];
-			}		
-			print "$type \n";
-		}
-		else {
-			$type = $field->{'att'}->{'type'};
-		}
-
+		
 		#print $field->{'att'}->{'name'};
 		if(!defined $field) {
 			next;
 		}
 		
 		#if the type of this field is the type we want, and this is the first one, skip it, we keep it inside the object
-		if(($type eq $ARGV[0]) and !defined $firstxid and $mythingy ne "lucy") {
+		if(($ftype eq $ARGV[0]) and !defined $firstxid and $mythingy ne "lucy") {
 			$firstxid = 0;
 			next;
 		}
 
 		foreach my $xidtmp (@xids) {
 			#if its an xid. we need to Objectify its name to the form ObjXCBXid
-			if($type eq $xidtmp) {
+			if($ftype eq $xidtmp) {
 				my $capxid = $xidtmp;
 				$capxid =~ s/(\w+)/\u\L$1/g;
 				#$ftype = ("XCB" . $xidtmp);
-				$type = "ObjXCB$capxid *";
+				$ftype = "ObjXCB$capxid *";
 			}
 		}
 
-		print $fh ":\($type\)$field->{'att'}->{'name'}";	
+		print $fh ":\($ftype\)$field->{'att'}->{'name'}";	
 	}
 
 	#lists
@@ -813,29 +657,12 @@ sub output_decl($$$)
 			@lop = $lop[0]->children('op');
 		}
 
-		#resolve namespaces, defined like xproto:window or glx:window
-		if($ltype =~ /:/) {
-			print "$ltype:";
-			@types = split(/:/, $ltype);
-			if($types[0] ne "xproto") {
-				$types[0] =~ tr/a-z/A-Z/;
-				$type = $types[0] . $types[1];
-			}
-			else {
-				$type = $types[1];
-			}		
-			print "$type \n";
-		}
-		else {
-			$type = $ltype;
-		}
-
 		#if its an xid, we need to Objectify its name to the form ObjXCBXid
 		foreach my $xidtmp (@xids) {
-			if($type eq $xidtmp) {
+			if($ltype eq $xidtmp) {
 				my $capxid = $xidtmp;
 				$capxid =~ s/(\w+)/\u\L$1/g;
-				$type = "ObjXCB$capxid *";
+				$ltype = "ObjXCB$capxid *";
 			}
 		}
 	
@@ -843,41 +670,24 @@ sub output_decl($$$)
 			print $fh ":\(CARD16\)$lfield->{'att'}->{'name'}_len";
 		}
 
-		print $fh ":\($type *\)$lfield->{'att'}->{'name'}";
+		print $fh ":\($ltype *\)$lfield->{'att'}->{'name'}";
 	}
 
 	#valueparams
 	foreach my $vparam (@valueparam) {
 		my $vtype = $vparam->{'att'}->{'value-mask-type'};
-		
-		#resolve namespaces, defined like xproto:window or glx:window
-		if($vtype =~ /:/) {
-			print "$vtype:";
-			@types = split(/:/, $vtype);
-			if($types[0] ne "xproto") {
-				$types[0] =~ tr/a-z/A-Z/;
-				$type = $types[0] . $types[1];
-			}
-			else {
-				$type = $types[1];
-			}		
-			print "$type \n";
-		}
-		else {
-			$type = $vtype;
-		}
 
 		foreach my $xidtmp (@xids) {
 			#if its an xid. we need to Objectify its name to the form ObjXCBXid
-			if($type eq $xidtmp) {
+			if($vtype eq $xidtmp) {
 				my $capxid = $xidtmp;
 				$capxid =~ s/(\w+)/\u\L$1/g;
-				$type = "ObjXCB$capxid *";
+				$vtype = "ObjXCB$capxid *";
 			}
 		}
 		
-		print $fh ":\($type\)$vparam->{'att'}->{'value-mask-name'}";
-		print $fh ":\($type *\)$vparam->{'att'}->{'value-list-name'}";
+		print $fh ":\($vtype\)$vparam->{'att'}->{'value-mask-name'}";
+		print $fh ":\($vtype *\)$vparam->{'att'}->{'value-list-name'}";
 	}
 }
 
