@@ -79,15 +79,16 @@ start_class_header($outheaderfile);
 start_class_source($outsourcefile,$outheaderfile);
 
 #create twig
-#if(!($ARGV[1] =~ "xproto")) {
-#	my $twig = XML::Twig->new(twig_handlers=> {
-#			xidtype => \&xid_handle,
-#			union => \&xid_handle,
-#			request => \&request_handle
-#			});
+if(!($ARGV[1] =~ "xproto")) {
+	my $twig = XML::Twig->new(twig_handlers=> {
+			xidtype => \&xid_handle,
+			union => \&xid_handle,
+			});
 #	$twig->parsefile($ARGV[1]);
-#	$twig->purge;
-#}
+	#XXX TODO FIXME THIS IS SO WRONG ON SO MANY LEVELS
+	$twig->parsefile("/usr/local/include/X11/XCB/xproto.xml");
+	$twig->purge;
+}
 
 my $twig = XML::Twig->new(twig_handlers=> {
 		xidtype => \&xid_handle,
@@ -279,7 +280,7 @@ sub start_class_source($$)
 
 	#include
 	print $sourcefh '#include <obj-xcb.h>' . "\n";
-	print $sourcefh '#include <' . "$_[1]" . '>' . "\n\n";
+	print $sourcefh '#include "' . "$_[1]" . '"' . "\n\n";
 
 	#generic init and free code
 	print $sourcefh "\@implementation ObjXCB$prefix$capxid : $inherits \n\n";

@@ -14,6 +14,27 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 /* XCB includes */
 #include <X11/XCB/xcb.h>
+#include <X11/XCB/bigreq.h>
+#include <X11/XCB/composite.h>
+#include <X11/XCB/damage.h>
+#include <X11/XCB/dpms.h>
+#include <X11/XCB/glx.h>
+#include <X11/XCB/randr.h>
+#include <X11/XCB/record.h>
+#include <X11/XCB/render.h>
+#include <X11/XCB/res.h>
+#include <X11/XCB/screensaver.h>
+#include <X11/XCB/shape.h>
+#include <X11/XCB/shm.h>
+#include <X11/XCB/sync.h>
+#include <X11/XCB/xc_misc.h>
+#include <X11/XCB/xevie.h>
+#include <X11/XCB/xf86dri.h>
+#include <X11/XCB/xfixes.h>
+#include <X11/XCB/xprint.h>
+#include <X11/XCB/xtest.h>
+#include <X11/XCB/xvmc.h>
+#include <X11/XCB/xv.h>
 
 /* C Standard library includes */
 #include <stdio.h>
@@ -62,7 +83,8 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 #import "xcb_colormap.h"
 #import "xcb_atom.h"
 #import "xcb_window.h"
-/*
+
+#if 0
 #import "extensions/xcb_damagedamage.h"
 #import "extensions/xcb_shmseg.h"
 #import "extensions/xcb_glxcontext.h"
@@ -83,4 +105,4 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 #import "extensions/xcb_xvmcsurface.h"
 #import "extensions/xcb_renderpicture.h"
 #import "extensions/xcb_xvport.h"
-*/
+#endif
