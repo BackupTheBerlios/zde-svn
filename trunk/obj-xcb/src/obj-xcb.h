@@ -69,6 +69,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 #define KEYCODE XCBKEYCODE
 #define KEYSYM XCBKEYSYM
 #define HOST XCBHOST
+#define REGION ObjXCBXfixesRegion
 
 /* obj-xcb includes */
 #import "objxproto.h"
@@ -83,6 +84,8 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 #import "xcb_colormap.h"
 #import "xcb_atom.h"
 #import "xcb_window.h"
+
+#import "extensions/xcb_xfixesregion.h"
 
 #if 0
 #import "extensions/xcb_damagedamage.h"

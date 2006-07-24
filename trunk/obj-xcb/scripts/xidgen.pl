@@ -34,6 +34,7 @@ my $headerfh;
 my $sourcefh;
 
 my @xids;
+my @xidsext;
 my @orphans;
 my $orphan;
 my $orphanct = 0;
@@ -81,8 +82,8 @@ start_class_source($outsourcefile,$outheaderfile);
 #create twig
 if(!($ARGV[1] =~ "xproto")) {
 	my $twig = XML::Twig->new(twig_handlers=> {
-			xidtype => \&xid_handle,
-			union => \&xid_handle,
+			xidtype => \&xid_handleext,
+			union => \&xid_handleext,
 			});
 #	$twig->parsefile($ARGV[1]);
 	#XXX TODO FIXME THIS IS SO WRONG ON SO MANY LEVELS
@@ -96,6 +97,9 @@ my $twig = XML::Twig->new(twig_handlers=> {
 		struct => \&xid_handle,
 		request => \&request_handle
 		});
+
+#FIXME STUPID HACK
+#$xids[@xids] = "REGION";
 
 $twig->parsefile($ARGV[1]);
 $twig->purge;
@@ -120,6 +124,19 @@ sub xid_handle()
 		return;
 	}
 	$xids[@xids] = $section->{'att'}->{'name'};
+}
+
+sub xid_handleext()
+{ my($twig, $section) = @_;
+	if($section->{'att'}->{'name'} eq "VISUALID" || $section->{'att'}->{'name'} eq "TIMECOORD" || $section->{'att'}->{'name'} eq "STR" ||
+			$section->{'att'}->{'name'} eq "CHARINFO" || $section->{'att'}->{'name'} eq "FONTPROP" || $section->{'att'}->{'name'} eq "TIMESTAMP"
+			|| $section->{'att'}->{'name'} eq "POINT" || $section->{'att'}->{'name'} eq "SEGMENT" || $section->{'att'}->{'name'} eq "RECTANGLE" ||
+			$section->{'att'}->{'name'} eq "ARC" || $section->{'att'}->{'name'} eq "CHAR2B" || $section->{'att'}->{'name'} eq "HOST" ||
+			$section->{'att'}->{'name'} eq "RGB" || $section->{'att'}->{'name'} eq "COLORITEM" || $section->{'att'}->{'name'} eq "KEYCODE" ||
+			$section->{'att'}->{'name'} eq "KEYSYM") {
+		return;
+	}
+	$xidsext[@xidsext] = $section->{'att'}->{'name'};
 }
 
 sub request_handle()
@@ -378,6 +395,17 @@ sub output_method_header($$)
 					$rtype = "ObjXCB$prefix$capxid *";
 				}
 			}
+
+			if(!($rtype =~ "ObjXCB")) {
+				foreach my $xidtmp (@xidsext) {
+					if($rtype eq $xidtmp) {
+						my $capxid = $xidtmp;
+						$capxid =~ s/(\w+)/\u\L$1/g;
+						$rtype = "ObjXCB$capxid *";
+					}
+				}	
+			}
+
 			print $repfh "- \($rtype\)get_$repfield->{'att'}->{'name'};\n";	
 		}
 
@@ -392,6 +420,16 @@ sub output_method_header($$)
 					$ltype = "ObjXCB$prefix$capxid *";
 				}
 			}
+			if(!($ltype =~ "ObjXCB")) {
+				foreach my $xidtmp (@xidsext) {
+					if($ltype eq $xidtmp) {
+						my $capxid = $xidtmp;
+						$capxid =~ s/(\w+)/\u\L$1/g;
+						$ltype = "ObjXCB$capxid *";
+					}
+				}	
+			}
+
 			print $repfh "- \($ltype*\)get_$lfield->{'att'}->{'name'};\n";
 		}
 
@@ -469,6 +507,17 @@ sub output_method_source($$)
 					$rtypenonpoint = "ObjXCB$prefix$capxid";
 				}
 			}
+			if(!($rtype =~ "ObjXCB")) {
+				foreach my $xidtmp (@xidsext) {
+					if($rtype eq $xidtmp) {
+						my $capxid = $xidtmp;
+						$capxid =~ s/(\w+)/\u\L$1/g;
+						$rtype = "ObjXCB$capxid *";
+						$rtypenonpoint = "ObjXCB$capxid";
+					}
+				}	
+			}
+
 			#TODO: ERROR HANDLING
 			print $repsourcefh "- \($rtype\)get_$repfield->{'att'}->{'name'}\n{\n";
 			print $repsourcefh "\t" . 'if(!self->got_rep) {' . "\n\t\t" . 'self->reply = XCB' . "$prefix$request->{'att'}->{'name'}Reply\(" . 
@@ -480,6 +529,14 @@ sub output_method_source($$)
 				if($repfield->{'att'}->{'type'} eq $xidtmp) {
 					$isxid = defined;
 					last;
+				}
+			}
+			if(!defined $isxid) {
+				foreach my $xidtmp (@xidsext) {
+					if($repfield->{'att'}->{'type'} eq $xidtmp) {
+						$isxid = defined;
+						last;
+					}
 				}
 			}
 
@@ -512,6 +569,16 @@ sub output_method_source($$)
 					$ltype = "ObjXCB$prefix$capxid *";
 				}
 			}
+			if(!($ltype =~ "ObjXCB")) {
+				foreach my $xidtmp (@xidsext) {
+					if($ltype eq $xidtmp) {
+						my $capxid = $xidtmp;
+						$capxid =~ s/(\w+)/\u\L$1/g;
+						$ltype = "ObjXCB$capxid *";
+					}
+				}	
+			}
+
 			print $repsourcefh "- \($ltype*\)get_$lfield->{'att'}->{'name'}\n{\n";
 
 			print $repsourcefh "\n}\n\n";
@@ -542,6 +609,16 @@ sub output_method_source($$)
 						$isxid = defined;
 					}
 				}
+				if(!defined $isxid) {
+					foreach my $xid (@xidsext) {
+						#if its an xid, output code to get it from the object.
+						if($xid eq $field->{'att'}->{'type'}) {
+							print $sourcefh ",[$field->{'att'}->{'name'} get_xid]";
+							$isxid = defined;
+						}
+					}
+				}
+
 				if(!defined $isxid) {
 					print $sourcefh ",$field->{'att'}->{'name'}";
 				}
@@ -595,6 +672,16 @@ sub output_method_source($$)
 						$isxid = defined;
 					}
 				}
+				if(!defined $isxid) {
+					foreach my $xid (@xidsext) {
+						#if its an xid, output code to get it from the object.
+						if($xid eq $field->{'att'}->{'type'}) {
+							print $sourcefh ",[$field->{'att'}->{'name'} get_xid]";
+							$isxid = defined;
+						}
+					}
+				}
+			
 				if(!defined $isxid) {
 					print $sourcefh ",$field->{'att'}->{'name'}";
 				}
@@ -665,6 +752,16 @@ sub output_decl($$$)
 			}
 		}
 
+		foreach my $xidtmp (@xidsext) {
+			#if its an xid. we need to Objectify its name to the form ObjXCBXid
+			if($ftype eq $xidtmp) {
+				my $capxid = $xidtmp;
+				$capxid =~ s/(\w+)/\u\L$1/g;
+				#$ftype = ("XCB" . $xidtmp);
+				$ftype = "ObjXCB$capxid *";
+			}
+		}
+
 		print $fh ":\($ftype\)$field->{'att'}->{'name'}";	
 	}
 
@@ -685,7 +782,15 @@ sub output_decl($$$)
 				$ltype = "ObjXCB$prefix$capxid *";
 			}
 		}
-	
+		foreach my $xidtmp (@xidsext) {
+			#if its an xid. we need to Objectify its name to the form ObjXCBXid
+			if($ltype eq $xidtmp) {
+				my $capxid = $xidtmp;
+				$capxid =~ s/(\w+)/\u\L$1/g;
+				$ltype = "ObjXCB$capxid *";
+			}
+		}
+
 		if(!@lfref and !@lop and $request->{'att'}->{'name'} ne "SendEvent") {
 			print $fh ":\(CARD16\)$lfield->{'att'}->{'name'}_len";
 		}
@@ -705,7 +810,15 @@ sub output_decl($$$)
 				$vtype = "ObjXCB$prefix$capxid *";
 			}
 		}
-		
+		foreach my $xidtmp (@xidsext) {
+			#if its an xid. we need to Objectify its name to the form ObjXCBXid
+			if($vtype eq $xidtmp) {
+				my $capxid = $xidtmp;
+				$capxid =~ s/(\w+)/\u\L$1/g;
+				$vtype = "ObjXCB$capxid *";
+			}
+		}
+
 		print $fh ":\($vtype\)$vparam->{'att'}->{'value-mask-name'}";
 		print $fh ":\($vtype *\)$vparam->{'att'}->{'value-list-name'}";
 	}
