@@ -27,8 +27,6 @@
 #include <obj-xcb.h>
 #include <imp.h>
 
-#include <X11/Xft/Xft.h>
-
 #include <cairo.h>
 
 #ifndef CAIRO_HAS_XCB_SURFACE
