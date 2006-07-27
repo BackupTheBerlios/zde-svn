@@ -24,8 +24,11 @@ libXCBobjc_la_SOURCES = xcb_conn.m xcb_window.m \
 			objxcb_listextensionsreply.m	   objxcb_getkeyboardmappingreply.m \
 			objxcb_getkeyboardcontrolreply.m   objxcb_getscreensaverreply.m \
 			objxcb_listhostsreply.m		   objxcb_setpointermappingreply.m \
-			objxcb_getpointermappingreply.m	    \
-			objxcb_getmodifiermappingreply.m   objxcb_getpointercontrolreply.m \
+			objxcb_getpointermappingreply.m	   objxcb_getmodifiermappingreply.m \
+			objxcb_getpointercontrolreply.m
+
+if EXT
+libXCBobjc_la_SOURCES += objxcb_getmodifiermappingreply.m   objxcb_getpointercontrolreply.m \
 			extensions/xcb_damagedamage.m      extensions/xcb_shmseg.m \
 			extensions/xcb_syncalarm.m         extensions/xcb_synccounter.m \
 			extensions/xcb_xfixesregion.m	   extensions/xcb_xprintpcontext.m \
@@ -34,7 +37,7 @@ libXCBobjc_la_SOURCES = xcb_conn.m xcb_window.m \
 			extensions/xcb_xvmcsubpicture.m	   extensions/xcb_renderpictformat.m \
 			extensions/xcb_xvmcsurface.m       extensions/xcb_renderpicture.m \
 			extensions/xcb_xvport.m
-
+endif
 
 XCBOBJCHEADERS = xcb_conn.h obj-xcb.h objxproto.h xcb_window.h xcb_atom.h xcb_colormap.h xcb_cursor.h xcb_font.h xcb_gcontext.h xcb_pixmap.h \
 		 xcb_drawable.h xcb_fontable.h xcb_conn_orphan.h \
@@ -56,8 +59,11 @@ XCBOBJCHEADERS = xcb_conn.h obj-xcb.h objxproto.h xcb_window.h xcb_atom.h xcb_co
 		 objxcb_listextensionsreply.h	    objxcb_getkeyboardmappingreply.h \
 		 objxcb_getkeyboardcontrolreply.h   objxcb_getscreensaverreply.h \
 		 objxcb_listhostsreply.h	    objxcb_setpointermappingreply.h \
-		 objxcb_getpointermappingreply.h     \
-		 objxcb_getmodifiermappingreply.h   objxcb_getpointercontrolreply.h \
+		 objxcb_getpointermappingreply.h    objxcb_getmodifiermappingreply.h \
+		 objxcb_getpointercontrolreply.h
+
+if EXT
+XCBOBJCHEADERS += objxcb_getmodifiermappingreply.h   objxcb_getpointercontrolreply.h \
 		 extensions/xcb_damagedamage.h      extensions/xcb_shmseg.h \
 		 extensions/xcb_glxcontext.h        extensions/xcb_syncalarm.h \
 	       	 extensions/xcb_glxfbconfig.h       extensions/xcb_synccounter.h \
@@ -69,6 +75,7 @@ XCBOBJCHEADERS = xcb_conn.h obj-xcb.h objxproto.h xcb_window.h xcb_atom.h xcb_co
 		 extensions/xcb_renderpictformat.h  extensions/xcb_xvmcsurface.h \
 		 extensions/xcb_renderpicture.h     extensions/xcb_xvport.h 
 
+endif
 
 EXTRA_DIST = $(XCBOBJCHEADERS)
 

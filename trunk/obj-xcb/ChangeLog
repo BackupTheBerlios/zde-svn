@@ -1,0 +1,10 @@
+0.0.2
+-More functions generated
+-Fix functions that were generated, but not correctly
+-Test program
+-Fixes
+-Extension generation(not complete, need to pass --enable-extensions to
+		configure)
+
+0.0.1
+-First release

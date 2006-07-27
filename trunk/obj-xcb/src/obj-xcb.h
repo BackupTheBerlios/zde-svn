@@ -85,7 +85,9 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 #import "xcb_atom.h"
 #import "xcb_window.h"
 
+#ifdef EXT
 #import "extensions/xcb_xfixesregion.h"
+#endif
 
 #if 0
 #import "extensions/xcb_damagedamage.h"

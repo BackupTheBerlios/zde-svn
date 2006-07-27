@@ -264,7 +264,10 @@ sub start_class_header($)
 	print $headerfh "\@interface ObjXCB$prefix$capxid : $inherits \n{\n";
 
 	#variables
-	if($ARGV[0] ne "WINDOW" or $ARGV[0] ne "PIXMAP") {
+	if($ARGV[0] eq "WINDOW" or $ARGV[0] eq "PIXMAP") {
+	}
+	#if($ARGV[0] ne "WINDOW" or $ARGV[0] ne "PIXMAP") {
+	else {
 		print $headerfh "\tXCB$prefix$ARGV[0]" . ' xid;' . "\n";
 		print $headerfh "\t" . 'ObjXCBConnection *c;' . "\n";
 	}

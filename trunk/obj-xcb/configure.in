@@ -85,6 +85,9 @@ AC_CHECK_FUNCS([malloc])
 AC_CHECK_FUNCS([calloc])
 AC_CHECK_FUNCS([realloc])
 
+AC_ARG_ENABLE(EXT,[ --enable-extensions    Enable compiling bindings to XCB extensions(default=no)],enable_ext=yes,enable_ext=no)
+AM_CONDITIONAL(EXT, test $enable_ext = yes)
+
 AC_CHECK_LIB(pot,coffee,,[
                 echo "Your coffee pot is empty, time to make some coffee!"
                 ])
