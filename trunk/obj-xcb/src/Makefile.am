@@ -39,7 +39,8 @@ libXCBobjc_la_SOURCES += objxcb_getmodifiermappingreply.m   objxcb_getpointercon
 			extensions/xcb_xvport.m
 endif
 
-XCBOBJCHEADERS = xcb_conn.h obj-xcb.h objxproto.h xcb_window.h xcb_atom.h xcb_colormap.h xcb_cursor.h xcb_font.h xcb_gcontext.h xcb_pixmap.h \
+XCBOBJCHEADERS = documentation.h \
+		 xcb_conn.h obj-xcb.h objxproto.h xcb_window.h xcb_atom.h xcb_colormap.h xcb_cursor.h xcb_font.h xcb_gcontext.h xcb_pixmap.h \
 		 xcb_drawable.h xcb_fontable.h xcb_conn_orphan.h \
 		 objxcb_alloccolorcellsreply.h      objxcb_listinstalledcolormapsreply.h \
 		 objxcb_alloccolorplanesreply.h     objxcb_listpropertiesreply.h \
