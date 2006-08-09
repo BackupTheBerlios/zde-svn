@@ -9,9 +9,6 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
  */
 
-/* Nasty hack for documenting the classes and their methods. */
-#include "documentation.h"
-
 /* Objc includes */
 #include <objc/Object.h>
 
