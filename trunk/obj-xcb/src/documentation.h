@@ -56,5 +56,8 @@
  * the data, that is then when the reply is forced, not before.  Therefore, you can have the same power that is available in plain XCB without keeping track of 
  * hundreds of different variables, instead it is all neatly encapsulated into a black box object that does the work for you.
  *
+ * Each reply object has accessor methods that correspond to the XCB structure memebers.  Each reply should also be freed when you are done with it, and never
+ * allocated or created yourself.
+ *
  */
 
