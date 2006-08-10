@@ -16,6 +16,7 @@ AC_ISC_POSIX
 AC_PROG_INSTALL
 AC_PROG_CPP
 AC_PROG_LIBTOOL
+AC_CHECK_PROG(PERL,perl,perl,noperl)
 
 dnl Set PACKAGE_LOCALE_DIR in config.h
 if test "x${prefix}" = "xNONE"; then
