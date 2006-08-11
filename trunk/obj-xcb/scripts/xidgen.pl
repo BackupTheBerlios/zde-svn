@@ -521,7 +521,9 @@ sub output_method_source($$)
 				}	
 			}
 
-			#TODO: ERROR HANDLING
+			#TODO: ERROR HANDLING Unfortunatly, exceptions are not universally supported by all gcc versions, and only on os x up till 4.1, so
+			#there really isn't a good solution here right now. once it is supported, it would be fairly trivial to add code that checks for
+			#and error and throws an exception
 			print $repsourcefh "- \($rtype\)get_$repfield->{'att'}->{'name'}\n{\n";
 			print $repsourcefh "\t" . 'if(!self->got_rep) {' . "\n\t\t" . 'self->reply = XCB' . "$prefix$request->{'att'}->{'name'}Reply\(" . 
 				'[self->c get_connection],self->repcookie,0);' . "\n\t\tself->got_rep = 1;" ."\n\t}\n";
