@@ -382,12 +382,14 @@ sub output_method_header($$)
 		print $repfh "\@interface ObjXCB$prefix$request->{'att'}->{'name'}Reply : Object\n{\n";
 		print $repfh "\tXCB$prefix$request->{'att'}->{'name'}" . "Cookie repcookie;\n";
 		print $repfh "\tXCB$prefix$request->{'att'}->{'name'}" . "Rep *reply;\n";
+		print $repfh "\tXCBGenericError err;\n";
 		print $repfh "\tObjXCBConnection *c;\n";
 		print $repfh "\tunsigned int got_rep;\n}\n\n";
 		
-		#constructor and deconstructor
+		#constructor, deconstructor, and error getter
 		print $repfh "- \(id\)init:\(ObjXCBConnection *\)c:\(XCB$prefix$request->{'att'}->{'name'}Cookie\)repcookie;\n";
 		print $repfh "- \(void\)free;\n";
+		print $repfh "- \(XCBGenericError *)get_error;\n";
 
 		foreach my $repfield (@repfields) {
 			my $rtype = $repfield->{'att'}->{'type'};
@@ -494,10 +496,11 @@ sub output_method_source($$)
 		print $repsourcefh '#include "obj-xcb.h"' . "\n\n";
 		print $repsourcefh '@implementation ObjXCB' . "$prefix$request->{'att'}->{'name'}Reply : Object\n\n";
 	
-		#constructor and deconstructor
+		#constructor, deconstructor, and error getter
 		print $repsourcefh "- \(id\)init:\(ObjXCBConnection *)c:\(XCB$prefix$request->{'att'}->{'name'}Cookie\)repcookie\n{\n";
 		print $repsourcefh "\tself->repcookie = repcookie;\n\tself->reply=NULL;\n\tself->got_rep = 0;\n\tself->c = c;\n}\n\n";
 		print $repsourcefh "- \(void\)free\n{\n\tif(self->reply) {\n\t\tfree\(self->reply\);\n\t}\n\t[super free];\n}\n\n";
+		print $repsourcefh "- \(XCBGenericError *)get_error\n{\n\treturn &self->err;\n}\n\n";
 
 		foreach my $repfield (@repfields) {
 			my $rtype = $repfield->{'att'}->{'type'};
@@ -526,7 +529,7 @@ sub output_method_source($$)
 			#and error and throws an exception
 			print $repsourcefh "- \($rtype\)get_$repfield->{'att'}->{'name'}\n{\n";
 			print $repsourcefh "\t" . 'if(!self->got_rep) {' . "\n\t\t" . 'self->reply = XCB' . "$prefix$request->{'att'}->{'name'}Reply\(" . 
-				'[self->c get_connection],self->repcookie,0);' . "\n\t\tself->got_rep = 1;" ."\n\t}\n";
+				'[self->c get_connection],self->repcookie,&err);' . "\n\t\tself->got_rep = 1;" ."\n\t}\n";
 
 			#figure out if its an xid, this determines how we need to return
 			$isxid = undef;
