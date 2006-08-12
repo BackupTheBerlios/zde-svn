@@ -14,6 +14,10 @@ int main(void)
 	ObjXCBGcontext *blugc = [ObjXCBGcontext alloc];
 	ObjXCBColormap *cmap;
 	ObjXCBAllocColorReply *acolorrep;
+	XCBExposeEvent *expose;
+	int width;
+	int height;
+
 	int random;
 
 	XCBGenericEvent *e;
@@ -67,24 +71,31 @@ int main(void)
 	value[0] = [acolorrep get_pixel];
 	[blugc CreateGC:w:XCBGCForeground:value];
 	
+	width = [geomrep get_width];
+	height = [geomrep get_height];
+
+	/* one giant rectangle */
 	rect[0].x = 0;
 	rect[0].y = 0;
-	rect[0].width = [geomrep get_width];
-	rect[0].height = [geomrep get_height];
+	rect[0].width = width;
+	rect[0].height = height;
 	[w PolyFillRectangle:bgc:1:rect];
-
 
 	/* Flush all requests to the server */
 	[c flush];
 
 	printf("The window is positioned at x:%d:y:%d with width:%d and height:%d.\n",[geomrep get_x],[geomrep get_y],[geomrep get_width],[geomrep get_height]);
 
+	/* Not the most efficient way, but it works(sort of) */
 	while(1) {
 		e = [c poll_next_event:NULL];
 		if(e) {
 			switch(e->response_type) {
 				case XCBExpose:
-					geomrep = [w GetGeometry];
+					expose = (XCBExposeEvent *)e;
+					width = expose->width;
+					height = expose->height;
+		//			geomrep = [w GetGeometry];
 				//	[w PolyFillRectangle:gc:1:rect];
 					break;
 				default:
@@ -113,10 +124,10 @@ int main(void)
 			gc = blugc;
 		}
 
-		rect[0].x = rand() % [geomrep get_width];
-		rect[0].y = rand() % [geomrep get_height];
-		rect[0].width = rand() % [geomrep get_width];
-		rect[0].height = rand() % [geomrep get_height];	
+		rect[0].x = rand() % width;
+		rect[0].y = rand() % height;
+		rect[0].width = rand() % width;
+		rect[0].height = rand() % height;	
 
 		[w PolyFillRectangle:gc:1:rect];
 		[c flush];
