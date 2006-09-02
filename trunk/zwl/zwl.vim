@@ -2,17 +2,17 @@ let SessionLoad = 1
 if &cp | set nocp | endif
 let s:cpo_save=&cpo
 set cpo&vim
-map! <F1> <F1>
-map! <F2> <F2>
-map! <F3> <F3>
-map! <F4> <F4>
-map! <S-F1> <S-F1>
-map! <S-F2> <S-F2>
-map! <S-F3> <S-F3>
-map! <S-F4> <S-F4>
-map! <End> <End>
-map! <Home> <Home>
 map! <S-Insert> <MiddleMouse>
+map! <Home> <Home>
+map! <End> <End>
+map! <S-F4> <S-F4>
+map! <S-F3> <S-F3>
+map! <S-F2> <S-F2>
+map! <S-F1> <S-F1>
+map! <F4> <F4>
+map! <F3> <F3>
+map! <F2> <F2>
+map! <F1> <F1>
 nmap d :cs find d =expand("<cword>")	
 nmap i :cs find i ^=expand("<cfile>")$
 nmap f :cs find f =expand("<cfile>")	
@@ -21,20 +21,22 @@ nmap t :cs find t =expand("<cword>")
 nmap c :cs find c =expand("<cword>")	
 nmap g :cs find g =expand("<cword>")	
 nmap s :cs find s =expand("<cword>")	
+map Q gq
 vmap [% [%m'gv``
 vmap ]% ]%m'gv``
 vmap a% [%v]%
 nmap gx <Plug>NetrwBrowseX
-map <F1> <F1>
-map <F2> <F2>
-map <F3> <F3>
-map <F4> <F4>
-map <S-F1> <S-F1>
-map <S-F2> <S-F2>
-map <S-F3> <S-F3>
-map <S-F4> <S-F4>
-map <End> <End>
+map <S-Insert> <MiddleMouse>
 map <Home> <Home>
+map <End> <End>
+map <S-F4> <S-F4>
+map <S-F3> <S-F3>
+map <S-F2> <S-F2>
+map <S-F1> <S-F1>
+map <F4> <F4>
+map <F3> <F3>
+map <F2> <F2>
+map <F1> <F1>
 nmap <Nul><Nul>d :vert scs find d =expand("<cword>")
 nmap <Nul><Nul>i :vert scs find i ^=expand("<cfile>")$	
 nmap <Nul><Nul>f :vert scs find f =expand("<cfile>")	
@@ -52,18 +54,20 @@ nmap <Nul>c :scs find c =expand("<cword>")
 nmap <Nul>g :scs find g =expand("<cword>")	
 nmap <Nul>s :scs find s =expand("<cword>")	
 nnoremap <silent> <Plug>NetrwBrowseX :call netrw#NetBrowseX(expand("<cWORD>"),0)
-map <S-Insert> <MiddleMouse>
 let &cpo=s:cpo_save
 unlet s:cpo_save
 set autoindent
 set background=dark
 set backspace=indent,eol,start
+set backup
 set cindent
 set cscopetag
 set cscopeverbose
 set guifont=Bitstream\ Vera\ Sans\ Mono\ 8
 set helplang=en
+set hlsearch
 set iminsert=0
+set incsearch
 set mouse=a
 set omnifunc=ccomplete#Complete
 set printoptions=paper:a4
@@ -91,9 +95,9 @@ badd +37 src/zwl.h
 badd +1 src/zwlinit.h
 badd +106 src/zwlwidget.h
 badd +28 src/zwlwindow.h
-badd +10 src/Makefile.am
+badd +1 src/Makefile.am
 badd +37 tests/zwl_test.m
-badd +1 README
+badd +16 README
 badd +27 src/zwlbutton.h
 badd +164 src/button.m
 badd +7 tests/Makefile.am
@@ -104,16 +108,18 @@ badd +1 src/menu.m
 badd +4 TODO
 badd +23 src/zwl_internal.h
 badd +25 src/zwl_internal.m
+badd +14 src/backend/Makefile.am
+badd +1 src/backend/backend.h
+badd +0 src/backend/backend.m
 silent! argdel *
-edit README
+edit src/backend/backend.m
 set splitbelow splitright
 set nosplitbelow
 set nosplitright
 wincmd t
 set winheight=1 winwidth=1
 argglobal
-setlocal noarabic
-setlocal noautoindent
+setlocal autoindent
 setlocal autoread
 setlocal balloonexpr=
 setlocal nobinary
@@ -137,8 +143,8 @@ setlocal nodiff
 setlocal equalprg=
 setlocal errorformat=
 setlocal noexpandtab
-if &filetype != ''
-setlocal filetype=
+if &filetype != 'matlab'
+setlocal filetype=matlab
 endif
 setlocal foldcolumn=0
 setlocal foldenable
@@ -158,11 +164,10 @@ setlocal iminsert=0
 setlocal imsearch=2
 setlocal include=
 setlocal includeexpr=
-setlocal indentexpr=
-setlocal indentkeys=0{,0},:,0#,!^F,o,O,e
+setlocal indentexpr=GetMatlabIndent(v:lnum)
+setlocal indentkeys=!,o,O=end,=case,=else,=elseif,=otherwise,=catch
 setlocal noinfercase
 setlocal iskeyword=@,48-57,_,192-255
-setlocal keymap=
 setlocal keywordprg=
 setlocal nolinebreak
 setlocal nolisp
@@ -173,7 +178,7 @@ setlocal modeline
 setlocal modifiable
 setlocal nrformats=octal,hex
 set number
-setlocal nonumber
+setlocal number
 setlocal numberwidth=4
 setlocal omnifunc=ccomplete#Complete
 setlocal path=
@@ -181,8 +186,6 @@ setlocal nopreserveindent
 setlocal nopreviewwindow
 setlocal quoteescape=\\
 setlocal noreadonly
-setlocal norightleft
-setlocal rightleftcmd=search
 setlocal noscrollbind
 setlocal shiftwidth=8
 setlocal noshortname
@@ -193,11 +196,11 @@ setlocal spellcapcheck=[.?!]\\_[\\])'\"\	\ ]\\+
 setlocal spellfile=
 setlocal spelllang=en
 setlocal statusline=
-setlocal suffixesadd=
+setlocal suffixesadd=.m
 setlocal swapfile
 setlocal synmaxcol=3000
-if &syntax != ''
-setlocal syntax=
+if &syntax != 'matlab'
+setlocal syntax=matlab
 endif
 setlocal tabstop=8
 setlocal tags=

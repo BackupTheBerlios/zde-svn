@@ -13,5 +13,6 @@ widgets and don't mind many constraints.
 Currently zwl is undergoing a rewrite to use obj-xcb instead of Xlib.  As such, it will be extended to not just be a widget toolkit, but a general-purpose Objective-C access layer to X, through obj-xcb, XRender, and Cairo, as well as with abstracted widgets.  Therefore it is not appropriatly titled as a "widget library", but I can't/won't change the name now.
 
 src/ Contains the zwl source code.
+src/backends/ Contains source code for the various backend(s) that can be used by zwl.
 tests/ Contains a test program.
-doc/ Contains documentation. Use the gendoc script in / to generate it from the source code.  You will need doxygen for this. 
+doc/ Contains documentation. Use the gendoc script in / to generate it from the source code.  You will need doxygen for this.
