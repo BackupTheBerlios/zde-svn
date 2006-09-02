@@ -202,7 +202,6 @@ AC_CONFIG_FILES([
                 Makefile \
 		zwl.pc \
                 src/Makefile \
-		src/backend/Makefile \
 		tests/Makefile 
 		])
 AC_OUTPUT
