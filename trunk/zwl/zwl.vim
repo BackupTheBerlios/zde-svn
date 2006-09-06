@@ -2,17 +2,17 @@ let SessionLoad = 1
 if &cp | set nocp | endif
 let s:cpo_save=&cpo
 set cpo&vim
-map! <S-Insert> <MiddleMouse>
-map! <Home> <Home>
-map! <End> <End>
-map! <S-F4> <S-F4>
-map! <S-F3> <S-F3>
-map! <S-F2> <S-F2>
-map! <S-F1> <S-F1>
-map! <F4> <F4>
-map! <F3> <F3>
-map! <F2> <F2>
 map! <F1> <F1>
+map! <F2> <F2>
+map! <F3> <F3>
+map! <F4> <F4>
+map! <S-F1> <S-F1>
+map! <S-F2> <S-F2>
+map! <S-F3> <S-F3>
+map! <S-F4> <S-F4>
+map! <End> <End>
+map! <Home> <Home>
+map! <S-Insert> <MiddleMouse>
 nmap d :cs find d =expand("<cword>")	
 nmap i :cs find i ^=expand("<cfile>")$
 nmap f :cs find f =expand("<cfile>")	
@@ -26,17 +26,17 @@ vmap [% [%m'gv``
 vmap ]% ]%m'gv``
 vmap a% [%v]%
 nmap gx <Plug>NetrwBrowseX
-map <S-Insert> <MiddleMouse>
-map <Home> <Home>
-map <End> <End>
-map <S-F4> <S-F4>
-map <S-F3> <S-F3>
-map <S-F2> <S-F2>
-map <S-F1> <S-F1>
-map <F4> <F4>
-map <F3> <F3>
-map <F2> <F2>
 map <F1> <F1>
+map <F2> <F2>
+map <F3> <F3>
+map <F4> <F4>
+map <S-F1> <S-F1>
+map <S-F2> <S-F2>
+map <S-F3> <S-F3>
+map <S-F4> <S-F4>
+map <End> <End>
+map <Home> <Home>
+map <S-Insert> <MiddleMouse>
 nmap <Nul><Nul>d :vert scs find d =expand("<cword>")
 nmap <Nul><Nul>i :vert scs find i ^=expand("<cfile>")$	
 nmap <Nul><Nul>f :vert scs find f =expand("<cfile>")	
@@ -108,11 +108,8 @@ badd +1 src/menu.m
 badd +4 TODO
 badd +23 src/zwl_internal.h
 badd +25 src/zwl_internal.m
-badd +14 src/backend/Makefile.am
-badd +1 src/backend/backend.h
-badd +0 src/backend/backend.m
 silent! argdel *
-edit src/backend/backend.m
+edit tests/Makefile.am
 set splitbelow splitright
 set nosplitbelow
 set nosplitright
@@ -130,8 +127,8 @@ setlocal cindent
 setlocal cinkeys=0{,0},0),:,0#,!^F,o,O,e
 setlocal cinoptions=
 setlocal cinwords=if,else,while,do,for,switch
-setlocal comments=s1:/*,mb:*,ex:*/,://,b:#,:%,:XCOMM,n:>,fb:-
-setlocal commentstring=/*%s*/
+setlocal comments=sO:#\ -,mO:#\ \ ,b:#
+setlocal commentstring=#\ %s
 setlocal complete=.,w,b,u,t,i
 setlocal completefunc=
 setlocal nocopyindent
@@ -143,8 +140,8 @@ setlocal nodiff
 setlocal equalprg=
 setlocal errorformat=
 setlocal noexpandtab
-if &filetype != 'matlab'
-setlocal filetype=matlab
+if &filetype != 'automake'
+setlocal filetype=automake
 endif
 setlocal foldcolumn=0
 setlocal foldenable
@@ -157,15 +154,15 @@ setlocal foldminlines=1
 setlocal foldnestmax=20
 setlocal foldtext=foldtext()
 setlocal formatexpr=
-setlocal formatoptions=tcq
+setlocal formatoptions=croql
 setlocal formatlistpat=^\\s*\\d\\+[\\]:.)}\\t\ ]\\s*
 setlocal grepprg=
 setlocal iminsert=0
 setlocal imsearch=2
-setlocal include=
+setlocal include=^\\s*include
 setlocal includeexpr=
-setlocal indentexpr=GetMatlabIndent(v:lnum)
-setlocal indentkeys=!,o,O=end,=case,=else,=elseif,=otherwise,=catch
+setlocal indentexpr=GetMakeIndent()
+setlocal indentkeys=!^F,o,O
 setlocal noinfercase
 setlocal iskeyword=@,48-57,_,192-255
 setlocal keywordprg=
@@ -196,11 +193,11 @@ setlocal spellcapcheck=[.?!]\\_[\\])'\"\	\ ]\\+
 setlocal spellfile=
 setlocal spelllang=en
 setlocal statusline=
-setlocal suffixesadd=.m
+setlocal suffixesadd=
 setlocal swapfile
 setlocal synmaxcol=3000
-if &syntax != 'matlab'
-setlocal syntax=matlab
+if &syntax != 'automake'
+setlocal syntax=automake
 endif
 setlocal tabstop=8
 setlocal tags=
@@ -211,11 +208,11 @@ setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
 silent! normal! zE
-let s:l = 1 - ((0 * winheight(0) + 35) / 71)
+let s:l = 7 - ((6 * winheight(0) + 35) / 71)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-1
+7
 normal! 0
 tabnext 1
 if exists('s:wipebuf')
