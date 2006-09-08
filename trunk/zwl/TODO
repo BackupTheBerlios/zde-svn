@@ -11,3 +11,9 @@ to go all MFC and make all widgets derive from a base and have callbacks in the 
 -I don't really like using Cairo for text rendering, as the "toy" text API is going to become deprecated, and I really don't want to use old APIs.  The only other
 choices, though, are plain Xft, which is a nightmare, and Pango, which would also be a nightmare, as it brings with it all of glib and company.
 -On the other hand, zwl will need some kind of image-loading support eventually, and cairo can help us with that.
+
+SOLUTIONS/PLAN OF ACTION
+------------------------
+-Continue to use Cairo as text renderer, as Pango/Xft don't have XCB bindings
+-Continue to use the on_add callback method, but rework it a bit to cut down on the redundant code, maybe with some helper-functions that can be used to
+create windows with XCB and such.  Upon further inspection, its really not so bad if the helper-functions get done.
