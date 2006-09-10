@@ -206,5 +206,5 @@ AC_CONFIG_FILES([
 		])
 AC_OUTPUT
 
-echo "zwl is now ready to be built.  Make sure you reade the README."
+echo "zwl is now ready to be built.  Make sure you read the README."
 	
