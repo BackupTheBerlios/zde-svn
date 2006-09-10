@@ -35,6 +35,7 @@
 
 #include <cairo-xcb.h>
 #include <cairo-xcb-xrender.h>
+#include <X11/XCB/xcb_renderutil.h>
 
 #include "zwlwidget.h"
 #include "zwlinit.h"

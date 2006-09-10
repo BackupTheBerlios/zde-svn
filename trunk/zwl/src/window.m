@@ -65,11 +65,18 @@ static void on_configure(ZWidget *widget, void *data);
 	/* Now setup the cairo surface */
 	if(backend == ZWL_BACKEND_XCB) {
 		draw.window = [self->window get_xid];
-		self->win_surf = cairo_xcb_surface_create(
-							[zc get_connection],
-							draw,
-							_get_root_visual_type(s),
-							1,1);
+		//self->win_surf = cairo_xcb_surface_create(
+		//					[zc get_connection],
+		//					draw,
+		//					_get_root_visual_type(s),
+		//					1,1);
+		self->win_surf = cairo_xcb_surface_create_with_xrender_format(
+									[zc get_connection],
+									draw,[zc get_screen],
+									XCBRenderUtilFindStandardFormat(XCBRenderUtilQueryFormats([zc get_connection]),
+																PictStandardRGB24),
+									1,1);
+
 		self->backend = backend;
 	}
 	else if(backend == ZWL_BACKEND_GL_GLITZ) {
