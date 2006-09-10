@@ -4,6 +4,8 @@
 #include <sys/time.h>
 #include <pthread.h>
 
+#include <zwl.h>
+
 #include <cairo.h>
 #include <cairo-xcb.h>
 #include <cairo-xcb-xrender.h>
@@ -19,6 +21,9 @@
 cairo_surface_t *win_surf = NULL;
 ZWindow *w;
 
+ObjXCBConnection *zc;
+XCBConnection *c;
+
 int win_width = 500;
 int win_height = 500;
 
@@ -31,6 +36,9 @@ int main(void)
 	w = [ZWindow alloc];
 
 	zwl_init();
+
+	zc = zwl_get_connection();
+	c = [zc get_connection];
 
 	XCBRenderInit(c);
 	XCBCompositeInit(c);
@@ -45,9 +53,11 @@ int main(void)
 
 	free(rep);
 
-	[win init:win_width:win_height];
+	[w init:ZWL_BACKEND_XCB:win_width:win_height];
 
-	pause();
+	[w show];
+
+	zwl_main_loop_start();
 
 	return 0;
 }
