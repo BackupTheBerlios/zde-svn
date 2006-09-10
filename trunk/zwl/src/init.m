@@ -33,6 +33,7 @@ static unsigned short int quit = 0;
 
 /* Helper functions */
 static ZWidget *_find_widget(XCBWINDOW *w);
+static void *main_loop(void *p);
 //static void process_xevent(XEvent *ev);
 
 void zwl_init(void)
@@ -200,6 +201,16 @@ void zwl_main_loop_remove_widget(ZWidget *w)
 
 void zwl_main_loop_start(void)
 {
+	pthread_t thr;
+
+	pthread_create(&thr,0,main_loop,0);
+
+	/* bad, bad... */
+	pause();
+}
+
+static void *main_loop(void *p)
+{
 	XCBGenericEvent *ev;
 	XCBKeyPressEvent *key;
 	XCBButtonPressEvent *button;
@@ -312,7 +323,6 @@ void zwl_main_loop_start(void)
 		free(ev);
 	}
 }
-
 
 void zwl_main_loop_quit(void)
 {
