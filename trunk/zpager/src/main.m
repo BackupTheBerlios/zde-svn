@@ -32,6 +32,10 @@ int main(void)
 	XCBSCREEN *screen;
  	pthread_t thr;
 	XCBCompositeQueryVersionRep *rep;
+	ObjXCBInternAtomReply *atomrep;
+	ObjXCBAtom *atom;
+	ObjXCBGetSelectionOwnerReply *selectionrep;
+	XCBWINDOW win;
 
 	w = [ZWindow alloc];
 
@@ -52,6 +56,24 @@ int main(void)
 	}
 
 	free(rep);
+
+	/* Check if there is a composite manager running. */
+	atomrep = [zc InternAtom:0:12:"_NET_WM_CM_0"];
+	atom = [atomrep get_atom];
+
+	selectionrep = [atom GetSelectionOwner];
+	
+	win = [[selectionrep get_owner] get_xid];
+
+	printf("%d:%d\n",win,win.xid);
+
+	if(win.xid != 0) {
+		printf("hey\n");
+	}
+
+	/* Redirect all windows to offscreen storage.  This is only necessary
+	 * if there is no composite manager running, */
+	//XCBCompositeRedirectSubwindows(c,[zc get_root_window_raw],XCBCompositeRedirectAutomatic);
 
 	[w init:ZWL_BACKEND_XCB:win_width:win_height];
 
