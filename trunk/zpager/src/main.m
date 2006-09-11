@@ -39,7 +39,7 @@ int main(void)
 	ObjXCBInternAtomReply *atomrep;
 	ObjXCBAtom *atom;
 	ObjXCBGetSelectionOwnerReply *selectionrep;
-	XCBWINDOW win;
+	XCBDRAWABLE win;
 	XCBDRAWABLE pix;
 	XCBQueryTreeRep *qrep;
 	XCBWINDOW *child;
@@ -67,15 +67,20 @@ int main(void)
 
 	free(rep);
 
-	/* Check if there is a composite manager running. */
-	atomrep = [zc InternAtom:0:12:"_NET_WM_CM_0"];
+	/* Check if there is a composite manager running. CURRENTLY BROKEN ON E16*/
+	atomrep = [zc InternAtom:0:12:"_NET_WM_CM_S0"];
+	//atomrep = [zc InternAtom:0:19:"_NET_SYSTEM_TRAY_S0"];
 	atom = [atomrep get_atom];
 
 	selectionrep = [atom GetSelectionOwner];
-	
-	win = [[selectionrep get_owner] get_xid];
 
-	if(win.xid != 0) {
+	printf("%d\n",win);
+
+	win.window = [[selectionrep get_owner] get_xid];
+
+	printf("%d\n",win.window);
+
+	if(win.window.xid != 0) {
 		printf("hey\n");
 	}
 
@@ -93,10 +98,27 @@ int main(void)
 
 	iter = XCBQueryTreeChildrenIter(qrep);
 
-	for(;iter.rem;XCBWINDOWNext(&iter)) {
+	char buf[100];
+/*	for(;iter.rem;XCBWINDOWNext(&iter)) {
 		child = iter.data;
-	}
 
+		pix.window = *child;
+
+		XCBCompositeNameWindowPixmap(c,pix.window,pix.pixmap);
+
+		[zc flush];
+
+	//	win_surf = cairo_xcb_surface_create(c,pix,get_root_visual_type([zc get_screen]),500,500);
+		win_surf = cairo_xcb_surface_create_with_xrender_format(c,pix,[zc get_screen],
+				XCBRenderUtilFindStandardFormat(XCBRenderUtilQueryFormats(c),PictStandardRGB24),
+				1280,1024);
+
+		snprintf(buf,100,"test/test%d.png",iter.rem);
+
+		cairo_surface_write_to_png(win_surf,buf);
+		printf("%d\n",iter.rem);
+	}
+*/
 	/* Let's get a pixmap! */
 //	pix.window = [w->window get_xid];
 
@@ -106,10 +128,12 @@ int main(void)
 
 	XCBCompositeNameWindowPixmap(c,pix.window,pix.pixmap);
 
+	[zc flush];
+
 //	win_surf = cairo_xcb_surface_create(c,pix,get_root_visual_type([zc get_screen]),500,500);
 	win_surf = cairo_xcb_surface_create_with_xrender_format(c,pix,[zc get_screen],
 			XCBRenderUtilFindStandardFormat(XCBRenderUtilQueryFormats(c),PictStandardRGB24),
-			1024,768);
+			600,600);
 
 	cairo_surface_write_to_png(win_surf,"test.png");
 
