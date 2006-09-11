@@ -55,7 +55,7 @@ static void on_configure(ZWidget *widget, void *data);
 	          | XCBEventMaskSubstructureNotify | XCBEventMaskSubstructureRedirect
 	          | XCBEventMaskEnterWindow	   | XCBEventMaskLeaveWindow
 	          | XCBEventMaskStructureNotify;
-	[w CreateWindow:XCBCopyFromParent:root:1:1:width:height:1:XCBWindowClassInputOutput:s->root_visual:XCBCWEventMask | XCBGCForeground:wvalue];
+	[w CreateWindow:XCBCopyFromParent:root:1:1:width:height:1:XCBWindowClassInputOutput:s->root_visual:XCBCWEventMask | XCBCWBackPixel:wvalue];
 
 	self->window = w;
 	self->parent = zwl_root;
@@ -65,11 +65,12 @@ static void on_configure(ZWidget *widget, void *data);
 	/* Now setup the cairo surface */
 	if(backend == ZWL_BACKEND_XCB) {
 		draw.window = [self->window get_xid];
-		//self->win_surf = cairo_xcb_surface_create(
-		//					[zc get_connection],
-		//					draw,
-		//					_get_root_visual_type(s),
-		//					1,1);
+		/*self->win_surf = cairo_xcb_surface_create(
+							[zc get_connection],
+							draw,
+							_get_root_visual_type(s),
+							1,1);
+		*/
 		self->win_surf = cairo_xcb_surface_create_with_xrender_format(
 									[zc get_connection],
 									draw,[zc get_screen],
