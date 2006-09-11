@@ -30,7 +30,6 @@ int win_width = 500;
 int win_height = 500;
 
 cairo_t *cr = NULL;
-cairo_surface_t *rootwin_surf = NULL;
 
 int main(void)
 {
@@ -42,6 +41,11 @@ int main(void)
 	ObjXCBGetSelectionOwnerReply *selectionrep;
 	XCBWINDOW win;
 	XCBDRAWABLE pix;
+	XCBQueryTreeRep *qrep;
+	XCBWINDOW *child;
+	XCBWINDOWIter iter;
+
+	int i;
 
 	w = [ZWindow alloc];
 
@@ -76,6 +80,7 @@ int main(void)
 	}
 
 	[w init:ZWL_BACKEND_XCB:win_width:win_height];
+	[w attatch_cb:EXPOSE:(ZCallback *)on_expose];
 
 	[w show];
 
@@ -83,36 +88,38 @@ int main(void)
 	 * if there is no composite manager running, */
 //	XCBCompositeRedirectSubwindows(c,[zc get_root_window_raw],XCBCompositeRedirectAutomatic);
 
+	/* QueryTree */
+	qrep = XCBQueryTreeReply(c,XCBQueryTree(c,[zc get_root_window_raw]),NULL);
+
+	iter = XCBQueryTreeChildrenIter(qrep);
+
+	for(;iter.rem;XCBWINDOWNext(&iter)) {
+		child = iter.data;
+	}
+
 	/* Let's get a pixmap! */
-	pix.window = [zc get_root_window_raw];
-//	pix->window = [w->window get_xid];
+//	pix.window = [w->window get_xid];
+
+	pix.window = *child;
+
+	printf("%d\n",pix.window);
 
 	XCBCompositeNameWindowPixmap(c,pix.window,pix.pixmap);
-//	XCBCompositeNameWindowPixmap(c,[w->window get_xid],pix->pixmap);
 
-	[zc flush];
-
-	printf("%d\n",pix.pixmap);
-
-//	rootwin_surf = cairo_xcb_surface_create_for_bitmap(c,pix->pixmap,[zc get_screen],1280,1024);
-//	rootwin_surf = cairo_xcb_surface_create(c,pix,get_root_visual_type([zc get_screen]),500,500);
-	rootwin_surf = cairo_xcb_surface_create_with_xrender_format(c,pix,[zc get_screen],
+//	win_surf = cairo_xcb_surface_create(c,pix,get_root_visual_type([zc get_screen]),500,500);
+	win_surf = cairo_xcb_surface_create_with_xrender_format(c,pix,[zc get_screen],
 			XCBRenderUtilFindStandardFormat(XCBRenderUtilQueryFormats(c),PictStandardRGB24),
 			1024,768);
 
-	cairo_surface_write_to_png(rootwin_surf,"test.png");
+	cairo_surface_write_to_png(win_surf,"test.png");
 
-	printf("rootsurface:%s\n",cairo_status_to_string(cairo_surface_status(rootwin_surf)));
-	printf("winsurface:%s\n",cairo_status_to_string(cairo_surface_status([w get_surf])));
 
 	cr = cairo_create([w get_surf]);
 
-//	cairo_set_source_rgba(cr,1,0,1,1);
-	cairo_set_source_surface(cr,rootwin_surf,0,0);
-//	cairo_rectangle(cr,0,0,500,500);
+	cairo_set_source_surface(cr,win_surf,0,0);
 
-	cairo_paint(cr);
-
+	printf("rootsurface:%s\n",cairo_status_to_string(cairo_surface_status(win_surf)));
+	printf("winsurface:%s\n",cairo_status_to_string(cairo_surface_status([w get_surf])));
 	printf("cairo:%s\n",cairo_status_to_string(cairo_status(cr)));
 
 	[zc flush];
@@ -125,13 +132,9 @@ int main(void)
 static void on_expose(ZWidget *widget, void *data)
 {
 	XCBExposeEvent *ev = (XCBExposeEvent *)data;
-//	cairo_set_source_surface(cr,rootwin_surf,100,100);
-//	cairo_set_source_rgba(cr,1,0,1,1);
-//	cairo_rectangle(cr,100,50,100,100);
-
-//	cairo_fill_preserve(cr);
-//	cairo_stroke(cr);
-//	[zc flush];
+	
+	cairo_paint_with_alpha(cr,.5);
+	[zc flush];
 }
 
 XCBVISUALTYPE *get_root_visual_type(XCBSCREEN *s)
