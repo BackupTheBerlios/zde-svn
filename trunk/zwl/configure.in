@@ -127,18 +127,6 @@ fi
 AC_SUBST(IMP_CFLAGS)
 AC_SUBST(IMP_LIBS)
 
-dnl Check for X
-#AC_CHECK_HEADER(X11/X.h,
-#   [
-#	X_DIR=${X_DIR:-/usr}
-#       X_CFLAGS=${X_CFLAGS:--I${X_INCLUDES:-$X_DIR/include}}
-#       X_LIBS="${X_LIBS:--L${X_LIBRARIES:-$X_DIR/lib}} -lX11 -lXext"
-#   ]
-#   )
-
-#AC_SUBST(X_CFLAGS)
-#AC_SUBST(X_LIBS)
-
 dnl Check for cairo
 if test x$PKGCONFIG != xno; then
 	AC_MSG_CHECKING(for cairo >= 1.2.0...)

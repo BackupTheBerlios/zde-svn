@@ -24,7 +24,7 @@
 #ifndef ZWLWIDGET_H
 #define ZWLWIDGET_H
 
-/* Widget event defines. */
+/* Widget event defines. XXX The descriptions all need to be updated to reflect XCB */
 #define SHOW 0  /**< When widget is shown. Data is NULL */
 #define BUTTON_DOWN 1 /**< When a mouse button is pressed on the widget. Data is an XButtonEvent structure. */
 #define BUTTON_UP 2 /**< When a mouse button is released on the widget. Data is an XButtonEvent structure. */
