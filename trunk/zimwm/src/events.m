@@ -21,7 +21,23 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
+#include "zimwm.h"
+
 void on_map_request(ZWidget *widget, void *data)
 {
+	XCBMapRequestEvent *ev = (XCBMapRequestEvent *)data;
+	ZimClient *c = [ZimClient alloc];
+	ObjXCBWindow *w = [ObjXCBWindow alloc];
 
+	printf("%d\n",ev->window);
+
+	[w init:zc:ev->window];
+
+	[c init:w];
+	
+}
+
+void on_button_down(ZWidget *widget, void *data)
+{
+	printf("hey man!\n");
 }

@@ -73,6 +73,12 @@ static void init_root_window(void)
 
 	[root_window->window ChangeWindowAttributes:XCBCWEventMask | XCBCWBackPixel:wvalue];
 
+	zwl_main_loop_add_widget(root_window);
+
+	/* Register for events */
+	[root_window attatch_cb:MAP_REQUEST:(ZCallback *)on_map_request];
+	[root_window attatch_cb:BUTTON_DOWN:(ZCallback *)on_button_down];
+
 	[zc flush];
 }
 

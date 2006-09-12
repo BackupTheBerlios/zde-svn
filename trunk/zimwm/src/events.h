@@ -24,7 +24,7 @@
 #ifndef EVENTS_H
 #define EVENTS_H
 
-void on_button_down(ZWidget *widget, void *data);
 void on_map_request(ZWidget *widget, void *data);
+void on_button_down(ZWidget *widget, void *data);
 
 #endif
