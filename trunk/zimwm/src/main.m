@@ -79,6 +79,8 @@ static void init_root_window(void)
 	[root_window attatch_cb:MAP_REQUEST:(ZCallback *)on_map_request];
 	[root_window attatch_cb:BUTTON_DOWN:(ZCallback *)on_button_down];
 
+	[geomrep free];
+
 	[zc flush];
 }
 

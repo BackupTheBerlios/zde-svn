@@ -41,6 +41,8 @@
 	/* FIXME numbers here should be config options (titleheight,border) FIXME */
 	[self->parent init:ZWL_BACKEND_XCB:[geomrep get_width] + 10:[geomrep get_height] + 20];
 
+	[geomrep free];
+
 	[self->parent move:100:100];
 
 	[self->window->window ReparentWindow:self->parent->window:5:15];
