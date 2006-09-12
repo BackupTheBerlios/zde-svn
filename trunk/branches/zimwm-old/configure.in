@@ -1,0 +1,209 @@
+# Process this file with autoconf to produce a configure script.
+
+AC_PREREQ(2.57)
+        AC_INIT([zimwm],[0.0.6])
+        AM_INIT_AUTOMAKE(AC_PACKAGE_NAME,AC_PACKAGE_VERSION)
+        AC_PROG_MAKE_SET
+
+AC_CONFIG_SRCDIR([.])
+AC_CONFIG_SRCDIR([src])
+
+# Checks for programs.
+AC_PROG_CC
+AC_PROG_CC_STDC
+AC_ISC_POSIX
+AC_PROG_INSTALL
+AC_PROG_CPP
+AC_PROG_LIBTOOL
+
+dnl Set PACKAGE_LOCALE_DIR in config.h
+if test "x${prefix}" = "xNONE"; then
+  AC_DEFINE_UNQUOTED(PACKAGE_LOCALE_DIR, "${ac_default_prefix}/${DATADIRNAME}/locale", [Locale data directory])
+else
+  AC_DEFINE_UNQUOTED(PACKAGE_LOCALE_DIR, "${prefix}/${DATADIRNAME}/locale", [Locale data directory])
+fi
+
+dnl Set PACKAGE_DATA_DIR in config.h
+if test "x${datadir}" = 'x${prefix}/share'; then
+  if test "x${prefix}" = "xNONE"; then
+    AC_DEFINE_UNQUOTED(PACKAGE_DATA_DIR, "${ac_default_prefix}/share/${PACKAGE}", [Shared data directory])
+  else
+    AC_DEFINE_UNQUOTED(PACKAGE_DATA_DIR, "${prefix}/share/${PACKAGE}", [Shared data directory])
+  fi
+else
+  AC_DEFINE_UNQUOTED(PACKAGE_DATA_DIR, "${datadir}/${PACKAGE}", [Shared data directory])
+fi
+
+dnl Set PACKAGE_SOURCE_DIR in config.h
+packagesrcdir=`cd $srcdir && pwd`
+AC_DEFINE_UNQUOTED(PACKAGE_SOURCE_DIR, "${packagesrcdir}", [Source code directory])
+
+dnl Objective C stuff
+
+AC_MSG_CHECKING(for Objective-C compiler)
+cc1objpath=`gcc -print-prog-name=cc1obj`
+if test "$cc1objpath" != "cc1obj"; then
+  AC_MSG_RESULT(yes)
+else
+    AC_MSG_ERROR(no)
+fi
+
+AC_CHECK_HEADERS(objc/objc.h)
+if test $ac_cv_header_objc_objc_h = no; then
+  AC_MSG_ERROR(Objective-C headers were not found.)  
+fi
+
+_AM_DEPENDENCIES([OBJC])
+OBJC="g++"
+OBJCFLAGS="-g"
+OBJCLDFLAGS="-lobjc -lpthread"
+AC_SUBST(OBJC)
+AC_SUBST(OBJCFLAGS)
+AC_SUBST(OBJCLDFLAGS)
+
+AC_CONFIG_HEADER(zimwm-config.h)
+AC_CHECK_HEADERS(stdio.h stdlib.h unistd.h errno.h string.h)
+AC_C_CONST
+AC_FUNC_SELECT_ARGTYPES
+
+AC_CHECK_FUNCS([strdup])
+AC_CHECK_FUNCS([malloc])
+AC_CHECK_FUNCS([calloc])
+AC_CHECK_FUNCS([realloc])
+
+AC_PATH_PROG(PKGCONFIG,pkg-config,no)
+if test x$PKGCONFIG != xno; then
+	AC_MSG_CHECKING(for imp >= 0.0.7...)
+
+	imp_major_version=`$PKGCONFIG imp --modversion | \
+	   sed 's/\([[0-9]]*\).\([[0-9]]*\).\([[0-9]]*\)/\1/'`
+	imp_minor_version=`$PKGCONFIG imp --modversion | \
+	   sed 's/\([[0-9]]*\).\([[0-9]]*\).\([[0-9]]*\)/\2/'`
+	imp_micro_version=`$PKGCONFIG imp --modversion | \
+	   sed 's/\([[0-9]]*\).\([[0-9]]*\).\([[0-9]]*\)/\3/'`
+
+	if test $imp_major_version -ge 0 -a $imp_minor_version \
+		       -ge 0 -a $imp_micro_version -ge 7 ; then
+		AC_MSG_RESULT(ok)
+		AC_MSG_CHECKING(for imp compile information)
+		IMP_CFLAGS=`$PKGCONFIG imp --cflags`
+		IMP_LIBS=`$PKGCONFIG imp --libs`
+		AC_MSG_RESULT(ok)
+	else AC_MSG_ERROR(Incorrect imp version. Please upgrade to 0.0.7 or greater)
+	fi
+else
+	AC_MSG_ERROR(echo *** imp >= 0.0.7  not found ***)
+fi
+
+AC_SUBST(IMP_CFLAGS)
+AC_SUBST(IMP_LIBS)
+
+dnl Check for X
+AC_CHECK_HEADER(X11/X.h,
+    [
+	X_DIR=${X_DIR:-/usr/X11R6}
+        X_CFLAGS=${X_CFLAGS:--I${X_INCLUDES:-$X_DIR/include}}
+        X_LIBS="${X_LIBS:--L${X_LIBRARIES:-$X_DIR/lib}} -lX11 -lXext"
+    ]
+    )
+
+AC_SUBST(X_CFLAGS)
+AC_SUBST(X_LIBS)
+
+dnl Check for Xft
+if test x$PKGCONFIG != xno; then
+	AC_MSG_CHECKING(for Xft >= 2.1.8...)
+
+	xft_major_version=`$PKGCONFIG xft --modversion | \
+	   sed 's/\([[0-9]]*\).\([[0-9]]*\).\([[0-9]]*\).\([[0-9]]*\)/\1/'`
+	 xft_minor_version=`$PKGCONFIG xft --modversion | \
+	   sed 's/\([[0-9]]*\).\([[0-9]]*\).\([[0-9]]*\).\([[0-9]]*\)/\2/'`
+	 xft_micro_version=`$PKGCONFIG xft --modversion | \
+	   sed 's/\([[0-9]]*\).\([[0-9]]*\).\([[0-9]]*\).\([[0-9]]*\)/\3/'`
+
+	 if test $xft_major_version -ge 2 -a $xft_minor_version \
+		       -ge 1 -a $xft_micro_version -ge 8 ; then
+		AC_MSG_RESULT(ok)
+		AC_MSG_CHECKING(for xft compile information)
+		XFT_CFLAGS=`$PKGCONFIG xft --cflags`
+		XFT_LIBS=`$PKGCONFIG xft --libs`
+		AC_MSG_RESULT(ok)
+	else AC_MSG_ERROR(Incorrect Xft version. Please upgrade to 2.1.8 or greater)
+	fi
+else
+	AC_MSG_ERROR(echo *** Xft >= 2.1.8  not found ***)
+fi
+
+AC_SUBST(XFT_CFLAGS)
+AC_SUBST(XFT_LIBS)
+
+dnl Check for cairo
+if test x$PKGCONFIG != xno; then
+	AC_MSG_CHECKING(for cairo >= 1.0.2...)
+
+	 cairo_major_version=`$PKGCONFIG cairo --modversion | \
+	   sed 's/\([[0-9]]*\).\([[0-9]]*\).\([[0-9]]*\)/\1/'`
+	 cairo_minor_version=`$PKGCONFIG cairo --modversion | \
+	   sed 's/\([[0-9]]*\).\([[0-9]]*\).\([[0-9]]*\)/\2/'`
+	 cairo_micro_version=`$PKGCONFIG cairo --modversion | \
+	   sed 's/\([[0-9]]*\).\([[0-9]]*\).\([[0-9]]*\)/\3/'`
+
+	 if test $cairo_major_version -ge 1 -a $cairo_minor_version \
+		       -ge 0 -a $cairo_micro_version -ge 2 ; then
+		AC_MSG_RESULT(ok)
+		AC_MSG_CHECKING(for cairo compile information)
+		CAIRO_CFLAGS=`$PKGCONFIG cairo --cflags`
+		CAIRO_LIBS=`$PKGCONFIG cairo --libs`
+		AC_MSG_RESULT(ok)
+	else AC_MSG_ERROR(Incorrect cairo version. Please upgrade to 1.0.2 or greater)
+	fi
+else
+	AC_MSG_ERROR(echo *** cairo >= 1.0.2  not found ***)
+fi
+
+AC_SUBST(CAIRO_CFLAGS)
+AC_SUBST(CAIRO_LIBS)
+
+dnl Check for zwl
+if test x$PKGCONFIG != xno; then
+	AC_MSG_CHECKING(for zwl >= 0.0.7...)
+
+	 zwl_major_version=`$PKGCONFIG zwl --modversion | \
+	   sed 's/\([[0-9]]*\).\([[0-9]]*\).\([[0-9]]*\)/\1/'`
+	 zwl_minor_version=`$PKGCONFIG zwl --modversion | \
+	   sed 's/\([[0-9]]*\).\([[0-9]]*\).\([[0-9]]*\)/\2/'`
+	 zwl_micro_version=`$PKGCONFIG zwl --modversion | \
+	   sed 's/\([[0-9]]*\).\([[0-9]]*\).\([[0-9]]*\)/\3/'`
+
+	 if test $zwl_major_version -ge 0 -a $zwl_minor_version \
+		       -ge 0 -a $zwl_micro_version -ge 7 ; then
+		AC_MSG_RESULT(ok)
+		AC_MSG_CHECKING(for zwl compile information)
+		ZWL_CFLAGS=`$PKGCONFIG zwl --cflags`
+		ZWL_LIBS=`$PKGCONFIG zwl --libs`
+		AC_MSG_RESULT(ok)
+	else AC_MSG_ERROR(Incorrect zwl version. Please upgrade to 0.0.7 or greater)
+	fi
+else
+	AC_MSG_ERROR(echo *** zwl >= 0.0.7  not found ***)
+fi
+
+AC_SUBST(ZWL_CFLAGS)
+AC_SUBST(ZWL_LIBS)
+
+AC_CHECK_LIB(pot,coffee,,[
+                echo "Your coffee pot is empty, time to make some coffee!"
+                ])
+
+AC_CONFIG_FILES([
+                Makefile \
+		data/Makefile \
+                src/Makefile \
+		src/modules/Makefile \
+		src/modules/systray/Makefile \
+		src/modules/pager/Makefile
+		])
+AC_OUTPUT
+
+echo "zimwm is now ready to be built.  Make sure you reade the README."
+

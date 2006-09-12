@@ -1,0 +1,13 @@
+You will need the latest versions of imp and zwl from svn to compile zimwm. Be aware that this is alpha(i.e. in heavy development) code, and is completely unpolished. It has rough, pointy edges, and should be approached with caution and an open mind.  Patches are welcome, e-mail the zde-devel list, the address of which can be found on the berlios project page. Also check out the zde wiki at zde.berlios.de
+
+zimwm is the window manager of the zde project.  Planned features include vi and emacs style keybindings, a command-line interface with shell-like capabilities to control zimwm in real time, and dynamically-generated menus and thumbnails for iconified windows and the pager.  This means using new technologies such as XRender, the Composite extension, cairo, and the freedesktop.org standards in order to provide the best possible experience.
+
+
+Inspiration was obtained from (in no particular order) Ion, lwm,
+Enlightenment DR16 and DR17, ratpoison, awm, waimea, ewm, failsafewm, heliwm,
+jwm, mosquito, nwm, pawm, phluid, swm, uwm, wmii, pekwm, xswm, fluxbox,
+openbox, any other box, sawfish, metacity, kwin, xfwm4, twm, icewm, and fvwm.
+I tried really hard to like you guys, but you all fell short in at least one
+critical area.  But don't worry, I'm stealing some of your best ideas and
+combining them with my own into zimwm :)
+
