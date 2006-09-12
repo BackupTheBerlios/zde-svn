@@ -1,6 +1,26 @@
-You will need the latest versions of imp and zwl from svn to compile zimwm. Be aware that this is alpha(i.e. in heavy development) code, and is completely unpolished. It has rough, pointy edges, and should be approached with caution and an open mind.  Patches are welcome, e-mail the zde-devel list, the address of which can be found on the berlios project page. Also check out the zde wiki at zde.berlios.de
+You will need the latest versions of imp and zwl from svn to compile zimwm. Be aware that this is alpha(i.e. in heavy development) code, and is completely unpolished.  Patches are welcome, e-mail the zde-devel list, the address of which can be found on the berlios project page. Also check out the zde wiki at zde.berlios.de
 
-zimwm is the window manager of the zde project.  Planned features include vi and emacs style keybindings, a command-line interface with shell-like capabilities to control zimwm in real time, and dynamically-generated menus and thumbnails for iconified windows and the pager.  This means using new technologies such as XRender, the Composite extension, cairo, and the freedesktop.org standards in order to provide the best possible experience.
+zimwm is the window manager of the zde project.  Planned features include whatever I feel like hacking up.  
+This means using new technologies such as XRender, the Composite extension, xcb, cairo, and the freedesktop.org 
+standards in order to provide the most stuff to work with.
+
+My short rant on the current state of window management/desktop environments:
+Everything is based on old code.  The last somewhat-successful window manager that was written from scratch has
+been waimea, and it quickly died.  Well, e17 is also being written from scratch, but it sucks for my purposes(for reasons I won't go into)
+I'd like to see some more innovation, and that's what I'm coding zimwm, as a playground for my brain.  
+It had a goal, a purpose, at one point, but it does no longer.  I just want a useable
+window manager that does things the way I am accustomed/want to do them.  Currently, e16 is the closest, but
+far from perfect.  One thing that particuarly annoys me is the usage of virtual roots.  Anyways, thats it 
+for now.
+
+Also, this is my third semi-serious attempt at writing a window manager of some sort, so I do have *somewhat*
+of a clue now as to what I am doing.
+
+Short list of planned features:
+-Loadable module interface
+-Composite manager with spiffy effects
+-Pager with spiffy live-thumbnails
+-Useage of new, unproved/mostly untested technologies(as they are with respect to window management)
 
 
 Inspiration was obtained from (in no particular order) Ion, lwm,

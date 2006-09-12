@@ -1,77 +1,59 @@
-These are all rough approximations of things that need to be done to zimwm, in no particular order.
+These are all rough approximations of things that need to be done to zimwm, in no particular order, except for when I put them in order.
 If there are parenthesis after an item, that means that something needs updating/fixing first before
 the item can be completed.
 
+**FIRST THINGS FIRST (REWRITE)**
+--------------------------------
+-Core stuff, initialization, etc.
+-Module interface
+	-This time I plan on A LOT more of zimwm's functionality being in modules, so I NEED to make sure that I do this right.
+
+Everything else
+---------------
 *Update COMPLIANCE file as needed
 
 *Focus system
- -50% done, right now its just sloppy focus. I also want just pointer focus, i.e. focus is strictly is under the mouse.
 
 *Keybindings
- -5% done. So far, pressing ALT on a window and clicking moves it. There needs to be a sophisticated key:action
- configuration stored in a file, and a better subsystem to describe and implement this.
  
 *Maximise windows, horizontally, vertically, or both
- -50% done, need horiz and vert seperately but thats simple.  Need to recognize Struts.
 
 *Tile windows
- -0% done
 
 *"Smart" window placement, i.e. where there is no window and closest to mouse pointer
- -0% done
 
 *Titlebar buttons for Maximise, tile, other functions.  Should be images. (zwl?)
- -40% done
  
 *Window context menu for functions and settings related to the window, anything not on the titlebar.(zwl ZMenu)
- -0%
  
 *Fix windows resizing themselves.
- -90% done, still a few positioning problems, but its mostly there. Some windows set two different sizes I think,
- one when they create the window and another in the properties of the window.  I need to use whichever one is most accurate,
- so that the windows are not smaller or bigger than they are intended.
 
 *Shaped window support
- -0% done
  
 *EWMH/ICCCM Support
- -25% done
 
 *Virtual Desktops, including keybindings and edge flipping by border
-Outline of Implementation:
+Outline of Implementation(**** This needs to be revised since the rewrite ****):
 -Each desktop can have multiple virtual "workspaces". Workspaces are the visible area of the screen.  Desktops have seperate backgrounds,
 and maybe even different configurations.  There can be multiple desktops arranged vertically. workspaces are arranged horizontally.
 Workspaces will be implemented as extensions of the coordinate space of the first workspace of that desktop.
 I am not yet sure if I want Desktops to be implemented with Virtual Roots or just extensions of the coordinate space that are arranged
 horizontally.  That would be simpler, but would allow less flexibility.
- -50%, switching between workspaces is fine, but between desktops isn't there yet.
 
 *Various window states, i.e. sticky, withdrawn, shaded...
- -5% done
  
 *IPC for remote programs to have access to zimwm runtime information and configuration settings.
- -50%, the framework is in, just need more commands.
 
 *Module interface for more advanced functions than IPC, such as a Composite manager, additional behaviors.
- -85% Modules can be loaded and unloaded through IPC, but there needs to be more convenience functions for them.
-
-*Create some modules
- -10%, Some that might be useful: systray, composite manager, volume control(alsa), and a wifi signal meter.
 
 *Speedups, especially when mapping windows. (imp,zwl)
- -0% I'm not even thinking of optimizing right now.
 
 *Fix all the stupid little bugs and memory leaks lying around
- -??% you can never know when you have finished. Just do it.
 
 *Find all FIXMEs and XXXs and fix them.
- -??% Do it all the time
 
 *Some kind of functionality to "remember" window settings, like place, size, etc. that are set/can be set by the window manager.
- -10% IPC is going to implement this.
 
 *Convert to XCB (pending zwl conversion)
- -0%
 
 *IPC Command to find all windows and what workspace/desktop they are on by name/id/etc.
- -0%
