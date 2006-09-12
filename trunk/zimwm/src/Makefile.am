@@ -1,16 +1,13 @@
 bin_PROGRAMS=zimwm
-zimwm_SOURCES=main.m events.m client.m client-events.m widgets.m ewmh.m focus.m vdesk.m zone.m ipc.m modules.m
-
-bin_SCRIPTS=zimsh
-
-EXTRA_DIST=zimwm.h events.h client.h client-events.h widgets.h ewmh.h focus.h vdesk.h zone.h ipc.h ipc_commands.h modules.h zimsh
+zimwm_SOURCES=main.m
 
 INCLUDES = \
 -I$(top_builddir) \
 -I$(top_srcdir) \
-$(IMP_CFLAGS) $(X_CFLAGS) $(XFT_CFLAGS) $(CAIRO_CFLAGS) $(ZWL_CFLAGS)
+$(OBJXCB_CFLAGS) $(IMP_CFLAGS) $(ZWL_CFLAGS) $(CAIRO_CFLAGS) $(CAIRO_XCB_CFLAGS) $(XCB_RENDERUTIL_CFLAGS) -g3
 
-zimwm_LDADD= -lobjc -lpthread $(IMP_LIBS) $(X_LIBS) $(XFT_LIBS) $(CAIRO_LIBS) $(ZWL_LIBS)
+zimwm_LDADD= -lobjc -lpthread $(OBJXCB_LIBS) $(IMP_LIBS) $(ZWL_LIBS) $(CAIRO_LIBS) $(CAIRO_XCB_LIBS) $(XCB_RENDERUTIL_LIBS)
 zimwm_LDFLAGS = -rdynamic
-SUBDIRS = modules
+
+#SUBDIRS = modules
 
