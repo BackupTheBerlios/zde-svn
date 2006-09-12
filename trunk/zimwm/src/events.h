@@ -20,3 +20,11 @@
     License along with this program; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
+
+#ifndef EVENTS_H
+#define EVENTS_H
+
+void on_button_down(ZWidget *widget, void *data);
+void on_map_request(ZWidget *widget, void *data);
+
+#endif

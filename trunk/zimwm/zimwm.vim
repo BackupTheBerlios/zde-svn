@@ -65,16 +65,18 @@ badd +1 src/main.m
 badd +1 src/Makefile.am
 badd +1 src/client.h
 badd +1 src/client.m
-badd +0 src/zimwm.h
+badd +42 src/zimwm.h
+badd +1 src/events.h
+badd +0 src/events.m
 args Makefile.am README TODO configure.in src/main.m src/Makefile.am
-edit src/zimwm.h
+edit src/events.m
 set splitbelow splitright
 set nosplitbelow
 set nosplitright
 wincmd t
 set winheight=1 winwidth=1
 argglobal
-edit src/zimwm.h
+edit src/events.m
 setlocal autoindent
 setlocal autoread
 setlocal balloonexpr=
@@ -86,7 +88,7 @@ setlocal cindent
 setlocal cinkeys=0{,0},0),:,0#,!^F,o,O,e
 setlocal cinoptions=
 setlocal cinwords=if,else,while,do,for,switch
-setlocal comments=sO:*\ -,mO:*\ \ ,exO:*/,s1:/*,mb:*,ex:*/,://
+setlocal comments=s1:/*,mb:*,ex:*/,://,b:#,:%,:XCOMM,n:>,fb:-
 setlocal commentstring=/*%s*/
 setlocal complete=.,w,b,u,t,i
 setlocal completefunc=
@@ -99,8 +101,8 @@ setlocal nodiff
 setlocal equalprg=
 setlocal errorformat=
 setlocal noexpandtab
-if &filetype != 'cpp'
-setlocal filetype=cpp
+if &filetype != 'matlab'
+setlocal filetype=matlab
 endif
 setlocal foldcolumn=0
 setlocal foldenable
@@ -113,15 +115,15 @@ setlocal foldminlines=1
 setlocal foldnestmax=20
 setlocal foldtext=foldtext()
 setlocal formatexpr=
-setlocal formatoptions=croql
+setlocal formatoptions=tcq
 setlocal formatlistpat=^\\s*\\d\\+[\\]:.)}\\t\ ]\\s*
 setlocal grepprg=
 setlocal iminsert=2
 setlocal imsearch=2
 setlocal include=
 setlocal includeexpr=
-setlocal indentexpr=
-setlocal indentkeys=0{,0},:,0#,!^F,o,O,e
+setlocal indentexpr=GetMatlabIndent(v:lnum)
+setlocal indentkeys=!,o,O=end,=case,=else,=elseif,=otherwise,=catch
 setlocal noinfercase
 setlocal iskeyword=@,48-57,_,192-255
 setlocal keywordprg=
@@ -151,11 +153,11 @@ setlocal spellcapcheck=[.?!]\\_[\\])'\"\	\ ]\\+
 setlocal spellfile=
 setlocal spelllang=en
 setlocal statusline=
-setlocal suffixesadd=
+setlocal suffixesadd=.m
 setlocal swapfile
 setlocal synmaxcol=3000
-if &syntax != 'cpp'
-setlocal syntax=cpp
+if &syntax != 'matlab'
+setlocal syntax=matlab
 endif
 setlocal tabstop=8
 setlocal tags=
@@ -166,11 +168,11 @@ setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
 silent! normal! zE
-let s:l = 42 - ((41 * winheight(0) + 35) / 71)
+let s:l = 1 - ((0 * winheight(0) + 35) / 71)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-42
+1
 normal! 0
 tabnext 1
 if exists('s:wipebuf')

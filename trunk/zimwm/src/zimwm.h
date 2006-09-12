@@ -39,6 +39,7 @@
 
 #include "../zimwm-config.h"
 
+#include "events.h"
 #include "client.h"
 
 extern ZWidget *root_window; 
