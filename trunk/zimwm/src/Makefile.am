@@ -1,5 +1,5 @@
 bin_PROGRAMS=zimwm
-zimwm_SOURCES=main.m
+zimwm_SOURCES=main.m client.m
 
 INCLUDES = \
 -I$(top_builddir) \

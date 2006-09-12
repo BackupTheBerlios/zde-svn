@@ -21,28 +21,21 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef ZIMWM_H
-#define ZIMWM_H
+#ifndef CLIENT_H
+#define CLIENT_H
 
-#include <zwl.h>
+@interface ZimClient : IMPObject
+{
+	@public
+	ZWindow *window;
+	
+	ObjXCBAtom **atoms; /**< Atoms this window has. */
+}
 
-#include <signal.h>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <sys/un.h>
-#include <sys/stat.h>
-#include <arpa/inet.h>
-#include <fcntl.h>
-#include <dlfcn.h>
-#include <unistd.h>
-#include <errno.h>
+/** Register a new client with zimwm */
+-(id)init:(ObjXCBWindow *)win;
+-(void)free;
 
-#include "../zimwm-config.h"
-
-#include "client.h"
-
-extern ZWidget *root_window; 
-extern IMPList *client_list; /**< List of ALL clients managed by zimwm, regardless of what workspace or desktop they belong to. */
-extern IMPList *modules_list; /**< List of all modules loaded. */
+@end
 
 #endif

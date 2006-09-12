@@ -44,6 +44,7 @@ set incsearch
 set mouse=a
 set omnifunc=ccomplete#Complete
 set ruler
+set suffixes=.bak,~,.o,.h,.info,.swp,.obj,.asv
 set tags=./tags,tags,~/.vim/systags
 set termencoding=utf-8
 set visualbell
@@ -57,20 +58,23 @@ if expand('%') == '' && !&modified && line('$') <= 1 && getline(1) == ''
 endif
 set shortmess=aoO
 badd +1 Makefile.am
-badd +0 README
-badd +0 TODO
-badd +0 configure.in
-badd +0 src/main.m
-badd +0 src/Makefile.am
+badd +17 README
+badd +1 TODO
+badd +1 configure.in
+badd +1 src/main.m
+badd +1 src/Makefile.am
+badd +1 src/client.h
+badd +1 src/client.m
+badd +0 src/zimwm.h
 args Makefile.am README TODO configure.in src/main.m src/Makefile.am
-edit README
+edit src/zimwm.h
 set splitbelow splitright
 set nosplitbelow
 set nosplitright
 wincmd t
 set winheight=1 winwidth=1
 argglobal
-edit README
+edit src/zimwm.h
 setlocal autoindent
 setlocal autoread
 setlocal balloonexpr=
@@ -82,7 +86,7 @@ setlocal cindent
 setlocal cinkeys=0{,0},0),:,0#,!^F,o,O,e
 setlocal cinoptions=
 setlocal cinwords=if,else,while,do,for,switch
-setlocal comments=s1:/*,mb:*,ex:*/,://,b:#,:%,:XCOMM,n:>,fb:-
+setlocal comments=sO:*\ -,mO:*\ \ ,exO:*/,s1:/*,mb:*,ex:*/,://
 setlocal commentstring=/*%s*/
 setlocal complete=.,w,b,u,t,i
 setlocal completefunc=
@@ -95,8 +99,8 @@ setlocal nodiff
 setlocal equalprg=
 setlocal errorformat=
 setlocal noexpandtab
-if &filetype != ''
-setlocal filetype=
+if &filetype != 'cpp'
+setlocal filetype=cpp
 endif
 setlocal foldcolumn=0
 setlocal foldenable
@@ -109,7 +113,7 @@ setlocal foldminlines=1
 setlocal foldnestmax=20
 setlocal foldtext=foldtext()
 setlocal formatexpr=
-setlocal formatoptions=tcq
+setlocal formatoptions=croql
 setlocal formatlistpat=^\\s*\\d\\+[\\]:.)}\\t\ ]\\s*
 setlocal grepprg=
 setlocal iminsert=2
@@ -150,8 +154,8 @@ setlocal statusline=
 setlocal suffixesadd=
 setlocal swapfile
 setlocal synmaxcol=3000
-if &syntax != ''
-setlocal syntax=
+if &syntax != 'cpp'
+setlocal syntax=cpp
 endif
 setlocal tabstop=8
 setlocal tags=
@@ -162,12 +166,12 @@ setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
 silent! normal! zE
-let s:l = 17 - ((16 * winheight(0) + 35) / 71)
+let s:l = 42 - ((41 * winheight(0) + 35) / 71)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-17
-normal! 035l
+42
+normal! 0
 tabnext 1
 if exists('s:wipebuf')
   silent exe 'bwipe ' . s:wipebuf

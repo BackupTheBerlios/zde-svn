@@ -25,15 +25,54 @@
 
 static unsigned int quit = 0;
 
+/* Exported variables */
+ZWidget *root_window; 
+
 IMPList *client_list = NULL;
 ZWidget *root_window = NULL;
+
+/* static functions */
+static void init_root_window(void);
 
 int main(int argc, char **argv)
 {	
 	zwl_init();
 
+	init_root_window();
+
 	zwl_main_loop_start();
 	
 	return 0;
+}
+
+static void init_root_window(void)
+{
+	ObjXCBGetGeometryReply *geomrep;
+	CARD32 wvalue[2];
+
+	root_window = [ZWindow alloc];
+
+	root_window->window = [zc get_root_window];
+
+	geomrep = [root_window->window GetGeometry];
+
+	root_window->parent = NULL;
+	root_window->x = 0;
+	root_window->y = 0;
+	root_window->width = [geomrep get_width];
+	root_window->height = [geomrep get_height];
+
+	wvalue[0] = [zc get_white_pixel];
+	wvalue[1] = XCBEventMaskExposure           | XCBEventMaskButtonPress
+             	  | XCBEventMaskButtonRelease      | XCBEventMaskPointerMotion
+                  | XCBEventMaskEnterWindow        | XCBEventMaskLeaveWindow
+                  | XCBEventMaskKeyPress           | XCBEventMaskKeyRelease
+	          | XCBEventMaskSubstructureNotify | XCBEventMaskSubstructureRedirect
+	          | XCBEventMaskEnterWindow	   | XCBEventMaskLeaveWindow
+	          | XCBEventMaskStructureNotify;
+
+	[root_window->window ChangeWindowAttributes:XCBCWEventMask | XCBCWBackPixel:wvalue];
+
+	[zc flush];
 }
 
