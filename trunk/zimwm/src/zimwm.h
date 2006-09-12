@@ -38,36 +38,9 @@
 #include <errno.h>
 
 #include "../zimwm-config.h"
-#include "ewmh.h"
-#include "client-events.h"
-#include "client.h"
-#include "events.h"
-#include "focus.h"
-#include "vdesk.h"
-#include "zone.h"
-#include "ipc.h"
-#include "modules.h"
-
-/* FIXME Should be from config file. */
-extern int snap_px;
-
-/* Index into the array of zones for the one currently used. */
-extern int curr_zone;
 
 extern ZWidget *root_window; 
 extern IMPList *client_list; /**< List of ALL clients managed by zimwm, regardless of what workspace or desktop they belong to. */
-extern Zone **zones; /**< Array of all zones used by zimwm. */
 extern IMPList *modules_list; /**< List of all modules loaded. */
-
-/** Main loop that goes through xevents and checks for IPC messages. */
-void zimwm_main_loop_start();
-void zimwm_main_loop_quit();
-
-void zimwm_add_client(ZimClient *client);
-ZimClient *zimwm_find_client_by_zwindow(ZWindow *w);
-ZimClient *zimwm_find_client_by_window(Window *w);
-ZimClient *zimwm_find_client_by_window_frame(Window *w);
-void zimwm_remove_client(ZimClient *c);
-void zimwm_find_and_remove_client(ZWindow *w);
 
 #endif

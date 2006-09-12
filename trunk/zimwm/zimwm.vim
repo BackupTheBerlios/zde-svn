@@ -1,66 +1,53 @@
 let SessionLoad = 1
 if &cp | set nocp | endif
+nmap d :cs find d =expand("<cword>")	
+nmap i :cs find i ^=expand("<cfile>")$
+nmap f :cs find f =expand("<cfile>")	
+nmap e :cs find e =expand("<cword>")	
+nmap t :cs find t =expand("<cword>")	
+nmap c :cs find c =expand("<cword>")	
+nmap g :cs find g =expand("<cword>")	
+nmap s :cs find s =expand("<cword>")	
+map Q gq
 let s:cpo_save=&cpo
 set cpo&vim
-map! <F1> <F1>
-map! <F2> <F2>
-map! <F3> <F3>
-map! <F4> <F4>
-map! <S-F1> <S-F1>
-map! <S-F2> <S-F2>
-map! <S-F3> <S-F3>
-map! <S-F4> <S-F4>
-map! <End> <End>
-map! <Home> <Home>
-nmap s :cs find s =expand("<cword>")	
-nmap g :cs find g =expand("<cword>")	
-nmap c :cs find c =expand("<cword>")	
-nmap t :cs find t =expand("<cword>")	
-nmap e :cs find e =expand("<cword>")	
-nmap f :cs find f =expand("<cfile>")	
-nmap i :cs find i ^=expand("<cfile>")$
-nmap d :cs find d =expand("<cword>")	
 nmap gx <Plug>NetrwBrowseX
-map <F1> <F1>
-map <F2> <F2>
-map <F3> <F3>
-map <F4> <F4>
-map <S-F1> <S-F1>
-map <S-F2> <S-F2>
-map <S-F3> <S-F3>
-map <S-F4> <S-F4>
-map <End> <End>
-map <Home> <Home>
-nmap <Nul>s :scs find s =expand("<cword>")	
-nmap <Nul>g :scs find g =expand("<cword>")	
-nmap <Nul>c :scs find c =expand("<cword>")	
-nmap <Nul>t :scs find t =expand("<cword>")	
-nmap <Nul>e :scs find e =expand("<cword>")	
-nmap <Nul>f :scs find f =expand("<cfile>")	
-nmap <Nul>i :scs find i ^=expand("<cfile>")$	
-nmap <Nul>d :scs find d =expand("<cword>")	
-nmap <Nul><Nul>s :vert scs find s =expand("<cword>")
-nmap <Nul><Nul>g :vert scs find g =expand("<cword>")
-nmap <Nul><Nul>c :vert scs find c =expand("<cword>")
-nmap <Nul><Nul>t :vert scs find t =expand("<cword>")
-nmap <Nul><Nul>e :vert scs find e =expand("<cword>")
-nmap <Nul><Nul>f :vert scs find f =expand("<cfile>")	
-nmap <Nul><Nul>i :vert scs find i ^=expand("<cfile>")$	
 nmap <Nul><Nul>d :vert scs find d =expand("<cword>")
+nmap <Nul><Nul>i :vert scs find i ^=expand("<cfile>")$	
+nmap <Nul><Nul>f :vert scs find f =expand("<cfile>")	
+nmap <Nul><Nul>e :vert scs find e =expand("<cword>")
+nmap <Nul><Nul>t :vert scs find t =expand("<cword>")
+nmap <Nul><Nul>c :vert scs find c =expand("<cword>")
+nmap <Nul><Nul>g :vert scs find g =expand("<cword>")
+nmap <Nul><Nul>s :vert scs find s =expand("<cword>")
+nmap <Nul>d :scs find d =expand("<cword>")	
+nmap <Nul>i :scs find i ^=expand("<cfile>")$	
+nmap <Nul>f :scs find f =expand("<cfile>")	
+nmap <Nul>e :scs find e =expand("<cword>")	
+nmap <Nul>t :scs find t =expand("<cword>")	
+nmap <Nul>c :scs find c =expand("<cword>")	
+nmap <Nul>g :scs find g =expand("<cword>")	
+nmap <Nul>s :scs find s =expand("<cword>")	
 nnoremap <silent> <Plug>NetrwBrowseX :call netrw#NetBrowseX(expand("<cWORD>"),0)
 let &cpo=s:cpo_save
 unlet s:cpo_save
 set autoindent
 set background=dark
 set backspace=indent,eol,start
+set backup
 set cindent
-set helplang=en
+set cscopetag
+set cscopeverbose
+set guifont=Bitstream\ Vera\ Sans\ Mono\ 8
+set hlsearch
+set incsearch
 set mouse=a
 set omnifunc=ccomplete#Complete
+set ruler
 set tags=./tags,tags,~/.vim/systags
 set termencoding=utf-8
 set visualbell
-set window=52
+set window=71
 let s:so_save = &so | let s:siso_save = &siso | set so=0 siso=0
 let v:this_session=expand("<sfile>:p")
 silent only
@@ -69,41 +56,13 @@ if expand('%') == '' && !&modified && line('$') <= 1 && getline(1) == ''
   let s:wipebuf = bufnr('%')
 endif
 set shortmess=aoO
-badd +204 configure.in
-badd +13 README
 badd +1 Makefile.am
-badd +13 src/Makefile.am
-badd +58 src/main.m
-badd +60 src/zimwm.h
-badd +32 src/events.h
-badd +43 src/events.m
-badd +52 src/client.h
-badd +530 src/client.m
-badd +77 TODO
-badd +46 src/ewmh.h
-badd +89 src/ewmh.m
-badd +34 src/client-events.h
-badd +36 src/client-events.m
-badd +2 data/Makefile.am
-badd +6 src/focus.h
-badd +38 src/focus.m
-badd +31 COMPLIANCE
-badd +1 src/vdesk.m
-badd +31 src/vdesk.h
-badd +27 src/ipc.h
-badd +170 src/ipc.m
-badd +6 src/zimsh
-badd +15 src/ipc_commands.h
-badd +60 src/modules.m
-badd +27 src/modules.h
-badd +2 src/modules/Makefile.am
-badd +12 src/modules/systray/Makefile.am
-badd +43 src/modules/zimwm_module.h
-badd +10 src/modules/systray/systray.m
-badd +1 src/modules/zimwm_module.m
-badd +1 src/modules/pager/Makefile.am
-badd +1 src/modules/pager/pager.m
-args configure.in README
+badd +0 README
+badd +0 TODO
+badd +0 configure.in
+badd +0 src/main.m
+badd +0 src/Makefile.am
+args Makefile.am README TODO configure.in src/main.m src/Makefile.am
 edit README
 set splitbelow splitright
 set nosplitbelow
@@ -170,7 +129,6 @@ setlocal matchpairs=(:),{:},[:]
 setlocal modeline
 setlocal modifiable
 setlocal nrformats=octal,hex
-set number
 setlocal nonumber
 setlocal numberwidth=4
 setlocal omnifunc=ccomplete#Complete
@@ -204,14 +162,15 @@ setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
 silent! normal! zE
-let s:l = 13 - ((12 * winheight(0) + 26) / 52)
+let s:l = 17 - ((16 * winheight(0) + 35) / 71)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-13
-normal! 0
+17
+normal! 035l
+tabnext 1
 if exists('s:wipebuf')
-  exe 'bwipe ' . s:wipebuf
+  silent exe 'bwipe ' . s:wipebuf
 endif
 unlet! s:wipebuf
 set winheight=1 winwidth=20 shortmess=filnxtToO
