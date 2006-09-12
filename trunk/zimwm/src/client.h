@@ -28,6 +28,7 @@
 {
 	@public
 	ZWindow *window;
+	ZWindow *parent; /**< The frame window */
 	
 	ObjXCBAtom **atoms; /**< Atoms this window has. */
 }

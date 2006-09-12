@@ -27,10 +27,35 @@
 
 -(id)init:(ObjXCBWindow *)win
 {
+	ObjXCBGetGeometryReply *geomrep;
+
 	[super init];
+
+	self->window = [ZWindow alloc];
+	self->parent = [ZWindow alloc];
+
+	geomrep = [win GetGeometry];
+
+	self->window->window = win;
+
+	/* FIXME numbers here should be config options (titleheight,border) FIXME */
+	[self->parent init:ZWL_BACKEND_XCB:[geomrep get_width] + 10:[geomrep get_height] + 20];
+
+	[self->parent move:100:100];
+
+	[self->window->window ReparentWindow:self->parent->window:5:15];
+	
+	self->window->parent = self->parent;
+
+	[self->parent show];
+	[self->window show];
+
+	[zc flush];
 }
 
 -(void)free
 {
 
 }
+
+@end
