@@ -38,6 +38,7 @@
 
 	self->window->window = win;
 
+	/* FIXME This needs to be generalized, for creation of buttons, text label, so on... */
 	/* FIXME numbers here should be config options (titleheight,border) FIXME */
 	[self->parent init:ZWL_BACKEND_XCB:[geomrep get_width] + 10:[geomrep get_height] + 20];
 

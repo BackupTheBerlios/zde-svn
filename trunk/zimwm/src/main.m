@@ -26,7 +26,7 @@
 /* Exported variables */
 ZWidget *root_window = NULL; 
 IMPList *client_list = NULL;
-extern IMPList *modules_list = NULL;
+IMPList *modules_list = NULL;
 
 /* static functions */
 static void init_root_window(void);
@@ -102,5 +102,47 @@ void zimwm_remove_client(ZimClient *c)
 
 		[iter next];
 	}
+
+	[iter release];
+}
+
+ZimClient *find_client_by_xcb_window(ObjXCBWindow *w)
+{
+	IMPListIterator *iter = [client_list iterator];
+	ZimClient *c;
+
+	while([iter has_next]) {
+		
+		c = (ZimClient *)[iter get_data];
+
+		if(c->window->window == w) {
+			[iter release];
+			return c;
+		}
+	}
+}
+ZimClient *find_client_by_xcb_parent(ObjXCBWindow *w)
+{
+	IMPListIterator *iter = [client_list iterator];
+	ZimClient *c;
+
+	while([iter has_next]) {
+		
+		c = (ZimClient *)[iter get_data];
+
+		if(c->parent->window == w) {
+			[iter release];
+			return c;
+		}
+	}
+}
+
+ObjXCBWindow *xcb_win_to_objxcb(XCBWINDOW w)
+{
+	ObjXCBWindow *win = [ObjXCBWindow alloc];
+
+	[win init:zc:w];
+
+	return win;
 }
 

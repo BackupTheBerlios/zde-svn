@@ -27,14 +27,13 @@ void on_map_request(ZWidget *widget, void *data)
 {
 	XCBMapRequestEvent *ev = (XCBMapRequestEvent *)data;
 	ZimClient *c = [ZimClient alloc];
-	ObjXCBWindow *w = [ObjXCBWindow alloc];
+	ObjXCBWindow *w;
 
 	printf("%d\n",ev->window);
 
-	[w init:zc:ev->window];
+	w = xcb_win_to_objxcb(ev->window);
 
-	[c init:w];
-	
+	[c init:w];	
 }
 
 void on_button_down(ZWidget *widget, void *data)

@@ -46,7 +46,14 @@ extern ZWidget *root_window;
 extern IMPList *client_list; /**< List of ALL clients managed by zimwm, regardless of what workspace or desktop they belong to. */
 extern IMPList *modules_list; /**< List of all modules loaded. */
 
+/** Convenience function to make an ObjXCBWindow from an XCBWINDOW.  Useful mostly because
+ * events are handled using the plain C API, while most everywhere else obj-xcb is used. */
+ObjXCBWindow *xcb_win_to_objxcb(XCBWINDOW w);
+
 void zimwm_add_client(ZimClient *c);
 void zimwm_remove_client(ZimClient *c);
+
+ZimClient *find_client_by_xcb_window(ObjXCBWindow *w);
+ZimClient *find_client_by_xcb_parent(ObjXCBWindow *w);
 
 #endif
