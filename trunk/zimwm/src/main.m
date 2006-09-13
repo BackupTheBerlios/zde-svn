@@ -48,7 +48,10 @@ int main(int argc, char **argv)
 static void init_root_window(void)
 {
 	ObjXCBGetGeometryReply *geomrep;
-	CARD32 wvalue[2];
+	CARD32 wvalue[3];
+	CARD32 value;
+	ObjXCBFont *cursor_font = [ObjXCBFont alloc];
+	XCBCURSOR c;
 
 	root_window = [ZWindow alloc];
 
@@ -71,7 +74,24 @@ static void init_root_window(void)
 	          | XCBEventMaskEnterWindow	   | XCBEventMaskLeaveWindow
 	          | XCBEventMaskStructureNotify;
 
+	/* Create a font cursor */
+	[cursor_font init:zc];
+	[cursor_font OpenFont:6:"cursor"];
+
 	[root_window->window ChangeWindowAttributes:XCBCWEventMask | XCBCWBackPixel:wvalue];
+
+	XCBFONTNew([zc get_connection]);
+	c = XCBCURSORNew([zc get_connection]);
+
+	/* FIXME Obj-XCB equivalent gives a syntax error for some reason, need to look into that... */
+	XCBCreateGlyphCursor ([zc get_connection], c, [cursor_font get_xid], [cursor_font get_xid],
+                      68, 68,
+                      255, 255, 255,
+                      255, 255, 255);
+
+	value = c.xid;
+
+	[root_window->window ChangeWindowAttributes:XCBCWCursor:&value];
 
 	zwl_main_loop_add_widget(root_window);
 
