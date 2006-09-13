@@ -46,4 +46,7 @@ extern ZWidget *root_window;
 extern IMPList *client_list; /**< List of ALL clients managed by zimwm, regardless of what workspace or desktop they belong to. */
 extern IMPList *modules_list; /**< List of all modules loaded. */
 
+void zimwm_add_client(ZimClient *c);
+void zimwm_remove_client(ZimClient *c);
+
 #endif

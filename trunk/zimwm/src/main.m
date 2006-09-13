@@ -23,13 +23,10 @@
 
 #include "zimwm.h"
 
-static unsigned int quit = 0;
-
 /* Exported variables */
-ZWidget *root_window; 
-
+ZWidget *root_window = NULL; 
 IMPList *client_list = NULL;
-ZWidget *root_window = NULL;
+extern IMPList *modules_list = NULL;
 
 /* static functions */
 static void init_root_window(void);
@@ -37,6 +34,9 @@ static void init_root_window(void);
 int main(int argc, char **argv)
 {	
 	zwl_init();
+
+	client_list = [IMPList alloc];
+	[client_list init];
 
 	init_root_window();
 
@@ -82,5 +82,25 @@ static void init_root_window(void)
 	[geomrep free];
 
 	[zc flush];
+}
+
+void zimwm_add_client(ZimClient *c)
+{
+	if(client_list && c)
+		[client_list append:c];
+}
+
+void zimwm_remove_client(ZimClient *c)
+{
+	IMPListIterator *iter = [client_list iterator];
+
+	while([iter has_next]) {
+		
+		if([iter get_data] == c) {
+			[iter del];
+		}
+
+		[iter next];
+	}
 }
 

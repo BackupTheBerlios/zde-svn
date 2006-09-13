@@ -52,6 +52,8 @@
 	[self->parent show];
 	[self->window show];
 
+	zimwm_add_client(self);
+
 	[zc flush];
 }
 
