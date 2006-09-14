@@ -135,7 +135,7 @@ ZimClient *find_client_by_xcb_window(ObjXCBWindow *w)
 		
 		c = (ZimClient *)[iter get_data];
 
-		if(c->window->window == w) {
+		if(OBJXCBWIN_TO_XID(c->window->window) == OBJXCBWIN_TO_XID(w)) {
 			[iter release];
 			return c;
 		}
@@ -146,15 +146,15 @@ ZimClient *find_client_by_xcb_parent(ObjXCBWindow *w)
 	IMPListIterator *iter = [client_list iterator];
 	ZimClient *c;
 
-	while([iter has_next]) {
-		
+	do {
 		c = (ZimClient *)[iter get_data];
 
-		if(c->parent->window == w) {
+		if(OBJXCBWIN_TO_XID(c->parent->window) == OBJXCBWIN_TO_XID(w)) {
 			[iter release];
 			return c;
 		}
-	}
+
+	} while([iter has_next]); 
 }
 
 ObjXCBWindow *xcb_win_to_objxcb(XCBWINDOW w)
