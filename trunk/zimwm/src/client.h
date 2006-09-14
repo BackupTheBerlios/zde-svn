@@ -39,4 +39,6 @@
 
 @end
 
+void on_frame_button_down(ZWidget *widget,void *data);
+
 #endif

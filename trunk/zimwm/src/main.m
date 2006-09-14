@@ -126,7 +126,7 @@ void zimwm_remove_client(ZimClient *c)
 	[iter release];
 }
 
-ZimClient *find_client_by_xcb_window(ObjXCBWindow *w)
+ZimClient *find_client_by_window(ObjXCBWindow *w)
 {
 	IMPListIterator *iter = [client_list iterator];
 	ZimClient *c;
@@ -141,7 +141,7 @@ ZimClient *find_client_by_xcb_window(ObjXCBWindow *w)
 		}
 	}
 }
-ZimClient *find_client_by_xcb_parent(ObjXCBWindow *w)
+ZimClient *find_client_by_parent(ObjXCBWindow *w)
 {
 	IMPListIterator *iter = [client_list iterator];
 	ZimClient *c;

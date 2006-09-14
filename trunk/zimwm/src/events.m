@@ -36,11 +36,5 @@ void on_map_request(ZWidget *widget, void *data)
 
 void on_button_down(ZWidget *widget, void *data)
 {
-	XCBButtonPressEvent *ev = (XCBButtonPressEvent *)data;
-	ZimClient *c = NULL;
-
-	c = find_client_by_xcb_parent(xcb_win_to_objxcb(ev->event));
-
-	printf("%d\n",c);
-
+	
 }

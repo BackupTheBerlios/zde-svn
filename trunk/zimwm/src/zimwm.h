@@ -53,8 +53,8 @@ ObjXCBWindow *xcb_win_to_objxcb(XCBWINDOW w);
 void zimwm_add_client(ZimClient *c);
 void zimwm_remove_client(ZimClient *c);
 
-ZimClient *find_client_by_xcb_window(ObjXCBWindow *w);
-ZimClient *find_client_by_xcb_parent(ObjXCBWindow *w);
+ZimClient *find_client_by_window(ObjXCBWindow *w);
+ZimClient *find_client_by_parent(ObjXCBWindow *w);
 
 /** Convenience macros */
 #define OBJXCBWIN_TO_XID(w) [w get_xid].xid /**< Useful for comparing two ObjXCBWindows */

@@ -68,3 +68,14 @@
 }
 
 @end
+
+void on_frame_button_down(ZWidget *widget,void *data)
+{
+	XCBButtonPressEvent *ev = (XCBButtonPressEvent *)data;
+	ZimClient *c;
+
+	c = find_client_by_parent(xcb_win_to_objxcb(ev->event));
+
+	printf("%d\n",c);
+
+}
